@@ -1,0 +1,520 @@
+# German-Translation
+# Copyright (C) 2014
+# This file is distributed under the same license as the PACKAGE package.
+# Oliver Dippel <oliver@multixmedia.org>, 2014.
+# 
+# Alexandre GALODE <deusyss@yahoo.fr>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2015-03-11 13:12+0100\n"
+"Last-Translator: Alexandre GALODE <deusyss@yahoo.fr>\n"
+"Language-Team: français <deusyss@yahoo.fr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Gtranslator 2.91.6\n"
+"Language: Francais\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "View"
+msgstr "Vue"
+
+msgid "Tool"
+msgstr "Outil"
+
+msgid "Milling"
+msgstr "Usinage"
+
+msgid "Tabs"
+msgstr "Bridage"
+
+msgid "Rotary"
+msgstr "Tournage"
+
+msgid "Tangencial"
+msgstr "Tangenciel"
+
+msgid "Machine"
+msgstr "Machine"
+
+msgid "Material"
+msgstr "Materiau"
+
+msgid "Objects"
+msgstr "Objets"
+
+msgid "Misc"
+msgstr "Divers"
+
+msgid "Zoom"
+msgstr "Zoom"
+
+msgid "view-zoom"
+msgstr "Zoomer"
+
+msgid "Helplines"
+msgstr "Lignes d'aide"
+
+msgid "show helplines"
+msgstr "Afficher les lignes d'aide"
+
+msgid "ShowGrid"
+msgstr "Afficher la grille"
+
+msgid "show grid"
+msgstr "Afficher la grille"
+
+msgid "ShowTool"
+msgstr "Afficher l'outil"
+
+msgid "show tool-diameter"
+msgstr "Afficher le diametre de l'outil"
+
+msgid "Textures"
+msgstr "Textures"
+
+msgid "show textures"
+msgstr "Afficher les textures"
+
+msgid "Rotate-X"
+msgstr "Rotation-X"
+
+msgid "View-Rotate X"
+msgstr "Rotation en X de la vue"
+
+msgid "Rotate-Y"
+msgstr "Rotation-Y"
+
+msgid "View-Rotate Y"
+msgstr "Rotation en Y de la vue"
+
+msgid "Rotate-Z"
+msgstr "Rotation-Z"
+
+msgid "View-Rotate Z"
+msgstr "Rotation en Z de la vue"
+
+msgid "Translate-X"
+msgstr "Translation-X"
+
+msgid "View-Translate X"
+msgstr "Translation en X de la vue"
+
+msgid "Translate-Y"
+msgstr "Translation-Y"
+
+msgid "View-Translate Y"
+msgstr "Translation en Y de la vue"
+
+msgid "Grid-Size"
+msgstr "Pas de la grille"
+
+msgid "size of the grid"
+msgstr "Pas de la grille"
+
+msgid "Arrow-Scale"
+msgstr "Taille des axes"
+
+msgid "size of arrows"
+msgstr "Taille des axes"
+
+msgid "DXF-File"
+msgstr "Fichiers DXF"
+
+msgid "dxf-filename"
+msgstr "Nom du DXF"
+
+msgid "Select"
+msgstr "Selectionner"
+
+msgid "selected tool from tooltable"
+msgstr "Selectionner un outil depuis la table"
+
+msgid "Number"
+msgstr "Numero"
+
+msgid "tool-number"
+msgstr "Reference de l'outil"
+
+msgid "Diameter"
+msgstr "Diametre"
+
+msgid "tool-diameter"
+msgstr "Diametre d'outil"
+
+msgid "CalcSpeed"
+msgstr "Vitesse calculee"
+
+msgid "calculated spindle-speed"
+msgstr "Vitesse de rotation calculee"
+
+msgid "Speed"
+msgstr "Vitesse"
+
+msgid "real spindle-speed"
+msgstr "Vitesse de rotation reelle desiree"
+
+msgid "Flutes"
+msgstr "Tranchants"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr ""
+"Nombres de tranchants de la fraise, pour calculer les vitesses maximales de "
+"rotation et d'avance"
+
+msgid "Table"
+msgstr "Table d'outils"
+
+msgid "the tooltable filename"
+msgstr "Le nom de la table d'outils"
+
+msgid "MaxFeedRate"
+msgstr "Vitesse de deplacement maximale"
+
+msgid "calculated maximum feedrate"
+msgstr "Vitesse maximale de deplacement (calculee)"
+
+msgid "FeedRate"
+msgstr "Vitesse d'avance"
+
+msgid "real feedrate"
+msgstr "Vitesse d'avance reelle desiree"
+
+msgid "PlungeRate"
+msgstr "Vitesse de plongee"
+
+msgid "plunge feedrate"
+msgstr "Vitesse de plongee"
+
+msgid "Depth"
+msgstr "Profondeur finale"
+
+msgid "end depth"
+msgstr "Profondeur finale"
+
+msgid "Z-Step"
+msgstr "Profondeur de passe"
+
+msgid "depth per step"
+msgstr "Pas en descente"
+
+msgid "Save-Move"
+msgstr "Hauteur de securite"
+
+msgid "save move z-position"
+msgstr "Hauteur de securite"
+
+msgid "Overcut"
+msgstr "A travers tout"
+
+msgid "overcutting endges"
+msgstr "Traverser tout"
+
+msgid "Lasermode"
+msgstr "Mode laser"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "Utilisation d'un laser, on/off pour chaque objet"
+
+msgid "Climb"
+msgstr "Inverser deplacement"
+
+msgid "reverse milling direction / climb milling"
+msgstr "Inverser le sens de deplacement"
+
+msgid "NoOffsets"
+msgstr "Sans offset d'outil"
+
+msgid "without tool-offsets"
+msgstr "Sans compensation d'outil"
+
+msgid "Mill Text"
+msgstr "Graver le texte"
+
+msgid "mill mtext from dxf-files"
+msgstr "Graver le mtext issu d'un fichier dxf"
+
+msgid "NC-Debug"
+msgstr "Debug du GCODE"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "objets finaux sans offset (pour debugage)"
+
+msgid "Use Taps"
+msgstr "Utiliser des brides"
+
+msgid "using holding-tabs"
+msgstr "Utiliser des brides"
+
+msgid "Show Grid"
+msgstr "Afficher la grille"
+
+msgid "show tab-grid"
+msgstr "Afficher la table rainuree"
+
+msgid "depth of the holding-tabs"
+msgstr "Hauteur du bridage"
+
+msgid "Lenght"
+msgstr "Longueur"
+
+msgid "lenght of the holding-tabs"
+msgstr "Largeur des brides"
+
+msgid "Triangle-Type"
+msgstr "Brides triangulaires"
+
+msgid "type of the holding-tabs"
+msgstr "Type de bridage"
+
+msgid "X-Grid"
+msgstr "Pas de rainure en X"
+
+msgid "X-grid of the holding-tabs"
+msgstr "Pas en X de la table de fraisage"
+
+msgid "Y-Grid"
+msgstr "Pas de rainure en Y"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Pas en Y de la table de fraisage"
+
+msgid "Fastmove-Speed"
+msgstr "Vitesse de deplacement rapide"
+
+msgid "fast-move speed of the maschine, to calculate the milling-time"
+msgstr "Mouvement rapide de la machine, pour estimer le temps d'usinage"
+
+msgid "Post"
+msgstr "Post"
+
+msgid "post-processor selection"
+msgstr "Selection du post processeur"
+
+msgid "Output-File"
+msgstr "Fichier de sortie"
+
+msgid "gcode-output filename"
+msgstr "Nom du fichier GCODE de sortie"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr ""
+"Selection du materiau, sert Ã  calculer les vitesses d'avance et de rotation"
+
+msgid "Cutting Speed"
+msgstr "Vitesse de coupe"
+
+msgid "Feedrate/Flute/<4mm"
+msgstr "Vitesse d'avance/tranchant (diametre outil < 4mm)"
+
+msgid "Feedrate/Flute/<8mm"
+msgstr "Vitesse d'avance/tranchant (diametre outil < 8mm)"
+
+msgid "Feedrate/Flute/<12mm"
+msgstr "Vitesse d'avance/tranchant (diametre outil < 12mm)"
+
+msgid "Texture"
+msgstr "Texture"
+
+msgid "Post-Command"
+msgstr "Post commande"
+
+msgid ""
+"postcommand to trigger an script after saving the gcode (you can use this to "
+"copy the gcode to your cnc-maschine)"
+msgstr ""
+"Post-commande pour lancer un script apres avoir sauvegarder le GCODE (Peut "
+"être utilise pour televerser le code a la CNC)"
+
+msgid "object selection"
+msgstr "Choix d'un objet"
+
+msgid "Use"
+msgstr "Utiliser"
+
+msgid "Overwrite"
+msgstr "Surcharger, remplacer les parametres generiques"
+
+msgid "Offset"
+msgstr "Offset"
+
+msgid "Pocket"
+msgstr "Poche"
+
+msgid "Laser"
+msgstr "Laser"
+
+msgid "Holding-Tab's"
+msgstr "Table rainuree"
+
+msgid "use holding tabs"
+msgstr "Utilisation d'une table rainuree"
+
+msgid "Order"
+msgstr "Priorite"
+
+msgid "milling order"
+msgstr "Priorite d'usinage"
+
+msgid "Activate"
+msgstr "Activer"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "Mode tournage pour projection sur axe de rotation"
+
+msgid "Axis"
+msgstr "Axes"
+
+msgid "axis that used as rotating axis"
+msgstr "Axe utilise comme axe de rotation"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "Diametre du materiau en mode tournage"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "Couteau tangeanciel, 0.0"
+
+msgid "axis that used as tangencial axis"
+msgstr "Axe utilise comme axe tangenciel"
+
+msgid "MaxAngle"
+msgstr "Angle maximal"
+
+msgid "maximum angle before push up the knife"
+msgstr "Angle maximal avant de relever l'outil"
+
+msgid "Tolerance"
+msgstr "Tolerance"
+
+msgid "Tollerance between points to close objects"
+msgstr "Tolerance entre deux points d'un objet"
+
+msgid "Parameter"
+msgstr "Parametres"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Vue etendue ou par onglets"
+
+msgid "VNC-Server"
+msgstr "Serveur VNC"
+
+msgid "VNC-Server address"
+msgstr "Adresse du serveur VNC"
+
+msgid "VNC-Port"
+msgstr "Port VNC"
+
+msgid "VNC-Server port"
+msgstr "Port du serveur VNC"
+
+msgid "On/Off"
+msgstr "On/Off"
+
+msgid "3D-View"
+msgstr "Vue 3D"
+
+msgid "Output"
+msgstr "Sortie"
+
+msgid "PostProcessor"
+msgstr "Post-Processeur"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Documentation"
+
+msgid "-5 First"
+msgstr "-5 (Eleve)"
+
+msgid "0 Auto"
+msgstr "0 (Auto)"
+
+msgid "5 Last"
+msgstr "5 (basse)"
+
+msgid "None"
+msgstr "Sans"
+
+msgid "Inside"
+msgstr "Interieur"
+
+msgid "Outside"
+msgstr "Exterieur"
+
+msgid "Expander"
+msgstr "Etendue"
+
+msgid "Notebook-Tabs"
+msgstr "Onglets"
+
+msgid "Help"
+msgstr "Aide"
+
+msgid "About"
+msgstr "A propos de..."
+
+msgid "File"
+msgstr "Fichier"
+
+msgid "Load DXF"
+msgstr "Charger un DXF"
+
+msgid "Load Preset"
+msgstr "Charger un Preset"
+
+msgid "Save Preset"
+msgstr "Sauvegarder les reglages"
+
+msgid "Save Output"
+msgstr "Sauvegarder le GCODE"
+
+msgid "Load Tooltable"
+msgstr "Charger une table d'outils"
+
+msgid "Save Setup"
+msgstr "Sauvegarder la configuration"
+
+msgid "Quit"
+msgstr "Quitter"
+
+msgid "Preset"
+msgstr "Prereglage"
+
+msgid "Tooltable"
+msgstr "Table d'outils"
+
+msgid "Load Drawing"
+msgstr "Charger un dessin"
+
+msgid "DXF-Drawings"
+msgstr "Dessins DXF"
+
+msgid "DWG-Drawings"
+msgstr "Dessins DWG"
+
+msgid "SVG-Drawings"
+msgstr "Dessins SVG"
+
+msgid "On Open"
+msgstr "Bridage exterieur"
+
+msgid "holding-tabs on open contours"
+msgstr "Bridage sur contours ouverts"
+
+msgid "On Inside"
+msgstr "Bridage interieur"
+
+msgid "holding-tabs on inside-contours"
+msgstr "Bridage interieur"
+
+msgid "On Outside"
+msgstr "Bridage exterieur"
+
+msgid "holding-tabs on outside-contours"
+msgstr "Bridage exterieur"
