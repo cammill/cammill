@@ -1,4 +1,4 @@
-# German-Translation
+# Italian-Translation
 # Copyright (C) 2014
 # This file is distributed under the same license as the PACKAGE package.
 # Oliver Dippel <oliver@multixmedia.org>, 2014.
@@ -34,7 +34,7 @@ msgid "Tangencial"
 msgstr "Tangenziale"
 
 msgid "Machine"
-msgstr "Mcchina"
+msgstr "Macchina"
 
 msgid "Material"
 msgstr "Materiale"
@@ -58,10 +58,10 @@ msgid "show helplines"
 msgstr "Mostra linee guida"
 
 msgid "ShowGrid"
-msgstr "Mostra Reticolo"
+msgstr "Mostra Griglia"
 
 msgid "show grid"
-msgstr "Mostra Reticolo"
+msgstr "Mostra Griglia"
 
 msgid "ShowTool"
 msgstr "Mostra Utensile"
@@ -70,10 +70,10 @@ msgid "show tool-diameter"
 msgstr "Mostra diametro utensile"
 
 msgid "Textures"
-msgstr "Motivo"
+msgstr "Textures"
 
 msgid "show textures"
-msgstr "Mostra Motivo"
+msgstr "Mostra Texture"
 
 msgid "Rotate-X"
 msgstr "Ruota Asse X"
@@ -106,10 +106,10 @@ msgid "View-Translate Y"
 msgstr "Mostra Traslazione Asse Y"
 
 msgid "Grid-Size"
-msgstr "Dimensione Reticolo"
+msgstr "Dimensione Griglia"
 
 msgid "size of the grid"
-msgstr "dimensione reticolo"
+msgstr "dimensione griglia"
 
 msgid "Arrow-Scale"
 msgstr "Dimensione Frecce"
@@ -157,7 +157,7 @@ msgid "Flutes"
 msgstr "Taglienti"
 
 msgid "flutes of the tool, to calculate max toolspeed and feedrate"
-msgstr "taglienti dell'utensile per calcol. la max velocità e avanzamento"
+msgstr "taglienti dell'utensile per calcolare la max velocità e avanzamento"
 
 msgid "Table"
 msgstr "Tabella"
@@ -166,7 +166,7 @@ msgid "the tooltable filename"
 msgstr "nome della tabella utensili"
 
 msgid "MaxFeedRate"
-msgstr "Avanz. Max"
+msgstr "Avanzamento Max"
 
 msgid "calculated maximum feedrate"
 msgstr "avanzamento massimo calcolato"
@@ -205,7 +205,7 @@ msgid "Overcut"
 msgstr "Sovrapposizione"
 
 msgid "overcutting endges"
-msgstr "Ecken Ausfräsen"
+msgstr "Estendi taglio angoli"
 
 msgid "Lasermode"
 msgstr "Modalità Laser"
@@ -244,10 +244,10 @@ msgid "using holding-tabs"
 msgstr "usa punti di fissaggio"
 
 msgid "Show Grid"
-msgstr "Mostra Reticolo"
+msgstr "Mostra Griglia"
 
 msgid "show tab-grid"
-msgstr "mostra reticolo fissaggi"
+msgstr "mostra griglia fissaggi"
 
 msgid "depth of the holding-tabs"
 msgstr "profondita dei punti di fissaggio"
@@ -265,16 +265,16 @@ msgid "type of the holding-tabs"
 msgstr "Tipo di punti di fissaggio"
 
 msgid "X-Grid"
-msgstr "Reticolo-X"
+msgstr "Griglia-X"
 
 msgid "X-grid of the holding-tabs"
-msgstr "punti di fissaggio su reticolo-X"
+msgstr "punti di fissaggio su griglia-X"
 
 msgid "Y-Grid"
-msgstr "Reticolo-Y"
+msgstr "Griglia-Y"
 
 msgid "Y-grid of the holding-tabs"
-msgstr "punti di fissaggio su reticolo-Y"
+msgstr "punti di fissaggio su griglia-Y"
 
 msgid "Fastmove-Speed"
 msgstr "Velocità Rapidi"
@@ -310,7 +310,7 @@ msgid "Feedrate/Flute/<12mm"
 msgstr "Avanzamento/Taglienti (<12mm)"
 
 msgid "Texture"
-msgstr "Motivo"
+msgstr "Texture"
 
 msgid "Post-Command"
 msgstr "Post-Command"
@@ -466,7 +466,7 @@ msgid "Load Tooltable"
 msgstr "Carica Utensili"
 
 msgid "Save Setup"
-msgstr "Slava configurazione"
+msgstr "Salva configurazione"
 
 msgid "Quit"
 msgstr "Esci"
@@ -506,4 +506,3 @@ msgstr "All'esterno"
 
 msgid "holding-tabs on outside-contours"
 msgstr "fissaggi sull'esterno del contorno"
-
