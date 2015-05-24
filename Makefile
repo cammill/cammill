@@ -26,7 +26,7 @@ cammill: main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c dxf.
 	mkdir -p intl/it_IT.UTF-8/LC_MESSAGES
 	msgfmt it.po -o intl/it_IT.UTF-8/LC_MESSAGES/cammill.mo
 #	gcc -fopenmp -ggdb -Wall -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
-	clang -ggdb -Wall -Wno-unknown-pragmas -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
+	clang -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
 
 gprof:
 	gcc -pg -ggdb -Wall -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
