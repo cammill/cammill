@@ -45,7 +45,7 @@ void add_angle_offset (double *check_x, double *check_y, double radius, double a
 void object_optimize_dir (int object_num);
 int intersect_check (double p0_x, double p0_y, double p1_x, double p1_y, double p2_x, double p2_y, double p3_x, double p3_y, double *i_x, double *i_y);
 void intersect (double l1x1, double l1y1, double l1x2, double l1y2, double l2x1, double l2y1, double l2x2, double l2y2, double *x, double *y);
-void mill_begin (void);
+void mill_begin (const char* path);
 void mill_end (void);
 void mill_objects (void);
 void mill_z (int gcmd, double z);
@@ -60,7 +60,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 int find_next_line (int object_num, int first, int num, int dir, int depth);
 int line_open_check (int num);
 void init_objects (void);
-void MaterialLoadList (void);
+void MaterialLoadList (const char* path);
 void DrawCheckSize (void);
 void DrawSetZero (void);
 void remove_double_lines (void);
