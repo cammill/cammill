@@ -905,7 +905,7 @@ void intersect (double l1x1, double l1y1, double l1x2, double l1y2, double l2x1,
 	return;
 }
 
-void mill_begin (void) {
+void mill_begin (const char* path) {
 	char tmp_str[1024];
 	// init output
 	mill_start_all = 0;
@@ -926,7 +926,7 @@ void mill_begin (void) {
 		postcam_exit_lua();
 		strcpy(output_extension, "ngc");
 		strcpy(output_info, "");
-		postcam_init_lua(postcam_plugins[PARAMETER[P_H_POST].vint]);
+		postcam_init_lua(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 		postcam_plugin = PARAMETER[P_H_POST].vint;
 		gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
 		sprintf(tmp_str, "Output (%s)", output_extension);
@@ -2885,8 +2885,10 @@ char *csv_getfield (char *line, int num, char *val) {
 	return 0;
 }
 
-void MaterialLoadList (void) {
-	FILE *stream = fopen("material.tbl", "r");
+void MaterialLoadList (const char* path) {
+        char filename[PATH_MAX];
+        snprintf(filename, PATH_MAX, "%s%s", path, "material.tbl");
+	FILE *stream = fopen(filename, "r");
 	MaterialMax = 0;
 	if (stream != NULL) {
 		char line[1024];
