@@ -1,6 +1,6 @@
 2D CAM-Tool for Linux and OSX
 
-![travis-ci](https://api.travis-ci.org/cammill/cammill.svg)
+[![Build Status](https://api.travis-ci.org/cammill/cammill.svg)](https://travis-ci.org/cammill/cammill)
 
 Features:
 * Automatic Offsets (Inside / Outside)
