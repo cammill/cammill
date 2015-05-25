@@ -305,7 +305,7 @@ static int set_output_info (lua_State *L) {
 	return 1;
 }
 
-void postcam_init_lua (char *plugin) {
+void postcam_init_lua (const char* path, char *plugin) {
 	L = luaL_newstate();
 	luaL_openlibs(L);
 
@@ -335,7 +335,9 @@ void postcam_init_lua (char *plugin) {
 	postcam_var_push_string("toolName", "");
 	postcam_var_push_string("partName", "");
 
-	if (luaL_loadfile(L, "postprocessor.lua")) {
+        char filename[PATH_MAX];
+        snprintf(filename, PATH_MAX, "%s%s", path, "postprocessor.lua");
+	if (luaL_loadfile(L, filename)) {
 		sprintf(output_error, "FATAL ERROR(postprocessor.lua / 1):\n %s\n\n", lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);
 		lua_stat = 0;
@@ -348,8 +350,8 @@ void postcam_init_lua (char *plugin) {
 
 	lua_stat = 1;
 
-	char tmp_str[1024];
-	sprintf(tmp_str, "posts/%s.scpost", plugin);
+	char tmp_str[PATH_MAX];
+	snprintf(tmp_str, PATH_MAX, "%sposts/%s.scpost", path, plugin);
 	postcam_var_push_string("postfile", tmp_str);
 	postcam_call_function("load_post");
 

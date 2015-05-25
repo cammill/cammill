@@ -39,6 +39,7 @@
 #endif
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 #include <gtk/gtkgl.h>
 #include <gtksourceview/gtksourceview.h>
 #include <gtksourceview/gtksourcelanguagemanager.h>
@@ -83,6 +84,9 @@ void slice_3d (char *file, float z);
 
 
 void texture_init (void);
+
+// path to cammill executable
+char path[PATH_MAX];
 
 int winw = 1600;
 int winh = 1200;
@@ -163,8 +167,8 @@ GtkWidget *dialog;
 
 
 void postcam_load_source (char *plugin) {
-	char tmp_str[1024];
-	sprintf(tmp_str, "posts/%s.scpost", plugin);
+	char tmp_str[PATH_MAX];
+	snprintf(tmp_str, PATH_MAX, "%sposts/%s.scpost", path, plugin);
 	GtkTextBuffer *bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
 	gchar *file_buffer;
 	GError *error;
@@ -178,9 +182,9 @@ void postcam_load_source (char *plugin) {
 	free(file_buffer);
 }
 
-void postcam_save_source (char *plugin) {
-	char tmp_str[1024];
-	sprintf(tmp_str, "posts/%s.scpost", plugin);
+void postcam_save_source (const char* path, char *plugin) {
+	char tmp_str[PATH_MAX];
+	snprintf(tmp_str, PATH_MAX, "%sposts/%s.scpost", path, plugin);
 	FILE *fp = fopen(tmp_str, "w");
 	if (fp != NULL) {
 		GtkTextIter start, end;
@@ -472,7 +476,7 @@ void mainloop (void) {
 			}
 		}
 
-		mill_begin();
+		mill_begin(path);
 		mill_objects();
 		mill_end();
 
@@ -528,8 +532,8 @@ void mainloop (void) {
 		fprintf(fd_out, "%s", gcode_buffer);
 		fclose(fd_out);
 		if (PARAMETER[P_POST_CMD].vstr[0] != 0) {
-			char cmd_str[2048];
-			sprintf(cmd_str, PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
+			char cmd_str[PATH_MAX];
+			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
 			system(cmd_str);
 		}
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
@@ -578,7 +582,10 @@ void ToolLoadTable (void) {
 		char *line = NULL;
 		size_t len = 0;
 		ssize_t read;
-		tt_fp = fopen(PARAMETER[P_TOOL_TABLE].vstr, "r");
+                char path_tooltable[PATH_MAX];
+                
+                snprintf(path_tooltable, PATH_MAX, "%s%s", path, PARAMETER[P_TOOL_TABLE].vstr);
+		tt_fp = fopen(path_tooltable, "r");
 		if (tt_fp == NULL) {
 			fprintf(stderr, "Can not open Tooltable-File: %s\n", PARAMETER[P_TOOL_TABLE].vstr);
 			exit(EXIT_FAILURE);
@@ -697,6 +704,23 @@ void handler_rotate_drawing (GtkWidget *widget, gpointer data) {
 	}
 	init_objects();
 	loading = 0;
+}
+
+void handler_reload_dxf (GtkWidget *widget, gpointer data) {
+		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf..."), "reloading dxf...");
+		loading = 1;
+#ifdef USE_G3D
+		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+			dxf_read(PARAMETER[P_V_DXF].vstr);
+		} else {
+			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
+		}
+#else
+		dxf_read(PARAMETER[P_V_DXF].vstr);
+#endif
+		init_objects();
+		loading = 0;
+		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf...done"), "reloading dxf...done");
 }
 
 void handler_load_dxf (GtkWidget *widget, gpointer data) {
@@ -834,15 +858,15 @@ char *suffix_remove (char *mystr) {
 
 void handler_save_lua (GtkWidget *widget, gpointer data) {
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving lua..."), "saving lua...");
-	postcam_save_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
+	postcam_save_source(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	postcam_plugin = -1;
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving lua...done"), "saving lua...done");
 }
 
-void handler_save_gcode (GtkWidget *widget, gpointer data) {
+void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 	char ext_str[1024];
 	GtkWidget *dialog;
-	sprintf(ext_str, "%s (.%s)", _("Save Output"), output_extension);
+	snprintf(ext_str, 1024, "%s (.%s)", _("Save Output As.."), output_extension);
 	dialog = gtk_file_chooser_dialog_new (ext_str,
 		GTK_WINDOW(window),
 		GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -854,7 +878,7 @@ void handler_save_gcode (GtkWidget *widget, gpointer data) {
 	GtkFileFilter *ffilter;
 	ffilter = gtk_file_filter_new();
 	gtk_file_filter_set_name(ffilter, output_extension);
-	sprintf(ext_str, "*.%s", output_extension);
+	snprintf(ext_str, 1024, "*.%s", output_extension);
 	gtk_file_filter_add_pattern(ffilter, ext_str);
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 	if (PARAMETER[P_MFILE].vstr[0] == 0) {
@@ -878,6 +902,7 @@ void handler_save_gcode (GtkWidget *widget, gpointer data) {
 	} else {
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (dialog), PARAMETER[P_MFILE].vstr);
 	}
+
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
@@ -887,6 +912,15 @@ void handler_save_gcode (GtkWidget *widget, gpointer data) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
 	}
 	gtk_widget_destroy(dialog);
+}
+
+void handler_save_gcode (GtkWidget *widget, gpointer data) {
+	if (PARAMETER[P_MFILE].vstr[0] == 0) {
+                handler_save_gcode_as(widget, data);
+        } else {
+                save_gcode = 1;
+                gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
+        }
 }
 
 void handler_load_tooltable (GtkWidget *widget, gpointer data) {
@@ -938,7 +972,10 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	GtkWidget *label = gtk_label_new("CAMmill 2D\nCopyright by Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>");
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
-	GtkWidget *image = gtk_image_new_from_file("icons/logo.png");
+
+        char iconfile[PATH_MAX];
+        snprintf(iconfile, PATH_MAX, "%s%s", path, "icons/logo.png");
+	GtkWidget *image = gtk_image_new_from_file(iconfile);
 	GtkWidget *box = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 	gtk_box_pack_start(GTK_BOX(box), image, TRUE, TRUE, 0);
 	gtk_box_pack_start(GTK_BOX(box), label, TRUE, TRUE, 0);
@@ -1229,7 +1266,7 @@ void handler_webkit_forward (GtkWidget *widget, gpointer data) {
 }
 #endif
 
-void create_gui (void) {
+void create_gui () {
 	GtkWidget *vbox;
 
 	glCanvas = create_gl();
@@ -1245,18 +1282,36 @@ void create_gui (void) {
 	// top-menu
 	GtkWidget *MenuBar = gtk_menu_bar_new();
 	GtkWidget *MenuItem;
-	GtkWidget *FileMenu = gtk_menu_item_new_with_label(_("File"));
+	GtkWidget *FileMenu = gtk_menu_item_new_with_mnemonic(_("_File"));
 	GtkWidget *FileMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(FileMenu), FileMenuList);
 	gtk_menu_bar_append(GTK_MENU_BAR(MenuBar), FileMenu);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Load DXF"));
+        GtkAccelGroup *accel_group = gtk_accel_group_new();
+
+		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Load DXF"));
 		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
+                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+                                           GDK_o, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                
+		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Reload DXF"));
+		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_reload_dxf), NULL);
+                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+                                           GDK_r, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                
+		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output As.."));
+		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
+                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+                                           GDK_s, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Save Output"));
+		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output"));
 		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode), NULL);
+                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+                                           GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 		MenuItem = gtk_menu_item_new_with_label(_("Load Tooltable"));
 		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
@@ -1274,12 +1329,16 @@ void create_gui (void) {
 		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_setup), NULL);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Quit"));
+		MenuItem = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel_group);
 		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_destroy), NULL);
 
+                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+                                           GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+                
 
-	GtkWidget *HelpMenu = gtk_menu_item_new_with_label(_("Help"));
+
+	GtkWidget *HelpMenu = gtk_menu_item_new_with_mnemonic(_("_Help"));
 	GtkWidget *HelpMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(HelpMenu), HelpMenuList);
 	gtk_menu_bar_append(GTK_MENU_BAR(MenuBar), HelpMenu);
@@ -1296,6 +1355,16 @@ void create_gui (void) {
 	gtk_tool_item_set_tooltip_text(ToolItemLoadDXF, _("Load DXF"));
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemLoadDXF, -1);
 	g_signal_connect(G_OBJECT(ToolItemLoadDXF), "clicked", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
+
+	GtkToolItem *ToolItemReloadDXF = gtk_tool_button_new_from_stock(GTK_STOCK_REFRESH);
+	gtk_tool_item_set_tooltip_text(ToolItemReloadDXF, _("Reload DXF"));
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemReloadDXF, -1);
+	g_signal_connect(G_OBJECT(ToolItemReloadDXF), "clicked", GTK_SIGNAL_FUNC(handler_reload_dxf), NULL);
+
+	GtkToolItem *ToolItemSaveAsGcode = gtk_tool_button_new_from_stock(GTK_STOCK_SAVE_AS);
+	gtk_tool_item_set_tooltip_text(ToolItemSaveAsGcode, _("Save Output As.."));
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSaveAsGcode, -1);
+	g_signal_connect(G_OBJECT(ToolItemSaveAsGcode), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
 
 	GtkToolItem *ToolItemSaveGcode = gtk_tool_button_new_from_stock(GTK_STOCK_SAVE);
 	gtk_tool_item_set_tooltip_text(ToolItemSaveGcode, _("Save Output"));
@@ -1315,7 +1384,7 @@ void create_gui (void) {
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemLoadPreset, -1);
 	g_signal_connect(G_OBJECT(ToolItemLoadPreset), "clicked", GTK_SIGNAL_FUNC(handler_load_preset), NULL);
 
-	GtkToolItem *ToolItemSavePreset = gtk_tool_button_new_from_stock(GTK_STOCK_SAVE);
+	GtkToolItem *ToolItemSavePreset = gtk_tool_button_new_from_stock(GTK_STOCK_SAVE_AS);
 	gtk_tool_item_set_tooltip_text(ToolItemSavePreset, _("Save Preset"));
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSavePreset, -1);
 	g_signal_connect(G_OBJECT(ToolItemSavePreset), "clicked", GTK_SIGNAL_FUNC(handler_save_preset), NULL);
@@ -1624,7 +1693,11 @@ void create_gui (void) {
 	DIR *dir;
 	n = 0;
 	struct dirent *ent;
-	if ((dir = opendir("posts/")) != NULL) {
+
+        char dir_posts[PATH_MAX];
+        snprintf(dir_posts, PATH_MAX, "%s%s", path, "posts/");
+
+	if ((dir = opendir(dir_posts)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
 				char *pname = suffix_remove(ent->d_name);
@@ -1654,11 +1727,11 @@ void create_gui (void) {
 	}
 */
 
-	g_signal_connect(G_OBJECT(ParamButton[P_MFILE]), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode), NULL);
+	g_signal_connect(G_OBJECT(ParamButton[P_MFILE]), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_TOOL_TABLE]), "clicked", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_V_DXF]), "clicked", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
 
-	MaterialLoadList();
+	MaterialLoadList(path);
 	ToolLoadTable();
 
 	ParameterUpdate();
@@ -1839,7 +1912,10 @@ void create_gui (void) {
 	gtk_container_add(GTK_CONTAINER(SizeInfo), SizeInfoLabel);
 	gtk_container_set_border_width(GTK_CONTAINER(SizeInfo), 4);
 
-	GtkWidget *LogoIMG = gtk_image_new_from_file("icons/logo-top.png");
+        char iconfile[PATH_MAX];
+        snprintf(iconfile, PATH_MAX, "%s%s", path, "icons/logo-top.png");
+
+	GtkWidget *LogoIMG = gtk_image_new_from_file(iconfile);
 	GtkWidget *Logo = gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(Logo), LogoIMG);
 	gtk_signal_connect(GTK_OBJECT(Logo), "button_press_event", GTK_SIGNAL_FUNC(handler_about), NULL);
@@ -1859,10 +1935,12 @@ void create_gui (void) {
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "CAMmill 2D");
-
+        gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-	gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf("icons/logo-top.png"));
+
+        snprintf(iconfile, PATH_MAX, "%s%s", path, "icons/logo-top.png");
+	gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf(iconfile));
 
 	gtk_signal_connect(GTK_OBJECT(window), "destroy_event", GTK_SIGNAL_FUNC (handler_destroy), NULL);
 	gtk_signal_connect(GTK_OBJECT(window), "delete_event", GTK_SIGNAL_FUNC (handler_destroy), NULL);
@@ -1877,8 +1955,32 @@ void create_gui (void) {
 */
 }
 
-int main (int argc, char *argv[]) {
+size_t get_executable_path (char* buffer, size_t len) {
+        char* path_end;
 
+        if (readlink ("/proc/self/exe", buffer, len) <= 0)
+                return -1;
+
+        /* Find the last occurence of a forward slash, the path separator.  */
+        path_end = strrchr (buffer, '/');
+        if (path_end == NULL)
+                return -1;
+
+        /* Advance to the character past the last slash.  */
+        ++path_end;
+
+        /* Obtain the directory containing the program by truncating the
+           path after the last slash.  */
+
+        *path_end = '\0';
+        /* The length of the path is the number of characters up through the
+           last slash.  */
+        return (size_t) (path_end - buffer);
+}
+
+int main (int argc, char *argv[]) {
+        get_executable_path (path, sizeof (path));
+        
 	bindtextdomain("cammill", "intl");
 	textdomain("cammill");
 
@@ -1900,7 +2002,7 @@ int main (int argc, char *argv[]) {
 #ifdef USE_POSTCAM
 	strcpy(output_extension, "ngc");
 	strcpy(output_info, "");
-	postcam_init_lua(postcam_plugins[PARAMETER[P_H_POST].vint]);
+	postcam_init_lua(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	postcam_plugin = PARAMETER[P_H_POST].vint;
 	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
 	char tmp_str[1024];

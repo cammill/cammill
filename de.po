@@ -453,6 +453,9 @@ msgstr "Datei"
 msgid "Load DXF"
 msgstr "DXF-Datei laden"
 
+msgid "Reload DXF"
+msgstr "DXF-Datei auffrischen"
+
 msgid "Load Preset"
 msgstr "Voreinstellungen laden"
 
@@ -461,6 +464,9 @@ msgstr "Voreinstellungen speichern"
 
 msgid "Save Output"
 msgstr "Ausgaben speichern"
+
+msgid "Save Output As.."
+msgstr "Ausgaben speichern unter.."
 
 msgid "Load Tooltable"
 msgstr "Werkzeugtabelle laden"
