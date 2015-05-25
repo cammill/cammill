@@ -15,6 +15,7 @@ Features:
 * Post-Processor (with lua-script / compatible with sheetcam-tng)
 * Running under Linux and Mac-OSX (and maybe other Unix-Like Systems)
 * .....
+Missing Features: see #6
 
 Homepage: http://www.multixmedia.org/cammill/
 
