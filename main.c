@@ -532,8 +532,8 @@ void mainloop (void) {
 		fprintf(fd_out, "%s", gcode_buffer);
 		fclose(fd_out);
 		if (PARAMETER[P_POST_CMD].vstr[0] != 0) {
-			char cmd_str[2048];
-			snprintf(cmd_str, 2048, PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
+			char cmd_str[PATH_MAX];
+			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
 			system(cmd_str);
 		}
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
