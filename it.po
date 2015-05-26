@@ -214,10 +214,10 @@ msgid "lasermode, depth=0.0, turn on/off per object"
 msgstr "Modalità Laser, prof.=0.0, acceso/spento per oggetto"
 
 msgid "Climb"
-msgstr "Salita"
+msgstr "Fresatura Concorde"
 
 msgid "reverse milling direction / climb milling"
-msgstr "inverti direzione fresatura / fresatura a salire"
+msgstr "inverte la direzione fresatura / fresatura concorde"
 
 msgid "NoOffsets"
 msgstr "NoOffsets"
