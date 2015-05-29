@@ -1,0 +1,91 @@
+post.ForceExtension("ngc")
+
+function OnAbout(event)
+	ctrl = event:GetTextCtrl()
+	ctrl:AppendText("GRBL post processor\n")
+end
+
+function OnInit()
+	axisX = "X"
+	axisY = "Y"
+	axisZ = "Z"
+	post.Text("G21 (Metric)\n")
+	post.Text("G40 (No Offsets)\n")
+	post.Text("G90 (Absolute-Mode)\n")
+#	if velocityMode == 1 then
+#		post.Text("G64 P")
+#		post.Number(blendingTolerance)
+#	else
+#		post.Text("G61")
+#	end
+	post.Eol()
+	post.ModalNumber("F", feedRate, "0")
+	post.Eol()
+end
+
+function OnFinish()
+	post.Text("M02\n")
+end
+
+function OnRapid()
+	post.ModalText("G00")
+	post.ModalNumber(" "..axisX, endX)
+	post.ModalNumber(" "..axisY, endY)
+	post.ModalNumber(" "..axisZ, endZ)
+	post.Eol()
+end
+
+function OnMove()
+	post.ModalText("G01")
+	post.ModalNumber(" "..axisX, endX)
+	post.ModalNumber(" "..axisY, endY)
+	post.ModalNumber(" "..axisZ, endZ)
+	post.ModalNumber(" F", feedRate, "0")
+	post.Eol()
+end
+
+function OnArc()
+	if(arcAngle <0) then
+		post.ModalText("G03")
+	else
+		post.ModalText("G02")
+	end
+	post.ModalNumber(" "..axisX, endX)
+	post.ModalNumber(" "..axisY, endY)
+	post.ModalNumber(" "..axisZ, endZ)
+	post.Text(" I")
+	post.Number((arcCentreX - currentX))
+	post.Text(" J")
+	post.Number((arcCentreY - currentY))
+	post.ModalNumber(" F", feedRate, "0")
+	post.Eol()
+end
+
+function OnSpindleCW()
+	post.Text("M03")
+	post.ModalNumber(" S", spindleSpeed, "0")
+	post.Eol()
+end
+
+function OnSpindleCCW()
+	post.Text("M04")
+	post.ModalNumber(" S", spindleSpeed, "0")
+	post.Eol()
+end
+
+function OnSpindleOff()
+	post.Text("M05")
+	post.Eol()
+end
+
+function OnNewOperation()
+end
+
+function OnComment()
+	post.Text(" (",commentText,")\n")
+end
+
+function OnToolChange()
+	post.ModalNumber("M6 T", tool, "0")
+	post.Eol()
+end

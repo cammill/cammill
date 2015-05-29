@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Oliver Dippel <oliver@multixmedia.org>, 2014.
 #
+
 msgid ""
 msgstr ""
 "Project-Id-Version: cammill\n"
@@ -14,6 +15,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+
+msgid "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"
+msgstr "Distanza: Fresa-XY=%0.2fmm/Z=%0.2fmm / Muovi-XY=%0.2fmm/Z=%0.2fmm / Tempo>%0.1fmin"
 
 msgid "View"
 msgstr "Vista"
@@ -40,7 +44,7 @@ msgid "Material"
 msgstr "Materiale"
 
 msgid "Objects"
-msgstr "Oggetto"
+msgstr "Oggetti"
 
 msgid "Misc"
 msgstr "Varie"
@@ -52,10 +56,10 @@ msgid "view-zoom"
 msgstr "Vista zoom"
 
 msgid "Helplines"
-msgstr "Linee Guida"
+msgstr "Dimensioni"
 
 msgid "show helplines"
-msgstr "Mostra linee guida"
+msgstr "Mostra Dimensioni"
 
 msgid "ShowGrid"
 msgstr "Mostra Griglia"
@@ -280,7 +284,7 @@ msgid "Fastmove-Speed"
 msgstr "Velocità Rapidi"
 
 msgid "fast-move speed of the maschine, to calculate the milling-time"
-msgstr "Velocità dei rapidi per calcolate il tempo di fresatura"
+msgstr "Velocità dei rapidi per calcolare il tempo di fresatura"
 
 msgid "Post"
 msgstr "Post"
@@ -322,7 +326,7 @@ msgid "object selection"
 msgstr "selezione oggetto"
 
 msgid "Use"
-msgstr "Uso"
+msgstr "Usa Oggetto"
 
 msgid "Overwrite"
 msgstr "Sovrascrivi"
@@ -400,7 +404,7 @@ msgid "VNC-Server port"
 msgstr "VNC-Server Port"
 
 msgid "On/Off"
-msgstr "Acc/Spento"
+msgstr "Sì/No"
 
 msgid "3D-View"
 msgstr "Vista-3D"
@@ -496,7 +500,7 @@ msgid "SVG-Drawings"
 msgstr "Disegni SVG"
 
 msgid "On Open"
-msgstr "Su Aperti"
+msgstr "Su contorni aperti"
 
 msgid "holding-tabs on open contours"
 msgstr "fissaggi su contorni aperti"
@@ -512,3 +516,9 @@ msgstr "All'esterno"
 
 msgid "holding-tabs on outside-contours"
 msgstr "fissaggi sull'esterno del contorno"
+
+msgid "Velocity-Mode"
+msgstr "Controllo Traiettoria G61/G64"
+
+msgid "Velocity-Mode G61/G64 P..."
+msgstr "Controllo Traiettoria G61/G64 P... "
