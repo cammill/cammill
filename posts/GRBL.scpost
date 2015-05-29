@@ -2,8 +2,7 @@ post.ForceExtension("ngc")
 
 function OnAbout(event)
 	ctrl = event:GetTextCtrl()
-	ctrl:AppendText("EMC post processor\n")
-	ctrl:AppendText("(LinuxCNC)\n")
+	ctrl:AppendText("GRBL post processor\n")
 end
 
 function OnInit()
