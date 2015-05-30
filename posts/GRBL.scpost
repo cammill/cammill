@@ -12,12 +12,14 @@ function OnInit()
 	post.Text("G21 (Metric)\n")
 	post.Text("G40 (No Offsets)\n")
 	post.Text("G90 (Absolute-Mode)\n")
-#	if velocityMode == 1 then
-#		post.Text("G64 P")
-#		post.Number(blendingTolerance)
-#	else
-#		post.Text("G61")
-#	end
+--[=====[
+	if velocityMode == 1 then
+		post.Text("G64 P")
+		post.Number(blendingTolerance)
+	else
+		post.Text("G61")
+	end
+--]=====]
 	post.Eol()
 	post.ModalNumber("F", feedRate, "0")
 	post.Eol()
