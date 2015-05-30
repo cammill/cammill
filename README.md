@@ -26,7 +26,7 @@ $ apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev
 ```
 
 ```bash
-$ git clone https://github.com/multigcs/cammill.git
+$ git clone https://github.com/cammill/cammill.git
 $ cd cammill
 $ make
 $ ./cammill test.dxf
