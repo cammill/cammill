@@ -43,7 +43,7 @@ $ port install lua
 ```
 
 ```bash
-$ git clone https://github.com/multigcs/cammill.git
+$ git clone https://github.com/cammill/cammill.git
 $ cd cammill
 $ make -f Makefile.osx
 $ ./cammill test.dxf
