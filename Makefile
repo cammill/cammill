@@ -22,11 +22,11 @@ all: cammill
 
 cammill: main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c dxf.h font.c font.h texture.c
 	mkdir -p intl/de_DE.UTF-8/LC_MESSAGES
-	msgfmt de.po -o intl/de_DE.UTF-8/LC_MESSAGES/cammill.mo
+	msgfmt po/de.po -o intl/de_DE.UTF-8/LC_MESSAGES/cammill.mo
 	mkdir -p intl/it_IT.UTF-8/LC_MESSAGES
-	msgfmt it.po -o intl/it_IT.UTF-8/LC_MESSAGES/cammill.mo
+	msgfmt po/it.po -o intl/it_IT.UTF-8/LC_MESSAGES/cammill.mo
 	mkdir -p intl/fr_FR.UTF-8/LC_MESSAGES
-	msgfmt fr.po -o intl/fr_FR.UTF-8/LC_MESSAGES/cammill.mo
+	msgfmt po/fr.po -o intl/fr_FR.UTF-8/LC_MESSAGES/cammill.mo
 #	gcc -fopenmp -ggdb -Wall -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
 	clang -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
 
