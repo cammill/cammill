@@ -22,7 +22,7 @@ Homepage: http://www.multixmedia.org/cammill/
 ### Compile under Linux (Debian Wheezy/Jessie)
 
 ```bash
-$ apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev
+$ apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
 ```
 
 ```bash
