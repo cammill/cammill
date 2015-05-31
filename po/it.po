@@ -283,7 +283,7 @@ msgstr "punti di fissaggio su griglia-Y"
 msgid "Fastmove-Speed"
 msgstr "Velocità Rapidi"
 
-msgid "fast-move speed of the maschine, to calculate the milling-time"
+msgid "fast-move speed of the machine, to calculate the milling-time"
 msgstr "Velocità dei rapidi per calcolare il tempo di fresatura"
 
 msgid "Post"
@@ -319,7 +319,7 @@ msgstr "Texture"
 msgid "Post-Command"
 msgstr "Post-Command"
 
-msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-maschine)"
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
 msgstr "comando per lanciare uno script dopo aver salvato il gcode (usabile per trasferire il codice alla fresatrice)"
 
 msgid "object selection"

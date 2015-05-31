@@ -279,7 +279,7 @@ msgstr "Y-Raster der Haltelachen"
 msgid "Fastmove-Speed"
 msgstr "Maximale-Geschwindigkeit"
 
-msgid "fast-move speed of the maschine, to calculate the milling-time"
+msgid "fast-move speed of the machine, to calculate the milling-time"
 msgstr "Maximale-Geschwindigkeit zum berechnen der mindest Fräs-Dauer"
 
 msgid "Post"
@@ -315,7 +315,7 @@ msgstr "Texturen"
 msgid "Post-Command"
 msgstr "Post-Befehl"
 
-msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-maschine)"
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
 msgstr "Post-Befehl zum starten eines Befehls nach dem Speichern der Ausgabe-Daten (z.B. zum kopieren der Daten auf eine entfernte CNC-Maschine)"
 
 msgid "object selection"

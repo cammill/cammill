@@ -286,7 +286,7 @@ msgstr "Pas en Y de la table de fraisage"
 msgid "Fastmove-Speed"
 msgstr "Vitesse de deplacement rapide"
 
-msgid "fast-move speed of the maschine, to calculate the milling-time"
+msgid "fast-move speed of the machine, to calculate the milling-time"
 msgstr "Mouvement rapide de la machine, pour estimer le temps d'usinage"
 
 msgid "Post"
@@ -325,7 +325,7 @@ msgstr "Post commande"
 
 msgid ""
 "postcommand to trigger an script after saving the gcode (you can use this to "
-"copy the gcode to your cnc-maschine)"
+"copy the gcode to your cnc-machine)"
 msgstr ""
 "Post-commande pour lancer un script apres avoir sauvegarder le GCODE (Peut "
 "être utilise pour televerser le code a la CNC)"
