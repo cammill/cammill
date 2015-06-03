@@ -8,6 +8,7 @@
 #include <lualib.h>
 #include <dxf.h>
 #include <setup.h>
+#include <linux/limits.h> // for PATH_MAX
 
 extern char output_extension[128];
 extern char output_info[1024];
