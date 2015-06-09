@@ -3,6 +3,7 @@ post.ForceExtension("ngc")
 function OnAbout(event)
 	ctrl = event:GetTextCtrl()
 	ctrl:AppendText("GRBL post processor\n")
+	ctrl:AppendText("(GRBL v 0.9)\n")
 end
 
 function OnInit()
@@ -12,14 +13,15 @@ function OnInit()
 	post.Text("G21 (Metric)\n")
 	post.Text("G40 (No Offsets)\n")
 	post.Text("G90 (Absolute-Mode)\n")
---[=====[
+   	post.Text(" ( GRBL Support only G61 mode )\n")
+   	post.Text(" ( Version < 0.9i build 20150529 )\n")
+   	post.Text(" ( must delete the G61 from this file )\n")
+   	post.Text(" ( otherwise it raise an error )\n")    	
 	if velocityMode == 1 then
-		post.Text("G64 P")
-		post.Number(blendingTolerance)
+		post.Text("G61")
 	else
 		post.Text("G61")
 	end
---]=====]
 	post.Eol()
 	post.ModalNumber("F", feedRate, "0")
 	post.Eol()
@@ -31,17 +33,17 @@ end
 
 function OnRapid()
 	post.ModalText("G00")
-	post.ModalNumber(" "..axisX, endX)
-	post.ModalNumber(" "..axisY, endY)
-	post.ModalNumber(" "..axisZ, endZ)
+	post.ModalNumber(" "..axisX, endX, "0.0000")
+	post.ModalNumber(" "..axisY, endY, "0.0000")
+	post.ModalNumber(" "..axisZ, endZ, "0.0000")
 	post.Eol()
 end
 
 function OnMove()
 	post.ModalText("G01")
-	post.ModalNumber(" "..axisX, endX)
-	post.ModalNumber(" "..axisY, endY)
-	post.ModalNumber(" "..axisZ, endZ)
+	post.ModalNumber(" "..axisX, endX, "0.0000")
+	post.ModalNumber(" "..axisY, endY, "0.0000")
+	post.ModalNumber(" "..axisZ, endZ, "0.0000")
 	post.ModalNumber(" F", feedRate, "0")
 	post.Eol()
 end
@@ -52,9 +54,9 @@ function OnArc()
 	else
 		post.ModalText("G02")
 	end
-	post.ModalNumber(" "..axisX, endX)
-	post.ModalNumber(" "..axisY, endY)
-	post.ModalNumber(" "..axisZ, endZ)
+	post.ModalNumber(" "..axisX, endX, "0.0000")
+	post.ModalNumber(" "..axisY, endY, "0.0000")
+	post.ModalNumber(" "..axisZ, endZ, "0.0000")
 	post.Text(" I")
 	post.Number((arcCentreX - currentX))
 	post.Text(" J")
