@@ -48,3 +48,7 @@ cd cammill
 make -f Makefile.osx
 ./cammill test.dxf
 ```
+
+### IRC
+
+[irc.freenode.org](http://www.freenode.org/) #cammill
