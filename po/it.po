@@ -367,9 +367,6 @@ msgstr "usa fissaggio pezzi"
 msgid "Order"
 msgstr "Ordine"
 
-msgid "milling order"
-msgstr "ordine di fresatura"
-
 msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
 msgstr "Ordine di fresatura (Auto = prima profili interni poi esterni, -1 -> -5 = fresa prima 1 -> 5 = fresa per ultimi)"
 

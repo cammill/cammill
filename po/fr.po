@@ -211,7 +211,7 @@ msgstr "Hauteur de securite"
 msgid "Overcut"
 msgstr "A travers tout"
 
-msgid "overcutting endges"
+msgid "overcutting edges"
 msgstr "Traverser tout"
 
 msgid "Lasermode"
@@ -357,7 +357,7 @@ msgstr "Utilisation d'une table rainuree"
 msgid "Order"
 msgstr "Priorite"
 
-msgid "milling order"
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
 msgstr "Priorite d'usinage"
 
 msgid "Activate"

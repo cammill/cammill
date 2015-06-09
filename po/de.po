@@ -201,10 +201,16 @@ msgstr "Sichere-Z-Position"
 msgid "save move z-position"
 msgstr "Sichere-Bewegungen"
 
+msgid "use this object"
+msgstr "Objekt verwenden"
+
+msgid "override global parameters for this object"
+msgstr "Überschreibe globale Einstellungen"
+
 msgid "Overcut"
 msgstr "Ecken Ausfräsen"
 
-msgid "overcutting endges"
+msgid "overcutting edges"
 msgstr "Ecken Ausfräsen"
 
 msgid "Lasermode"
@@ -214,6 +220,9 @@ msgid "lasermode, depth=0.0, turn on/off per object"
 msgstr "Laser-Modus"
 
 msgid "Climb"
+msgstr "Gleichlauffräsen"
+
+msgid "Climb Milling"
 msgstr "Gleichlauffräsen"
 
 msgid "reverse milling direction / climb milling"
@@ -333,8 +342,14 @@ msgstr "Werkzeugkorrektur"
 msgid "Pocket"
 msgstr "Taschen"
 
+msgid "Pocket cutting"
+msgstr "Taschen-Fräsen"
+
 msgid "Laser"
 msgstr "Laser"
+
+msgid "Laser cutting"
+msgstr "Läser-Schneiden"
 
 msgid "Holding-Tab's"
 msgstr "Halte-Laschen"
@@ -345,7 +360,7 @@ msgstr "Halte-Laschen nutzen"
 msgid "Order"
 msgstr "Reihenfolge"
 
-msgid "milling order"
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
 msgstr "Fräs-Reihenfolge"
 
 msgid "Activate"
