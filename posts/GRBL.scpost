@@ -15,7 +15,7 @@ function OnInit()
 	post.Text("G90 (Absolute-Mode)\n")
         post.Text(" ( GRBL Support only G61 mode )\n")
         post.Text(" ( Version < 0.9i build 20150529 )\n")
-        post.Text(" ( must delete the G61 from this file )\
+        post.Text(" ( must delete the G61 from this file )\n")
         post.Text(" ( otherwise it raise an error )\n")
 	if velocityMode == 1 then
 		post.Text("G61")
