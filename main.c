@@ -458,11 +458,11 @@ void mainloop (void) {
 	}
 	PARAMETER[P_TOOL_SPEED_MAX].vint = (int)(((float)Material[PARAMETER[P_MAT_SELECT].vint].vc * 1000.0) / (PI * (PARAMETER[P_TOOL_DIAMETER].vdouble)));
 	if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 4.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[0] * (float)PARAMETER[P_TOOL_W].vint);
+		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE4] * (float)PARAMETER[P_TOOL_W].vint);
 	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 8.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[1] * (float)PARAMETER[P_TOOL_W].vint);
+		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE8] * (float)PARAMETER[P_TOOL_W].vint);
 	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 12.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[2] * (float)PARAMETER[P_TOOL_W].vint);
+		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE12] * (float)PARAMETER[P_TOOL_W].vint);
 	}
 
 	if (update_post == 1) {
@@ -1157,9 +1157,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	if (n == P_MAT_SELECT) {
 		int mat_num = PARAMETER[P_MAT_SELECT].vint;
 		PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
-		PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[0];
-		PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[1];
-		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[2];
+		PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
+		PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
+		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
 		strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
 	}
 
@@ -1749,9 +1749,9 @@ void create_gui () {
 
 	int mat_num = PARAMETER[P_MAT_SELECT].vint;
 	PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
-	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[0];
-	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[1];
-	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[2];
+	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
+	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
+	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
 	strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
 
 	StatusBar = gtk_statusbar_new();
