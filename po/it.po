@@ -208,7 +208,10 @@ msgstr "salva/muovi posizione Z"
 msgid "Overcut"
 msgstr "Sovrapposizione"
 
-msgid "overcutting endges"
+msgid "admit an internal cutting error due to the tool diameter"
+msgstr "Permetti un errore di fresatura interno dovuto al raggio utensile"
+
+msgid "overcutting edges"
 msgstr "Estendi taglio angoli"
 
 msgid "Lasermode"
@@ -328,8 +331,14 @@ msgstr "selezione oggetto"
 msgid "Use"
 msgstr "Usa Oggetto"
 
+msgid "use this object"
+msgstr "Usa questo oggetto"
+
 msgid "Overwrite"
 msgstr "Sovrascrivi"
+
+msgid "override global parameters for this object"
+msgstr "Utilizza questi parametri invece di quellli predefiniti per questo oggetto"
 
 msgid "Offset"
 msgstr "Offset"
