@@ -208,7 +208,10 @@ msgstr "salva/muovi posizione Z"
 msgid "Overcut"
 msgstr "Sovrapposizione"
 
-msgid "overcutting endges"
+msgid "admit an internal cutting error due to the tool diameter"
+msgstr "Permetti un errore di fresatura interno dovuto al raggio utensile"
+
+msgid "overcutting edges"
 msgstr "Estendi taglio angoli"
 
 msgid "Lasermode"
@@ -328,8 +331,17 @@ msgstr "selezione oggetto"
 msgid "Use"
 msgstr "Usa Oggetto"
 
+msgid "use this object"
+msgstr "Usa questo oggetto"
+
 msgid "Overwrite"
 msgstr "Sovrascrivi"
+
+msgid "override global parameters for this object"
+msgstr "Utilizza questi parametri invece di quellli predefiniti per questo oggetto"
+
+msgid "Climb Milling"
+msgstr "Fresatura Concorde"
 
 msgid "Offset"
 msgstr "Offset"
@@ -337,8 +349,14 @@ msgstr "Offset"
 msgid "Pocket"
 msgstr "Tasca"
 
+msgid "Pocket cutting"
+msgstr "Fresa una tasca"
+
 msgid "Laser"
 msgstr "Laser"
+
+msgid "Laser cutting"
+msgstr "Taglio Laser"
 
 msgid "Holding-Tab's"
 msgstr "Fissaggio Pezzi"
@@ -351,6 +369,9 @@ msgstr "Ordine"
 
 msgid "milling order"
 msgstr "ordine di fresatura"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "Ordine di fresatura (Auto = prima profili interni poi esterni, -1 -> -5 = fresa prima 1 -> 5 = fresa per ultimi)"
 
 msgid "Activate"
 msgstr "Attiva"
