@@ -6,8 +6,6 @@ enum {
 	FZ_LAST
 };
 
-		
-
 typedef struct{
 	int used;
 	int vc;

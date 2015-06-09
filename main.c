@@ -699,6 +699,34 @@ void handler_rotate_drawing (GtkWidget *widget, gpointer data) {
 	loading = 0;
 }
 
+void handler_flip_x_drawing (GtkWidget *widget, gpointer data) {
+	int num;
+	loading = 1;
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1) {
+			myLINES[num].x1 = size_x - myLINES[num].x1;
+			myLINES[num].x2 = size_x - myLINES[num].x2;
+			myLINES[num].cx = size_x - myLINES[num].cx;
+		}
+	}
+	init_objects();
+	loading = 0;
+}
+
+void handler_flip_y_drawing (GtkWidget *widget, gpointer data) {
+	int num;
+	loading = 1;
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1) {
+			myLINES[num].y1 = size_y - myLINES[num].y1;
+			myLINES[num].y2 = size_y - myLINES[num].y2;
+			myLINES[num].cy = size_y - myLINES[num].cy;
+		}
+	}
+	init_objects();
+	loading = 0;
+}
+
 void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf..."), "reloading dxf...");
 		loading = 1;
@@ -1385,12 +1413,27 @@ void create_gui () {
 	GtkToolItem *ToolItemSep1 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep1, -1); 
 
+	GtkToolItem *TB_Rotate;
+	TB_Rotate = gtk_tool_button_new_from_stock(GTK_STOCK_CONVERT);
+	GtkIconInfo *icon_Rotate = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-rotate-right", 24, 0);
+	TB_Rotate = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_Rotate)), "Rotate");
+	gtk_tool_item_set_tooltip_text(TB_Rotate, "Rotate 90°");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_Rotate, -1);
+	g_signal_connect(G_OBJECT(TB_Rotate), "clicked", GTK_SIGNAL_FUNC(handler_rotate_drawing), NULL);
 
-	GtkToolItem *TB;
-	TB = gtk_tool_button_new_from_stock(GTK_STOCK_CONVERT);
-	gtk_tool_item_set_tooltip_text(TB, "Rotate 90°");
-	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB, -1);
-	g_signal_connect(G_OBJECT(TB), "clicked", GTK_SIGNAL_FUNC(handler_rotate_drawing), NULL);
+	GtkToolItem *TB_FlipX;
+	GtkIconInfo *icon_FlipX = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-flip-horizontal", 24, 0);
+	TB_FlipX = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_FlipX)), "FlipX");
+	gtk_tool_item_set_tooltip_text(TB_FlipX, "Flip X");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipX, -1);
+	g_signal_connect(G_OBJECT(TB_FlipX), "clicked", GTK_SIGNAL_FUNC(handler_flip_x_drawing), NULL);
+
+	GtkToolItem *TB_FlipY;
+	GtkIconInfo *icon_FlipY = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-flip-vertical", 24, 0);
+	TB_FlipY = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_FlipY)), "FlipY");
+	gtk_tool_item_set_tooltip_text(TB_FlipY, "Flip Y");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipY, -1);
+	g_signal_connect(G_OBJECT(TB_FlipY), "clicked", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);
 
 	GtkToolItem *ToolItemSep2 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep2, -1); 
