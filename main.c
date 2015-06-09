@@ -584,7 +584,7 @@ void ToolLoadTable (void) {
 		ssize_t read;
                 char path_tooltable[PATH_MAX];
                 
-                snprintf(path_tooltable, PATH_MAX, "%s%s", path, PARAMETER[P_TOOL_TABLE].vstr);
+                snprintf(path_tooltable, PATH_MAX, "%s", PARAMETER[P_TOOL_TABLE].vstr);
 		tt_fp = fopen(path_tooltable, "r");
 		if (tt_fp == NULL) {
 			fprintf(stderr, "Can not open Tooltable-File: %s\n", PARAMETER[P_TOOL_TABLE].vstr);
@@ -941,7 +941,7 @@ void handler_load_tooltable (GtkWidget *widget, gpointer data) {
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 
 	if (PARAMETER[P_TOOL_TABLE].vstr[0] == 0) {
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "/tmp");
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "./");
 		gtk_file_chooser_set_current_name (GTK_FILE_CHOOSER (dialog), "tool.tbl");
 	} else {
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), PARAMETER[P_TOOL_TABLE].vstr);
