@@ -2709,7 +2709,7 @@ void init_objects (void) {
 	for (object_num = 0; object_num < line_last; object_num++) {
 		if (myOBJECTS[object_num].line[0] != 0) {
 			char tmp_str[128];	
-			sprintf(tmp_str, "Object: #%i (%s)", object_num, myOBJECTS[object_num].layer);
+			snprintf(tmp_str, 128, "%i (%s)", object_num, myOBJECTS[object_num].layer);
 			gtk_list_store_insert_with_values(ListStore[P_O_SELECT], NULL, object_num, 0, NULL, 1, tmp_str, -1);
 		}
 	}
