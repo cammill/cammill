@@ -81,13 +81,12 @@
 </BLOCKQUOTE>
 <HR>
 <H2>Downloads</H2>
-<A href="https://github.com/multigcs/cammill">Sources</A><BR>
+<A href="https://github.com/cammill/cammill">Sources</A><BR>
 <BR>
 To compile under Linux (Debian/Wheezy):
 <PRE>
-apt-get install libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev
-
-git clone https://github.com/multigcs/cammill.git
+apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
+git clone https://github.com/cammill/cammill.git
 cd cammill
 make
 ./cammill test.dxf
@@ -100,7 +99,7 @@ port install gtkglext
 port install gtksourceview2
 port install lua
 
-git clone https://github.com/multigcs/cammill.git
+git clone https://github.com/cammill/cammill.git
 cd cammill
 make -f Makefile.osx
 ./cammill test.dxf
