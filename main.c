@@ -979,10 +979,10 @@ void handler_about (GtkWidget *widget, gpointer data) {
 void handler_draw (GtkWidget *w, GdkEventExpose* e, void *v) {
 }
 
-void handler_scrollwheel (GtkWidget *w, GdkEventButton* e, void *v) {
-	if (e->state == 0) {
+void handler_scrollwheel(GtkWidget * w, GdkEvent* e, GtkWidget *l) {
+	if (e->scroll.direction == GDK_SCROLL_UP) {
 		PARAMETER[P_V_ZOOM].vfloat += 0.1;
-	} else if (e->state == 1) {
+	} else if (e->scroll.direction == GDK_SCROLL_DOWN) {
 		PARAMETER[P_V_ZOOM].vfloat -= 0.1;
 	}
 }
