@@ -1414,7 +1414,6 @@ void create_gui () {
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep1, -1); 
 
 	GtkToolItem *TB_Rotate;
-	TB_Rotate = gtk_tool_button_new_from_stock(GTK_STOCK_CONVERT);
 	GtkIconInfo *icon_Rotate = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-rotate-right", 24, 0);
 	TB_Rotate = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_Rotate)), "Rotate");
 	gtk_tool_item_set_tooltip_text(TB_Rotate, "Rotate 90°");
