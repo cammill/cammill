@@ -12,7 +12,7 @@ install:
 before_script:
   - git clone https://github.com/mxe/mxe.git
   - cd mxe
-  - travis_wait make MXE_TARGETS='i686-w64-mingw32.static' gcc gtk2 lua gtkglext gtksourceview freeglut
+  - travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gcc gtk2 lua gtkglext gtksourceview freeglut
   - export PATH=`pwd`/usr/bin:$PATH
   - cd ..
 
