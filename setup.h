@@ -115,6 +115,8 @@ enum {
 	P_LAST,
 };
 
+extern const char * VERSION;
+
 extern PARA PARAMETER[];
 
 void SetupShow (void);

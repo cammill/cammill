@@ -23,6 +23,8 @@ extern GtkWidget *MiscExpander;
 extern int PannedStat;
 extern int ExpanderStat[20];
 
+const char * VERSION = "0.8.1";
+
 PARA PARAMETER[] = {
 	{"Zoom",	"View",		"-zo",	T_FLOAT,	0,	1.0,	0.0,	"",	0.1,	0.1,	20.0,		"x", 1, 0, "view-zoom", 0, 0, 0},
 	{"Helplines",	"View", 	"-hl",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "show helplines", 0, 0, 0},

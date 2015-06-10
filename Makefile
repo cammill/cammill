@@ -1,8 +1,5 @@
-
-#libwebkitgtk-dev
-#msgfmt de.po -o intl/de_DE.UTF-8/LC_MESSAGES/cammill.mo
-
 HERSHEY_FONTS_DIR = ./
+GIT_VERSION := $(shell git describe --abbrev=6 --always --tags)
 INCLUDES += -I./
 LIBS += -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc `pkg-config gtk+-2.0 --libs` `pkg-config gtk+-2.0 --cflags` `pkg-config gtkglext-x11-1.0 --libs` `pkg-config gtkglext-x11-1.0 --cflags`
 LIBS += `pkg-config gtksourceview-2.0 --libs` `pkg-config gtksourceview-2.0 --cflags`
@@ -11,6 +8,7 @@ LIBS += `pkg-config libg3d --libs` `pkg-config libg3d --cflags`
 #LIBS += `pkg-config gtk-vnc-1.0 --libs` `pkg-config gtk-vnc-1.0 --cflags`
 #LIBS += `pkg-config webkit-1.0 --libs` `pkg-config webkit-1.0 --cflags`
 
+CFLAGS+="-DGIT_VERSION=\"$(GIT_VERSION)\""
 #CFLAGS+="-DGTK_DISABLE_SINGLE_INCLUDES"
 CFLAGS+="-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS+="-DGSEAL_ENABLE"
