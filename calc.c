@@ -86,7 +86,7 @@ extern int object_last;
 extern char postcam_plugins[100][1024];
 extern int postcam_plugin;
 extern int update_post;
-extern char *gcode_buffer;
+extern char *output_buffer;
 extern char output_extension[128];
 extern char output_info[1024];
 extern double mill_distance_xy;
@@ -117,8 +117,6 @@ extern GtkWidget *gCodeViewLabel;
 
 void postcam_load_source (char *plugin);
 GLuint texture_load (char *filename);
-
-
 
 void CALLBACK beginCallback(GLenum which) {
    glBegin(which);
@@ -530,36 +528,6 @@ void draw_line3 (float x1, float y1, float z1, float x2, float y2, float z2) {
 	}
 }
 
-
-
-
-void append_gcode (char *text) {
-#ifdef USE_POSTCAM
-	return;
-#endif
-	if (gcode_buffer == NULL) {
-		int len = strlen(text) + 1;
-		gcode_buffer = (char *)malloc(len);
-		gcode_buffer[0] = 0;
-	} else {
-		int len = strlen(gcode_buffer) + strlen(text) + 1;
-		gcode_buffer = (char *)realloc((void *)gcode_buffer, len);
-	}
-	strcat(gcode_buffer, text);
-}
-
-void append_gcode_new (char *text) {
-	if (gcode_buffer == NULL) {
-		int len = strlen(text) + 1;
-		gcode_buffer = (char *)malloc(len);
-		gcode_buffer[0] = 0;
-	} else {
-		int len = strlen(gcode_buffer) + strlen(text) + 1;
-		gcode_buffer = (char *)realloc((void *)gcode_buffer, len);
-	}
-	strcat(gcode_buffer, text);
-}
-
 void line_invert (int num) {
 	double tempx = myLINES[num].x2;
 	double tempy = myLINES[num].y2;
@@ -917,11 +885,10 @@ void mill_begin (const char* path) {
 	mill_last_x = 0.0;
 	mill_last_y = 0.0;
 	mill_last_z = PARAMETER[P_CUT_SAVE].vdouble;
-	if (gcode_buffer != NULL) {
-		free(gcode_buffer);
-		gcode_buffer = NULL;
+	if (output_buffer != NULL) {
+		free(output_buffer);
+		output_buffer = NULL;
 	}
-#ifdef USE_POSTCAM
 	if (postcam_plugin != PARAMETER[P_H_POST].vint) {
 		postcam_exit_lua();
 		strcpy(output_extension, "ngc");
@@ -968,17 +935,9 @@ void mill_begin (const char* path) {
 		postcam_var_push_string("axisY", "Y");
 	}
 	postcam_var_push_string("axisZ", "Z");
-#else
-	append_gcode("G21 (Metric)\n");
-	append_gcode("G40 (No Offsets)\n");
-	append_gcode("G90 (Absolute-Mode)\n");
-	sprintf(cline, "F%i\n", PARAMETER[P_M_FEEDRATE].vint);
-	append_gcode(cline);
-#endif
 }
 
 void mill_z (int gcmd, double z) {
-#ifdef USE_POSTCAM
 	postcam_var_push_int("feedRate", PARAMETER[P_M_PLUNGE_SPEED].vint);
 	postcam_var_push_double("currentX", _X(mill_last_x));
 	postcam_var_push_double("currentY", _Y(mill_last_y));
@@ -993,22 +952,6 @@ void mill_z (int gcmd, double z) {
 		mill_distance_z += set_positive(z - mill_last_z);
 		postcam_call_function("OnMove");
 	}
-#else
-	char tz_str[128];
-	translateAxisZ(z, tz_str);
-	if (gcmd == 0) {
-		sprintf(cline, "G0%i %s\n", gcmd, tz_str);
-		append_gcode(cline);
-	} else {
-		sprintf(cline, "G0%i %s F%i\n", gcmd, tz_str, PARAMETER[P_M_PLUNGE_SPEED].vint);
-		append_gcode(cline);
-	}
-	if (gcmd == 0) {
-		move_distance_z += set_positive(z - mill_last_z);
-	} else {
-		mill_distance_z += set_positive(z - mill_last_z);
-	}
-#endif
 	if (mill_start_all != 0) {
 		glColor4f(0.0, 1.0, 1.0, 1.0);
 		if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
@@ -1345,24 +1288,13 @@ void mill_objects (void) {
 }
 
 void mill_end (void) {
-#ifdef USE_POSTCAM
 		postcam_call_function("OnSpindleOff");
 		postcam_call_function("OnFinish");
-#else
-		append_gcode("M05 (Spindle-/Laser-Off)\n");
-		append_gcode("M02 (Programm-End)\n");
-#endif
 }
 
 void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, char *comment) {
-#ifndef USE_POSTCAM
-	char tx_str[128];
-	char ty_str[128];
-	char tz_str[128];
-#endif
 	if (comment[0] != 0) {
-		sprintf(cline, "(%s)\n", comment);
-		append_gcode(cline);
+		postcam_comment(comment);
 	}
 	if (gcmd != 0) {
 		int hflag = 0;
@@ -1697,18 +1629,10 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 		}
 		draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
 		if (gcmd == 1) {
-#ifdef USE_POSTCAM
 			postcam_var_push_double("endX", _X(x));
 			postcam_var_push_double("endY", _Y(y));
 			postcam_call_function("OnMove");
-#else
-			translateAxisX(x, tx_str);
-			translateAxisY(y, ty_str);
-			sprintf(cline, "G0%i %s %s F%i\n", gcmd, tx_str, ty_str, feed);
-			append_gcode(cline);
-#endif
 		} else if (gcmd == 2 || gcmd == 3) {
-#ifdef USE_POSTCAM
 			postcam_var_push_double("endX", _X(x));
 			postcam_var_push_double("endY", _Y(y));
 			double e = x - mill_last_x;
@@ -1756,19 +1680,12 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 			}
 			postcam_var_push_double("arcRadius", r);
 			postcam_call_function("OnArc");
-#else
-			translateAxisX(x, tx_str);
-			translateAxisY(y, ty_str);
-			sprintf(cline, "G0%i %s %s R%f F%i\n", gcmd, tx_str, ty_str, r, feed);
-			append_gcode(cline);
-#endif
 		}
 	} else {
 		if (mill_start_all != 0) {
 			glColor4f(0.0, 1.0, 1.0, 1.0);
 			draw_line3((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z);
 		}
-#ifdef USE_POSTCAM
 		postcam_var_push_int("feedRate", feed);
 		postcam_var_push_double("currentX", _X(mill_last_x));
 		postcam_var_push_double("currentY", _Y(mill_last_y));
@@ -1777,12 +1694,6 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 		postcam_var_push_double("endY", _Y(y));
 		postcam_var_push_double("endZ", _Z(mill_last_z));
 		postcam_call_function("OnRapid");
-#else
-		translateAxisX(x, tx_str);
-		translateAxisY(y, ty_str);
-		sprintf(cline, "G00 %s %s\n", tx_str, ty_str);
-		append_gcode(cline);
-#endif
 	}
 	if (gcmd == 0) {
 		move_distance_xy += set_positive(get_len(mill_last_x, mill_last_y, x, y));
@@ -1797,8 +1708,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 
 void mill_drill (double x, double y, double depth, int feed, int object_num, char *comment) {
 	if (comment[0] != 0) {
-		sprintf(cline, "(%s)\n", comment);
-		append_gcode(cline);
+		postcam_comment(comment);
 	}
 	mill_z(1, depth);
 	draw_line(x, y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
@@ -1806,16 +1716,10 @@ void mill_drill (double x, double y, double depth, int feed, int object_num, cha
 }
 
 void mill_circle (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment) {
-#ifndef USE_POSTCAM
-	char tx_str[128];
-	char ty_str[128];
-#endif
 	if (comment[0] != 0) {
-		sprintf(cline, "(%s)\n", comment);
-		append_gcode(cline);
+		postcam_comment(comment);
 	}
 	mill_z(1, depth);
-#ifdef USE_POSTCAM
 	postcam_var_push_int("feedRate", feed);
 	postcam_var_push_double("currentX", _X(mill_last_x));
 	postcam_var_push_double("currentY", _Y(mill_last_y));
@@ -1835,16 +1739,6 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 	postcam_var_push_double("currentX", _X(x + r));
 	postcam_var_push_double("endX", _X(x - r));
 	postcam_call_function("OnArc");
-#else
-	translateAxisX(x + r, tx_str);
-	translateAxisY(y, ty_str);
-	sprintf(cline, "G0%i %s %s R%f F%i\n", gcmd, tx_str, ty_str, r, feed);
-	append_gcode(cline);
-	translateAxisX(x - r, tx_str);
-	translateAxisY(y, ty_str);
-	sprintf(cline, "G0%i %s %s R%f F%i\n", gcmd, tx_str, ty_str, r, feed);
-	append_gcode(cline);
-#endif
 	float an = 0.0;
 	float last_x = x + r;
 	float last_y = y;
@@ -1875,30 +1769,21 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 	// move to
 	if (lasermode == 1) {
 		if (tool_last != 5) {
-#ifdef USE_POSTCAM
+			postcam_call_function("OnSpindleOff");
 			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
 			char tmp_str[1024];
 			sprintf(tmp_str, "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
 			postcam_var_push_string("toolName", tmp_str);
-			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
 			postcam_call_function("OnToolChange");
-#else
-			sprintf(cline, "M6 T%i", PARAMETER[P_TOOL_NUM].vint);
-			append_gcode(cline);
-#endif
+			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
 		}
 		tool_last = PARAMETER[P_TOOL_NUM].vint;
 		mill_xy(0, x, y, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 		mill_z(0, 0.0);
-#ifdef USE_POSTCAM
 		postcam_call_function("OnSpindleCW");
-#else
-		sprintf(cline, "M03 (Laser-On)\n");
-		append_gcode(cline);
-#endif
 	} else {
 		if (tool_last != PARAMETER[P_TOOL_NUM].vint) {
-#ifdef USE_POSTCAM
+			postcam_call_function("OnSpindleOff");
 			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
 			char tmp_str[1024];
 			sprintf(tmp_str, "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
@@ -1907,12 +1792,6 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
 			postcam_call_function("OnToolChange");
 			postcam_call_function("OnSpindleCW");
-#else
-			sprintf(cline, "M6 T%i", PARAMETER[P_TOOL_NUM].vint);
-			append_gcode(cline);
-			sprintf(cline, "M03 S%i", PARAMETER[P_TOOL_SPEED].vint);
-			append_gcode(cline);
-#endif
 		}
 		tool_last = PARAMETER[P_TOOL_NUM].vint;
 		mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
@@ -1920,16 +1799,10 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 	}
 }
 
-
 void mill_move_out (int lasermode, int object_num) {
 	// move out
 	if (lasermode == 1) {
-#ifdef USE_POSTCAM
 		postcam_call_function("OnSpindleOff");
-#else
-		sprintf(cline, "M05 (Laser-Off)\n");
-		append_gcode(cline);
-#endif
 	} else {
 		mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
 	}
@@ -1961,21 +1834,6 @@ void object_draw (FILE *fd_out, int object_num) {
 		glEnd();
 	}
 	if (PARAMETER[P_M_NCDEBUG].vint == 1) {
-		append_gcode("\n");
-		sprintf(cline, "(--------------------------------------------------)\n");
-		append_gcode(cline);
-		sprintf(cline, "(Object: #%i)\n", object_num);
-		append_gcode(cline);
-		sprintf(cline, "(Layer: %s)\n", myOBJECTS[object_num].layer);
-		append_gcode(cline);
-		if (lasermode == 1) {
-			sprintf(cline, "(Laser-Mode: On)\n");
-		} else { 
-			sprintf(cline, "(Depth: %f)\n", mill_depth_real);
-		}
-		append_gcode(cline);
-		append_gcode("(--------------------------------------------------)\n");
-		append_gcode("\n");
 	}
 	if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
 		int lnum = myOBJECTS[object_num].line[0];
@@ -2039,16 +1897,19 @@ void object_draw (FILE *fd_out, int object_num) {
 				if (num == 0) {
 					if (lasermode == 1) {
 						if (tool_last != 5) {
-							sprintf(cline, "M06 T%i (Change-Tool / Laser-Mode)\n", 5);
-							append_gcode(cline);
+							postcam_call_function("OnSpindleOff");
+							postcam_var_push_int("tool", 5);
+							char tmp_str[1024];
+							sprintf(tmp_str, "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+							postcam_var_push_string("toolName", tmp_str);
+							postcam_call_function("OnToolChange");
 						}
 						tool_last = 5;
 					}
 					mill_xy(0, myLINES[lnum].x1, myLINES[lnum].y1, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 					if (lasermode == 1) {
 						mill_z(0, 0.0);
-						sprintf(cline, "M03 (Laser-On)\n");
-						append_gcode(cline);
+						postcam_call_function("OnSpindleCW");
 					}
 				}
 				if (myLINES[lnum].type == TYPE_ARC || myLINES[lnum].type == TYPE_CIRCLE) {
@@ -2225,7 +2086,6 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 							mill_move_in(first_x, first_y, depth, lasermode, object_num);
 							mill_start = 1;
 						}
-						append_gcode("\n");
 						mill_z(1, depth);
 
 						if (myOBJECTS[object_num].climb == 0) {
@@ -2289,7 +2149,6 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 							last_x = first_x;
 							last_y = first_y;
 						}
-						append_gcode("\n");
 						mill_z(1, depth);
 						if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
 							double adx = myLINES[lnum2].x1 - px;
@@ -2351,7 +2210,6 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 					first_y = myLINES[lnum2].y1;
 					mill_move_in(first_x, first_y, depth, lasermode, object_num);
 					mill_start = 1;
-					append_gcode("\n");
 					mill_z(1, depth);
 				}
 				double alpha1 = line_angle2(lnum1);
@@ -2373,12 +2231,12 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 						}
 						if (alpha_diff > PARAMETER[P_H_KNIFEMAXANGLE].vdouble || alpha_diff < -PARAMETER[P_H_KNIFEMAXANGLE].vdouble) {
 							mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
-							sprintf(cline, "  (TAN: %f)\n", alpha2);
-							append_gcode(cline);
+							sprintf(cline, "TAN: %f\n", alpha2);
+							postcam_comment(cline);
 							mill_z(1, depth);
 						} else {
-							sprintf(cline, "  (TAN: %f)\n", alpha2);
-							append_gcode(cline);
+							sprintf(cline, "TAN: %f\n", alpha2);
+							postcam_comment(cline);
 						}
 					}
 					mill_xy(1, myLINES[lnum2].x2, myLINES[lnum2].y2, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
@@ -2412,7 +2270,6 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 	}
 	*next_x = last_x;
 	*next_y = last_y;
-	append_gcode("\n");
 	if (error > 0) {
 		return;
 	}
@@ -2453,7 +2310,6 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 		mill_pocket(object_num, next_x, next_y);
 	}
 
-#ifdef USE_POSTCAM
 	postcam_comment("--------------------------------------------------");
 	sprintf(cline, "Object: #%i", object_num);
 	postcam_var_push_string("partName", cline);
@@ -2480,7 +2336,6 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	postcam_comment(cline);
 	postcam_comment("--------------------------------------------------");
 	postcam_call_function("OnNewPart");
-#endif
 
 	mill_start = 0;
 

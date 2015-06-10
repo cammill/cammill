@@ -105,7 +105,7 @@ int tools_max = 0;
 char postcam_plugins[100][1024];
 int postcam_plugin = -1;
 int update_post = 1;
-char *gcode_buffer = NULL;
+char *output_buffer = NULL;
 char output_extension[128];
 char output_info[1024];
 char output_error[1024];
@@ -458,11 +458,11 @@ void mainloop (void) {
 	}
 	PARAMETER[P_TOOL_SPEED_MAX].vint = (int)(((float)Material[PARAMETER[P_MAT_SELECT].vint].vc * 1000.0) / (PI * (PARAMETER[P_TOOL_DIAMETER].vdouble)));
 	if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 4.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[0] * (float)PARAMETER[P_TOOL_W].vint);
+		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE4] * (float)PARAMETER[P_TOOL_W].vint);
 	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 8.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[1] * (float)PARAMETER[P_TOOL_W].vint);
+		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE8] * (float)PARAMETER[P_TOOL_W].vint);
 	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 12.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[2] * (float)PARAMETER[P_TOOL_W].vint);
+		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE12] * (float)PARAMETER[P_TOOL_W].vint);
 	}
 
 	if (update_post == 1) {
@@ -485,11 +485,7 @@ void mainloop (void) {
 		GtkTextBuffer *bufferLua;
 		bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
 		gtk_text_buffer_get_bounds(bufferLua, &startLua, &endLua);
-
-#ifdef USE_POSTCAM
 		gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_error);
-#endif
-
 		update_post = 0;
 		GtkTextIter start, end;
 		GtkTextBuffer *buffer;
@@ -497,9 +493,9 @@ void mainloop (void) {
 		gtk_text_buffer_get_bounds(buffer, &start, &end);
 		char *gcode_check = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
 		if (gcode_check != NULL) {
-			if (gcode_buffer != NULL) {
-				if (strcmp(gcode_check, gcode_buffer) != 0) {
-					gtk_text_buffer_set_text(buffer, gcode_buffer, -1);
+			if (output_buffer != NULL) {
+				if (strcmp(gcode_check, output_buffer) != 0) {
+					gtk_text_buffer_set_text(buffer, output_buffer, -1);
 				}
 			} else {
 				gtk_text_buffer_set_text(buffer, "", -1);
@@ -529,7 +525,7 @@ void mainloop (void) {
 			fprintf(stderr, "Can not open file: %s\n", PARAMETER[P_MFILE].vstr);
 			exit(0);
 		}
-		fprintf(fd_out, "%s", gcode_buffer);
+		fprintf(fd_out, "%s", output_buffer);
 		fclose(fd_out);
 		if (PARAMETER[P_POST_CMD].vstr[0] != 0) {
 			char cmd_str[PATH_MAX];
@@ -697,6 +693,34 @@ void handler_rotate_drawing (GtkWidget *widget, gpointer data) {
 			tmp = myLINES[num].cx;
 			myLINES[num].cx = myLINES[num].cy;
 			myLINES[num].cy = size_x - tmp;
+		}
+	}
+	init_objects();
+	loading = 0;
+}
+
+void handler_flip_x_drawing (GtkWidget *widget, gpointer data) {
+	int num;
+	loading = 1;
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1) {
+			myLINES[num].x1 = size_x - myLINES[num].x1;
+			myLINES[num].x2 = size_x - myLINES[num].x2;
+			myLINES[num].cx = size_x - myLINES[num].cx;
+		}
+	}
+	init_objects();
+	loading = 0;
+}
+
+void handler_flip_y_drawing (GtkWidget *widget, gpointer data) {
+	int num;
+	loading = 1;
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1) {
+			myLINES[num].y1 = size_y - myLINES[num].y1;
+			myLINES[num].y2 = size_y - myLINES[num].y2;
+			myLINES[num].cy = size_y - myLINES[num].cy;
 		}
 	}
 	init_objects();
@@ -983,10 +1007,10 @@ void handler_about (GtkWidget *widget, gpointer data) {
 void handler_draw (GtkWidget *w, GdkEventExpose* e, void *v) {
 }
 
-void handler_scrollwheel (GtkWidget *w, GdkEventButton* e, void *v) {
-	if (e->state == 0) {
+void handler_scrollwheel(GtkWidget * w, GdkEvent* e, GtkWidget *l) {
+	if (e->scroll.direction == GDK_SCROLL_UP) {
 		PARAMETER[P_V_ZOOM].vfloat += 0.1;
-	} else if (e->state == 1) {
+	} else if (e->scroll.direction == GDK_SCROLL_DOWN) {
 		PARAMETER[P_V_ZOOM].vfloat -= 0.1;
 	}
 }
@@ -1161,9 +1185,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	if (n == P_MAT_SELECT) {
 		int mat_num = PARAMETER[P_MAT_SELECT].vint;
 		PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
-		PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[0];
-		PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[1];
-		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[2];
+		PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
+		PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
+		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
 		strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
 	}
 
@@ -1389,12 +1413,26 @@ void create_gui () {
 	GtkToolItem *ToolItemSep1 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep1, -1); 
 
+	GtkToolItem *TB_Rotate;
+	GtkIconInfo *icon_Rotate = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-rotate-right", 24, 0);
+	TB_Rotate = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_Rotate)), "Rotate");
+	gtk_tool_item_set_tooltip_text(TB_Rotate, "Rotate 90°");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_Rotate, -1);
+	g_signal_connect(G_OBJECT(TB_Rotate), "clicked", GTK_SIGNAL_FUNC(handler_rotate_drawing), NULL);
 
-	GtkToolItem *TB;
-	TB = gtk_tool_button_new_from_stock(GTK_STOCK_CONVERT);
-	gtk_tool_item_set_tooltip_text(TB, "Rotate 90°");
-	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB, -1);
-	g_signal_connect(G_OBJECT(TB), "clicked", GTK_SIGNAL_FUNC(handler_rotate_drawing), NULL);
+	GtkToolItem *TB_FlipX;
+	GtkIconInfo *icon_FlipX = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-flip-horizontal", 24, 0);
+	TB_FlipX = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_FlipX)), "FlipX");
+	gtk_tool_item_set_tooltip_text(TB_FlipX, "Flip X");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipX, -1);
+	g_signal_connect(G_OBJECT(TB_FlipX), "clicked", GTK_SIGNAL_FUNC(handler_flip_x_drawing), NULL);
+
+	GtkToolItem *TB_FlipY;
+	GtkIconInfo *icon_FlipY = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-flip-vertical", 24, 0);
+	TB_FlipY = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_FlipY)), "FlipY");
+	gtk_tool_item_set_tooltip_text(TB_FlipY, "Flip Y");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipY, -1);
+	g_signal_connect(G_OBJECT(TB_FlipY), "clicked", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);
 
 	GtkToolItem *ToolItemSep2 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep2, -1); 
@@ -1753,9 +1791,9 @@ void create_gui () {
 
 	int mat_num = PARAMETER[P_MAT_SELECT].vint;
 	PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
-	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[0];
-	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[1];
-	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[2];
+	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
+	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
+	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
 	strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
 
 	StatusBar = gtk_statusbar_new();
@@ -1995,7 +2033,6 @@ int main (int argc, char *argv[]) {
 	gtk_gl_init(&argc, &argv);
 	create_gui();
 
-#ifdef USE_POSTCAM
 	strcpy(output_extension, "ngc");
 	strcpy(output_info, "");
 	postcam_init_lua(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
@@ -2005,14 +2042,11 @@ int main (int argc, char *argv[]) {
 	sprintf(tmp_str, "%s (%s)", _("Output"), output_extension);
 	gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
 	postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
-#endif
 
 	gtk_timeout_add(1000/25, handler_periodic_action, NULL);
 	gtk_main ();
 
-#ifdef USE_POSTCAM
 	postcam_exit_lua();
-#endif
 
 	return 0;
 }

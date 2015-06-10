@@ -149,8 +149,6 @@ void mill_pocketline (int object_num, double depth, double *next_x, double *next
 void mill_pocket (int object_num, double *next_x, double *next_y) {
 	char cline[1024];
 	int n = 0;
-
-#ifdef USE_POSTCAM
 	postcam_comment("--------------------------------------------------");
 	sprintf(cline, "Object: #%i", object_num);
 	postcam_var_push_string("partName", cline);
@@ -161,8 +159,6 @@ void mill_pocket (int object_num, double *next_x, double *next_y) {
 	postcam_comment(cline);
 	postcam_comment("--------------------------------------------------");
 	postcam_call_function("OnNewPart");
-#endif
-
 
 #pragma omp parallel
 {

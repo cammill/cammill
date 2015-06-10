@@ -1,8 +1,15 @@
 
+enum {
+	FZ_FEEDFLUTE4,
+	FZ_FEEDFLUTE8,
+	FZ_FEEDFLUTE12,
+	FZ_LAST
+};
+
 typedef struct{
 	int used;
 	int vc;
-	float fz[3];
+	float fz[FZ_LAST];
 	char *texture;
 } _MATERIAL;
 
@@ -20,8 +27,6 @@ void draw_line2 (float x1, float y1, float z1, float x2, float y2, float z2, flo
 void draw_line (float x1, float y1, float z1, float x2, float y2, float z2, float width);
 void draw_line3 (float x1, float y1, float z1, float x2, float y2, float z2);
 
-void append_gcode (char *text);
-void append_gcode_new (char *text);
 void line_invert (int num);
 int point_in_object (int object_num, int object_ex, double testx, double testy);
 int point_in_object_old (int object_num, int object_ex, double testx, double testy);

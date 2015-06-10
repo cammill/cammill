@@ -3,6 +3,8 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
@@ -10,6 +12,7 @@
 #include <setup.h>
 #include <linux/limits.h> // for PATH_MAX
 
+extern char *output_buffer;
 extern char output_extension[128];
 extern char output_info[1024];
 extern char output_error[1024];
@@ -17,7 +20,6 @@ extern char output_error[1024];
 int lua_stat = 0;
 
 lua_State *L;
-void append_gcode (char *text);
 void append_gcode_new (char *text);
 #define A(i)	luaL_checknumber(L,i)
 
@@ -289,8 +291,16 @@ void postcam_comment (char *value) {
 }
 
 static int append_output (lua_State *L) {
-	const char *str = lua_tostring(L, -1);
-	append_gcode_new((char *)str);
+	const char *text = lua_tostring(L, -1);
+	if (output_buffer == NULL) {
+		int len = strlen(text) + 1;
+		output_buffer = (char *)malloc(len);
+		output_buffer[0] = 0;
+	} else {
+		int len = strlen(output_buffer) + strlen(text) + 1;
+		output_buffer = (char *)realloc((void *)output_buffer, len);
+	}
+	strcat(output_buffer, text);
 	return 1;
 }
 
@@ -336,8 +346,8 @@ void postcam_init_lua (const char* path, char *plugin) {
 	postcam_var_push_string("toolName", "");
 	postcam_var_push_string("partName", "");
 
-        char filename[PATH_MAX];
-        snprintf(filename, PATH_MAX, "%s%s", path, "postprocessor.lua");
+	char filename[PATH_MAX];
+	snprintf(filename, PATH_MAX, "%s%s", path, "postprocessor.lua");
 	if (luaL_loadfile(L, filename)) {
 		sprintf(output_error, "FATAL ERROR(postprocessor.lua / 1):\n %s\n\n", lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);
