@@ -90,7 +90,7 @@ char path[PATH_MAX];
 
 char *about1 = "CAMmill 2D";
 char *author1 = "Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>";
-char *author2 = "";
+char *author2 = "improvements by Jakob Flierl <koppi> and Carlo <onekk>";
 char *website = "Website: https://github.com/cammill/cammill\nIRC: #cammill (freenode) ";
 
 
