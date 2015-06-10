@@ -52,7 +52,7 @@ lang:
 	@echo ${PO_MSGFMT} | sh
 
 ${PROGRAM}: ${OBJS}
-	@$(COMP) -o ${PROGRAM} ${OBJS} ${LIBS} ${INCLUDES} ${CFLAGS}
+	$(COMP) -o ${PROGRAM} ${OBJS} ${LIBS} ${INCLUDES} ${CFLAGS}
 
 %.o: %.c
 	$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
