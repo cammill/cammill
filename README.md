@@ -1,4 +1,4 @@
-2D CAM-Tool for Linux and OSX
+2D CAM-Tool for Linux, Windows and OSX
 
 [![Build Status](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
 
