@@ -88,6 +88,12 @@ void texture_init (void);
 // path to cammill executable
 char path[PATH_MAX];
 
+char *about1 = "CAMmill 2D";
+char *author1 = "Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>";
+char *author2 = "";
+char *website = "Website: https://github.com/cammill/cammill\nIRC: #cammill (freenode) ";
+
+
 int winw = 1600;
 int winh = 1200;
 float size_x = 0.0;
@@ -507,7 +513,7 @@ void mainloop (void) {
 		double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
 		milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
 		milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
-		sprintf(tmp_str, "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin", mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
+		sprintf(tmp_str, _("Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"), mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
 		sprintf(tmp_str, "Width=%0.1fmm / Height=%0.1fmm", size_x, size_y);
 		gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
@@ -990,7 +996,9 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
-	GtkWidget *label = gtk_label_new("CAMmill 2D\nCopyright by Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>");
+	char tmp_str[2048];
+    sprintf(tmp_str,"%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s-%s\n",about1,author1,author2,website,VERSION,GIT_VERSION);
+	GtkWidget *label = gtk_label_new(tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
 
         char iconfile[PATH_MAX];
