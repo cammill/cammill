@@ -11,6 +11,8 @@ CFLAGS += -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3
 
 OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o
 
+PKG_CONFIG ?= pkg-config
+
 # GTK+2.0
 PKGS += gtk+-2.0
 PKGS += gtkglext-x11-1.0
@@ -33,8 +35,8 @@ CFLAGS += "-DUSE_G3D"
 #PKGS += webkit-1.0 
 #CFLAGS += "-DUSE_WEBKIT"
 
-LIBS += $(PKGS:%=`pkg-config % --libs`)
-CFLAGS += $(PKGS:%=`pkg-config % --cflags`)
+LIBS += $(PKGS:%=`$(PKG_CONFIG) % --libs`)
+CFLAGS += $(PKGS:%=`$(PKG_CONFIG) % --cflags`)
 
 LANGS += de
 LANGS += it
