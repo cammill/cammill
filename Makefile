@@ -2,6 +2,7 @@
 HERSHEY_FONTS_DIR = ./
 COMP = clang
 PROGRAM = cammill
+INSTALL_PATH = /opt/${PROGRAM}
 
 LIBS += -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./
@@ -66,6 +67,19 @@ clean:
 	rm -rf ${OBJS}
 	rm -rf ${PROGRAM}
 
-
-
+install: ${PROGRAM}
+	mkdir -p ${INSTALL_PATH}
+	cp ${PROGRAM} ${INSTALL_PATH}/${PROGRAM}
+	chmod 755 ${INSTALL_PATH}/${PROGRAM}
+	mkdir -p ${INSTALL_PATH}/posts
+	cp -a posts/* ${INSTALL_PATH}/posts
+	mkdir -p ${INSTALL_PATH}/textures
+	cp -a textures/* ${INSTALL_PATH}/textures
+	mkdir -p ${INSTALL_PATH}/icons
+	cp -a icons/* ${INSTALL_PATH}/icons
+	mkdir -p ${INSTALL_PATH}/fonts
+	cp -a fonts/* ${INSTALL_PATH}/fonts
+	mkdir -p ${INSTALL_PATH}/doc
+	cp -a doc/* ${INSTALL_PATH}/doc
+	cp -a material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf ${INSTALL_PATH}/
 
