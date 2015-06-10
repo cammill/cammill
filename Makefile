@@ -1,39 +1,70 @@
+
 HERSHEY_FONTS_DIR = ./
-INCLUDES += -I./
-LIBS += -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc `pkg-config gtk+-2.0 --libs` `pkg-config gtk+-2.0 --cflags` `pkg-config gtkglext-x11-1.0 --libs` `pkg-config gtkglext-x11-1.0 --cflags`
-LIBS += `pkg-config gtksourceview-2.0 --libs` `pkg-config gtksourceview-2.0 --cflags`
-LIBS += `pkg-config lua5.1 --libs` `pkg-config lua5.1 --cflags`
-LIBS += `pkg-config libg3d --libs` `pkg-config libg3d --cflags`
-#LIBS += `pkg-config gtk-vnc-1.0 --libs` `pkg-config gtk-vnc-1.0 --cflags`
-#LIBS += `pkg-config webkit-1.0 --libs` `pkg-config webkit-1.0 --cflags`
+COMP = clang
+PROGRAM = cammill
 
-#CFLAGS+="-DGTK_DISABLE_SINGLE_INCLUDES"
-CFLAGS+="-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
-CFLAGS+="-DGSEAL_ENABLE"
-CFLAGS+="-DHERSHEY_FONTS_DIR=\"./\""
-CFLAGS+="-DUSE_G3D"
-#CFLAGS+="-DUSE_VNC"
-#CFLAGS+="-DUSE_WEBKIT"
+LIBS += -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc
+CFLAGS += -I./
+CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
+CFLAGS += -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3
 
-all: cammill
+OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o
 
-cammill: main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c dxf.h font.c font.h texture.c
-	mkdir -p intl/de_DE.UTF-8/LC_MESSAGES
-	msgfmt po/de.po -o intl/de_DE.UTF-8/LC_MESSAGES/cammill.mo
-	mkdir -p intl/it_IT.UTF-8/LC_MESSAGES
-	msgfmt po/it.po -o intl/it_IT.UTF-8/LC_MESSAGES/cammill.mo
-	mkdir -p intl/fr_FR.UTF-8/LC_MESSAGES
-	msgfmt po/fr.po -o intl/fr_FR.UTF-8/LC_MESSAGES/cammill.mo
-#	gcc -fopenmp -ggdb -Wall -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
-	clang -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
+# GTK+2.0
+PKGS += gtk+-2.0
+PKGS += gtkglext-x11-1.0
+PKGS += gtksourceview-2.0
+CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
+CFLAGS += "-DGSEAL_ENABLE"
+
+# LUA-5.1
+PKGS += lua5.1
+
+# LIBG3D
+PKGS += libg3d
+CFLAGS += "-DUSE_G3D"
+
+# VNC-1.0
+#PKGS += gtk-vnc-1.0
+#CFLAGS += "-DUSE_VNC"
+
+# WEBKIT-1.0
+#PKGS += webkit-1.0 
+#CFLAGS += "-DUSE_WEBKIT"
+
+LIBS += `$(PKGS:%=pkg-config % --libs)`
+CFLAGS += `$(PKGS:%=pkg-config % --cflags)`
+
+LANGS += de
+LANGS += it
+LANGS += fr
+
+PO_MKDIR = mkdir -p $(foreach PO,$(LANGS),intl/$(PO)_$(shell echo $(PO) | tr "a-z" "A-Z").UTF-8/LC_MESSAGES)
+PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo $(PO) | tr "a-z" "A-Z").UTF-8/LC_MESSAGES/${PROGRAM}.mo\;)
+
+
+all: lang ${PROGRAM}
+
+lang:
+	@echo ${PO_MKDIR}
+	@echo ${PO_MKDIR} | sh
+	@echo ${PO_MSGFMT}
+	@echo ${PO_MSGFMT} | sh
+
+${PROGRAM}: ${OBJS}
+	@$(COMP) -o ${PROGRAM} ${OBJS} ${LIBS} ${INCLUDES} ${CFLAGS}
+
+%.o: %.c
+	$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
 
 gprof:
-	gcc -pg -ggdb -Wall -O3 -o cammill main.c pocket.c calc.c hersheyfont.c postprocessor.c setup.c dxf.c font.c texture.c ${LIBS} ${INCLUDES} ${CFLAGS}
-	@echo "./cammill"
-	@echo "gprof cammill gmon.out"
+	gcc -pg -o ${PROGRAM} ${OBJS} ${LIBS} ${INCLUDES} ${CFLAGS}
+	@echo "./${PROGRAM}"
+	@echo "gprof ${PROGRAM} gmon.out"
 
 clean:
-	rm -rf cammill
+	rm -rf ${OBJS}
+	rm -rf ${PROGRAM}
 
 
 
