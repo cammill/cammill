@@ -21,3 +21,5 @@ notifications:
     channels:
       - "irc.freenode.org#cammill"
     use_notice: true
+git:
+  depth: 5
