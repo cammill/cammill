@@ -86,7 +86,7 @@ void slice_3d (char *file, float z);
 void texture_init (void);
 
 // path to cammill executable
-char path[PATH_MAX];
+char program_path[PATH_MAX];
 
 char *about1 = "CAMmill 2D";
 char *author1 = "Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>";
@@ -174,7 +174,7 @@ GtkWidget *dialog;
 
 void postcam_load_source (char *plugin) {
 	char tmp_str[PATH_MAX];
-	snprintf(tmp_str, PATH_MAX, "%sposts/%s.scpost", path, plugin);
+	snprintf(tmp_str, PATH_MAX, "%sposts/%s.scpost", program_path, plugin);
 	GtkTextBuffer *bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
 	gchar *file_buffer;
 	GError *error;
@@ -482,7 +482,7 @@ void mainloop (void) {
 			}
 		}
 
-		mill_begin(path);
+		mill_begin(program_path);
 		mill_objects();
 		mill_end();
 
@@ -885,7 +885,7 @@ char *suffix_remove (char *mystr) {
 
 void handler_save_lua (GtkWidget *widget, gpointer data) {
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving lua..."), "saving lua...");
-	postcam_save_source(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
+	postcam_save_source(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	postcam_plugin = -1;
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving lua...done"), "saving lua...done");
 }
@@ -1001,8 +1001,8 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	GtkWidget *label = gtk_label_new(tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
 
-        char iconfile[PATH_MAX];
-        snprintf(iconfile, PATH_MAX, "%s%s", path, "icons/logo.png");
+	char iconfile[PATH_MAX];
+	snprintf(iconfile, PATH_MAX, "%s%s", program_path, "icons/logo.png");
 	GtkWidget *image = gtk_image_new_from_file(iconfile);
 	GtkWidget *box = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 	gtk_box_pack_start(GTK_BOX(box), image, TRUE, TRUE, 0);
@@ -1361,8 +1361,7 @@ void create_gui () {
 		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_destroy), NULL);
 
-                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-                                           GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                 
 
 
@@ -1371,10 +1370,9 @@ void create_gui () {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(HelpMenu), HelpMenuList);
 	gtk_menu_bar_append(GTK_MENU_BAR(MenuBar), HelpMenu);
 
-		MenuItem = gtk_menu_item_new_with_label(_("About"));
-		gtk_menu_append(GTK_MENU(HelpMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_about), NULL);
-
+	MenuItem = gtk_menu_item_new_with_label(_("About"));
+	gtk_menu_append(GTK_MENU(HelpMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_about), NULL);
 
 	GtkWidget *ToolBar = gtk_toolbar_new();
 	gtk_toolbar_set_style(GTK_TOOLBAR(ToolBar), GTK_TOOLBAR_ICONS);
@@ -1687,8 +1685,6 @@ void create_gui () {
 	/* import DXF */
 	loading = 1;
 	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
-
-
 #ifdef USE_G3D
 		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
@@ -1698,12 +1694,10 @@ void create_gui () {
 #else
 		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
-
 	}
 	init_objects();
 //	LayerLoadList();
 	loading = 0;
-
 
 	gtk_list_store_insert_with_values(ListStore[P_O_OFFSET], NULL, -1, 0, NULL, 1, _("None"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_OFFSET], NULL, -1, 0, NULL, 1, _("Inside"), -1);
@@ -1735,10 +1729,8 @@ void create_gui () {
 	DIR *dir;
 	n = 0;
 	struct dirent *ent;
-
-        char dir_posts[PATH_MAX];
-        snprintf(dir_posts, PATH_MAX, "%s%s", path, "posts/");
-
+	char dir_posts[PATH_MAX];
+	snprintf(dir_posts, PATH_MAX, "%s%s", program_path, "posts/");
 	if ((dir = opendir(dir_posts)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
@@ -1773,7 +1765,7 @@ void create_gui () {
 	g_signal_connect(G_OBJECT(ParamButton[P_TOOL_TABLE]), "clicked", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_V_DXF]), "clicked", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
 
-	MaterialLoadList(path);
+	MaterialLoadList(program_path);
 	ToolLoadTable();
 
 	ParameterUpdate();
@@ -1878,7 +1870,6 @@ void create_gui () {
 	GtkSourceLanguage *langLua = gtk_source_language_manager_get_language(manager, "lua");
 	gtk_source_buffer_set_language(GTK_SOURCE_BUFFER(bufferLua), langLua);
 
-
 	GtkWidget *NbBox2 = gtk_table_new(2, 2, FALSE);
 	GtkWidget *notebook2 = gtk_notebook_new();
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook2), GTK_POS_TOP);
@@ -1948,26 +1939,23 @@ void create_gui () {
 	gtk_paned_pack2(GTK_PANED(hbox), NbBox2, TRUE, TRUE);
 	gtk_paned_set_position(GTK_PANED(hbox), PannedStat);
 
-
 	SizeInfoLabel = gtk_label_new("Width=0mm / Height=0mm");
 	GtkWidget *SizeInfo = gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(SizeInfo), SizeInfoLabel);
 	gtk_container_set_border_width(GTK_CONTAINER(SizeInfo), 4);
 
-        char iconfile[PATH_MAX];
-        snprintf(iconfile, PATH_MAX, "%s%s", path, "icons/logo-top.png");
+	char iconfile[PATH_MAX];
+	snprintf(iconfile, PATH_MAX, "%s%s", program_path, "icons/logo-top.png");
 
 	GtkWidget *LogoIMG = gtk_image_new_from_file(iconfile);
 	GtkWidget *Logo = gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(Logo), LogoIMG);
 	gtk_signal_connect(GTK_OBJECT(Logo), "button_press_event", GTK_SIGNAL_FUNC(handler_about), NULL);
 
-
 	GtkWidget *topBox = gtk_hbox_new(0, 0);
 	gtk_box_pack_start(GTK_BOX(topBox), ToolBar, 1, 1, 0);
 	gtk_box_pack_start(GTK_BOX(topBox), SizeInfo, 0, 0, 0);
 	gtk_box_pack_start(GTK_BOX(topBox), Logo, 0, 0, 0);
-
 
 	vbox = gtk_vbox_new(0, 0);
 	gtk_box_pack_start(GTK_BOX(vbox), MenuBar, 0, 0, 0);
@@ -1981,7 +1969,7 @@ void create_gui () {
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
-        snprintf(iconfile, PATH_MAX, "%s%s", path, "icons/logo-top.png");
+	snprintf(iconfile, PATH_MAX, "%s%s", program_path, "icons/logo-top.png");
 	gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf(iconfile));
 
 	gtk_signal_connect(GTK_OBJECT(window), "destroy_event", GTK_SIGNAL_FUNC (handler_destroy), NULL);
@@ -1998,31 +1986,34 @@ void create_gui () {
 }
 
 size_t get_executable_path (char* buffer, size_t len) {
-        char* path_end;
+	char *path_end;
 
-        if (readlink ("/proc/self/exe", buffer, len) <= 0)
-                return -1;
+	if (readlink("/proc/self/exe", buffer, len) <= 0) {
+		return -1;
+	}
 
-        /* Find the last occurence of a forward slash, the path separator.  */
-        path_end = strrchr (buffer, '/');
-        if (path_end == NULL)
-                return -1;
+	/* Find the last occurence of a forward slash, the path separator.  */
+	path_end = strrchr (buffer, '/');
+	if (path_end == NULL) {
+		return -1;
+	}
 
-        /* Advance to the character past the last slash.  */
-        ++path_end;
+	/* Advance to the character past the last slash.  */
+	++path_end;
 
-        /* Obtain the directory containing the program by truncating the
-           path after the last slash.  */
+	/* Obtain the directory containing the program by truncating the
+	path after the last slash.  */
 
-        *path_end = '\0';
-        /* The length of the path is the number of characters up through the
-           last slash.  */
-        return (size_t) (path_end - buffer);
+	*path_end = '\0';
+	/* The length of the path is the number of characters up through the
+	last slash.  */
+	return (size_t)(path_end - buffer);
 }
 
 int main (int argc, char *argv[]) {
-        get_executable_path (path, sizeof (path));
-        
+
+	get_executable_path(program_path, sizeof(program_path));
+
 	bindtextdomain("cammill", "intl");
 	textdomain("cammill");
 
@@ -2043,7 +2034,7 @@ int main (int argc, char *argv[]) {
 
 	strcpy(output_extension, "ngc");
 	strcpy(output_info, "");
-	postcam_init_lua(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
+	postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	postcam_plugin = PARAMETER[P_H_POST].vint;
 	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
 	char tmp_str[1024];

@@ -2741,8 +2741,8 @@ char *csv_getfield (char *line, int num, char *val) {
 }
 
 void MaterialLoadList (const char* path) {
-        char filename[PATH_MAX];
-        snprintf(filename, PATH_MAX, "%s%s", path, "material.tbl");
+	char filename[PATH_MAX];
+	snprintf(filename, PATH_MAX, "%s%s", path, "material.tbl");
 	FILE *stream = fopen(filename, "r");
 	MaterialMax = 0;
 	if (stream != NULL) {
