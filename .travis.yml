@@ -15,5 +15,9 @@ cache: apt
 script:
   - make
   - make clean
-#notifications:
-#  email:
+notifications:
+  email: false
+  irc:
+    channels:
+      - "irc.freenode.org#cammill"
+    use_notice: true
