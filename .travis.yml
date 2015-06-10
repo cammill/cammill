@@ -1,9 +1,26 @@
 before_install:
   - env | sort
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq update; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -fyq install; fi
+
+install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get install -qq clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew update; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install gtkglext; brew install gtksourceview; brew install lua; fi
+
+before_script:
+  - git clone https://github.com/mxe/mxe.git
+  - cd mxe
+  - travis_wait make MXE_TARGETS='i686-w64-mingw32.static' gcc gtk2 lua gtkglext gtksourceview freeglut
+  - export PATH=`pwd`/usr/bin:$PATH
+  - cd ..
+
+script:
+  - make
+  - make clean
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static- COMP=i686-w64-mingw32.static-gcc PKGS="gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua"; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make clean; fi
+
 os:
   - linux
   - osx
@@ -12,9 +29,6 @@ language:
 compiler:
   - clang
 cache: apt
-script:
-  - make
-  - make clean
 notifications:
   email: false
   irc:

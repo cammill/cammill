@@ -1,22 +1,19 @@
+COMP?=$(CROSS)clang
+PKG_CONFIG=$(CROSS)pkg-config
 
 HERSHEY_FONTS_DIR = ./
-COMP = clang
-PROGRAM = cammill
+PROGRAM ?= cammill
 INSTALL_PATH = /opt/${PROGRAM}
 
-LIBS += -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc
+LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
 CFLAGS += -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3
 
-OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o
-
-PKG_CONFIG ?= pkg-config
+OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o os-hacks.o
 
 # GTK+2.0
-PKGS += gtk+-2.0
-PKGS += gtkglext-x11-1.0
-PKGS += gtksourceview-2.0
+PKGS ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0
 CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS += "-DGSEAL_ENABLE"
 
@@ -24,8 +21,8 @@ CFLAGS += "-DGSEAL_ENABLE"
 PKGS += lua5.1
 
 # LIBG3D
-PKGS += libg3d
-CFLAGS += "-DUSE_G3D"
+#PKGS += libg3d
+#CFLAGS += "-DUSE_G3D"
 
 # VNC-1.0
 #PKGS += gtk-vnc-1.0
@@ -35,7 +32,7 @@ CFLAGS += "-DUSE_G3D"
 #PKGS += webkit-1.0 
 #CFLAGS += "-DUSE_WEBKIT"
 
-LIBS += $(PKGS:%=`$(PKG_CONFIG) % --libs`)
+ALL_LIBS = $(LIBS) $(PKGS:%=`$(PKG_CONFIG) % --libs`)
 CFLAGS += $(PKGS:%=`$(PKG_CONFIG) % --cflags`)
 
 LANGS += de
@@ -55,19 +52,19 @@ lang:
 	@echo ${PO_MSGFMT} | sh
 
 ${PROGRAM}: ${OBJS}
-	$(COMP) -o ${PROGRAM} ${OBJS} ${LIBS} ${INCLUDES} ${CFLAGS}
+		$(COMP) -o ${PROGRAM} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
 
 %.o: %.c
-	$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
+		$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
 
 gprof:
-	gcc -pg -o ${PROGRAM} ${OBJS} ${LIBS} ${INCLUDES} ${CFLAGS}
+	gcc -pg -o ${PROGRAM} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
 	@echo "./${PROGRAM}"
 	@echo "gprof ${PROGRAM} gmon.out"
 
 clean:
 	rm -rf ${OBJS}
-	rm -rf ${PROGRAM}
+	rm -rf ${PROGRAM} {PROGRAM}.exe
 
 install: ${PROGRAM}
 	mkdir -p ${INSTALL_PATH}

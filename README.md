@@ -49,6 +49,24 @@ make -f Makefile.osx
 ./cammill test.dxf
 ```
 
+### Cross-Compile Windows (32 Bit) unter Linux
+
+Compile and install [mxe](http://mxe.cc/):
+```bash
+cd /opt
+git clone https://github.com/mxe/mxe.git
+cd mxe
+make MXE_TARGETS='i686-w64-mingw32.static' gcc gtk2 lua gtkglext gtksourceview freeglut
+export PATH=`pwd`/usr/bin:$PATH
+```
+Cross-compile ```cammill.exe```:
+```
+cd /opt
+git clone https://github.com/cammill/cammill.git
+cd cammill
+make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static- COMP=i686-w64-mingw32.static-gcc PKGS="gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua"
+```
+
 ### IRC
 
 [irc.freenode.org](http://www.freenode.org/) #cammill

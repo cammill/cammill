@@ -1,9 +1,15 @@
 #include <stdlib.h>
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <locale.h>
+
+#include "os-hacks.h"
+#ifndef __MINGW32__
 #include <pwd.h>
+#endif
+
 #include <dxf.h>
 #include <setup.h>
 #include <postprocessor.h>
@@ -196,10 +202,10 @@ void SetupSave (void) {
 	char cfgfile[2048];
 	FILE *cfg_fp;
 	int n = 0;
-	struct passwd *pw = getpwuid(getuid());
-	const char *homedir = pw->pw_dir;
+	char homedir[PATH_MAX];
+        get_home_dir(homedir);
 	setlocale(LC_NUMERIC, "C");
-	sprintf(cfgfile, "%s/.cammill.cfg", homedir);
+	snprintf(cfgfile, PATH_MAX, "%s%s.cammill.cfg", homedir, DIR_SEP);
 	cfg_fp = fopen(cfgfile, "w");
 	if (cfg_fp == NULL) {
 		fprintf(stderr, "Can not write Setup: %s\n", cfgfile);
@@ -280,10 +286,10 @@ void SetupLoad (void) {
 	for (n = 0; n < 20; n++) {
 		ExpanderStat[n] = 0;
 	}
-	struct passwd *pw = getpwuid(getuid());
-	const char *homedir = pw->pw_dir;
+	char homedir[PATH_MAX];
+        get_home_dir(homedir);
 	setlocale(LC_NUMERIC, "C");
-	sprintf(cfgfile, "%s/.cammill.cfg", homedir);
+	snprintf(cfgfile, PATH_MAX, "%s%s.cammill.cfg", homedir, DIR_SEP);
 	cfg_fp = fopen(cfgfile, "r");
 	if (cfg_fp == NULL) {
 //		fprintf(stderr, "Can not read Setup: %s\n", cfgfile);

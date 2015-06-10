@@ -12,6 +12,7 @@ end
  
 post = {}
 post.Text = function (...)
+  local arg={...}
 	for i,v in ipairs(arg) do
 		out = string.format("%s", v)
 		append_output(out)

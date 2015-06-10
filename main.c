@@ -51,6 +51,7 @@
 #endif
 #include <libgen.h>
 #include <math.h>
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <sys/time.h>
@@ -70,12 +71,13 @@ void slice_3d (char *file, float z);
 #include <unistd.h>
 #include <math.h>
 #include <sys/types.h>
-#include <pwd.h>
 #include <dxf.h>
 #include <font.h>
 #include <setup.h>
 #include <postprocessor.h>
 #include <calc.h>
+
+#include "os-hacks.h"
 
 #include <libintl.h>
 #define _(String) gettext(String)
@@ -1364,7 +1366,6 @@ void create_gui () {
 	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                 
 
-
 	GtkWidget *HelpMenu = gtk_menu_item_new_with_mnemonic(_("_Help"));
 	GtkWidget *HelpMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(HelpMenu), HelpMenuList);
@@ -1730,7 +1731,8 @@ void create_gui () {
 	n = 0;
 	struct dirent *ent;
 	char dir_posts[PATH_MAX];
-	snprintf(dir_posts, PATH_MAX, "%s%s", program_path, "posts/");
+	snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "posts");
+        // fprintf(stderr, "postprocessor directory: '%s'\n", dir_posts);
 	if ((dir = opendir(dir_posts)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
@@ -1743,7 +1745,7 @@ void create_gui () {
 		}
 		closedir (dir);
 	} else {
-		fprintf(stderr, "postprocessor directory not found: posts/\n");
+		fprintf(stderr, "postprocessor directory not found: %s\n", dir_posts);
 	}
 
 /*
@@ -1985,31 +1987,6 @@ void create_gui () {
 */
 }
 
-size_t get_executable_path (char* buffer, size_t len) {
-	char *path_end;
-
-	if (readlink("/proc/self/exe", buffer, len) <= 0) {
-		return -1;
-	}
-
-	/* Find the last occurence of a forward slash, the path separator.  */
-	path_end = strrchr (buffer, '/');
-	if (path_end == NULL) {
-		return -1;
-	}
-
-	/* Advance to the character past the last slash.  */
-	++path_end;
-
-	/* Obtain the directory containing the program by truncating the
-	path after the last slash.  */
-
-	*path_end = '\0';
-	/* The length of the path is the number of characters up through the
-	last slash.  */
-	return (size_t)(path_end - buffer);
-}
-
 int main (int argc, char *argv[]) {
 
 	get_executable_path(program_path, sizeof(program_path));
@@ -2034,6 +2011,7 @@ int main (int argc, char *argv[]) {
 
 	strcpy(output_extension, "ngc");
 	strcpy(output_info, "");
+
 	postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	postcam_plugin = PARAMETER[P_H_POST].vint;
 	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);

@@ -64,7 +64,6 @@
 #include <unistd.h>
 #include <math.h>
 #include <sys/types.h>
-#include <pwd.h>
 #include <dxf.h>
 #include <font.h>
 #include <setup.h>
@@ -72,6 +71,7 @@
 #include <calc.h>
 #include <pocket.h>
 
+#include "os-hacks.h"
 
 #define dot(ux,uy,uz,vx,vy,vz) (ux * vx + uy * vy + uz * vz)
 
@@ -2742,7 +2742,7 @@ char *csv_getfield (char *line, int num, char *val) {
 
 void MaterialLoadList (const char* path) {
 	char filename[PATH_MAX];
-	snprintf(filename, PATH_MAX, "%s%s", path, "material.tbl");
+	snprintf(filename, PATH_MAX, "%s%s%s", path, DIR_SEP, "material.tbl");
 	FILE *stream = fopen(filename, "r");
 	MaterialMax = 0;
 	if (stream != NULL) {
@@ -2761,7 +2761,10 @@ void MaterialLoadList (const char* path) {
 			}
 		}
 		fclose(stream);
-	}
+	} else {
+                fprintf(stderr, "unable to open '%s'\n", filename);
+                exit(1);
+        }
 }
 
 void DrawCheckSize (void) {

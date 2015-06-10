@@ -61,7 +61,6 @@
 #include <unistd.h>
 #include <math.h>
 #include <sys/types.h>
-#include <pwd.h>
 #include <dxf.h>
 #include <font.h>
 #include <setup.h>

@@ -1,3 +1,4 @@
+//#define LUA_COMPAT_ALL 1
 #define LUA_COMPAT_MODULE 1
 #define _GNU_SOURCE 1
 #include <math.h>
@@ -10,7 +11,15 @@
 #include <lualib.h>
 #include <dxf.h>
 #include <setup.h>
+#include <assert.h>
+
+#include "os-hacks.h"
+
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <linux/limits.h> // for PATH_MAX
+#endif
 
 extern char *output_buffer;
 extern char output_extension[128];
@@ -233,11 +242,15 @@ static const luaL_Reg R[] = {
 
 
 LUALIB_API int luaopen_mathx(lua_State *L) {
-	luaL_register(L,LUA_MATHLIBNAME,R);
+#if LUA_VERSION_NUM >= 502
+        // TODO fix this for LUA 5.2+
+#else
+        luaL_register(L,LUA_MATHLIBNAME,R);
 	lua_pushnumber(L,INFINITY);
 	lua_setfield(L,-2,"infinity");
 	lua_pushnumber(L,NAN);
 	lua_setfield(L,-2,"nan");
+#endif
 	return 1;
 }
 
@@ -318,7 +331,8 @@ static int set_output_info (lua_State *L) {
 
 void postcam_init_lua (const char* path, char *plugin) {
 	L = luaL_newstate();
-	luaL_openlibs(L);
+
+        luaL_openlibs(L);
 
 	luaopen_mathx(L);
 	lua_register(L, "output_info", set_output_info);  
@@ -347,7 +361,7 @@ void postcam_init_lua (const char* path, char *plugin) {
 	postcam_var_push_string("partName", "");
 
 	char filename[PATH_MAX];
-	snprintf(filename, PATH_MAX, "%s%s", path, "postprocessor.lua");
+	snprintf(filename, PATH_MAX, "%s%s%s", path, DIR_SEP, "postprocessor.lua");
 	if (luaL_loadfile(L, filename)) {
 		sprintf(output_error, "FATAL ERROR(postprocessor.lua / 1):\n %s\n\n", lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);
@@ -362,7 +376,7 @@ void postcam_init_lua (const char* path, char *plugin) {
 	lua_stat = 1;
 
 	char tmp_str[PATH_MAX];
-	snprintf(tmp_str, PATH_MAX, "%sposts/%s.scpost", path, plugin);
+	snprintf(tmp_str, PATH_MAX, "%sposts%s%s.scpost", path, DIR_SEP, plugin);
 	postcam_var_push_string("postfile", tmp_str);
 	postcam_call_function("load_post");
 

@@ -27,6 +27,7 @@
 */
 
 #include <stdlib.h>
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
@@ -39,7 +40,7 @@
 #endif
 #include <locale.h>
 
-
+#include "os-hacks.h" // for getline()
 
 int block = 0;
 double block_x = 0.0;
