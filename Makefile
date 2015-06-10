@@ -32,8 +32,8 @@ CFLAGS += "-DUSE_G3D"
 #PKGS += webkit-1.0 
 #CFLAGS += "-DUSE_WEBKIT"
 
-LIBS += `$(PKGS:%=pkg-config % --libs)`
-CFLAGS += `$(PKGS:%=pkg-config % --cflags)`
+LIBS += $(PKGS:%=`pkg-config % --libs`)
+CFLAGS += $(PKGS:%=`pkg-config % --cflags`)
 
 LANGS += de
 LANGS += it
