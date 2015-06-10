@@ -997,7 +997,7 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	char tmp_str[2048];
-    sprintf(tmp_str,"%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s-%s\n",about1,author1,author2,website,VERSION,GIT_VERSION);
+    sprintf(tmp_str,"%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s\n",about1,author1,author2,website,VERSION);
 	GtkWidget *label = gtk_label_new(tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
 
