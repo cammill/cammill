@@ -15,10 +15,12 @@
 
 #include "os-hacks.h"
 
-#ifdef _WIN32
+#ifdef __linux__
+#include <linux/limits.h> // for PATH_MAX
+#elif _WIN32
 #include <windows.h>
 #else
-#include <linux/limits.h> // for PATH_MAX
+#include <limits.h>
 #endif
 
 extern char *output_buffer;
