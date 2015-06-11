@@ -10,16 +10,16 @@ install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew install gtkglext; brew install gtksourceview; brew install lua; fi
 
 before_script:
-  - git clone https://github.com/mxe/mxe.git
-  - cd mxe
-  - travis_wait 145 make MXE_TARGETS='i686-w64-mingw32.static' gcc
-  - travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gtk2
-  - travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' lua
-  - travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gtkglext
-  - travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gtksourceview
-  - travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' freeglut
-  - export PATH=`pwd`/usr/bin:$PATH
-  - cd ..
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then git clone https://github.com/mxe/mxe.git; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd mxe; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 145 make MXE_TARGETS='i686-w64-mingw32.static' gcc; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gtk2; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' lua; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gtkglext; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' gtksourceview; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static' freeglut; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then export PATH=`pwd`/usr/bin:$PATH; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd ..; fi
 
 script:
   - make
