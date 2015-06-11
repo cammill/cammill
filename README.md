@@ -35,11 +35,11 @@ make
 ### Compile under Mac OS X
 
 ```bash
-port selfupdate
-port upgrade outdated
-port install gtkglext
-port install gtksourceview2
-port install lua
+brew update
+brew install gtkglext
+brew install gtksourceview
+brew install lua gettext
+brew link gettext
 ```
 
 ```bash
