@@ -1,4 +1,4 @@
-2D CAM-Tool for Linux, Windows and OSX
+2D CAM-Tool for Linux, Windows and Mac OS X
 
 [![Build Status](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
 
@@ -32,7 +32,7 @@ make
 ./cammill test.dxf
 ```
 
-### Compile under Mac-OSX
+### Compile under Mac OS X
 
 ```bash
 port selfupdate
