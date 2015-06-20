@@ -35,11 +35,13 @@ make
 ### Compile under Mac OS X
 
 ```bash
+export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig
 brew update
 brew install gtkglext
 brew install gtksourceview
-brew install lua gettext
-brew link gettext
+brew install lua
+brew install gettext
+brew link gettext --force
 ```
 
 ```bash
