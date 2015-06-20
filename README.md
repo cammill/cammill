@@ -47,7 +47,7 @@ brew link gettext --force
 ```bash
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make -f Makefile.osx
+make LIBS="-framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc" PKGS="gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua"
 ./cammill test.dxf
 ```
 
