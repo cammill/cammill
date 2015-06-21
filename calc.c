@@ -2755,16 +2755,26 @@ void MaterialLoadList (const char* path) {
 				Material[MaterialMax].fz[0] = atof(csv_getfield(line, 2, val_str));
 				Material[MaterialMax].fz[1] = atof(csv_getfield(line, 3, val_str));
 				Material[MaterialMax].fz[2] = atof(csv_getfield(line, 4, val_str));
-				Material[MaterialMax].texture = malloc(129);
+				Material[MaterialMax].texture = malloc(strlen(csv_getfield(line, 5, val_str)) + 1);
 				strcpy(Material[MaterialMax].texture, csv_getfield(line, 5, val_str));
 				MaterialMax++;
 			}
 		}
 		fclose(stream);
 	} else {
-                fprintf(stderr, "unable to open '%s'\n", filename);
-                exit(1);
-        }
+		fprintf(stderr, "unable to open '%s'\n", filename);
+		gtk_list_store_insert_with_values(ListStore[P_MAT_SELECT], NULL, -1, 0, NULL, 1, "AL", -1);
+		Material[MaterialMax].vc = 200;
+		Material[MaterialMax].fz[0] = 0.04;
+		Material[MaterialMax].fz[1] = 0.05;
+		Material[MaterialMax].fz[2] = 0.10;
+		Material[MaterialMax].texture = malloc(129);
+		strcpy(Material[MaterialMax].texture, "textures/metal.bmp");
+		MaterialMax++;
+	}
+	if (PARAMETER[P_MAT_SELECT].vint >= MaterialMax) {
+		PARAMETER[P_MAT_SELECT].vint = 0;
+	}
 }
 
 void DrawCheckSize (void) {
