@@ -1,0 +1,44 @@
+#!/usr/bin/tclsh
+#
+#
+
+#(cd /usr/share/nsis/ ; wget -O UltraModernUI_1.00_2010-11-11.zip http://freefr.dl.sourceforge.net/project/ultramodernui/UltraModernUI/UltraModernUI%201.00b2-dev/UltraModernUI_1.00_2010-11-11.zip)
+#(cd /usr/share/nsis/ ; unzip -x UltraModernUI_1.00_2010-11-11.zip)
+
+
+
+proc list_files {DIR} {
+	catch {
+		foreach FILE [glob "$DIR/*"] {
+			set FILE2 [string replace $FILE 0 1 ""]
+			set FILE2 [string map "/ \\" $FILE2]
+			if {! [file isdir $FILE]} {
+				if {$FILE2 != "installer.nsis"} {
+					puts "  File $FILE2"
+				}
+			}
+		}
+		foreach FILE [glob "$DIR/*"] {
+			set FILE2 [string replace $FILE 0 1 ""]
+			set FILE2 [string map "/ \\" $FILE2]
+			if {[file isdir $FILE]} {
+				puts " SetOutPath \"\$INSTDIR\\$FILE2\""
+				list_files "$FILE"
+			}
+		}
+	}
+}
+
+set fp [open "../../utils/create-win-installer.pre" r]
+puts "[read $fp]"
+close $fp
+
+puts "Section \"install\" install"
+
+puts " SetOutPath \"\$INSTDIR\""
+list_files "./"
+
+set fp [open "../../utils/create-win-installer.post" r]
+puts "[read $fp]"
+close $fp
+

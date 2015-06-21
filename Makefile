@@ -1,9 +1,30 @@
+
+#TARGETS: DEFAULT, MINGW32, OSX
+TARGET ?= DEFAULT
+
+ifeq (${TARGET}, MINGW32)
+	PROGRAM ?= cammill.exe
+	LIBS    ?= -lm -lstdc++ -lgcc
+	CROSS   ?= i686-w64-mingw32.static-
+	COMP    ?= i686-w64-mingw32.static-gcc
+	PKGS    ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
+	INSTALL_PATH ?= Windows/CamMill
+endif
+
+ifeq (${TARGET}, OSX)
+	LIBS    ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
+	PKGS    ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
+    PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
+endif
+
+
+
 COMP?=$(CROSS)clang
 PKG_CONFIG=$(CROSS)pkg-config
 
 HERSHEY_FONTS_DIR = ./
 PROGRAM ?= cammill
-INSTALL_PATH = /opt/${PROGRAM}
+INSTALL_PATH ?= /opt/${PROGRAM}
 
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./
@@ -12,13 +33,10 @@ CFLAGS += -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3
 
 OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o os-hacks.o
 
-# GTK+2.0
-PKGS ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0
+# GTK+2.0 and LUA5.1
+PKGS ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS += "-DGSEAL_ENABLE"
-
-# LUA-5.1
-PKGS += lua5.1
 
 # LIBG3D
 #PKGS += libg3d
@@ -64,7 +82,7 @@ gprof:
 
 clean:
 	rm -rf ${OBJS}
-	rm -rf ${PROGRAM} {PROGRAM}.exe
+	rm -rf ${PROGRAM}
 
 install: ${PROGRAM}
 	mkdir -p ${INSTALL_PATH}
@@ -80,5 +98,11 @@ install: ${PROGRAM}
 	cp -a fonts/* ${INSTALL_PATH}/fonts
 	mkdir -p ${INSTALL_PATH}/doc
 	cp -a doc/* ${INSTALL_PATH}/doc
-	cp -a material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf ${INSTALL_PATH}/
+	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf ${INSTALL_PATH}/
+
+win_installer:
+	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
+	cp icons/icon.ico ${INSTALL_PATH}/icon.ico
+	(cd ${INSTALL_PATH} ; makensis installer.nsis)
+	mv ${INSTALL_PATH}/installer.exe Windows/
 
