@@ -123,8 +123,9 @@ void CALLBACK beginCallback(GLenum which) {
 }
 
 void CALLBACK errorCallback(GLenum errorCode) {
-	const GLubyte *estring;
-	estring = gluErrorString(errorCode);
+	gluErrorString(errorCode);
+//	const GLubyte *estring;
+//	estring = gluErrorString(errorCode);
 //	fprintf(stderr, "Tessellation Error: %s\n", (char *) estring);
 //	exit(0);
 }
@@ -1297,7 +1298,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 		postcam_comment(comment);
 	}
 	if (gcmd != 0) {
-		int hflag = 0;
+//		int hflag = 0;
 		postcam_var_push_int("feedRate", feed);
 		postcam_var_push_double("currentZ", _Z(mill_last_z));
 		postcam_var_push_double("currentX", _X(mill_last_x));
@@ -1344,7 +1345,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha2 + 180);
 								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
 								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, PARAMETER[P_TOOL_DIAMETER].vdouble);
-								hflag = 1;
+//								hflag = 1;
 								postcam_var_push_double("endX", _X(i_x2));
 								postcam_var_push_double("endY", _Y(i_y2));
 								postcam_call_function("OnMove");
@@ -1429,7 +1430,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha2 + 180);
 								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
 								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, PARAMETER[P_TOOL_DIAMETER].vdouble);
-								hflag = 1;
+//								hflag = 1;
 								postcam_var_push_double("endX", _X(i_x2));
 								postcam_var_push_double("endY", _Y(i_y2));
 								postcam_call_function("OnMove");
@@ -1548,7 +1549,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha2 + 180);
 								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
 								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, PARAMETER[P_TOOL_DIAMETER].vdouble);
-								hflag = 1;
+//								hflag = 1;
 								postcam_var_push_double("endX", _X(i_x2));
 								postcam_var_push_double("endY", _Y(i_y2));
 								postcam_call_function("OnMove");
@@ -1810,7 +1811,6 @@ void mill_move_out (int lasermode, int object_num) {
 
 void object_draw (FILE *fd_out, int object_num) {
 	int num = 0;
-	int last = 0;
 	int lasermode = 0;
 	double mill_depth_real = 0.0;
 	char tmp_str[1024];
@@ -1818,12 +1818,6 @@ void object_draw (FILE *fd_out, int object_num) {
 	lasermode = myOBJECTS[object_num].laser;
 	mill_depth_real = myOBJECTS[object_num].depth;
 
-	/* find last line in object */
-	for (num = 0; num < line_last; num++) {
-		if (myOBJECTS[object_num].line[num] != 0) {
-			last = myOBJECTS[object_num].line[num];
-		}
-	}
 	if (PARAMETER[P_O_SELECT].vint == object_num) {
 		glColor4f(1.0, 0.0, 0.0, 0.3);
 		glBegin(GL_QUADS);
