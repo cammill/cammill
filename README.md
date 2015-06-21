@@ -26,6 +26,7 @@ apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev f
 ```
 
 ```bash
+cd /usr/src
 git clone https://github.com/cammill/cammill.git
 cd cammill
 make
@@ -55,7 +56,7 @@ make LIBS="-framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc" PKGS="g
 
 Compile and install [mxe](http://mxe.cc/):
 ```bash
-cd /opt
+cd /usr/src
 git clone https://github.com/mxe/mxe.git
 cd mxe
 make MXE_TARGETS='i686-w64-mingw32.static' gcc gtk2 lua gtkglext gtksourceview freeglut
@@ -63,7 +64,7 @@ export PATH=`pwd`/usr/bin:$PATH
 ```
 Cross-compile ```cammill.exe```:
 ```
-cd /opt
+cd /usr/src
 git clone https://github.com/cammill/cammill.git
 cd cammill
 make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static- COMP=i686-w64-mingw32.static-gcc PKGS="gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua"
