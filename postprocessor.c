@@ -333,9 +333,7 @@ static int set_output_info (lua_State *L) {
 
 void postcam_init_lua (const char* path, char *plugin) {
 	L = luaL_newstate();
-
-        luaL_openlibs(L);
-
+	luaL_openlibs(L);
 	luaopen_mathx(L);
 	lua_register(L, "output_info", set_output_info);  
 	lua_register(L, "append_output", append_output);  

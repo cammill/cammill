@@ -1746,6 +1746,7 @@ void create_gui () {
 		closedir (dir);
 	} else {
 		fprintf(stderr, "postprocessor directory not found: %s\n", dir_posts);
+		PARAMETER[P_H_POST].vint = -1;
 	}
 
 /*
@@ -1832,7 +1833,7 @@ void create_gui () {
 	gtk_box_pack_start(GTK_BOX(textWidgetLuaBox), OutputErrorLabel, 0, 0, 0);
 
 	GtkTextBuffer *bufferLua;
-	const gchar *textLua = "Hallo Lua";
+	const gchar *textLua = "WARNING: No Postprocessor loaded";
 	bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
 	gtk_text_buffer_set_text(bufferLua, textLua, -1);
 
@@ -1849,7 +1850,7 @@ void create_gui () {
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(textWidget), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
 
 	GtkTextBuffer *buffer;
-	const gchar *text = "Hallo Text";
+	const gchar *text = "Hello Text";
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeView));
 	gtk_text_buffer_set_text(buffer, text, -1);
 
@@ -2012,13 +2013,17 @@ int main (int argc, char *argv[]) {
 	strcpy(output_extension, "ngc");
 	strcpy(output_info, "");
 
-	postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
+	if (PARAMETER[P_H_POST].vint != -1) {
+		postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
+	}
 	postcam_plugin = PARAMETER[P_H_POST].vint;
 	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
 	char tmp_str[1024];
 	sprintf(tmp_str, "%s (%s)", _("Output"), output_extension);
 	gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
-	postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
+	if (PARAMETER[P_H_POST].vint != -1) {
+		postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
+	}
 
 	gtk_timeout_add(1000/25, handler_periodic_action, NULL);
 	gtk_main ();

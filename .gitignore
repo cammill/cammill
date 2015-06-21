@@ -7,4 +7,5 @@ cammill
 *.ncb
 *.aps
 *.sdf
+*.exe
 intl/*
