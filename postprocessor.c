@@ -292,7 +292,7 @@ void postcam_call_function (char *name) {
 	int type = lua_type(L, -1);
 	if (type != LUA_TNIL && type == LUA_TFUNCTION) {
 		if (lua_pcall(L, 0, 0, 0)) {
-			sprintf(output_error, "FATAL ERROR (call: %s):\n %s\n\n", name, lua_tostring(L, -1));
+			snprintf(output_error, sizeof(output_error), "FATAL ERROR (call: %s):\n %s\n\n", name, lua_tostring(L, -1));
 			fprintf(stderr, "%s", output_error);
 			lua_stat = 0;
 		}
@@ -327,7 +327,7 @@ static int set_extension (lua_State *L) {
 
 static int set_output_info (lua_State *L) {
 	const char *str = lua_tostring(L, -1);
-	sprintf(output_info, "\n%s", (char *)str);
+	snprintf(output_info, sizeof(output_info), "\n%s", (char *)str);
 	return 1;
 }
 
@@ -367,12 +367,12 @@ void postcam_init_lua (const char* path, char *plugin) {
 		snprintf(filename, PATH_MAX, "%s%s%s", path, DIR_SEP, "postprocessor.lua");
 	}
 	if (luaL_loadfile(L, filename)) {
-		sprintf(output_error, "FATAL ERROR(postprocessor.lua / 1):\n %s\n\n", lua_tostring(L, -1));
+		snprintf(output_error, sizeof(output_error), "FATAL ERROR(postprocessor.lua / 1):\n %s\n\n", lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);
 		lua_stat = 0;
 	}
 	if (lua_pcall(L, 0, 0, 0)) {
-		sprintf(output_error, "FATAL ERROR(postprocessor.lua / 2):\n %s\n\n", lua_tostring(L, -1));
+		snprintf(output_error, sizeof(output_error), "FATAL ERROR(postprocessor.lua / 2):\n %s\n\n", lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);
 		lua_stat = 0;
 	}
@@ -394,7 +394,7 @@ void postcam_init_lua (const char* path, char *plugin) {
 	int type = lua_type(L, -1);
 	if (type != LUA_TNIL && (error = lua_pcall(L, 1, 1, 0))) {
 		int ret_stack = lua_gettop(L);
-		sprintf(output_error, "FATAL ERROR(lua-init):\nstack: %i\nerror: %i\n %s\n\n", ret_stack, error, lua_tostring(L, -1));
+		snprintf(output_error, sizeof(output_error), "FATAL ERROR(lua-init):\nstack: %i\nerror: %i\n %s\n\n", ret_stack, error, lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);
 		lua_stat = 0;
 	} else {

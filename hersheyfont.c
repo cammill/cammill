@@ -211,9 +211,10 @@ hershey_font_load( const char *fontname )
     jhfdir = getenv("HERSHEY_FONTS_DIR");
     if ( !jhfdir )
 	jhfdir = HERSHEY_FONTS_DIR;
-    char *jhffile = malloc(strlen(jhfdir)+1+strlen(fontname)+5);
+    int len = strlen(jhfdir)+1+strlen(fontname)+5;
+    char *jhffile = malloc(len);
     assert(jhffile);
-    sprintf(jhffile, "%s/%s.jhf", jhfdir, fontname);
+    snprintf(jhffile, len, "%s/%s.jhf", jhfdir, fontname);
     struct hershey_font *hf = hershey_jhf_font_load(jhffile);
     free(jhffile);
     return hf;

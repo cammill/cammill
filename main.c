@@ -320,7 +320,7 @@ void draw_helplines (void) {
 		glTranslatef(lenX, -offXYZ, 0.0);
 		glPushMatrix();
 		glTranslatef(-lenX / 2.0, -arrow_d * 2.0 - 11.0, 0.0);
-		sprintf(tmp_str, "%0.2fmm", lenX);
+		snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenX);
 		output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
 		glPopMatrix();
 		glRotatef(-90.0, 0.0, 1.0, 0.0);
@@ -372,7 +372,7 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(arrow_d * 2.0 + 1.0, lenY / 2.0, 0.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
-	sprintf(tmp_str, "%0.2fmm", lenY);
+	snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenY);
 	glPushMatrix();
 	glTranslatef(0.0, 4.0, 0.0);
 	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
@@ -403,7 +403,7 @@ void draw_helplines (void) {
 	glTranslatef(lenX, -offXYZ, 0.0);
 	glPushMatrix();
 	glTranslatef(-lenX / 2.0, -arrow_d * 2.0 - 1.0, 0.0);
-	sprintf(tmp_str, "%0.2fmm", lenX);
+	snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenX);
 	glPushMatrix();
 	glTranslatef(0.0, -4.0, 0.0);
 	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
@@ -435,7 +435,7 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(arrow_d * 2.0 - 1.0, -arrow_d * 2.0 - 1.0, lenZ / 2.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	sprintf(tmp_str, "%0.2fmm", lenZ);
+	snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenZ);
 	glPushMatrix();
 	glTranslatef(0.0, -4.0, 0.0);
 	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
@@ -538,9 +538,9 @@ void mainloop (void) {
 		double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
 		milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
 		milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
-		sprintf(tmp_str, _("Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"), mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
+		snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"), mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
-		sprintf(tmp_str, "Width=%0.1fmm / Height=%0.1fmm", size_x, size_y);
+		snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1fmm / Height=%0.1fmm", size_x, size_y);
 		gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
 		glEndList();
 	}
@@ -654,7 +654,7 @@ void ToolLoadTable (void) {
 		tooltbl_diameters[0] = 1;
 		n = 0;
 		gtk_list_store_clear(ListStore[P_TOOL_SELECT]);
-		sprintf(tmp_str, "FREE");
+		snprintf(tmp_str, sizeof(tmp_str), "FREE");
 		gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
 		n++;
 		while ((read = getline(&line, &len, tt_fp)) != -1) {
@@ -669,7 +669,7 @@ void ToolLoadTable (void) {
 					if (strstr(line2, ";") > 0) {
 						strcpy(tool_descr[tooln], strstr(line2, ";") + 1);
 					}
-					sprintf(tmp_str, "#%i D%0.2fmm (%s)", tooln, tooltbl_diameters[tooln], tool_descr[tooln]);
+					snprintf(tmp_str, sizeof(tmp_str), "#%i D%0.2fmm (%s)", tooln, tooltbl_diameters[tooln], tool_descr[tooln]);
 					gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
 					n++;
 					tools_max++;
@@ -1059,7 +1059,7 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	char tmp_str[2048];
-    sprintf(tmp_str,"%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s\n",about1, author1, author2, website, VERSION);
+	snprintf(tmp_str, sizeof(tmp_str), "%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s\n",about1, author1, author2, website, VERSION);
 	GtkWidget *label = gtk_label_new(tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
 
@@ -1318,21 +1318,21 @@ void ParameterUpdate (void) {
 		}
 	}
 	for (n = 0; n < P_LAST; n++) {
-		sprintf(path, "0:%i:%i", PARAMETER[n].l1, PARAMETER[n].l2);
+		snprintf(path, sizeof(path), "0:%i:%i", PARAMETER[n].l1, PARAMETER[n].l2);
 		if (PARAMETER[n].type == T_FLOAT) {
-			sprintf(value2, "%f", PARAMETER[n].vfloat);
+			snprintf(value2, sizeof(value2), "%f", PARAMETER[n].vfloat);
 		} else if (PARAMETER[n].type == T_DOUBLE) {
-			sprintf(value2, "%f", PARAMETER[n].vdouble);
+			snprintf(value2, sizeof(value2), "%f", PARAMETER[n].vdouble);
 		} else if (PARAMETER[n].type == T_INT) {
-			sprintf(value2, "%i", PARAMETER[n].vint);
+			snprintf(value2, sizeof(value2), "%i", PARAMETER[n].vint);
 		} else if (PARAMETER[n].type == T_SELECT) {
-			sprintf(value2, "%i", PARAMETER[n].vint);
+			snprintf(value2, sizeof(value2), "%i", PARAMETER[n].vint);
 		} else if (PARAMETER[n].type == T_BOOL) {
-			sprintf(value2, "%i", PARAMETER[n].vint);
+			snprintf(value2, sizeof(value2), "%i", PARAMETER[n].vint);
 		} else if (PARAMETER[n].type == T_STRING) {
-			sprintf(value2, "%s", PARAMETER[n].vstr);
+			snprintf(value2, sizeof(value2), "%s", PARAMETER[n].vstr);
 		} else if (PARAMETER[n].type == T_FILE) {
-			sprintf(value2, "%s", PARAMETER[n].vstr);
+			snprintf(value2, sizeof(value2), "%s", PARAMETER[n].vstr);
 		} else {
 			continue;
 		}
@@ -1972,7 +1972,7 @@ void create_gui () {
 		gtk_container_add(GTK_CONTAINER(VncWindow), VncView);
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(VncWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
 		gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), VncWindow, VncLabel);
-		sprintf(port, "%i", PARAMETER[P_O_VNCPORT].vint);
+		snprintf(port, sizeof(port), "%i", PARAMETER[P_O_VNCPORT].vint);
 		vnc_display_open_host(VNC_DISPLAY(VncView), PARAMETER[P_O_VNCSERVER].vstr, port);
 	}
 #endif
@@ -2094,7 +2094,7 @@ int main (int argc, char *argv[]) {
 	postcam_plugin = PARAMETER[P_H_POST].vint;
 	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
 	char tmp_str[1024];
-	sprintf(tmp_str, "%s (%s)", _("Output"), output_extension);
+	snprintf(tmp_str, sizeof(tmp_str), "%s (%s)", _("Output"), output_extension);
 	gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
 	if (PARAMETER[P_H_POST].vint != -1) {
 		postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);

@@ -147,12 +147,12 @@ void mill_pocket (int object_num, double *next_x, double *next_y) {
 	char cline[1024];
 	int n = 0;
 	postcam_comment("--------------------------------------------------");
-	sprintf(cline, "Object: #%i", object_num);
+	snprintf(cline, sizeof(cline), "Object: #%i", object_num);
 	postcam_var_push_string("partName", cline);
 	postcam_comment(cline);
-	sprintf(cline, "Layer: %s", myOBJECTS[object_num].layer);
+	snprintf(cline, sizeof(cline), "Layer: %s", myOBJECTS[object_num].layer);
 	postcam_comment(cline);
-	sprintf(cline, "Pocket-Operation");
+	snprintf(cline, sizeof(cline), "Pocket-Operation");
 	postcam_comment(cline);
 	postcam_comment("--------------------------------------------------");
 	postcam_call_function("OnNewPart");

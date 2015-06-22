@@ -895,7 +895,7 @@ void mill_begin (const char* path) {
 		postcam_init_lua(path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 		postcam_plugin = PARAMETER[P_H_POST].vint;
 		gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
-		sprintf(tmp_str, "Output (%s)", output_extension);
+		snprintf(tmp_str, sizeof(tmp_str), "Output (%s)", output_extension);
 		gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
 		postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
@@ -1771,7 +1771,7 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 			postcam_call_function("OnSpindleOff");
 			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
 			char tmp_str[1024];
-			sprintf(tmp_str, "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
 			postcam_var_push_string("toolName", tmp_str);
 			postcam_call_function("OnToolChange");
 			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
@@ -1785,7 +1785,7 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 			postcam_call_function("OnSpindleOff");
 			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
 			char tmp_str[1024];
-			sprintf(tmp_str, "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
 			postcam_var_push_string("toolName", tmp_str);
 			postcam_var_push_double("endZ", _Z(mill_last_z));
 			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
@@ -1862,7 +1862,7 @@ void object_draw (FILE *fd_out, int object_num) {
 			} else {
 				glColor4f(1.0, 1.0, 1.0, 1.0);
 			}
-			sprintf(tmp_str, "%i", object_num);
+			snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
 			output_text_gl_center(tmp_str, (float)x + (float)r, (float)y, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
 			if (PARAMETER[P_V_HELPLINES].vint == 1) {
 				if (myOBJECTS[object_num].closed == 1 && myOBJECTS[object_num].inside == 0) {
@@ -1895,7 +1895,7 @@ void object_draw (FILE *fd_out, int object_num) {
 							postcam_call_function("OnSpindleOff");
 							postcam_var_push_int("tool", 5);
 							char tmp_str[1024];
-							sprintf(tmp_str, "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+							snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
 							postcam_var_push_string("toolName", tmp_str);
 							postcam_call_function("OnToolChange");
 						}
@@ -1937,7 +1937,7 @@ void object_draw (FILE *fd_out, int object_num) {
 						} else {
 							glColor4f(1.0, 1.0, 1.0, 1.0);
 						}
-						sprintf(tmp_str, "%i", object_num);
+						snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
 						output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
 					}
 				}
@@ -2227,11 +2227,11 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 						}
 						if (alpha_diff > PARAMETER[P_H_KNIFEMAXANGLE].vdouble || alpha_diff < -PARAMETER[P_H_KNIFEMAXANGLE].vdouble) {
 							mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
-							sprintf(cline, "TAN: %f\n", alpha2);
+							snprintf(cline, sizeof(cline), "TAN: %f\n", alpha2);
 							postcam_comment(cline);
 							mill_z(1, depth);
 						} else {
-							sprintf(cline, "TAN: %f\n", alpha2);
+							snprintf(cline, sizeof(cline), "TAN: %f\n", alpha2);
 							postcam_comment(cline);
 						}
 					}
@@ -2308,27 +2308,27 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	}
 
 	postcam_comment("--------------------------------------------------");
-	sprintf(cline, "Object: #%i", object_num);
+	snprintf(cline, sizeof(cline), "Object: #%i", object_num);
 	postcam_var_push_string("partName", cline);
 	postcam_comment(cline);
-	sprintf(cline, "Layer: %s", myOBJECTS[object_num].layer);
+	snprintf(cline, sizeof(cline), "Layer: %s", myOBJECTS[object_num].layer);
 	postcam_comment(cline);
-	sprintf(cline, "Overcut: %i",  overcut);
+	snprintf(cline, sizeof(cline), "Overcut: %i",  overcut);
 	postcam_comment(cline);
 	if (tangencialmode == 1) {
-		sprintf(cline, "Tangencial-Mode: On");
+		snprintf(cline, sizeof(cline), "Tangencial-Mode: On");
 	} else if (lasermode == 1) {
-		sprintf(cline, "Laser-Mode: On");
+		snprintf(cline, sizeof(cline), "Laser-Mode: On");
 	} else { 
-		sprintf(cline, "Depth: %f", mill_depth_real);
+		snprintf(cline, sizeof(cline), "Depth: %f", mill_depth_real);
 	}
 	postcam_comment(cline);
 	if (offset == 0) {
-		sprintf(cline, "Offset: None");
+		snprintf(cline, sizeof(cline), "Offset: None");
 	} else if (offset == 1) {
-		sprintf(cline, "Offset: Inside");
+		snprintf(cline, sizeof(cline), "Offset: Inside");
 	} else {
-		sprintf(cline, "Offset: Outside");
+		snprintf(cline, sizeof(cline), "Offset: Outside");
 	}
 	postcam_comment(cline);
 	postcam_comment("--------------------------------------------------");
