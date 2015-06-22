@@ -255,7 +255,7 @@ void SetupSavePreset (char *cfgfile) {
 	}
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		snprintf(name_str, "%s|%s", sizeof(name_str), PARAMETER[n].group, PARAMETER[n].name);
+		snprintf(name_str, sizeof(name_str), "%s|%s", PARAMETER[n].group, PARAMETER[n].name);
 		if (PARAMETER[n].inpreset == 0) {
 		} else if (PARAMETER[n].type == T_FLOAT) {
 			fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vfloat);
