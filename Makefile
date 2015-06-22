@@ -78,11 +78,6 @@ ${PROGRAM}: ${OBJS}
 %.o: %.c
 		$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
 
-gprof:
-	gcc -pg -o ${PROGRAM} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
-	@echo "./${PROGRAM}"
-	@echo "gprof ${PROGRAM} gmon.out"
-
 clean:
 	rm -rf ${OBJS}
 	rm -rf ${PROGRAM}
@@ -103,14 +98,27 @@ install: ${PROGRAM}
 	cp -a doc/* ${INSTALL_PATH}/doc
 	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
 
+ifeq (${TARGET}, MINGW32)
+
 win_installer: install
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
 	cp icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	mv ${INSTALL_PATH}/installer.exe Windows/
 
+endif
+ifeq (${TARGET}, OSX)
+
 osx_app: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
+
+endif
+ifeq (${TARGET}, DEFAULT)
+
+gprof:
+	gcc -pg -o ${PROGRAM} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
+	@echo "./${PROGRAM}"
+	@echo "gprof ${PROGRAM} gmon.out"
 
 deb: ${PROGRAM}
 	rm -rf debian-package
@@ -155,3 +163,4 @@ deb: ${PROGRAM}
 	dpkg-deb --build debian-package
 	mv debian-package.deb ${PROGRAM}_$(VERSION)-`date +%s`_`dpkg --print-architecture`.deb
 
+endif
