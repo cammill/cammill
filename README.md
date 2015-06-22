@@ -69,6 +69,11 @@ cd cammill
 make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- clean all 
 wine cammill.exe test-minimal.dxf
 ```
+generate installer-package ```cammill-installer.exe```:
+```
+make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- package 
+wine Windows/cammill-installer.exe
+```
 
 ## Compile under FreeBSD (10.0)
 

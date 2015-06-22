@@ -115,6 +115,7 @@ package: install
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
 	cp -p icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
+	rm -rf Windows/*.exe
 	mv ${INSTALL_PATH}/installer.exe Windows/cammill-installer.exe
 
 endif
