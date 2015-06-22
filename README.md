@@ -48,8 +48,7 @@ brew link gettext --force
 ```bash
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make LIBS="-framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc" PKGS="gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua"
-./cammill cammill.dxf
+make TARGET=OSX osx_app
 ```
 
 ### Cross-Compile Windows (32 Bit) under Linux
