@@ -110,4 +110,4 @@ gmake TARGET=OPENBSD clean all
 [irc.freenode.org](http://www.freenode.org/) #cammill
 
 ### Facebook
-[Facebook])https://www.facebook.com/cammill2d)
+[https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
