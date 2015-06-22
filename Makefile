@@ -28,7 +28,7 @@ HERSHEY_FONTS_DIR = ./
 PROGRAM ?= cammill
 INSTALL_PATH ?= /opt/${PROGRAM}
 
-LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -ldl -lXi -lxcb -lXau -lXdmcp -lgcc -lc
+LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
 CFLAGS += -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3
