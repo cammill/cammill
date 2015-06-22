@@ -36,6 +36,9 @@ HERSHEY_FONTS_DIR = ./
 PROGRAM ?= cammill
 INSTALL_PATH ?= /opt/${PROGRAM}
 
+MAINTAINER_NAME  ?= Oliver Dippel
+MAINTAINER_EMAIL ?= oliver@multixmedia.org
+
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
@@ -159,7 +162,7 @@ deb: ${PROGRAM}
 	echo "Source: ${PROGRAM}" >> debian-package/DEBIAN/control
 	echo "Version: $(VERSION)-`date +%s`" >> debian-package/DEBIAN/control
 	echo "Architecture: `dpkg --print-architecture`" >> debian-package/DEBIAN/control
-	echo "Maintainer: Oliver Dippel <oliver@multixmedia.org>" >> debian-package/DEBIAN/control
+	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> debian-package/DEBIAN/control
 	echo "Depends: libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> debian-package/DEBIAN/control
 	echo "Section: graphics" >> debian-package/DEBIAN/control
 	echo "Priority: optional" >> debian-package/DEBIAN/control
@@ -170,5 +173,66 @@ deb: ${PROGRAM}
 	chmod 0755 debian-package/DEBIAN/ -R
 	dpkg-deb --build debian-package
 	mv debian-package.deb ${PROGRAM}_$(VERSION)-`date +%s`_`dpkg --print-architecture`.deb
+
+endif
+ifeq (${TARGET}, FREEBSD)
+
+package: ${PROGRAM}
+	rm -rf freebsd-package
+	mkdir -p freebsd-package
+
+	mkdir -p freebsd-package${INSTALL_PATH}
+	cp ${PROGRAM} freebsd-package${INSTALL_PATH}/${PROGRAM}
+	chmod 755 freebsd-package${INSTALL_PATH}/${PROGRAM}
+	mkdir -p freebsd-package${INSTALL_PATH}/posts
+	cp -p posts/* freebsd-package${INSTALL_PATH}/posts
+	mkdir -p freebsd-package${INSTALL_PATH}/textures
+	cp -p textures/* freebsd-package${INSTALL_PATH}/textures
+	mkdir -p freebsd-package${INSTALL_PATH}/icons
+	cp -p icons/* freebsd-package${INSTALL_PATH}/icons
+	mkdir -p freebsd-package${INSTALL_PATH}/fonts
+	cp -p fonts/* freebsd-package${INSTALL_PATH}/fonts
+	mkdir -p freebsd-package${INSTALL_PATH}/doc
+	cp -p doc/* freebsd-package${INSTALL_PATH}/doc
+	cp -p GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf freebsd-package${INSTALL_PATH}/
+	mkdir -p freebsd-package/usr/local/bin/
+	ln -sf ${INSTALL_PATH}/${PROGRAM} freebsd-package/usr/local/bin/${PROGRAM}
+
+	echo "name: ${PROGRAM}" > freebsd-package/+MANIFEST
+	echo "version: ${VERSION}_0" >> freebsd-package/+MANIFEST
+	echo "origin: graphics" >> freebsd-package/+MANIFEST
+	echo "comment: 2D CAM-Tool (DXF to GCODE)" >> freebsd-package/+MANIFEST
+	echo "arch: i386" >> freebsd-package/+MANIFEST
+	echo "www: http://www.multixmedia.org/cammill/" >> freebsd-package/+MANIFEST
+	echo "maintainer: ${MAINTAINER_EMAIL}" >> freebsd-package/+MANIFEST
+	echo "prefix: /opt" >> freebsd-package/+MANIFEST
+	echo "licenselogic: or" >> freebsd-package/+MANIFEST
+	echo "licenses: [GPL3]" >> freebsd-package/+MANIFEST
+	echo "flatsize: `du -sck freebsd-package/ | tail -n1 | awk '{print $$1}'`" >> freebsd-package/+MANIFEST
+	#echo "users: [USER1, USER2]" >> freebsd-package/+MANIFEST
+	#echo "groups: [GROUP1, GROUP2]" >> freebsd-package/+MANIFEST
+	#echo "options: { OPT1: off, OPT2: on }" >> freebsd-package/+MANIFEST
+	echo "desc: |-" >> freebsd-package/+MANIFEST
+	echo "  2D CAM-Tool for Linux, Windows and Mac OS X" >> freebsd-package/+MANIFEST
+	echo "categories: [graphics]" >> freebsd-package/+MANIFEST
+	#echo "deps:" >> freebsd-package/+MANIFEST
+	#echo "  libiconv: {origin: converters/libiconv, version: 1.13.1_2}" >> freebsd-package/+MANIFEST
+	#echo "  perl: {origin: lang/perl5.12, version: 5.12.4 }" >> freebsd-package/+MANIFEST
+	#freeglut gtkglext gtksourceview2 lua51
+	echo "files: {" >> freebsd-package/+MANIFEST
+	(for F in `find freebsd-package${INSTALL_PATH} freebsd-package/usr/local/bin/${PROGRAM} -type f` ; do echo "  `echo $$F | sed "s|^freebsd-package||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> freebsd-package/+MANIFEST
+	echo "}" >> freebsd-package/+MANIFEST
+	echo "scripts: {" >> freebsd-package/+MANIFEST
+	echo "  pre-install:  {" >> freebsd-package/+MANIFEST
+	echo "    #!/bin/sh" >> freebsd-package/+MANIFEST
+	echo "    echo pre-install" >> freebsd-package/+MANIFEST
+	echo "  }" >> freebsd-package/+MANIFEST
+	echo "  post-install:  {" >> freebsd-package/+MANIFEST
+	echo "    #!/bin/sh" >> freebsd-package/+MANIFEST
+	echo "    echo post-install" >> freebsd-package/+MANIFEST
+	echo "  }" >> freebsd-package/+MANIFEST
+	echo "}" >> freebsd-package/+MANIFEST
+
+	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C freebsd-package/ -czvpPf freebsd-package.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
 
 endif

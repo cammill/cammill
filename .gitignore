@@ -9,7 +9,9 @@ cammill
 *.sdf
 *.exe
 *.deb
+*.tgz
 intl/*
 Windows
 OSX
 debian-package
+freebsd-package
