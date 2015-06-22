@@ -1816,6 +1816,9 @@ void object_draw (FILE *fd_out, int object_num) {
 	lasermode = myOBJECTS[object_num].laser;
 	mill_depth_real = myOBJECTS[object_num].depth;
 
+	glLoadName(object_num);
+
+
 	if (PARAMETER[P_O_SELECT].vint == object_num) {
 		glColor4f(1.0, 0.0, 0.0, 0.3);
 		glBegin(GL_QUADS);
@@ -1963,6 +1966,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 	double first_y = 0.0;
 	double last_x = 0.0;
 	double last_y = 0.0;
+	glLoadName(object_num);
 
 	/* find last line in object */
 	for (num = 0; num < line_last; num++) {
@@ -2292,6 +2296,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	mill_depth_real = myOBJECTS[object_num].depth;
 	overcut = myOBJECTS[object_num].overcut;
 	lasermode = myOBJECTS[object_num].laser;
+	glLoadName(object_num);
 
 	tool_offset = PARAMETER[P_TOOL_DIAMETER].vdouble / 2.0;
 	if (myOBJECTS[object_num].use == 0) {

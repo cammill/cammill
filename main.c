@@ -93,6 +93,9 @@ char *author1 = "Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcu
 char *author2 = "improvements by Jakob Flierl <koppi> and Carlo <onekk>";
 char *website = "Website: https://github.com/cammill/cammill\nIRC: #cammill (freenode) ";
 
+int select_object_flag = 0;
+int select_object_x = 0;
+int select_object_y = 0;
 
 int winw = 1600;
 int winh = 1200;
@@ -447,6 +450,24 @@ void draw_helplines (void) {
 	glPopMatrix();
 }
 
+void select_object (GLint hits, GLuint buffer[]) {
+	unsigned int i, j;
+	GLuint names, *ptr;
+	ptr = (GLuint *) buffer;
+	printf("hits = %d\n", hits);
+	for (i = 0; i < hits; i++) {  /* for each hit  */
+		names = *ptr;
+		printf(" number of names for hit = %d\n", names); ptr++;
+		printf("  z1 is %g;", (float) *ptr/0x7fffffff); ptr++;
+		printf(" z2 is %g\n", (float) *ptr/0x7fffffff); ptr++;
+		printf("   the name is ");
+		for (j = 0; j < names; j++) {  /* for each name */
+			PARAMETER[P_O_SELECT].vint = (int)*ptr;
+			printf("%d ", *ptr); ptr++;
+		}
+		printf("\n");
+	}
+}
 
 void mainloop (void) {
 	char tmp_str[1024];
@@ -546,6 +567,31 @@ void mainloop (void) {
 		onExit();
 		exit(0);
 	} else {
+
+		#define BUFSIZE 512
+		GLuint selectBuf[BUFSIZE];
+		GLint hits;
+		GLint viewport[4];
+		int x = select_object_x;
+		int y = select_object_y;
+
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+
+		if (select_object_flag == 1) {
+			glGetIntegerv(GL_VIEWPORT, viewport);
+			glSelectBuffer(BUFSIZE, selectBuf);
+			glRenderMode(GL_SELECT);
+			glInitNames();
+			glPushName(0);
+			gluPickMatrix((GLdouble)(x), (GLdouble)(viewport[3] - y), 5.0, 5.0, viewport);
+		}
+
+		gluPerspective((M_PI / 4) / M_PI * 180, (float)width / (float)height, 0.1, 1000.0);
+		gluLookAt(0, 0, 6,  0, 0, 0,  0, 1, 0);
+		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
+
 		glClearColor(0, 0, 0, 1);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearDepth(1.0);
@@ -557,6 +603,7 @@ void mainloop (void) {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glPushMatrix();
+
 		glScalef(PARAMETER[P_V_ZOOM].vfloat, PARAMETER[P_V_ZOOM].vfloat, PARAMETER[P_V_ZOOM].vfloat);
 		glScalef(scale, scale, scale);
 		glTranslatef(PARAMETER[P_V_TRANSX].vint, PARAMETER[P_V_TRANSY].vint, 0.0);
@@ -569,7 +616,16 @@ void mainloop (void) {
 		}
 		glCallList(1);
 		glCallList(2);
+		
 		glPopMatrix();
+
+		if (select_object_flag == 1) {
+			glFlush();
+//			printf("## %i %i \n", x , y);
+			hits = glRenderMode(GL_RENDER);
+			select_object(hits, selectBuf);
+			select_object_flag = 0;
+		}
 	}
 	return;
 }
@@ -1029,13 +1085,15 @@ void handler_button_press (GtkWidget *w, GdkEventButton* e, void *v) {
 	int mouseY = e->y;
 	int state = e->state;
 	int button = e->button;;
-
 	if (button == 4 && state == 0) {
 		PARAMETER[P_V_ZOOM].vfloat += 0.05;
 	} else if (button == 5 && state == 0) {
 		PARAMETER[P_V_ZOOM].vfloat -= 0.05;
 	} else if (button == 1) {
 		if (state == 0) {
+			select_object_x = mouseX;
+			select_object_y = mouseY;
+			select_object_flag = 2;
 			last_mouse_x = mouseX - PARAMETER[P_V_TRANSX].vint * 2;
 			last_mouse_y = mouseY - PARAMETER[P_V_TRANSY].vint * -2;
 			last_mouse_button = button;
@@ -1069,13 +1127,19 @@ void handler_button_press (GtkWidget *w, GdkEventButton* e, void *v) {
 
 void handler_button_release (GtkWidget *w, GdkEventButton* e, void *v) {
 //	printf("button_release x=%g y=%g b=%d state=%d\n", e->x, e->y, e->button, e->state);
-	last_mouse_button = -1;
+	last_mouse_button = -1;	
+	if (select_object_flag == 2) {
+		select_object_flag = 1;
+	} else {
+		select_object_flag = 0;
+	}
 }
 
 void handler_motion (GtkWidget *w, GdkEventMotion* e, void *v) {
 //	printf("button_motion x=%g y=%g state=%d\n", e->x, e->y, e->state);
 	int mouseX = e->x;
 	int mouseY = e->y;
+	select_object_flag = 0;
 	if (last_mouse_button == 1) {
 		PARAMETER[P_V_TRANSX].vint = (mouseX - last_mouse_x) / 2;
 		PARAMETER[P_V_TRANSY].vint = (mouseY - last_mouse_y) / -2;
