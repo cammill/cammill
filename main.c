@@ -90,9 +90,9 @@ void texture_init (void);
 char program_path[PATH_MAX];
 
 char *about1 = "CAMmill 2D";
-char *author1 = "Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>";
-char *author2 = "improvements by Jakob Flierl <koppi> and Carlo <onekk>";
-char *website = "Website: https://github.com/cammill/cammill\nIRC: #cammill (FreeNode) ";
+char *author1 = "Oliver Dippel <a href='&lt;oliver@multixmedia.org&gt;'>oliver@multixmedia.org</a>\nOS X port by McUles <a href='&lt;mcules@fpv-club.de&gt;'>mcules@fpv-club.de</a>";
+char *author2 = "improvements by Jakob Flierl <a href='https://github.com/koppi'>@koppi</a> and Carlo <a href='https://github.com/onekk'>@onekk</a>";
+char *website = "Website: <a href='https://github.com/cammill'>https://github.com/cammill</a>\nIRC: #cammill (FreeNode) ";
 
 int select_object_flag = 0;
 int select_object_x = 0;
@@ -1062,6 +1062,8 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	char tmp_str[2048];
 	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s\n\nCopyright by %s\n%s\n\n%s",about1, VERSION, author1, author2, website);
 	GtkWidget *label = gtk_label_new(tmp_str);
+        gtk_label_set_use_markup (label, TRUE);
+        gtk_label_set_markup(label, tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 16"));
 
 	char iconfile[PATH_MAX];
