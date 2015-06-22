@@ -10,8 +10,6 @@
 #include <math.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
-#else
-#include <malloc.h>
 #endif
 
 struct Image {

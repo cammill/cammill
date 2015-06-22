@@ -29,14 +29,13 @@
 #include <stdlib.h>
 #define _GNU_SOURCE
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include <dxf.h>
 #include <font.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
-#else
-#include <malloc.h>
 #endif
 #include <locale.h>
 

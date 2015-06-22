@@ -58,8 +58,6 @@
 #include <sys/types.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
-#else
-#include <malloc.h>
 #endif
 #ifdef USE_G3D
 #include <g3d/g3d.h>
