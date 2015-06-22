@@ -112,7 +112,7 @@ win_installer: install
 osx_app: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
 
-deb:
+deb: ${PROGRAM}
 	mkdir -p debian-package${INSTALL_PATH}
 	cp ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
 	chmod 755 debian-package${INSTALL_PATH}/${PROGRAM}
@@ -127,6 +127,9 @@ deb:
 	mkdir -p debian-package${INSTALL_PATH}/doc
 	cp -a doc/* debian-package${INSTALL_PATH}/doc
 	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
+
+	mkdir -p debian-package/usr/bin
+	ln -sf ${INSTALL_PATH}/${PROGRAM} debian-package/usr/bin/${PROGRAM}
 
 	mkdir -p debian-package/usr/share/man/man1/
 	cat utils/man.1 | gzip -9 > debian-package/usr/share/man/man1/${PROGRAM}.1.gz
