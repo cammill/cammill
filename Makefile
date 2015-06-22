@@ -19,8 +19,9 @@ endif
 
 
 
-COMP?=$(CROSS)clang
-PKG_CONFIG=$(CROSS)pkg-config
+COMP       ?= $(CROSS)clang
+PKG_CONFIG ?= $(CROSS)pkg-config
+VERSION    ?= 0.9
 
 HERSHEY_FONTS_DIR = ./
 PROGRAM ?= cammill
@@ -37,6 +38,7 @@ OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o
 PKGS ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS += "-DGSEAL_ENABLE"
+CFLAGS += "-DVERSION=\"${VERSION}\""
 
 # LIBG3D
 #PKGS += libg3d
@@ -98,7 +100,7 @@ install: ${PROGRAM}
 	cp -a fonts/* ${INSTALL_PATH}/fonts
 	mkdir -p ${INSTALL_PATH}/doc
 	cp -a doc/* ${INSTALL_PATH}/doc
-	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf ${INSTALL_PATH}/
+	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
 
 win_installer:
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)

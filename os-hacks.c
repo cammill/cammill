@@ -31,19 +31,19 @@ int get_home_dir(char* buffer) {
 size_t get_executable_path (char* buffer, size_t len) {
 	char *path_end;
 
-        getcwd (buffer, sizeof (buffer));
+	getcwd(buffer, sizeof(buffer));
 
 #ifndef __MINGW32__
 	if (readlink("/proc/self/exe", buffer, len) <= 0) {
 		return -1;
 	}
 #else
-        HMODULE hModule = GetModuleHandle(NULL);
-        if (hModule != NULL)
-        {
-                // When passing NULL to GetModuleHandle, it returns handle of exe itself
-                GetModuleFileName(hModule, buffer, (sizeof(buffer)));
-        }
+//	HMODULE hModule = GetModuleHandle(NULL);
+//	if (hModule != NULL) {
+		// When passing NULL to GetModuleHandle, it returns handle of exe itself
+//		GetModuleFileName(hModule, buffer, (sizeof(buffer)));
+//	}
+	buffer[0] = 0;
 #endif
 
 	/* Find the last occurence of a forward slash, the path separator.  */

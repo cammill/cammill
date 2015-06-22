@@ -361,7 +361,11 @@ void postcam_init_lua (const char* path, char *plugin) {
 	postcam_var_push_string("partName", "");
 
 	char filename[PATH_MAX];
-	snprintf(filename, PATH_MAX, "%s%s%s", path, DIR_SEP, "postprocessor.lua");
+	if (path[0] == 0) {
+		snprintf(filename, PATH_MAX, "%s", "postprocessor.lua");
+	} else {
+		snprintf(filename, PATH_MAX, "%s%s%s", path, DIR_SEP, "postprocessor.lua");
+	}
 	if (luaL_loadfile(L, filename)) {
 		sprintf(output_error, "FATAL ERROR(postprocessor.lua / 1):\n %s\n\n", lua_tostring(L, -1));
 		fprintf(stderr, "%s", output_error);

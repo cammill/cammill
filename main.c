@@ -999,7 +999,7 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	char tmp_str[2048];
-    sprintf(tmp_str,"%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s\n",about1,author1,author2,website,VERSION);
+    sprintf(tmp_str,"%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s\n",about1, author1, author2, website, VERSION);
 	GtkWidget *label = gtk_label_new(tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
 
@@ -1731,8 +1731,12 @@ void create_gui () {
 	n = 0;
 	struct dirent *ent;
 	char dir_posts[PATH_MAX];
-	snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "posts");
-        // fprintf(stderr, "postprocessor directory: '%s'\n", dir_posts);
+	if (program_path[0] == 0) {
+		snprintf(dir_posts, PATH_MAX, "%s", "posts");
+	} else {
+		snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "posts");
+	}
+	// fprintf(stderr, "postprocessor directory: '%s'\n", dir_posts);
 	if ((dir = opendir(dir_posts)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
@@ -1741,6 +1745,9 @@ void create_gui () {
 				strcpy(postcam_plugins[n++], pname);
 				postcam_plugins[n][0] = 0;
 				free(pname);
+				if (PARAMETER[P_H_POST].vint == -1) {
+					PARAMETER[P_H_POST].vint = 0;
+				}
 			}
 		}
 		closedir (dir);
