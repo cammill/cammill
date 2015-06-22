@@ -90,19 +90,7 @@ do
 done
 
 echo "## create/copy icons ##"
-if ! test -e $UTILS_PATH/${applicationName}.icns
-then
-	rm -rf $UTILS_PATH/${applicationName}.iconset/
-	mkdir -p $UTILS_PATH/${applicationName}.iconset/
-	for size in 16x16 32x32 128x128 256x256 512x512
-	do
-		convert -scale $size! icons/logo.png $UTILS_PATH/${applicationName}.iconset/icon_${size}.png 2>/dev/null
-	#	convert -scale $size! icons/logo.png $UTILS_PATH/${applicationName}.iconset/icon_${size}@2x.png 2>/dev/null
-	done
-	png2icns $UTILS_PATH/${applicationName}.icns $UTILS_PATH/${applicationName}.iconset/icon_*png 2>/dev/null
-fi
-cp $UTILS_PATH/${applicationName}.icns ${INSTALL_PATH}/Contents/Resources/
-
+cp $UTILS_PATH/../icons/icon.icns ${INSTALL_PATH}/Contents/Resources/${applicationName}.icns
 
 echo "## creating dmg-image ##"
 umount /Volumes/${applicationName} 2>/dev/null
