@@ -15,6 +15,7 @@ ifeq (${TARGET}, OSX)
 	LIBS    ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS    ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
+	INSTALL_PATH ?= OSX/CamMill
 endif
 
 
@@ -107,4 +108,7 @@ win_installer:
 	cp icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	mv ${INSTALL_PATH}/installer.exe Windows/
+
+osx_app:
+	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
 
