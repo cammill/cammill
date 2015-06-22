@@ -107,7 +107,7 @@ gmake TARGET=OPENBSD clean all
 
 ### IRC
 
-[irc.freenode.org](http://www.freenode.org/) #cammill
+[irc.freenode.org](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) #cammill
 
 ### Facebook
 [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
