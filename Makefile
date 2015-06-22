@@ -111,7 +111,7 @@ install: ${PROGRAM}
 
 ifeq (${TARGET}, MINGW32)
 
-win_installer: install
+package: install
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
 	cp -p icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
@@ -120,7 +120,7 @@ win_installer: install
 endif
 ifeq (${TARGET}, OSX)
 
-osx_app: install
+package: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
 
 endif
@@ -131,7 +131,10 @@ gprof:
 	@echo "./${PROGRAM}"
 	@echo "gprof ${PROGRAM} gmon.out"
 
-deb: ${PROGRAM}
+depends:
+	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
+
+package: ${PROGRAM}
 	rm -rf debian-package
 	mkdir -p debian-package${INSTALL_PATH}
 	cp -p ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
@@ -175,7 +178,16 @@ deb: ${PROGRAM}
 	mv debian-package.deb ${PROGRAM}_$(VERSION)-`date +%s`_`dpkg --print-architecture`.deb
 
 endif
+ifeq (${TARGET}, OPENBSD)
+
+depends:
+	pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
+
+endif
 ifeq (${TARGET}, FREEBSD)
+
+depends:
+	pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
 
 package: ${PROGRAM}
 	rm -rf freebsd-package
