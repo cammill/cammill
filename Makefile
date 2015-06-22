@@ -87,22 +87,22 @@ install: ${PROGRAM}
 	cp ${PROGRAM} ${INSTALL_PATH}/${PROGRAM}
 	chmod 755 ${INSTALL_PATH}/${PROGRAM}
 	mkdir -p ${INSTALL_PATH}/posts
-	cp -a posts/* ${INSTALL_PATH}/posts
+	cp -p posts/* ${INSTALL_PATH}/posts
 	mkdir -p ${INSTALL_PATH}/textures
-	cp -a textures/* ${INSTALL_PATH}/textures
+	cp -p textures/* ${INSTALL_PATH}/textures
 	mkdir -p ${INSTALL_PATH}/icons
-	cp -a icons/* ${INSTALL_PATH}/icons
+	cp -p icons/* ${INSTALL_PATH}/icons
 	mkdir -p ${INSTALL_PATH}/fonts
-	cp -a fonts/* ${INSTALL_PATH}/fonts
+	cp -p fonts/* ${INSTALL_PATH}/fonts
 	mkdir -p ${INSTALL_PATH}/doc
-	cp -a doc/* ${INSTALL_PATH}/doc
-	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
+	cp -p doc/* ${INSTALL_PATH}/doc
+	cp -p GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
 
 ifeq (${TARGET}, MINGW32)
 
 win_installer: install
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
-	cp icons/icon.ico ${INSTALL_PATH}/icon.ico
+	cp -p icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	mv ${INSTALL_PATH}/installer.exe Windows/
 
@@ -123,26 +123,26 @@ gprof:
 deb: ${PROGRAM}
 	rm -rf debian-package
 	mkdir -p debian-package${INSTALL_PATH}
-	cp ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
+	cp -p ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
 	chmod 755 debian-package${INSTALL_PATH}/${PROGRAM}
 	mkdir -p debian-package${INSTALL_PATH}/posts
-	cp -a posts/* debian-package${INSTALL_PATH}/posts
+	cp -p posts/* debian-package${INSTALL_PATH}/posts
 	mkdir -p debian-package${INSTALL_PATH}/textures
-	cp -a textures/* debian-package${INSTALL_PATH}/textures
+	cp -p textures/* debian-package${INSTALL_PATH}/textures
 	mkdir -p debian-package${INSTALL_PATH}/icons
-	cp -a icons/* debian-package${INSTALL_PATH}/icons
+	cp -p icons/* debian-package${INSTALL_PATH}/icons
 	mkdir -p debian-package${INSTALL_PATH}/fonts
-	cp -a fonts/* debian-package${INSTALL_PATH}/fonts
-	cp -a material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
+	cp -p fonts/* debian-package${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
 	mkdir -p debian-package/usr/bin
 	ln -sf ${INSTALL_PATH}/${PROGRAM} debian-package/usr/bin/${PROGRAM}
 	mkdir -p debian-package/usr/share/man/man1/
 	cat utils/man.1 | gzip -9 > debian-package/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p debian-package/usr/share/doc/${PROGRAM}/
-	cp -a README.md debian-package/usr/share/doc/${PROGRAM}/README
-	cp -a doc debian-package/usr/share/doc/${PROGRAM}/doc
-	cp -a GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/copyright
-	cp -a GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/GPLv3.txt
+	cp -p README.md debian-package/usr/share/doc/${PROGRAM}/README
+	cp -p doc debian-package/usr/share/doc/${PROGRAM}/doc
+	cp -p GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/copyright
+	cp -p GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/GPLv3.txt
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.gz
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
 	mkdir -p debian-package/DEBIAN/
