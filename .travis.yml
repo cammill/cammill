@@ -28,7 +28,7 @@ script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make clean; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static- COMP=i686-w64-mingw32.static-gcc PKGS="gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua"; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make clean; fi
-  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make LIBS="-framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc" PKGS="gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua"; fi
+  - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make TARGET=OSX all osx_app; fi
 
 os:
   - linux
