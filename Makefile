@@ -31,7 +31,7 @@ INSTALL_PATH ?= /opt/${PROGRAM}
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
-CFLAGS += -ggdb -Wno-int-to-void-pointer-cast -Wall -Wno-unknown-pragmas -O3
+CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
 
 OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o os-hacks.o
 
