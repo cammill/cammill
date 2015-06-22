@@ -29,8 +29,8 @@ apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev f
 cd /usr/src
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make
-./cammill cammill.dxf
+make all install
+./cammill test.dxf
 ```
 
 ### Compile under Mac OS X
@@ -48,7 +48,8 @@ brew link gettext --force
 ```bash
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make TARGET=OSX osx_app
+make TARGET=OSX clean all
+./cammill test.dxf
 ```
 
 ### Cross-Compile Windows (32 Bit) under Linux
@@ -66,7 +67,8 @@ Cross-compile ```cammill.exe```:
 cd /usr/src
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static- COMP=i686-w64-mingw32.static-gcc PKGS="gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua"
+make TARGET=MINGW32 clean all 
+wine cammill.exe test-minimal.dxf
 ```
 
 ## Compile under FreeBSD (10.0)
@@ -75,9 +77,8 @@ make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static
 pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
 git clone https://github.com/cammill/cammill
 cd cammill/
-gmake TARGET=FREEBSD
-gmake TARGET=FREEBSD install
-cammill cammill.dxf
+gmake TARGET=FREEBSD clean all
+./cammill test.dxf
 ```
 
 ## Compile under OpenBSD (5.7)
@@ -86,9 +87,8 @@ cammill cammill.dxf
 pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
 git clone https://github.com/cammill/cammill
 cd cammill/
-gmake TARGET=OPENBSD
-gmake TARGET=OPENBSD install
-cammill cammill.dxf
+gmake TARGET=OPENBSD clean all
+./cammill test.dxf
 ```
 
 ### IRC
