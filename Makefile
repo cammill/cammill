@@ -1,5 +1,5 @@
 
-#TARGETS: DEFAULT, MINGW32, OSX
+#TARGETS: DEFAULT, MINGW32, OSX, OPENBSD
 TARGET ?= DEFAULT
 
 ifeq (${TARGET}, MINGW32)
@@ -18,6 +18,10 @@ ifeq (${TARGET}, OSX)
 	INSTALL_PATH    ?= OSX/CamMill
 endif
 
+ifeq (${TARGET}, OPENBSD)
+	COMP            ?= gcc
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51
+endif
 
 
 COMP       ?= $(CROSS)clang
