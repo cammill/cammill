@@ -73,7 +73,7 @@ make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static
 ## Compile under FreeBSD (10.0)
 
 ```bash
-pkg add git gmake gettext freeglut gtkglext gtksourceview2 lua51
+pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
 git clone https://github.com/cammill/cammill
 cd cammill/
 gmake TARGET=FREEBSD
