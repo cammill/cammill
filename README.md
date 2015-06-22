@@ -60,14 +60,13 @@ cd /usr/src
 git clone https://github.com/mxe/mxe.git
 cd mxe
 make MXE_TARGETS='i686-w64-mingw32.static' gcc gtk2 lua gtkglext gtksourceview freeglut
-export PATH=`pwd`/usr/bin:$PATH
 ```
 Cross-compile ```cammill.exe```:
 ```
 cd /usr/src
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make TARGET=MINGW32 clean all 
+make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- clean all 
 wine cammill.exe test-minimal.dxf
 ```
 
