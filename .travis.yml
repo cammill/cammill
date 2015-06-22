@@ -25,8 +25,10 @@ before_script:
 
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make clean all; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make package; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make clean; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make TARGET=MINGW32 CROSS=i686-w64-mingw32.static- clean all; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make TARGET=MINGW32 CROSS=i686-w64-mingw32.static- package; fi
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make TARGET=MINGW32 CROSS=i686-w64-mingw32.static- clean; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make clean; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make TARGET=OSX clean all; fi
