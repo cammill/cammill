@@ -113,6 +113,7 @@ osx_app: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
 
 deb: ${PROGRAM}
+	rm -rf debian-package
 	mkdir -p debian-package${INSTALL_PATH}
 	cp ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
 	chmod 755 debian-package${INSTALL_PATH}/${PROGRAM}
@@ -141,16 +142,18 @@ deb: ${PROGRAM}
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
 
 	mkdir -p debian-package/DEBIAN/
+	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> debian-package/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > debian-package/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> debian-package/DEBIAN/control
 	echo "Version: $(VERSION)-`date +%s`" >> debian-package/DEBIAN/control
 	echo "Architecture: `dpkg --print-architecture`" >> debian-package/DEBIAN/control
 	echo "Maintainer: Oliver Dippel <oliver@multixmedia.org>" >> debian-package/DEBIAN/control
-	echo "Depends: $(DEB_DEPENDS)" >> debian-package/DEBIAN/control
-	echo "Section: media" >> debian-package/DEBIAN/control
+	echo "Depends: libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> debian-package/DEBIAN/control
+	echo "Section: graphics" >> debian-package/DEBIAN/control
 	echo "Priority: optional" >> debian-package/DEBIAN/control
-	echo "Description: Ground-Control-Station based on OpenGL(-ES)" >> debian-package/DEBIAN/control
-	echo " Ground-Control-Station based on OpenGL(-ES)" >> debian-package/DEBIAN/control
+	echo "Description: 2D CAM-Tool (DXF to GCODE)" >> debian-package/DEBIAN/control
+	echo " 2D CAM-Tool for Linux, Windows and Mac OS X" >> debian-package/DEBIAN/control
+	echo "Homepage: http://www.multixmedia.org/cammill/" >> debian-package/DEBIAN/control
 	chmod -R -s debian-package/ -R
 	chmod 0755 debian-package/DEBIAN/ -R
 	dpkg-deb --build debian-package
