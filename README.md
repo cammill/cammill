@@ -32,6 +32,11 @@ cd cammill
 make all install
 ./cammill test.dxf
 ```
+generate installer-package ```cammill-freebsd-0.9.tgz```:
+```
+make package 
+dpkg -i cammill-0.9.deb
+```
 
 ### Compile under Mac OS X
 

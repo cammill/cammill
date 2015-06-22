@@ -155,7 +155,8 @@ package: ${PROGRAM}
 	cat utils/man.1 | gzip -9 > debian-package/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p debian-package/usr/share/doc/${PROGRAM}/
 	cp -p README.md debian-package/usr/share/doc/${PROGRAM}/README
-	cp -p doc debian-package/usr/share/doc/${PROGRAM}/doc
+	mkdir -p debian-package/usr/share/doc/${PROGRAM}/doc
+	cp -p doc/* debian-package/usr/share/doc/${PROGRAM}/doc/
 	cp -p GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/copyright
 	cp -p GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/GPLv3.txt
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.gz
@@ -176,7 +177,7 @@ package: ${PROGRAM}
 	chmod -R -s debian-package/ -R
 	chmod 0755 debian-package/DEBIAN/ -R
 	dpkg-deb --build debian-package
-	mv debian-package.deb ${PROGRAM}_$(VERSION)-`date +%s`_`dpkg --print-architecture`.deb
+	mv debian-package.deb ${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
 
 endif
 ifeq (${TARGET}, OPENBSD)
