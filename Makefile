@@ -3,19 +3,19 @@
 TARGET ?= DEFAULT
 
 ifeq (${TARGET}, MINGW32)
-	PROGRAM ?= cammill.exe
-	LIBS    ?= -lm -lstdc++ -lgcc
-	CROSS   ?= i686-w64-mingw32.static-
-	COMP    ?= i686-w64-mingw32.static-gcc
-	PKGS    ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
-	INSTALL_PATH ?= Windows/CamMill
+	PROGRAM         ?= cammill.exe
+	LIBS            ?= -lm -lstdc++ -lgcc
+	CROSS           ?= i686-w64-mingw32.static-
+	COMP            ?= ${CROSS}gcc
+	PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
+	INSTALL_PATH    ?= Windows/CamMill
 endif
 
 ifeq (${TARGET}, OSX)
-	LIBS    ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
-	PKGS    ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
+	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
+	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
-	INSTALL_PATH ?= OSX/CamMill
+	INSTALL_PATH    ?= OSX/CamMill
 endif
 
 
