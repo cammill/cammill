@@ -1,5 +1,5 @@
 
-#TARGETS: DEFAULT, MINGW32, OSX, OPENBSD
+#TARGETS: DEFAULT, FREEBSD, MINGW32, OSX, OPENBSD
 TARGET ?= DEFAULT
 
 ifeq (${TARGET}, MINGW32)
@@ -23,6 +23,10 @@ ifeq (${TARGET}, OPENBSD)
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51
 endif
 
+ifeq (${TARGET}, FREEBSD)
+	COMP            ?= clang
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua-5.1
+endif
 
 COMP       ?= $(CROSS)clang
 PKG_CONFIG ?= $(CROSS)pkg-config

@@ -52,7 +52,7 @@ make LIBS="-framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc" PKGS="g
 ./cammill cammill.dxf
 ```
 
-### Cross-Compile Windows (32 Bit) unter Linux
+### Cross-Compile Windows (32 Bit) under Linux
 
 Compile and install [mxe](http://mxe.cc/):
 ```bash
@@ -70,14 +70,25 @@ cd cammill
 make PROGRAM=cammill.exe LIBS="-lm -lstdc++ -lgcc" CROSS=i686-w64-mingw32.static- COMP=i686-w64-mingw32.static-gcc PKGS="gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua"
 ```
 
+## Compile under FreeBSD (10.0)
+
+```bash
+pkg add git gmake gettext freeglut gtkglext gtksourceview2 lua51
+git clone https://github.com/cammill/cammill
+cd cammill/
+gmake TARGET=FREEBSD
+gmake TARGET=FREEBSD install
+cammill cammill.dxf
+```
+
 ## Compile under OpenBSD (5.7)
 
 ```bash
-pkg_add gcc git freeglut gtk+ gtksourceview gtkglext lua gmake
+pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
 git clone https://github.com/cammill/cammill
 cd cammill/
-gmake COMP=gcc PKGS="gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51"
-gmake install
+gmake TARGET=OPENBSD
+gmake TARGET=OPENBSD install
 cammill cammill.dxf
 ```
 
