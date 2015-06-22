@@ -12,7 +12,7 @@ ifeq (${TARGET}, MINGW32)
 endif
 
 ifeq (${TARGET}, OSX)
-	CLFAGS          += "-Wno-deprecated"
+	CFLAGS          += "-Wno-deprecated"
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
