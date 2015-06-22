@@ -204,7 +204,7 @@ msgstr "Sichere-Bewegungen"
 msgid "Overcut"
 msgstr "Ecken Ausfräsen"
 
-msgid "overcutting endges"
+msgid "overcutting edges"
 msgstr "Ecken Ausfräsen"
 
 msgid "Lasermode"
