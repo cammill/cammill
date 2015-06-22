@@ -125,22 +125,18 @@ deb: ${PROGRAM}
 	cp -a icons/* debian-package${INSTALL_PATH}/icons
 	mkdir -p debian-package${INSTALL_PATH}/fonts
 	cp -a fonts/* debian-package${INSTALL_PATH}/fonts
-	mkdir -p debian-package${INSTALL_PATH}/doc
-	cp -a doc/* debian-package${INSTALL_PATH}/doc
-	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
-
+	cp -a material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
 	mkdir -p debian-package/usr/bin
 	ln -sf ${INSTALL_PATH}/${PROGRAM} debian-package/usr/bin/${PROGRAM}
-
 	mkdir -p debian-package/usr/share/man/man1/
 	cat utils/man.1 | gzip -9 > debian-package/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p debian-package/usr/share/doc/${PROGRAM}/
 	cp -a README.md debian-package/usr/share/doc/${PROGRAM}/README
+	cp -a doc debian-package/usr/share/doc/${PROGRAM}/doc
 	cp -a GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/copyright
 	cp -a GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/GPLv3.txt
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.gz
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
-
 	mkdir -p debian-package/DEBIAN/
 	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> debian-package/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > debian-package/DEBIAN/control
