@@ -91,7 +91,7 @@ gmake TARGET=FREEBSD clean all
 ```
 generate installer-package ```cammill-freebsd-0.9.tgz```:
 ```
-make TARGET=FREEBSD package 
+gmake TARGET=FREEBSD package 
 pkg install cammill-freebsd-0.9.tgz
 ```
 
