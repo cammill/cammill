@@ -92,7 +92,7 @@ char program_path[PATH_MAX];
 char *about1 = "CAMmill 2D";
 char *author1 = "Oliver Dippel <oliver@multixmedia.org>\nMac-Port by McUles <mcules@fpv-club.de>";
 char *author2 = "improvements by Jakob Flierl <koppi> and Carlo <onekk>";
-char *website = "Website: https://github.com/cammill/cammill\nIRC: #cammill (freenode) ";
+char *website = "Website: https://github.com/cammill/cammill\nIRC: #cammill (FreeNode) ";
 
 int select_object_flag = 0;
 int select_object_x = 0;
@@ -1060,12 +1060,12 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	char tmp_str[2048];
-	snprintf(tmp_str, sizeof(tmp_str), "%s\n\nCopyright by %s\n%s\n\n%s\n\nVersion: %s\n",about1, author1, author2, website, VERSION);
+	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s\n\nCopyright by %s\n%s\n\n%s",about1, VERSION, author1, author2, website);
 	GtkWidget *label = gtk_label_new(tmp_str);
-	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 18"));
+	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 16"));
 
 	char iconfile[PATH_MAX];
-	snprintf(iconfile, PATH_MAX, "%s%s", program_path, "icons/logo.png");
+	snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo.png");
 	GtkWidget *image = gtk_image_new_from_file(iconfile);
 	GtkWidget *box = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 	gtk_box_pack_start(GTK_BOX(box), image, TRUE, TRUE, 0);
