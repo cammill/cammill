@@ -454,18 +454,22 @@ void select_object (GLint hits, GLuint buffer[]) {
 	unsigned int i, j;
 	GLuint names, *ptr;
 	ptr = (GLuint *) buffer;
-	printf("hits = %d\n", hits);
+//	printf("hits = %d\n", hits);
 	for (i = 0; i < hits; i++) {  /* for each hit  */
 		names = *ptr;
-		printf(" number of names for hit = %d\n", names); ptr++;
-		printf("  z1 is %g;", (float) *ptr/0x7fffffff); ptr++;
-		printf(" z2 is %g\n", (float) *ptr/0x7fffffff); ptr++;
-		printf("   the name is ");
+//		printf(" number of names for hit = %d\n", names);
+		ptr++;
+//		printf("  z1 is %g;", (float) *ptr/0x7fffffff);
+		ptr++;
+//		printf(" z2 is %g\n", (float) *ptr/0x7fffffff);
+		ptr++;
+//		printf("   the name is ");
 		for (j = 0; j < names; j++) {  /* for each name */
 			PARAMETER[P_O_SELECT].vint = (int)*ptr;
-			printf("%d ", *ptr); ptr++;
+//			printf("%d ", *ptr);
+			ptr++;
 		}
-		printf("\n");
+//		printf("\n");
 	}
 }
 
@@ -615,8 +619,9 @@ void mainloop (void) {
 			glTranslatef(0.0, -size_y / 2.0, 0.0);
 		}
 		glCallList(1);
-		glCallList(2);
-		
+		if (select_object_flag == 0) {
+			glCallList(2);
+		}
 		glPopMatrix();
 
 		if (select_object_flag == 1) {
@@ -625,6 +630,7 @@ void mainloop (void) {
 			hits = glRenderMode(GL_RENDER);
 			select_object(hits, selectBuf);
 			select_object_flag = 0;
+			mainloop();
 		}
 	}
 	return;
