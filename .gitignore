@@ -8,5 +8,8 @@ cammill
 *.aps
 *.sdf
 *.exe
+*.deb
 intl/*
 Windows
+OSX
+debian-package

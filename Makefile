@@ -103,12 +103,53 @@ install: ${PROGRAM}
 	cp -a doc/* ${INSTALL_PATH}/doc
 	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
 
-win_installer:
+win_installer: install
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
 	cp icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	mv ${INSTALL_PATH}/installer.exe Windows/
 
-osx_app:
+osx_app: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
+
+deb:
+	mkdir -p debian-package${INSTALL_PATH}
+	cp ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
+	chmod 755 debian-package${INSTALL_PATH}/${PROGRAM}
+	mkdir -p debian-package${INSTALL_PATH}/posts
+	cp -a posts/* debian-package${INSTALL_PATH}/posts
+	mkdir -p debian-package${INSTALL_PATH}/textures
+	cp -a textures/* debian-package${INSTALL_PATH}/textures
+	mkdir -p debian-package${INSTALL_PATH}/icons
+	cp -a icons/* debian-package${INSTALL_PATH}/icons
+	mkdir -p debian-package${INSTALL_PATH}/fonts
+	cp -a fonts/* debian-package${INSTALL_PATH}/fonts
+	mkdir -p debian-package${INSTALL_PATH}/doc
+	cp -a doc/* debian-package${INSTALL_PATH}/doc
+	cp -a GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
+
+	mkdir -p debian-package/usr/share/man/man1/
+	cat utils/man.1 | gzip -9 > debian-package/usr/share/man/man1/${PROGRAM}.1.gz
+	mkdir -p debian-package/usr/share/doc/${PROGRAM}/
+	cp -a README.md debian-package/usr/share/doc/${PROGRAM}/README
+	cp -a GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/copyright
+	cp -a GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/GPLv3.txt
+	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.gz
+	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
+
+	mkdir -p debian-package/DEBIAN/
+	echo "Package: ${PROGRAM}" > debian-package/DEBIAN/control
+	echo "Source: ${PROGRAM}" >> debian-package/DEBIAN/control
+	echo "Version: $(VERSION)-`date +%s`" >> debian-package/DEBIAN/control
+	echo "Architecture: `dpkg --print-architecture`" >> debian-package/DEBIAN/control
+	echo "Maintainer: Oliver Dippel <oliver@multixmedia.org>" >> debian-package/DEBIAN/control
+	echo "Depends: $(DEB_DEPENDS)" >> debian-package/DEBIAN/control
+	echo "Section: media" >> debian-package/DEBIAN/control
+	echo "Priority: optional" >> debian-package/DEBIAN/control
+	echo "Description: Ground-Control-Station based on OpenGL(-ES)" >> debian-package/DEBIAN/control
+	echo " Ground-Control-Station based on OpenGL(-ES)" >> debian-package/DEBIAN/control
+	chmod -R -s debian-package/ -R
+	chmod 0755 debian-package/DEBIAN/ -R
+	dpkg-deb --build debian-package
+	mv debian-package.deb ${PROGRAM}_$(VERSION)-`date +%s`_`dpkg --print-architecture`.deb
 
