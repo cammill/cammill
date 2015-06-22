@@ -84,6 +84,11 @@ cd cammill/
 gmake TARGET=FREEBSD clean all
 ./cammill test.dxf
 ```
+generate installer-package ```cammill-freebsd-0.9.tgz```:
+```
+make TARGET=FREEBSD package 
+pkg install cammill-freebsd-0.9.tgz
+```
 
 ## Compile under OpenBSD (5.7)
 

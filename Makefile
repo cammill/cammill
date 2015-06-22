@@ -246,6 +246,6 @@ package: ${PROGRAM}
 	echo "  }" >> freebsd-package/+MANIFEST
 	echo "}" >> freebsd-package/+MANIFEST
 
-	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C freebsd-package/ -czvpPf freebsd-package.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
+	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C freebsd-package/ -czvpPf cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
 
 endif
