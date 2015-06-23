@@ -512,38 +512,42 @@ void mainloop (void) {
 		mill_objects();
 		mill_end();
 
-		// update GUI
-		GtkTextIter startLua, endLua;
-		GtkTextBuffer *bufferLua;
-		bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
-		gtk_text_buffer_get_bounds(bufferLua, &startLua, &endLua);
-		gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_error);
-		update_post = 0;
-		GtkTextIter start, end;
-		GtkTextBuffer *buffer;
-		buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeView));
-		gtk_text_buffer_get_bounds(buffer, &start, &end);
-		char *gcode_check = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
-		if (gcode_check != NULL) {
-			if (output_buffer != NULL) {
-				if (strcmp(gcode_check, output_buffer) != 0) {
-					gtk_text_buffer_set_text(buffer, output_buffer, -1);
+
+		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+		} else {
+			// update GUI
+			GtkTextIter startLua, endLua;
+			GtkTextBuffer *bufferLua;
+			bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
+			gtk_text_buffer_get_bounds(bufferLua, &startLua, &endLua);
+			gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_error);
+			update_post = 0;
+			GtkTextIter start, end;
+			GtkTextBuffer *buffer;
+			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeView));
+			gtk_text_buffer_get_bounds(buffer, &start, &end);
+			char *gcode_check = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
+			if (gcode_check != NULL) {
+				if (output_buffer != NULL) {
+					if (strcmp(gcode_check, output_buffer) != 0) {
+						gtk_text_buffer_set_text(buffer, output_buffer, -1);
+					}
+				} else {
+					gtk_text_buffer_set_text(buffer, "", -1);
 				}
+				free(gcode_check);
 			} else {
 				gtk_text_buffer_set_text(buffer, "", -1);
 			}
-			free(gcode_check);
-		} else {
-			gtk_text_buffer_set_text(buffer, "", -1);
+			double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
+			milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
+			milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
+			snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"), mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
+			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
+			snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1fmm / Height=%0.1fmm", size_x, size_y);
+			gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
+			glEndList();
 		}
-		double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
-		milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
-		milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
-		snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"), mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
-		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
-		snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1fmm / Height=%0.1fmm", size_x, size_y);
-		gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
-		glEndList();
 	}
 
 	// save output
@@ -564,7 +568,10 @@ void mainloop (void) {
 			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
 			system(cmd_str);
 		}
-		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
+		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+		} else {
+			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
+		}
 		save_gcode = 0;
 	}
 
@@ -654,9 +661,12 @@ void ToolLoadTable (void) {
 		}
 		tooltbl_diameters[0] = 1;
 		n = 0;
-		gtk_list_store_clear(ListStore[P_TOOL_SELECT]);
-		snprintf(tmp_str, sizeof(tmp_str), "FREE");
-		gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
+		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+		} else {
+			gtk_list_store_clear(ListStore[P_TOOL_SELECT]);
+			snprintf(tmp_str, sizeof(tmp_str), "FREE");
+			gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
+		}
 		n++;
 		while ((read = getline(&line, &len, tt_fp)) != -1) {
 			if (strncmp(line, "T", 1) == 0) {
@@ -671,7 +681,10 @@ void ToolLoadTable (void) {
 						strcpy(tool_descr[tooln], strstr(line2, ";") + 1);
 					}
 					snprintf(tmp_str, sizeof(tmp_str), "#%i D%0.2fmm (%s)", tooln, tooltbl_diameters[tooln], tool_descr[tooln]);
-					gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
+					if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+					} else {
+						gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
+					}
 					n++;
 					tools_max++;
 				}
@@ -1754,20 +1767,6 @@ void create_gui () {
 	OutputInfoLabel = gtk_label_new("-- OutputInfo --");
 	gtk_box_pack_start(GTK_BOX(MachineBox), OutputInfoLabel, 0, 0, 0);
 
-	/* import DXF */
-	loading = 1;
-	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
-#ifdef USE_G3D
-		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
-			dxf_read(PARAMETER[P_V_DXF].vstr);
-		} else {
-			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-		}
-#else
-		dxf_read(PARAMETER[P_V_DXF].vstr);
-#endif
-	}
-	init_objects();
 //	LayerLoadList();
 	loading = 0;
 
@@ -1798,56 +1797,9 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Expander"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Notebook-Tabs"), -1);
 
-	DIR *dir;
-	n = 0;
-	struct dirent *ent;
-	char dir_posts[PATH_MAX];
-	if (program_path[0] == 0) {
-		snprintf(dir_posts, PATH_MAX, "%s", "posts");
-	} else {
-		snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "posts");
-	}
-	// fprintf(stderr, "postprocessor directory: '%s'\n", dir_posts);
-	if ((dir = opendir(dir_posts)) != NULL) {
-		while ((ent = readdir(dir)) != NULL) {
-			if (ent->d_name[0] != '.') {
-				char *pname = suffix_remove(ent->d_name);
-				gtk_list_store_insert_with_values(ListStore[P_H_POST], NULL, -1, 0, NULL, 1, pname, -1);
-				strcpy(postcam_plugins[n++], pname);
-				postcam_plugins[n][0] = 0;
-				free(pname);
-				if (PARAMETER[P_H_POST].vint == -1) {
-					PARAMETER[P_H_POST].vint = 0;
-				}
-			}
-		}
-		closedir (dir);
-	} else {
-		fprintf(stderr, "postprocessor directory not found: %s\n", dir_posts);
-		PARAMETER[P_H_POST].vint = -1;
-	}
-
-/*
-	if ((dir = opendir("fonts/")) != NULL) {
-		while ((ent = readdir(dir)) != NULL) {
-			if (ent->d_name[0] != '.') {
-				char *pname = suffix_remove(ent->d_name);
-				gtk_list_store_insert_with_values(ListStore[P_M_FONT], NULL, -1, 0, NULL, 1, pname, -1);
-				free(pname);
-			}
-		}
-		closedir (dir);
-	} else {
-		fprintf(stderr, "fonts directory not found: fonts/\n");
-	}
-*/
-
 	g_signal_connect(G_OBJECT(ParamButton[P_MFILE]), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_TOOL_TABLE]), "clicked", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_V_DXF]), "clicked", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
-
-	MaterialLoadList(program_path);
-	ToolLoadTable();
 
 	ParameterUpdate();
 	for (n = 0; n < P_LAST; n++) {
@@ -1869,13 +1821,6 @@ void create_gui () {
 			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
 		}
 	}
-
-	int mat_num = PARAMETER[P_MAT_SELECT].vint;
-	PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
-	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
-	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
-	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
-	strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
 
 	StatusBar = gtk_statusbar_new();
 
@@ -2066,7 +2011,85 @@ void create_gui () {
 */
 }
 
+void load_files () {
+	DIR *dir;
+	int n = 0;
+	struct dirent *ent;
+	char dir_posts[PATH_MAX];
+	if (program_path[0] == 0) {
+		snprintf(dir_posts, PATH_MAX, "%s", "posts");
+	} else {
+		snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "posts");
+	}
+	// fprintf(stderr, "postprocessor directory: '%s'\n", dir_posts);
+	if ((dir = opendir(dir_posts)) != NULL) {
+		while ((ent = readdir(dir)) != NULL) {
+			if (ent->d_name[0] != '.') {
+				char *pname = suffix_remove(ent->d_name);
+				if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+				} else {
+					gtk_list_store_insert_with_values(ListStore[P_H_POST], NULL, -1, 0, NULL, 1, pname, -1);
+				}
+				strcpy(postcam_plugins[n++], pname);
+				postcam_plugins[n][0] = 0;
+				free(pname);
+				if (PARAMETER[P_H_POST].vint == -1) {
+					PARAMETER[P_H_POST].vint = 0;
+				}
+			}
+		}
+		closedir (dir);
+	} else {
+		fprintf(stderr, "postprocessor directory not found: %s\n", dir_posts);
+		PARAMETER[P_H_POST].vint = -1;
+	}
+
+/*
+	if ((dir = opendir("fonts/")) != NULL) {
+		while ((ent = readdir(dir)) != NULL) {
+			if (ent->d_name[0] != '.') {
+				char *pname = suffix_remove(ent->d_name);
+				if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+				} else {
+					gtk_list_store_insert_with_values(ListStore[P_M_FONT], NULL, -1, 0, NULL, 1, pname, -1);
+				}
+				free(pname);
+			}
+		}
+		closedir (dir);
+	} else {
+		fprintf(stderr, "fonts directory not found: fonts/\n");
+	}
+*/
+
+	MaterialLoadList(program_path);
+	ToolLoadTable();
+
+	int mat_num = PARAMETER[P_MAT_SELECT].vint;
+	PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
+	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
+	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
+	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
+	strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
+
+	/* import DXF */
+	loading = 1;
+	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+#ifdef USE_G3D
+		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+			dxf_read(PARAMETER[P_V_DXF].vstr);
+		} else {
+			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
+		}
+#else
+		dxf_read(PARAMETER[P_V_DXF].vstr);
+#endif
+	}
+	init_objects();
+}
+
 int main (int argc, char *argv[]) {
+	char tmp_str[1024];
 
 	get_executable_path(program_path, sizeof(program_path));
 
@@ -2080,32 +2103,35 @@ int main (int argc, char *argv[]) {
 	ArgsRead(argc, argv);
 //	SetupShow();
 
-	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-		save_gcode = 1;
-	}
-
-	gtk_init(&argc, &argv);
-	gtk_gl_init(&argc, &argv);
-	create_gui();
-
 	strcpy(output_extension, "ngc");
 	strcpy(output_info, "");
 
+	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+		save_gcode = 1;
+		load_files();
+	} else {
+		gtk_init(&argc, &argv);
+		gtk_gl_init(&argc, &argv);
+		create_gui();
+		load_files();
+		gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
+		snprintf(tmp_str, sizeof(tmp_str), "%s (%s)", _("Output"), output_extension);
+		gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
+	}
 	if (PARAMETER[P_H_POST].vint != -1) {
 		postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
-	postcam_plugin = PARAMETER[P_H_POST].vint;
-	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
-	char tmp_str[1024];
-	snprintf(tmp_str, sizeof(tmp_str), "%s (%s)", _("Output"), output_extension);
-	gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
+	postcam_plugin = PARAMETER[P_H_POST].vint;	
 	if (PARAMETER[P_H_POST].vint != -1) {
 		postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
 
-	gtk_timeout_add(1000/25, handler_periodic_action, NULL);
-	gtk_main ();
-
+	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
+		mainloop();
+	} else {
+		gtk_timeout_add(1000/25, handler_periodic_action, NULL);
+		gtk_main();
+	}
 	postcam_exit_lua();
 
 	return 0;
