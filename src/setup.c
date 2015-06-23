@@ -15,6 +15,11 @@
 #include <postprocessor.h>
 #include <gtk/gtk.h>
 
+#include <libintl.h>
+#define _(String) gettext(String)
+#define gettext_noop(String) String
+#define N_(String) gettext_noop(String)
+
 extern GtkWidget *hbox;
 extern GtkWidget *ViewExpander;
 extern GtkWidget *ToolExpander;
@@ -82,9 +87,9 @@ PARA PARAMETER[] = {
 	{"Output-File",	"Milling",	"-o",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "gcode-output filename", 0, 0, 0},
 	{"Select",	"Material",	"-ms",	T_SELECT,	1,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "material selection to calculate feedrate and spindlespeed", 0, 0, 0},
 	{"Cutting Speed","Material",	"-cs",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"m/min", 1, 1, "Cutting Speed", 1, 0, 0},
-	{"Feedrate/Flute/<4mm","Material","-f4",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feedrate/Flute/<4mm", 1, 0, 0},
-	{"Feedrate/Flute/<8mm","Material","-f8",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feedrate/Flute/<8mm", 1, 0, 0},
-	{"Feedrate/Flute/<12mm","Material","-f12",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feedrate/Flute/<12mm", 1, 0, 0},
+	{"Feed/Tooth@<4mm","Material","-f4",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<4mm", 1, 0, 0},
+	{"Feed/Tooth@<8mm","Material","-f8",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<8mm", 1, 0, 0},
+	{"Feed/Tooth@<12mm","Material","-f12",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<12mm", 1, 0, 0},
 	{"Texture",	"Material",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 1, 1, "Bitmap file to load for texture rendering", 1, 0, 0},
 	{"Post-Command","Milling",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0},
 	{"Select",	"Objects",	"-objs",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"#", 0, 1, "object selection", 0, 0, 0},
@@ -176,7 +181,7 @@ void SetupShowHelp (void) {
 	fprintf(stdout, "cammill [OPTIONS] FILE\n");
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		snprintf(name_str, sizeof(name_str), "%s-%s", PARAMETER[n].group, PARAMETER[n].name);
+		snprintf(name_str, sizeof(name_str), "%s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
 		if (PARAMETER[n].readonly == 1) {
 		} else if (PARAMETER[n].type == T_FLOAT) {
 			fprintf(stdout, "%5s FLOAT    %s\n", PARAMETER[n].arg, name_str);

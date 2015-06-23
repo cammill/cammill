@@ -309,14 +309,14 @@ msgstr "Material-Auswahl"
 msgid "Cutting Speed"
 msgstr "Schnittgeschwindigkeit"
 
-msgid "Feedrate/Flute/<4mm"
-msgstr "Geschwindigkeit/Schneide (<4mm)"
+msgid "Feed/Tooth@<4mm"
+msgstr "Vorschub/Schneide (<4mm)"
 
-msgid "Feedrate/Flute/<8mm"
-msgstr "Geschwindigkeit/Schneide (<8mm)"
+msgid "Feed/Tooth@<8mm"
+msgstr "Vorschub/Schneide (<8mm)"
 
-msgid "Feedrate/Flute/<12mm"
-msgstr "Geschwindigkeit/Schneide (<12mm)"
+msgid "Feed/Tooth@<12mm"
+msgstr "Vorschub/Schneide (<12mm)"
 
 msgid "Texture"
 msgstr "Texturen"

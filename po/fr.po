@@ -308,13 +308,13 @@ msgstr ""
 msgid "Cutting Speed"
 msgstr "Vitesse de coupe"
 
-msgid "Feedrate/Flute/<4mm"
+msgid "Feed/Tooth@<4mm"
 msgstr "Vitesse d'avance/tranchant (diametre outil < 4mm)"
 
-msgid "Feedrate/Flute/<8mm"
+msgid "Feed/Tooth@<8mm"
 msgstr "Vitesse d'avance/tranchant (diametre outil < 8mm)"
 
-msgid "Feedrate/Flute/<12mm"
+msgid "Feed/Tooth@<12mm"
 msgstr "Vitesse d'avance/tranchant (diametre outil < 12mm)"
 
 msgid "Texture"

@@ -307,13 +307,13 @@ msgstr "tipo di materiale per calcolare velocità mandrino e avanzamento"
 msgid "Cutting Speed"
 msgstr "Velocità di Taglio"
 
-msgid "Feedrate/Flute/<4mm"
+msgid "Feed/Tooth@<4mm"
 msgstr "Avanzamento/Taglienti (<4mm)"
 
-msgid "Feedrate/Flute/<8mm"
+msgid "Feed/Tooth@<8mm"
 msgstr "Avanzamento/Taglienti (<8mm)"
 
-msgid "Feedrate/Flute/<12mm"
+msgid "Feed/Tooth@<12mm"
 msgstr "Avanzamento/Taglienti (<12mm)"
 
 msgid "Texture"
