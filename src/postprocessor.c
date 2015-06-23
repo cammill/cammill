@@ -84,10 +84,12 @@ static int Lfdim(lua_State *L) {
 	return 1;
 }
 
+#ifndef __NetBSD__
 static int Lfma(lua_State *L) {
 	lua_pushnumber(L,fma(A(1),A(2),A(3)));
 	return 1;
 }
+#endif
 
 static int Lfmax(lua_State *L) {
 	int i,n = lua_gettop(L);
@@ -162,7 +164,11 @@ static int Llogb(lua_State *L) {
 }
 
 static int Lnearbyint(lua_State *L) {
+#ifdef __NetBSD__
+	lua_pushnumber(L,rint(A(1)));
+#else
 	lua_pushnumber(L,nearbyint(A(1)));
+#endif
 	return 1;
 }
 
@@ -217,7 +223,9 @@ static const luaL_Reg R[] = {
 	{ "exp2",	Lexp2 },
 	{ "expm1",	Lexpm1 },
 	{ "fdim",	Lfdim },
+#ifndef __NetBSD__
 	{ "fma",	Lfma },
+#endif
 	{ "fmax",	Lfmax },
 	{ "fmin",	Lfmin },
 	{ "fpclassify",	Lfpclassify },
