@@ -1,7 +1,8 @@
-2D CAM-Tool for Linux, Windows and Mac OS X
+# CAMmill [![travis](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
+
+2D CAM tool for Linux/BSD, Windows and Mac OS X
 
 ![license](https://img.shields.io/github/license/cammill/cammill.svg)
-[![travis](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
 [![release](https://img.shields.io/github/release/cammill/cammill.svg)](https://github.com/cammill/cammill/releases)
 [![issues](https://img.shields.io/github/issues/cammill/cammill.svg)](https://github.com/cammill/cammill/issues)
 
