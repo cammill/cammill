@@ -63,7 +63,7 @@ int line_last = 0;
 void add_line (int type, char *layer, double x1, double y1, double x2, double y2, double opt, double cx, double cy) {
 //	printf("## ADD_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
 	if (x1 > 10000.0 || y1 > 10000.0 || x2 > 10000.0 || y2 > 10000.0) {
-		printf("###### LINE TOO BIG; %f %f -> %f %f ######\n", x1, y1, x2, y2);
+		fprintf(stderr, "dxf: ###### LINE TOO BIG; %f %f -> %f %f ######\n", x1, y1, x2, y2);
 		return;
 	}
 	if (line_n < MAX_LINES) {
@@ -113,7 +113,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 
 		line_last = line_n;
 	} else {
-		printf("### TOO MANY LINES ##\n");
+		fprintf(stderr, "dxf: ### TOO MANY LINES ##\n");
 //		exit(1);
 	}
 }
