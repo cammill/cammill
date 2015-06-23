@@ -19,14 +19,19 @@ ifeq (${TARGET}, OSX)
 	INSTALL_PATH    ?= packages/osx/CAMmill
 endif
 
-ifeq (${TARGET}, OPENBSD)
-	COMP            ?= gcc
-	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51
-endif
-
 ifeq (${TARGET}, FREEBSD)
 	COMP            ?= clang
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua-5.1
+endif
+
+ifeq (${TARGET}, NETBSD)
+	COMP            ?= gcc
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua-5.1
+endif
+
+ifeq (${TARGET}, OPENBSD)
+	COMP            ?= gcc
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51
 endif
 
 COMP       ?= $(CROSS)clang

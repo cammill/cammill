@@ -85,8 +85,8 @@ pkg install packages/cammill-freebsd-0.9.tgz
 #### NetBSD (6.1)
 
 ```bash
-pkgin install git gcc49 freeglut gtksourceview gtkglext lua51
-git clone https://github.com/cammill/cammill
+pkgin install git gcc49 pkg-config freeglut gtksourceview2 gtkglext lua51
+env GIT_SSL_NO_VERIFY=true git clone https://github.com/cammill/cammill
 cd cammill/
 gmake TARGET=NETBSD clean all
 ./cammill test.dxf
