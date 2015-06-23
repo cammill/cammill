@@ -121,8 +121,6 @@ install: ${PROGRAM}
 	cp -p icons/* ${INSTALL_PATH}/icons
 	mkdir -p ${INSTALL_PATH}/fonts
 	cp -p fonts/* ${INSTALL_PATH}/fonts
-	mkdir -p ${INSTALL_PATH}/doc
-	cp -p doc/* ${INSTALL_PATH}/doc
 	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
 
 ifeq (${TARGET}, MINGW32)
@@ -181,8 +179,6 @@ package: ${PROGRAM}
 	help2man ./${PROGRAM} | gzip -9 > packages/debian/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/
 	cp -p README.md packages/debian/usr/share/doc/${PROGRAM}/README
-	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/doc
-	cp -p doc/* packages/debian/usr/share/doc/${PROGRAM}/doc/
 	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/copyright
 	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/LICENSE.txt
 	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
@@ -242,8 +238,6 @@ package: ${PROGRAM}
 	cp -p icons/* packages/freebsd${INSTALL_PATH}/icons
 	mkdir -p packages/freebsd${INSTALL_PATH}/fonts
 	cp -p fonts/* packages/freebsd${INSTALL_PATH}/fonts
-	mkdir -p packages/freebsd${INSTALL_PATH}/doc
-	cp -p doc/* packages/freebsd${INSTALL_PATH}/doc
 	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/freebsd${INSTALL_PATH}/
 	mkdir -p packages/freebsd/usr/local/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/freebsd/usr/local/bin/${PROGRAM}
