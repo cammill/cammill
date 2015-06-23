@@ -58,7 +58,7 @@ apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev f
 cd /usr/src
 git clone https://github.com/cammill/cammill.git
 cd cammill
-make all install
+make clean all
 ./cammill test.dxf
 ```
 Generate installer-package ```cammill_0.9_i386.deb```:
