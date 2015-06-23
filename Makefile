@@ -297,9 +297,9 @@ doc: ${PROGRAM}
 	test -e cammill.wiki/ && sh utils/help2md.sh ./${PROGRAM} > cammill.wiki/Commandline-Arguments.md
 
 pull:
-	git pull
-	test -e cammill.github.io && (cd cammill.github.io/ ; git pull)
-	test -e cammill.wiki/ && (cd cammill.wiki/ ; git pull)
+	git pull --rebase
+	test -e cammill.github.io && (cd cammill.github.io/ ; git pull --rebase)
+	test -e cammill.wiki/ && (cd cammill.wiki/ ; git pull --rebase)
 
 
 
