@@ -6,7 +6,7 @@
 [![release](https://img.shields.io/github/release/cammill/cammill.svg)](https://github.com/cammill/cammill/releases)
 [![issues](https://img.shields.io/github/issues/cammill/cammill.svg)](https://github.com/cammill/cammill/issues)
 
-Features:
+CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and gcode for CNC machines. Some key features include:
 * Automatic Offsets (Inside / Outside)
 * Normal and Climb milling
 * Rotary-Axis Support
@@ -16,9 +16,11 @@ Features:
 * Support for milling MTEXT from dxf
 * LinuxCNC tool table import
 * Setup-Presets
-* Post-Processor (with Lua script / compatible with [SheetCam-tng](http://www.sheetcam.com/))
+* Lua scriptable Post-Processor compatible with [SheetCam-tng](http://www.sheetcam.com/)
+* OpenGL GUI and batch-mode
+* Its Free!
 
-Missing Features: see [#6](https://github.com/cammill/cammill/issues/6), please help [translate](https://crowdin.com/project/cammill).
+Missing features: see [#6](https://github.com/cammill/cammill/issues/6). Please help [translate](https://crowdin.com/project/cammill) to your language.
 
 Homepage: http://www.multixmedia.org/cammill/
 
