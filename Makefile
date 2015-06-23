@@ -294,3 +294,8 @@ endif
 
 doc: ${PROGRAM}
 	sh utils/help2html.sh ./${PROGRAM} > doc/cmdline.html
+	test -e cammill.wiki/ && sh utils/help2md.sh ./${PROGRAM} > cammill.wiki/Commandline-Arguments.md
+
+
+
+

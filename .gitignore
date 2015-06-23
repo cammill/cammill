@@ -14,3 +14,4 @@ cammill
 *.pot
 intl/*
 packages
+cammill.wiki
