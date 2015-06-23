@@ -187,7 +187,6 @@ void postcam_load_source (char *plugin) {
 		g_error("error opening file: %s\n",error && error->message ? error->message : "No Detail");
 		return;
 	}
-
 	gtk_text_buffer_set_text(bufferLua, file_buffer, -1);
 	free(file_buffer);
 }
@@ -512,9 +511,7 @@ void mainloop (void) {
 		mill_objects();
 		mill_end();
 
-
-		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-		} else {
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			// update GUI
 			GtkTextIter startLua, endLua;
 			GtkTextBuffer *bufferLua;
@@ -568,8 +565,7 @@ void mainloop (void) {
 			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
 			system(cmd_str);
 		}
-		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-		} else {
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
 		}
 		save_gcode = 0;
@@ -661,8 +657,7 @@ void ToolLoadTable (void) {
 		}
 		tooltbl_diameters[0] = 1;
 		n = 0;
-		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-		} else {
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			gtk_list_store_clear(ListStore[P_TOOL_SELECT]);
 			snprintf(tmp_str, sizeof(tmp_str), "FREE");
 			gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
@@ -681,8 +676,7 @@ void ToolLoadTable (void) {
 						strcpy(tool_descr[tooln], strstr(line2, ";") + 1);
 					}
 					snprintf(tmp_str, sizeof(tmp_str), "#%i D%0.2fmm (%s)", tooln, tooltbl_diameters[tooln], tool_descr[tooln]);
-					if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-					} else {
+					if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 						gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
 					}
 					n++;
@@ -2029,8 +2023,7 @@ void load_files () {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
 				char *pname = suffix_remove(ent->d_name);
-				if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-				} else {
+				if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 					gtk_list_store_insert_with_values(ListStore[P_H_POST], NULL, -1, 0, NULL, 1, pname, -1);
 				}
 				strcpy(postcam_plugins[n++], pname);
@@ -2052,8 +2045,7 @@ void load_files () {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
 				char *pname = suffix_remove(ent->d_name);
-				if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-				} else {
+				if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 					gtk_list_store_insert_with_values(ListStore[P_M_FONT], NULL, -1, 0, NULL, 1, pname, -1);
 				}
 				free(pname);
@@ -2125,13 +2117,12 @@ int main (int argc, char *argv[]) {
 		postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
 	postcam_plugin = PARAMETER[P_H_POST].vint;	
-	if (PARAMETER[P_H_POST].vint != -1) {
-		postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
-	}
-
 	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
 		mainloop();
 	} else {
+		if (PARAMETER[P_H_POST].vint != -1) {
+			postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
+		}
 		gtk_timeout_add(1000/25, handler_periodic_action, NULL);
 		gtk_main();
 	}
