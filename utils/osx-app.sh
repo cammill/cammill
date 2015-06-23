@@ -141,7 +141,7 @@ echo '
 echo "## unmounting/compressing dmg-image ##"
 sync
 hdiutil detach ${device} 2>/dev/null
-hdiutil convert "${applicationName}.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${applicationName}-${version}"
+hdiutil convert "${applicationName}.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${applicationName}"
 rm -f ${applicationName}.temp.dmg
 
 rm -rf dmg-background.png
