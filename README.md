@@ -13,16 +13,40 @@ Features:
 * Tool/Material calculations for feedrate and tool-speed
 * Holding-Tab's
 * Support for milling MTEXT from dxf
-* LinuxCNC-Tooltable import
+* LinuxCNC tool table import
 * Setup-Presets
-* Post-Processor (with lua-script / compatible with sheetcam-tng)
-* Running under Linux and Mac-OSX (and maybe other Unix-Like Systems)
-* .....
+* Post-Processor (with Lua script / compatible with [SheetCam-tng](http://www.sheetcam.com/))
 Missing Features: see [#6](https://github.com/cammill/cammill/issues/6), help [translate](https://crowdin.com/project/cammill).
 
 Homepage: http://www.multixmedia.org/cammill/
 
-### Compile under Linux (Debian Wheezy/Jessie)
+## Building for Mac OS X
+Prerequisites:
+* XCode, including XCode command-line tools.
+
+### Mac OS X (10.9)
+
+(assumes [Homebrew](http://brew.sh/) is already installed)
+```bash
+export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig
+brew update
+brew install gtkglext
+brew install gtksourceview
+brew install lua
+brew install gettext
+brew link gettext --force
+```
+
+```bash
+git clone https://github.com/cammill/cammill.git
+cd cammill
+make TARGET=OSX clean all
+./cammill test.dxf
+```
+
+## Building for Linux/BSD
+
+### Debian (Wheezy/Jessie)
 
 ```bash
 apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev help2man
@@ -41,24 +65,42 @@ make package
 dpkg -i packages/cammill_0.9_i386.deb
 ```
 
-### Compile under Mac OS X
+### FeeBSD (10.0)
 
 ```bash
-export PKG_CONFIG_PATH=/opt/X11/lib/pkgconfig
-brew update
-brew install gtkglext
-brew install gtksourceview
-brew install lua
-brew install gettext
-brew link gettext --force
-```
-
-```bash
-git clone https://github.com/cammill/cammill.git
-cd cammill
-make TARGET=OSX clean all
+pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
+git clone https://github.com/cammill/cammill
+cd cammill/
+gmake TARGET=FREEBSD clean all
 ./cammill test.dxf
 ```
+generate installer-package ```cammill-freebsd-0.9.tgz```:
+```
+gmake TARGET=FREEBSD package 
+pkg install packages/cammill-freebsd-0.9.tgz
+```
+
+### NetBSD (6.1)
+
+```bash
+pkgin install git gcc49 freeglut gtksourceview gtkglext lua51
+git clone https://github.com/cammill/cammill
+cd cammill/
+gmake TARGET=NETBSD clean all
+./cammill test.dxf
+```
+
+### OpenBSD (5.7)
+
+```bash
+pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
+git clone https://github.com/cammill/cammill
+cd cammill/
+gmake TARGET=OPENBSD clean all
+./cammill test.dxf
+```
+
+## Building for Windows
 
 ### Cross-Compile Windows (32 Bit) under Linux
 
@@ -83,30 +125,11 @@ make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- package
 wine packages/cammill-installer.exe
 ```
 
-## Compile under FreeBSD (10.0)
+## Compilation
 
-```bash
-pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
-git clone https://github.com/cammill/cammill
-cd cammill/
-gmake TARGET=FREEBSD clean all
-./cammill test.dxf
-```
-generate installer-package ```cammill-freebsd-0.9.tgz```:
-```
-gmake TARGET=FREEBSD package 
-pkg install packages/cammill-freebsd-0.9.tgz
-```
+If you had problems compiling from source, raise a new issue in the [issue tracker on the github page](https://github.com/cammill/cammill/issues).
 
-## Compile under OpenBSD (5.7)
-
-```bash
-pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
-git clone https://github.com/cammill/cammill
-cd cammill/
-gmake TARGET=OPENBSD clean all
-./cammill test.dxf
-```
+## Contact
 
 ### IRC
 [#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
