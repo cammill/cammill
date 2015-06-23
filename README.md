@@ -28,8 +28,5 @@ see [Wiki](https://github.com/cammill/cammill/wiki)
 
 ### Contact
 
-#### IRC
-[#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
-
-#### Facebook
-[https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
+* IRC [#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
+* Facebook [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
