@@ -46,11 +46,11 @@ MAINTAINER_NAME  ?= Oliver Dippel
 MAINTAINER_EMAIL ?= oliver@multixmedia.org
 
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
-CFLAGS += -I./
+CFLAGS += -I./ -I./src
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
 CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
 
-OBJS = main.o pocket.o calc.o hersheyfont.o postprocessor.o setup.o dxf.o font.o texture.o os-hacks.o
+OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/font.o src/texture.o src/os-hacks.o
 
 # GTK+2.0 and LUA5.1
 PKGS ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
