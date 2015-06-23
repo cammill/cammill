@@ -1,18 +1,16 @@
-
+  !addincludedir nsis
   !include "UMUI.nsh"
   !include WinMessages.nsh
 
   BrandingText " "
 
-  Name "CamMill"
-  Caption "CamMill installer"
-  !define MUI_PRODUCT "CamMill"
-
+  Name "CAMmill"
+  Caption "CAMmill installer"
+  !define MUI_PRODUCT "CAMmill"
 
   XPstyle on
  
   RequestExecutionLevel user
-
 
   CRCCheck On
 
@@ -21,17 +19,13 @@
   ShowInstDetails show
   ShowUninstDetails show
 
-
   !define MUI_ICON "icon.ico"
   !define MUI_UNICON "icon.ico"
-
-
 
   !insertmacro MUI_LANGUAGE "English"
   !insertmacro MUI_PAGE_LICENSE "GPLv3.txt"
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
-
  
   !define MUI_INNERTEXT_LICENSE_BOTTOM "LICENSE_BOTTOM"
   !define MUI_TEXT_LICENSE_TITLE "LICENSE_TITLE"
