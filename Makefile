@@ -296,6 +296,11 @@ doc: ${PROGRAM}
 	test -e cammill.github.io && sh utils/help2html.sh ./${PROGRAM} > cammill.github.io/de/cmdline.html
 	test -e cammill.wiki/ && sh utils/help2md.sh ./${PROGRAM} > cammill.wiki/Commandline-Arguments.md
 
+pull:
+	git pull
+	test -e cammill.github.io && (cd cammill.github.io/ ; git pull)
+	test -e cammill.wiki/ && (cd cammill.wiki/ ; git pull)
+
 
 
 
