@@ -1,4 +1,5 @@
 cammill
+*~
 *.a
 *.so
 *.o
@@ -10,5 +11,6 @@ cammill
 *.exe
 *.deb
 *.tgz
+*.pot
 intl/*
 packages

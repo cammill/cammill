@@ -3,51 +3,195 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Oliver Dippel <oliver@multixmedia.org>, 2014.
 #
-
 msgid ""
 msgstr ""
 "Project-Id-Version: cammill\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"POT-Creation-Date: 2015-06-23 21:33+0200\n"
 "PO-Revision-Date: 2015-05-26 16:05+0100\n"
 "Last-Translator: Carlo Dormeletti <carlo.dormeletti@alice.it>\n"
 "Language-Team: Italian <carlo.dormeletti@alice.it>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+#: src/main.c:544
+#, c-format
 msgid "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"
 msgstr "Distanza: Fresa-XY=%0.2fmm/Z=%0.2fmm / Muovi-XY=%0.2fmm/Z=%0.2fmm / Tempo>%0.1fmin"
 
+#: src/main.c:830
+msgid "Load Drawing"
+msgstr "carica disegni"
+
+#: src/main.c:840
+msgid "DXF-Drawings"
+msgstr "Disegni DXF"
+
+#: src/main.c:847
+msgid "3D-Objects"
+msgstr ""
+
+#: src/main.c:971 src/main.c:1475
+msgid "Save Output As.."
+msgstr "Salva output con nome.."
+
+#: src/main.c:1030 src/main.c:1429
+msgid "Load Tooltable"
+msgstr "Carica Utensili"
+
+#: src/main.c:1040
+msgid "Tooltable"
+msgstr "Tabella Utensili"
+
+#: src/main.c:1072 src/main.c:1457
+msgid "About"
+msgstr ""
+
+#: src/main.c:1398
+msgid "_File"
+msgstr ""
+
+#: src/main.c:1405
+msgid "_Load DXF"
+msgstr ""
+
+#: src/main.c:1411
+msgid "_Reload DXF"
+msgstr ""
+
+#: src/main.c:1417
+msgid "_Save Output As.."
+msgstr ""
+
+#: src/main.c:1423
+msgid "_Save Output"
+msgstr ""
+
+#: src/main.c:1433 src/main.c:1493
+msgid "Load Preset"
+msgstr "Carica Settaggi"
+
+#: src/main.c:1437 src/main.c:1498
+msgid "Save Preset"
+msgstr "Salva Settaggi"
+
+#: src/main.c:1441 src/main.c:1485
+msgid "Save Setup"
+msgstr "Salva configurazione"
+
+#: src/main.c:1452
+msgid "_Help"
+msgstr ""
+
+#: src/main.c:1465
+msgid "Load DXF"
+msgstr "Carica DXF"
+
+#: src/main.c:1470
+msgid "Reload DXF"
+msgstr "Ricarica DXF"
+
+#: src/main.c:1480
+msgid "Save Output"
+msgstr "Salva output"
+
+#: src/main.c:1558 src/main.c:1580
 msgid "View"
 msgstr "Vista"
 
+#: src/main.c:1559 src/main.c:1581
 msgid "Tool"
 msgstr "Utensile"
 
+#: src/main.c:1560 src/main.c:1582
 msgid "Milling"
 msgstr "Fresatura"
 
+#: src/main.c:1561 src/main.c:1583
 msgid "Tabs"
 msgstr "Fissaggi"
 
+#: src/main.c:1562 src/main.c:1584
 msgid "Rotary"
 msgstr "Rotazione"
 
+#: src/main.c:1563 src/main.c:1585
 msgid "Tangencial"
 msgstr "Tangenziale"
 
+#: src/main.c:1564 src/main.c:1586
 msgid "Machine"
 msgstr "Macchina"
 
+#: src/main.c:1565 src/main.c:1587
 msgid "Material"
 msgstr "Materiale"
 
+#: src/main.c:1566 src/main.c:1588
 msgid "Objects"
 msgstr "Oggetti"
 
+#: src/main.c:1567 src/main.c:1589
 msgid "Misc"
 msgstr "Varie"
+
+#: src/main.c:1688
+msgid "On/Off"
+msgstr "Sì/No"
+
+#: src/main.c:1772
+msgid "None"
+msgstr "Nessuna"
+
+#: src/main.c:1773
+msgid "Inside"
+msgstr "Interno"
+
+#: src/main.c:1774
+msgid "Outside"
+msgstr "Esterno"
+
+#: src/main.c:1776
+msgid "-5 First"
+msgstr "-5 prima"
+
+#: src/main.c:1781
+msgid "0 Auto"
+msgstr "0 Auto"
+
+#: src/main.c:1786
+msgid "5 Last"
+msgstr "5 dopo"
+
+#: src/main.c:1796
+msgid "Expander"
+msgstr "Voci estese"
+
+#: src/main.c:1797
+msgid "Notebook-Tabs"
+msgstr "Tabs"
+
+#: src/main.c:1903
+msgid "3D-View"
+msgstr "Vista-3D"
+
+#: src/main.c:1906 src/main.c:2115
+msgid "Output"
+msgstr "Output"
+
+#: src/main.c:1910
+msgid "PostProcessor"
+msgstr "Postprocessore"
+
+#: src/main.c:1916
+msgid "VNC"
+msgstr "VNC"
+
+#: src/main.c:1928
+msgid "Documentation"
+msgstr "Documentazione"
 
 msgid "Zoom"
 msgstr "Zoom"
@@ -421,48 +565,6 @@ msgstr "VNC-Port"
 msgid "VNC-Server port"
 msgstr "VNC-Server Port"
 
-msgid "On/Off"
-msgstr "Sì/No"
-
-msgid "3D-View"
-msgstr "Vista-3D"
-
-msgid "Output"
-msgstr "Output"
-
-msgid "PostProcessor"
-msgstr "Postprocessore"
-
-msgid "VNC"
-msgstr "VNC"
-
-msgid "Documentation"
-msgstr "Documentazione"
-
-msgid "-5 First"
-msgstr "-5 prima"
-
-msgid "0 Auto"
-msgstr "0 Auto"
-
-msgid "5 Last"
-msgstr "5 dopo"
-
-msgid "None"
-msgstr "Nessuna"
-
-msgid "Inside"
-msgstr "Interno"
-
-msgid "Outside"
-msgstr "Esterno"
-
-msgid "Expander"
-msgstr "Voci estese"
-
-msgid "Notebook-Tabs"
-msgstr "Tabs"
-
 msgid "Help"
 msgstr "Aiuto"
 
@@ -472,44 +574,11 @@ msgstr "Über CAMmill"
 msgid "File"
 msgstr "File"
 
-msgid "Load DXF"
-msgstr "Carica DXF"
-
-msgid "Reload DXF"
-msgstr "Ricarica DXF"
-
-msgid "Load Preset"
-msgstr "Carica Settaggi"
-
-msgid "Save Preset"
-msgstr "Salva Settaggi"
-
-msgid "Save Output"
-msgstr "Salva output"
-
-msgid "Save Output As.."
-msgstr "Salva output con nome.."
-
-msgid "Load Tooltable"
-msgstr "Carica Utensili"
-
-msgid "Save Setup"
-msgstr "Salva configurazione"
-
 msgid "Quit"
 msgstr "Esci"
 
 msgid "Preset"
 msgstr "Settaggi"
-
-msgid "Tooltable"
-msgstr "Tabella Utensili"
-
-msgid "Load Drawing"
-msgstr "carica disegni"
-
-msgid "DXF-Drawings"
-msgstr "Disegni DXF"
 
 msgid "DWG-Drawings"
 msgstr "Disegni DWG"

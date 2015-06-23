@@ -79,9 +79,19 @@ LANGS += fr
 
 PO_MKDIR = mkdir -p $(foreach PO,$(LANGS),intl/$(PO)_$(shell echo $(PO) | tr "a-z" "A-Z").UTF-8/LC_MESSAGES)
 PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo $(PO) | tr "a-z" "A-Z").UTF-8/LC_MESSAGES/${PROGRAM}.mo\;)
+PO_MERGE = $(foreach PO,$(LANGS),msgmerge --no-fuzzy-matching --width=512 --backup=none --previous --update po/$(PO).po lang.pot\;)
+PO_SED = $(foreach PO,$(LANGS),sed -i \'s/^.~ //g\' po/$(PO).po\;)
 
 
 all: lang ${PROGRAM}
+
+updatepo:
+	xgettext -k_ src/*.c -o lang.pot
+	@echo ${PO_MERGE}
+	@echo ${PO_MERGE} | sh
+	@echo ${PO_SED}
+	@echo ${PO_SED} | sh
+	rm -rf lang.pot
 
 lang:
 	@echo ${PO_MKDIR}
