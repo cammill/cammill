@@ -17,6 +17,15 @@ ifeq (${TARGET}, DEFAULT)
 		ifeq ($(UNAME_S),Linux)
 			TARGET = DEFAULT
 		endif
+		ifeq ($(UNAME_S),FreeBSD)
+			TARGET = FREEBSD
+		endif
+		ifeq ($(UNAME_S),OpenBSD)
+			TARGET = OPENBSD
+		endif
+		ifeq ($(UNAME_S),NetBSD)
+			TARGET = NETBSD
+		endif
 		ifeq ($(UNAME_S),Darwin)
 			TARGET = OSX
 		endif
