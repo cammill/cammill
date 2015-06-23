@@ -108,7 +108,7 @@ install: ${PROGRAM}
 	cp -p fonts/* ${INSTALL_PATH}/fonts
 	mkdir -p ${INSTALL_PATH}/doc
 	cp -p doc/* ${INSTALL_PATH}/doc
-	cp -p GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
+	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
 
 ifeq (${TARGET}, MINGW32)
 
@@ -158,8 +158,8 @@ package: ${PROGRAM}
 	cp -p README.md debian-package/usr/share/doc/${PROGRAM}/README
 	mkdir -p debian-package/usr/share/doc/${PROGRAM}/doc
 	cp -p doc/* debian-package/usr/share/doc/${PROGRAM}/doc/
-	cp -p GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/copyright
-	cp -p GPLv3.txt debian-package/usr/share/doc/${PROGRAM}/GPLv3.txt
+	cp -p LICENSE.txt debian-package/usr/share/doc/${PROGRAM}/copyright
+	cp -p LICENSE.txt debian-package/usr/share/doc/${PROGRAM}/LICENSE.txt
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.gz
 	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
 	mkdir -p debian-package/DEBIAN/
@@ -209,7 +209,7 @@ package: ${PROGRAM}
 	cp -p fonts/* freebsd-package${INSTALL_PATH}/fonts
 	mkdir -p freebsd-package${INSTALL_PATH}/doc
 	cp -p doc/* freebsd-package${INSTALL_PATH}/doc
-	cp -p GPLv3.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf freebsd-package${INSTALL_PATH}/
+	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf freebsd-package${INSTALL_PATH}/
 	mkdir -p freebsd-package/usr/local/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} freebsd-package/usr/local/bin/${PROGRAM}
 
