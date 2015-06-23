@@ -153,6 +153,7 @@ package: ${PROGRAM}
 	mkdir -p packages/debian/usr/bin
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/debian/usr/bin/${PROGRAM}
 	mkdir -p packages/debian/usr/share/man/man1/
+	help2man ./${PROGRAM} > utils/man.1
 	cat utils/man.1 | gzip -9 > packages/debian/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/
 	cp -p README.md packages/debian/usr/share/doc/${PROGRAM}/README
