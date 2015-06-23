@@ -48,7 +48,7 @@ make TARGET=OSX clean all
 
 ### Building for Linux/BSD
 
-#### Debian (Wheezy/Jessie)
+#### Debian (Wheezy/Jessie), Ubuntu (15.04)
 
 ```bash
 apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev help2man
