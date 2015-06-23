@@ -1,12 +1,12 @@
 # CAMmill [![travis](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
 
-2D CAM tool for Linux/BSD, Windows and Mac OS X
+CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and gcode for CNC machines.
 
 ![license](https://img.shields.io/github/license/cammill/cammill.svg)
 [![release](https://img.shields.io/github/release/cammill/cammill.svg)](https://github.com/cammill/cammill/releases)
 [![issues](https://img.shields.io/github/issues/cammill/cammill.svg)](https://github.com/cammill/cammill/issues)
 
-CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and gcode for CNC machines. Some key features include:
+Some key features include:
 * Automatic Offsets (Inside / Outside)
 * Normal and Climb milling
 * Rotary-Axis Support
