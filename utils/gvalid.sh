@@ -7,6 +7,16 @@ then
 	echo "ERROR(no G codes found)"
 	exit 1
 fi
+if ! cat "$1" | tr -d "\r" | grep -v " *(.*)$" | grep -s -q "\<X[0-9]*[0-9\.]\>"
+then
+	echo "ERROR(no X cords found)"
+	exit 1
+fi
+if ! cat "$1" | tr -d "\r" | grep -v " *(.*)$" | grep -s -q "\<Y[0-9]*[0-9\.]\>"
+then
+	echo "ERROR(no Y cords found)"
+	exit 1
+fi
 if ! cat "$1" | tr -d "\r" | grep -v " *(.*)$" | grep -s -q "\<M[0-9]*[0-9]\>"
 then
 	echo "ERROR(no M codes found)"
