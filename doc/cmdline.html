@@ -21,21 +21,19 @@ cammill [OPTIONS] FILE<BR>
 <BLOCKQUOTE><LI>-st: View-ShowTool (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-vt: View-Textures (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-rx: View-Rotate-X (FLOAT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-rx: View-Rotate-Y (FLOAT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-rx: View-Rotate-Z (FLOAT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-rx: View-Translate-X (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-rx: View-Translate-Y (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-ry: View-Rotate-Y (FLOAT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-rz: View-Rotate-Z (FLOAT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-tx: View-Translate-X (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-ty: View-Translate-Y (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-gs: View-Grid-Size (FLOAT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-as: View-Arrow-Scale (FLOAT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-d: View-DXF-File (FILE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-tn: Tool-Select (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-tp: Tool-Select (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-tn: Tool-Number (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-td: Tool-Diameter (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-cs: Tool-CalcSpeed (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-ts: Tool-Speed (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-tw: Tool-Flutes (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-tt: Tool-Table (FILE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-fm: Milling-MaxFeedRate (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-fr: Milling-FeedRate (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-pr: Milling-PlungeRate (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-md: Milling-Depth (DOUBLE)</BLOCKQUOTE>
@@ -53,45 +51,39 @@ cammill [OPTIONS] FILE<BR>
 <BLOCKQUOTE><LI>-nd: Milling-NC-Debug (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-hu: Holding-Tabs-Activate (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-tg: Holding-Tabs-Show Grid (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-hd: Holding-Tabs-Depth (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-hl: Holding-Tabs-Lenght (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ht: Holding-Tabs-Triangle-Type (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-htd: Holding-Tabs-Depth (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-htl: Holding-Tabs-Lenght (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-htt: Holding-Tabs-Triangle-Type (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-ht: Holding-Tabs-On Open (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ht: Holding-Tabs-On Inside (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ht: Holding-Tabs-On Outside (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ht: Holding-Tabs-X-Grid (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ht: Holding-Tabs-Y-Grid (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-hti: Holding-Tabs-On Inside (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-hto: Holding-Tabs-On Outside (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-htx: Holding-Tabs-X-Grid (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-hty: Holding-Tabs-Y-Grid (DOUBLE)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-fs: Machine-Fastmove-Speed (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-mp: Machine-Post (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-mpt: Machine-Post (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-o: Milling-Output-File (FILE)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-ms: Material-Select (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-cs: Material-Cutting Speed (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-f4: Material-Feedrate/Flute/<4mm (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-f4: Material-Feedrate/Flute/<8mm (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-f4: Material-Feedrate/Flute/<12mm (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-pc: Material-Texture (STRING)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-pc: Milling-Post-Command (STRING)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-so: Objects-Select (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ou: Objects-Use (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-of: Objects-Overwrite (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-oc: Objects-Climb (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-oo: Objects-Offset (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ov: Objects-Overcut (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-op: Objects-Pocket (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ol: Objects-Laser (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-od: Objects-Depth (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-ot: Objects-Holding-Tab's (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objs: Objects-Select (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-obju: Objects-Use (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objf: Objects-Overwrite (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objc: Objects-Climb (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objo: Objects-Offset (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objv: Objects-Overcut (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objp: Objects-Pocket (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objl: Objects-Laser (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objd: Objects-Depth (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-objt: Objects-Holding-Tab's (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-mo: Objects-Order (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-rm: Rotary-Activate (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-ra: Rotary-Axis (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-md: Rotary-Diameter (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-tm: Tangencial-Activate (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-rd: Rotary-Diameter (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-to: Tangencial-Activate (0/1)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-ta: Tangencial-Axis (INT)</BLOCKQUOTE>
 <BLOCKQUOTE><LI>-tm: Tangencial-MaxAngle (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-mt: Misc-Tolerance (DOUBLE)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-st: Misc-Parameter (INT)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-as: Misc-Setup-Autosave (0/1)</BLOCKQUOTE>
-<BLOCKQUOTE><LI>-bm: Misc-Batchmode (0/1)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-mto: Misc-Tolerance (DOUBLE)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-te: Misc-Parameter (INT)</BLOCKQUOTE>
+<BLOCKQUOTE><LI>-sa: Misc-Setup-Autosave (0/1)</BLOCKQUOTE>
 <BR>
 <BR>
 <BR>

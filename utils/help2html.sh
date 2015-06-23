@@ -46,3 +46,15 @@ cat <<EOF
 </BODY>
 </HTML>
 EOF
+
+if $CMD --help | grep "^ *-[a-z]" | awk '{print $1}' | sort | uniq -d | grep -s -q "."
+then
+	echo "WARNING: double used arguments:" >&2
+	for ARG in `$CMD --help | grep "^ *-[a-z]" | awk '{print $1}' | sort | uniq -d`
+	do
+		echo " $ARG" >&2
+		$CMD --help | grep "^ *$ARG" | sed "s|^|  |g" >&2
+	done
+fi
+
+
