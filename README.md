@@ -21,11 +21,11 @@ Missing Features: see [#6](https://github.com/cammill/cammill/issues/6), please 
 
 Homepage: http://www.multixmedia.org/cammill/
 
-## Building for Mac OS X
+### Building for Mac OS X
 Prerequisites:
 * XCode, including XCode command-line tools.
 
-### Mac OS X (10.9)
+#### Mac OS X (10.9)
 
 (assumes [Homebrew](http://brew.sh/) is already installed)
 ```bash
@@ -45,9 +45,9 @@ make TARGET=OSX clean all
 ./cammill test.dxf
 ```
 
-## Building for Linux/BSD
+### Building for Linux/BSD
 
-### Debian (Wheezy/Jessie)
+#### Debian (Wheezy/Jessie)
 
 ```bash
 apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev help2man
@@ -66,7 +66,7 @@ make package
 dpkg -i packages/cammill_0.9_i386.deb
 ```
 
-### FreeBSD (10.0)
+#### FreeBSD (10.0)
 
 ```bash
 pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
@@ -81,7 +81,7 @@ gmake TARGET=FREEBSD package
 pkg install packages/cammill-freebsd-0.9.tgz
 ```
 
-### NetBSD (6.1)
+#### NetBSD (6.1)
 
 ```bash
 pkgin install git gcc49 freeglut gtksourceview gtkglext lua51
@@ -91,7 +91,7 @@ gmake TARGET=NETBSD clean all
 ./cammill test.dxf
 ```
 
-### OpenBSD (5.7)
+#### OpenBSD (5.7)
 
 ```bash
 pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
@@ -101,9 +101,9 @@ gmake TARGET=OPENBSD clean all
 ./cammill test.dxf
 ```
 
-## Building for Windows
+### Building for Windows
 
-### Cross-Compile Windows (32 Bit) under Linux
+#### Cross-Compile Windows (32 Bit) under Linux
 
 Compile and install [mxe](http://mxe.cc/):
 ```bash
@@ -126,14 +126,14 @@ make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- package
 wine packages/cammill-installer.exe
 ```
 
-## Compilation
+### Compilation
 
 If you had problems compiling from source, raise a new issue in the [issue tracker on the github page](https://github.com/cammill/cammill/issues).
 
-## Contact
+### Contact
 
-### IRC
+#### IRC
 [#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
 
-### Facebook
+#### Facebook
 [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
