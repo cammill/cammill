@@ -113,7 +113,7 @@ install: ${PROGRAM}
 ifeq (${TARGET}, MINGW32)
 
 package: install
-	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
+	(cd ${INSTALL_PATH} ; tclsh ../../../utils/create-win-installer.tclsh > installer.nsis)
 	cp -p icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	rm -rf packages/windows/*.exe

@@ -29,7 +29,7 @@ proc list_files {DIR} {
 	}
 }
 
-set fp [open "../../utils/create-win-installer.pre" r]
+set fp [open "../../../utils/create-win-installer.pre" r]
 puts "[read $fp]"
 close $fp
 
@@ -38,7 +38,7 @@ puts "Section \"install\" install"
 puts " SetOutPath \"\$INSTDIR\""
 list_files "./"
 
-set fp [open "../../utils/create-win-installer.post" r]
+set fp [open "../../../utils/create-win-installer.post" r]
 puts "[read $fp]"
 close $fp
 
