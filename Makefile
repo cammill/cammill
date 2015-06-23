@@ -173,6 +173,9 @@ package: install
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	rm -rf packages/windows/*.exe
 	mv ${INSTALL_PATH}/installer.exe packages/cammill-installer.exe
+	@echo "##"
+	@echo "## packages/cammill-installer.exe"
+	@echo "##"
 
 test: ${PROGRAM}
 	wine ${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
@@ -184,6 +187,9 @@ ifeq (${TARGET}, OSX)
 
 package: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
+	@echo "##"
+	@echo "## packages/cammill.dmg"
+	@echo "##"
 
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
@@ -242,6 +248,9 @@ package: ${PROGRAM}
 	chmod 0755 packages/debian/DEBIAN/ -R
 	dpkg-deb --build packages/debian
 	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
+	@echo "##"
+	@echo "## packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb"
+	@echo "##"
 
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
@@ -318,8 +327,10 @@ package: ${PROGRAM}
 	echo "    echo post-install" >> packages/freebsd/+MANIFEST
 	echo "  }" >> packages/freebsd/+MANIFEST
 	echo "}" >> packages/freebsd/+MANIFEST
-
 	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czvpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
+	@echo "##"
+	@echo "## packages/cammill-freebsd-${VERSION}.tgz"
+	@echo "##"
 
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
