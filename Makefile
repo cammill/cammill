@@ -8,7 +8,7 @@ ifeq (${TARGET}, MINGW32)
 	CROSS           ?= i686-w64-mingw32.static-
 	COMP            ?= ${CROSS}gcc
 	PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
-	INSTALL_PATH    ?= Windows/CamMill
+	INSTALL_PATH    ?= Windows/CAMmill
 endif
 
 ifeq (${TARGET}, OSX)
@@ -16,7 +16,7 @@ ifeq (${TARGET}, OSX)
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
-	INSTALL_PATH    ?= OSX/CamMill
+	INSTALL_PATH    ?= OSX/CAMmill
 endif
 
 ifeq (${TARGET}, OPENBSD)
