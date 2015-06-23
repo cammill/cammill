@@ -120,7 +120,7 @@ package: install
 	mv ${INSTALL_PATH}/installer.exe packages/cammill-installer.exe
 
 test: ${PROGRAM}
-	wine cammill.exe -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
+	wine ${PROGRAM} -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc
 
 endif
@@ -130,7 +130,7 @@ package: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
 
 test: ${PROGRAM}
-	./cammill -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc
 
 endif
@@ -190,7 +190,7 @@ package: ${PROGRAM}
 	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
 
 test: ${PROGRAM}
-	./cammill -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc
 
 endif
@@ -200,7 +200,7 @@ depends:
 	pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
 
 test: ${PROGRAM}
-	./cammill -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc
 
 endif
@@ -268,7 +268,7 @@ package: ${PROGRAM}
 	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czvpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
 
 test: ${PROGRAM}
-	./cammill -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc && sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc
 
 endif
