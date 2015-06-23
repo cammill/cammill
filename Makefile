@@ -281,3 +281,6 @@ test: ${PROGRAM}
 	rm -rf test.ngc
 
 endif
+
+doc: ${PROGRAM}
+	sh utils/help2html.sh ./${PROGRAM} > doc/cmdline.html
