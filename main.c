@@ -708,7 +708,7 @@ void ArgsRead (int argc, char **argv) {
 	for (num = 1; num < argc; num++) {
 		if (SetupArgCheck(argv[num], argv[num + 1]) == 1) {
 			num++;
-		} else if (strcmp(argv[num], "-h") == 0) {
+		} else if (strcmp(argv[num], "-h") == 0 || strcmp(argv[num], "--help") == 0) {
 			SetupShowHelp();
 			exit(0);
 		} else if (num != argc - 1) {
