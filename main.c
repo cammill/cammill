@@ -90,7 +90,7 @@ void texture_init (void);
 char program_path[PATH_MAX];
 
 char *about1 = "CAMmill 2D";
-char *author1 = "Oliver Dippel <a href='&lt;oliver@multixmedia.org&gt;'>oliver@multixmedia.org</a>\nOS X port by McUles <a href='&lt;mcules@fpv-club.de&gt;'>mcules@fpv-club.de</a>";
+char *author1 = "Oliver Dippel <a href='mailto:oliver@multixmedia.org'>oliver@multixmedia.org</a>\nOS X port by McUles <a href='mailto:mcules@fpv-club.de'>mcules@fpv-club.de</a>";
 char *author2 = "improvements by Jakob Flierl <a href='https://github.com/koppi'>@koppi</a> and Carlo <a href='https://github.com/onekk'>@onekk</a>";
 char *website = "Website: <a href='https://github.com/cammill'>https://github.com/cammill</a>\nIRC: <a href='http://webchat.freenode.net/?nick=webchat_user&amp;channels=%23cammill&amp;prompt=1&amp;uio=MTE9MjM20f'>#cammill</a> (FreeNode) ";
 
@@ -1060,7 +1060,7 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	char tmp_str[2048];
-	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s\n\nCopyright by %s\n%s\n\n%s",about1, VERSION, author1, author2, website);
+	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s\n\nCopyright © 2006–2015 %s\n%s\n\n%s",about1, VERSION, author1, author2, website);
 	GtkWidget *label = gtk_label_new(tmp_str);
         gtk_label_set_use_markup (GTK_LABEL(label), TRUE);
         gtk_label_set_markup(GTK_LABEL(label), tmp_str);
