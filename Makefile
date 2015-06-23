@@ -8,7 +8,7 @@ ifeq (${TARGET}, MINGW32)
 	CROSS           ?= i686-w64-mingw32.static-
 	COMP            ?= ${CROSS}gcc
 	PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
-	INSTALL_PATH    ?= Windows/CAMmill
+	INSTALL_PATH    ?= packages/windows/CAMmill
 endif
 
 ifeq (${TARGET}, OSX)
@@ -16,7 +16,7 @@ ifeq (${TARGET}, OSX)
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
-	INSTALL_PATH    ?= OSX/CAMmill
+	INSTALL_PATH    ?= packages/osx/CAMmill
 endif
 
 ifeq (${TARGET}, OPENBSD)
@@ -116,8 +116,8 @@ package: install
 	(cd ${INSTALL_PATH} ; tclsh ../../utils/create-win-installer.tclsh > installer.nsis)
 	cp -p icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
-	rm -rf Windows/*.exe
-	mv ${INSTALL_PATH}/installer.exe Windows/cammill-installer.exe
+	rm -rf packages/windows/*.exe
+	mv ${INSTALL_PATH}/installer.exe packages/cammill-installer.exe
 
 endif
 ifeq (${TARGET}, OSX)
@@ -137,48 +137,48 @@ depends:
 	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
 
 package: ${PROGRAM}
-	rm -rf debian-package
-	mkdir -p debian-package${INSTALL_PATH}
-	cp -p ${PROGRAM} debian-package${INSTALL_PATH}/${PROGRAM}
-	chmod 755 debian-package${INSTALL_PATH}/${PROGRAM}
-	mkdir -p debian-package${INSTALL_PATH}/posts
-	cp -p posts/* debian-package${INSTALL_PATH}/posts
-	mkdir -p debian-package${INSTALL_PATH}/textures
-	cp -p textures/* debian-package${INSTALL_PATH}/textures
-	mkdir -p debian-package${INSTALL_PATH}/icons
-	cp -p icons/* debian-package${INSTALL_PATH}/icons
-	mkdir -p debian-package${INSTALL_PATH}/fonts
-	cp -p fonts/* debian-package${INSTALL_PATH}/fonts
-	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf debian-package${INSTALL_PATH}/
-	mkdir -p debian-package/usr/bin
-	ln -sf ${INSTALL_PATH}/${PROGRAM} debian-package/usr/bin/${PROGRAM}
-	mkdir -p debian-package/usr/share/man/man1/
-	cat utils/man.1 | gzip -9 > debian-package/usr/share/man/man1/${PROGRAM}.1.gz
-	mkdir -p debian-package/usr/share/doc/${PROGRAM}/
-	cp -p README.md debian-package/usr/share/doc/${PROGRAM}/README
-	mkdir -p debian-package/usr/share/doc/${PROGRAM}/doc
-	cp -p doc/* debian-package/usr/share/doc/${PROGRAM}/doc/
-	cp -p LICENSE.txt debian-package/usr/share/doc/${PROGRAM}/copyright
-	cp -p LICENSE.txt debian-package/usr/share/doc/${PROGRAM}/LICENSE.txt
-	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.gz
-	git log | gzip -9 > debian-package/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
-	mkdir -p debian-package/DEBIAN/
-	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> debian-package/DEBIAN/conffiles
-	echo "Package: ${PROGRAM}" > debian-package/DEBIAN/control
-	echo "Source: ${PROGRAM}" >> debian-package/DEBIAN/control
-	echo "Version: $(VERSION)-`date +%s`" >> debian-package/DEBIAN/control
-	echo "Architecture: `dpkg --print-architecture`" >> debian-package/DEBIAN/control
-	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> debian-package/DEBIAN/control
-	echo "Depends: libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> debian-package/DEBIAN/control
-	echo "Section: graphics" >> debian-package/DEBIAN/control
-	echo "Priority: optional" >> debian-package/DEBIAN/control
-	echo "Description: 2D CAM-Tool (DXF to GCODE)" >> debian-package/DEBIAN/control
-	echo " 2D CAM-Tool for Linux, Windows and Mac OS X" >> debian-package/DEBIAN/control
-	echo "Homepage: http://www.multixmedia.org/cammill/" >> debian-package/DEBIAN/control
-	chmod -R -s debian-package/ -R
-	chmod 0755 debian-package/DEBIAN/ -R
-	dpkg-deb --build debian-package
-	mv debian-package.deb ${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
+	rm -rf packages/debian
+	mkdir -p packages/debian${INSTALL_PATH}
+	cp -p ${PROGRAM} packages/debian${INSTALL_PATH}/${PROGRAM}
+	chmod 755 packages/debian${INSTALL_PATH}/${PROGRAM}
+	mkdir -p packages/debian${INSTALL_PATH}/posts
+	cp -p posts/* packages/debian${INSTALL_PATH}/posts
+	mkdir -p packages/debian${INSTALL_PATH}/textures
+	cp -p textures/* packages/debian${INSTALL_PATH}/textures
+	mkdir -p packages/debian${INSTALL_PATH}/icons
+	cp -p icons/* packages/debian${INSTALL_PATH}/icons
+	mkdir -p packages/debian${INSTALL_PATH}/fonts
+	cp -p fonts/* packages/debian${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/debian${INSTALL_PATH}/
+	mkdir -p packages/debian/usr/bin
+	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/debian/usr/bin/${PROGRAM}
+	mkdir -p packages/debian/usr/share/man/man1/
+	cat utils/man.1 | gzip -9 > packages/debian/usr/share/man/man1/${PROGRAM}.1.gz
+	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/
+	cp -p README.md packages/debian/usr/share/doc/${PROGRAM}/README
+	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/doc
+	cp -p doc/* packages/debian/usr/share/doc/${PROGRAM}/doc/
+	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/copyright
+	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/LICENSE.txt
+	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
+	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
+	mkdir -p packages/debian/DEBIAN/
+	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
+	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
+	echo "Source: ${PROGRAM}" >> packages/debian/DEBIAN/control
+	echo "Version: $(VERSION)-`date +%s`" >> packages/debian/DEBIAN/control
+	echo "Architecture: `dpkg --print-architecture`" >> packages/debian/DEBIAN/control
+	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> packages/debian/DEBIAN/control
+	echo "Depends: libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> packages/debian/DEBIAN/control
+	echo "Section: graphics" >> packages/debian/DEBIAN/control
+	echo "Priority: optional" >> packages/debian/DEBIAN/control
+	echo "Description: 2D CAM-Tool (DXF to GCODE)" >> packages/debian/DEBIAN/control
+	echo " 2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/debian/DEBIAN/control
+	echo "Homepage: http://www.multixmedia.org/cammill/" >> packages/debian/DEBIAN/control
+	chmod -R -s packages/debian/ -R
+	chmod 0755 packages/debian/DEBIAN/ -R
+	dpkg-deb --build packages/debian
+	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
 
 endif
 ifeq (${TARGET}, OPENBSD)
@@ -193,61 +193,61 @@ depends:
 	pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
 
 package: ${PROGRAM}
-	rm -rf freebsd-package
-	mkdir -p freebsd-package
+	rm -rf packages/freebsd
+	mkdir -p packages/freebsd
 
-	mkdir -p freebsd-package${INSTALL_PATH}
-	cp ${PROGRAM} freebsd-package${INSTALL_PATH}/${PROGRAM}
-	chmod 755 freebsd-package${INSTALL_PATH}/${PROGRAM}
-	mkdir -p freebsd-package${INSTALL_PATH}/posts
-	cp -p posts/* freebsd-package${INSTALL_PATH}/posts
-	mkdir -p freebsd-package${INSTALL_PATH}/textures
-	cp -p textures/* freebsd-package${INSTALL_PATH}/textures
-	mkdir -p freebsd-package${INSTALL_PATH}/icons
-	cp -p icons/* freebsd-package${INSTALL_PATH}/icons
-	mkdir -p freebsd-package${INSTALL_PATH}/fonts
-	cp -p fonts/* freebsd-package${INSTALL_PATH}/fonts
-	mkdir -p freebsd-package${INSTALL_PATH}/doc
-	cp -p doc/* freebsd-package${INSTALL_PATH}/doc
-	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf freebsd-package${INSTALL_PATH}/
-	mkdir -p freebsd-package/usr/local/bin/
-	ln -sf ${INSTALL_PATH}/${PROGRAM} freebsd-package/usr/local/bin/${PROGRAM}
+	mkdir -p packages/freebsd${INSTALL_PATH}
+	cp ${PROGRAM} packages/freebsd${INSTALL_PATH}/${PROGRAM}
+	chmod 755 packages/freebsd${INSTALL_PATH}/${PROGRAM}
+	mkdir -p packages/freebsd${INSTALL_PATH}/posts
+	cp -p posts/* packages/freebsd${INSTALL_PATH}/posts
+	mkdir -p packages/freebsd${INSTALL_PATH}/textures
+	cp -p textures/* packages/freebsd${INSTALL_PATH}/textures
+	mkdir -p packages/freebsd${INSTALL_PATH}/icons
+	cp -p icons/* packages/freebsd${INSTALL_PATH}/icons
+	mkdir -p packages/freebsd${INSTALL_PATH}/fonts
+	cp -p fonts/* packages/freebsd${INSTALL_PATH}/fonts
+	mkdir -p packages/freebsd${INSTALL_PATH}/doc
+	cp -p doc/* packages/freebsd${INSTALL_PATH}/doc
+	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/freebsd${INSTALL_PATH}/
+	mkdir -p packages/freebsd/usr/local/bin/
+	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/freebsd/usr/local/bin/${PROGRAM}
 
-	echo "name: ${PROGRAM}" > freebsd-package/+MANIFEST
-	echo "version: ${VERSION}_0" >> freebsd-package/+MANIFEST
-	echo "origin: graphics" >> freebsd-package/+MANIFEST
-	echo "comment: 2D CAM-Tool (DXF to GCODE)" >> freebsd-package/+MANIFEST
-	echo "arch: i386" >> freebsd-package/+MANIFEST
-	echo "www: http://www.multixmedia.org/cammill/" >> freebsd-package/+MANIFEST
-	echo "maintainer: ${MAINTAINER_EMAIL}" >> freebsd-package/+MANIFEST
-	echo "prefix: /opt" >> freebsd-package/+MANIFEST
-	echo "licenselogic: or" >> freebsd-package/+MANIFEST
-	echo "licenses: [GPL3]" >> freebsd-package/+MANIFEST
-	echo "flatsize: `du -sck freebsd-package/ | tail -n1 | awk '{print $$1}'`" >> freebsd-package/+MANIFEST
-	#echo "users: [USER1, USER2]" >> freebsd-package/+MANIFEST
-	#echo "groups: [GROUP1, GROUP2]" >> freebsd-package/+MANIFEST
-	#echo "options: { OPT1: off, OPT2: on }" >> freebsd-package/+MANIFEST
-	echo "desc: |-" >> freebsd-package/+MANIFEST
-	echo "  2D CAM-Tool for Linux, Windows and Mac OS X" >> freebsd-package/+MANIFEST
-	echo "categories: [graphics]" >> freebsd-package/+MANIFEST
-	#echo "deps:" >> freebsd-package/+MANIFEST
-	#echo "  libiconv: {origin: converters/libiconv, version: 1.13.1_2}" >> freebsd-package/+MANIFEST
-	#echo "  perl: {origin: lang/perl5.12, version: 5.12.4 }" >> freebsd-package/+MANIFEST
+	echo "name: ${PROGRAM}" > packages/freebsd/+MANIFEST
+	echo "version: ${VERSION}_0" >> packages/freebsd/+MANIFEST
+	echo "origin: graphics" >> packages/freebsd/+MANIFEST
+	echo "comment: 2D CAM-Tool (DXF to GCODE)" >> packages/freebsd/+MANIFEST
+	echo "arch: i386" >> packages/freebsd/+MANIFEST
+	echo "www: http://www.multixmedia.org/cammill/" >> packages/freebsd/+MANIFEST
+	echo "maintainer: ${MAINTAINER_EMAIL}" >> packages/freebsd/+MANIFEST
+	echo "prefix: /opt" >> packages/freebsd/+MANIFEST
+	echo "licenselogic: or" >> packages/freebsd/+MANIFEST
+	echo "licenses: [GPL3]" >> packages/freebsd/+MANIFEST
+	echo "flatsize: `du -sck packages/freebsd/ | tail -n1 | awk '{print $$1}'`" >> packages/freebsd/+MANIFEST
+	#echo "users: [USER1, USER2]" >> packages/freebsd/+MANIFEST
+	#echo "groups: [GROUP1, GROUP2]" >> packages/freebsd/+MANIFEST
+	#echo "options: { OPT1: off, OPT2: on }" >> packages/freebsd/+MANIFEST
+	echo "desc: |-" >> packages/freebsd/+MANIFEST
+	echo "  2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/freebsd/+MANIFEST
+	echo "categories: [graphics]" >> packages/freebsd/+MANIFEST
+	#echo "deps:" >> packages/freebsd/+MANIFEST
+	#echo "  libiconv: {origin: converters/libiconv, version: 1.13.1_2}" >> packages/freebsd/+MANIFEST
+	#echo "  perl: {origin: lang/perl5.12, version: 5.12.4 }" >> packages/freebsd/+MANIFEST
 	#freeglut gtkglext gtksourceview2 lua51
-	echo "files: {" >> freebsd-package/+MANIFEST
-	(for F in `find freebsd-package${INSTALL_PATH} freebsd-package/usr/local/bin/${PROGRAM} -type f` ; do echo "  `echo $$F | sed "s|^freebsd-package||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> freebsd-package/+MANIFEST
-	echo "}" >> freebsd-package/+MANIFEST
-	echo "scripts: {" >> freebsd-package/+MANIFEST
-	echo "  pre-install:  {" >> freebsd-package/+MANIFEST
-	echo "    #!/bin/sh" >> freebsd-package/+MANIFEST
-	echo "    echo pre-install" >> freebsd-package/+MANIFEST
-	echo "  }" >> freebsd-package/+MANIFEST
-	echo "  post-install:  {" >> freebsd-package/+MANIFEST
-	echo "    #!/bin/sh" >> freebsd-package/+MANIFEST
-	echo "    echo post-install" >> freebsd-package/+MANIFEST
-	echo "  }" >> freebsd-package/+MANIFEST
-	echo "}" >> freebsd-package/+MANIFEST
+	echo "files: {" >> packages/freebsd/+MANIFEST
+	(for F in `find packages/freebsd${INSTALL_PATH} packages/freebsd/usr/local/bin/${PROGRAM} -type f` ; do echo "  `echo $$F | sed "s|^packages/freebsd||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> packages/freebsd/+MANIFEST
+	echo "}" >> packages/freebsd/+MANIFEST
+	echo "scripts: {" >> packages/freebsd/+MANIFEST
+	echo "  pre-install:  {" >> packages/freebsd/+MANIFEST
+	echo "    #!/bin/sh" >> packages/freebsd/+MANIFEST
+	echo "    echo pre-install" >> packages/freebsd/+MANIFEST
+	echo "  }" >> packages/freebsd/+MANIFEST
+	echo "  post-install:  {" >> packages/freebsd/+MANIFEST
+	echo "    #!/bin/sh" >> packages/freebsd/+MANIFEST
+	echo "    echo post-install" >> packages/freebsd/+MANIFEST
+	echo "  }" >> packages/freebsd/+MANIFEST
+	echo "}" >> packages/freebsd/+MANIFEST
 
-	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C freebsd-package/ -czvpPf cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
+	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czvpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
 
 endif

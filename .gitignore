@@ -11,7 +11,4 @@ cammill
 *.deb
 *.tgz
 intl/*
-Windows
-OSX
-debian-package
-freebsd-package
+packages

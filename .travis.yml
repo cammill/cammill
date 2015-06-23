@@ -71,7 +71,7 @@ deploy:
   - provider: releases
     api_key:
       secure: EI1V4apdQ/iqXS1A/ScJl4G3kGO0kxtUqE1oXjS19O0VVEzWmjZwMenLaJXRdRwybd4aka0mn9tc1spLw8B79OWX+V72s61yOoKvDbo4B5YUo+Hcr9RrjBFNNr289D3EVBuNyb5SpWnL+yDf4zZ32yCNqSUom91sn61XnRW+yhckZtUXj8b9FgKGCTEtnqlU+5BNjme0Ikwz2jlZcUstJH9Bygmt5JTPPmqrmFC9pvHnvDcs6VVdV6lvbU2IgG6gn3wHgl7EiBLXvg2MBtIYsQrVfqPOjPl8//rLK41iG1fJDYrAFRzPe87mqJoQMT8XjZCT3zCFkY7ceEroiWc7/xqFLY9FuzF2i6ZXglAXUrCPyHa7QCdNowB92Fta9xrYCR/JO0+JFKz3ZYSOxzX8SHWRzas0RX0eGesXm2yED1lvBwfoImuqDWaG30Bs+cBoloKRnReafmc6KDWMOEVj65CLdvIP3XN+w2Ajzp3gjMjaU5w+gX66pgUozxFumZePcsGVbPAGXBce/x50TNpbR/x7GRbuyXwWAdf+KZFTi260N/IdU73/GxzBDiafGab/EjHFId5zyGg3xT7ysslTt1NZmn/yQwI4iuxU5fYzZ2QQMQAxcbTkORa51kfdV30t4vQUH542jH8FINXtUX5A40e+JSeaCREp4tAEtSROAX8=
-    file: Windows/cammill-installer.exe
+    file: packages/windows/cammill-installer.exe
     skip_cleanup: true
     on:
       condition: "$TRAVIS_OS_NAME = linux"

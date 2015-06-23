@@ -38,7 +38,7 @@ make all install
 generate installer-package ```cammill_0.9_i386.deb```:
 ```
 make package 
-dpkg -i cammill_0.9_i386.deb
+dpkg -i packages/cammill_0.9_i386.deb
 ```
 
 ### Compile under Mac OS X
@@ -80,7 +80,7 @@ wine cammill.exe test-minimal.dxf
 generate installer-package ```cammill-installer.exe```:
 ```
 make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- package 
-wine Windows/cammill-installer.exe
+wine packages/cammill-installer.exe
 ```
 
 ## Compile under FreeBSD (10.0)
@@ -95,7 +95,7 @@ gmake TARGET=FREEBSD clean all
 generate installer-package ```cammill-freebsd-0.9.tgz```:
 ```
 gmake TARGET=FREEBSD package 
-pkg install cammill-freebsd-0.9.tgz
+pkg install packages/cammill-freebsd-0.9.tgz
 ```
 
 ## Compile under OpenBSD (5.7)
