@@ -2,6 +2,39 @@
 #TARGETS: DEFAULT, FREEBSD, MINGW32, OSX, OPENBSD
 TARGET ?= DEFAULT
 
+#autodetect system
+ifeq (${TARGET}, DEFAULT)
+	ifeq ($(OS),Windows_NT)
+		TARGET = MINGW32
+		ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
+			CPU = AMD64
+		endif
+		ifeq ($(PROCESSOR_ARCHITECTURE),x86)
+			CPU = IA32
+		endif
+	else
+		UNAME_S := $(shell uname -s)
+		ifeq ($(UNAME_S),Linux)
+			TARGET = DEFAULT
+		endif
+		ifeq ($(UNAME_S),Darwin)
+			TARGET = OSX
+		endif
+		UNAME_P := $(shell uname -p)
+		ifeq ($(UNAME_P),x86_64)
+			CPU = AMD64
+		endif
+		ifneq ($(filter %86,$(UNAME_P)),)
+			CPU = IA32
+		endif
+		ifneq ($(filter arm%,$(UNAME_P)),)
+			CPU = ARM
+		endif
+	endif
+endif
+
+
+
 ifeq (${TARGET}, MINGW32)
 	PROGRAM         ?= cammill.exe
 	LIBS            ?= -lm -lstdc++ -lgcc
