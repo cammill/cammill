@@ -329,13 +329,13 @@ test: ${PROGRAM}
 endif
 
 doc: ${PROGRAM}
-	test -e cammill.github.io && sh utils/help2html.sh ./${PROGRAM} > cammill.github.io/de/cmdline.html
-	test -e cammill.wiki/ && sh utils/help2md.sh ./${PROGRAM} > cammill.wiki/Commandline-Arguments.md
+	test -e cammill.github.io && sh utils/help2html.sh ./${PROGRAM} > cammill.github.io/de/cmdline.html || true
+	test -e cammill.wiki/ && sh utils/help2md.sh ./${PROGRAM} > cammill.wiki/Commandline-Arguments.md || true
 
 pull:
 	git pull --rebase
-	test -e cammill.github.io && (cd cammill.github.io/ ; git pull --rebase)
-	test -e cammill.wiki/ && (cd cammill.wiki/ ; git pull --rebase)
+	test -e cammill.github.io && (cd cammill.github.io/ ; git pull --rebase) || true
+	test -e cammill.wiki/ && (cd cammill.wiki/ ; git pull --rebase) || true
 
 
 
