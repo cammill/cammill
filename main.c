@@ -1062,8 +1062,8 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	char tmp_str[2048];
 	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s\n\nCopyright by %s\n%s\n\n%s",about1, VERSION, author1, author2, website);
 	GtkWidget *label = gtk_label_new(tmp_str);
-        gtk_label_set_use_markup (label, TRUE);
-        gtk_label_set_markup(label, tmp_str);
+        gtk_label_set_use_markup (GTK_LABEL(label), TRUE);
+        gtk_label_set_markup(GTK_LABEL(label), tmp_str);
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 16"));
 
 	char iconfile[PATH_MAX];
