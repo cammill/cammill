@@ -22,13 +22,12 @@ CAMmill is a CAM application designed to take CAD files in DXF format, produce t
 
 Missing features: see [#6](https://github.com/cammill/cammill/issues/6). Please help [translate](https://crowdin.com/project/cammill) to your language.
 
-Homepage: http://www.multixmedia.org/cammill/
-
 ### Build and run
 
 see [Wiki](https://github.com/cammill/cammill/wiki)
 
 ### Contact
 
+* Homepage http://www.multixmedia.org/cammill/
 * IRC [#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
 * Facebook [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
