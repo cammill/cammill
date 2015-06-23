@@ -16,7 +16,8 @@ Features:
 * LinuxCNC tool table import
 * Setup-Presets
 * Post-Processor (with Lua script / compatible with [SheetCam-tng](http://www.sheetcam.com/))
-Missing Features: see [#6](https://github.com/cammill/cammill/issues/6), help [translate](https://crowdin.com/project/cammill).
+
+Missing Features: see [#6](https://github.com/cammill/cammill/issues/6), please help [translate](https://crowdin.com/project/cammill).
 
 Homepage: http://www.multixmedia.org/cammill/
 
@@ -59,13 +60,13 @@ cd cammill
 make all install
 ./cammill test.dxf
 ```
-generate installer-package ```cammill_0.9_i386.deb```:
+Generate installer-package ```cammill_0.9_i386.deb```:
 ```
 make package 
 dpkg -i packages/cammill_0.9_i386.deb
 ```
 
-### FeeBSD (10.0)
+### FreeBSD (10.0)
 
 ```bash
 pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
@@ -74,7 +75,7 @@ cd cammill/
 gmake TARGET=FREEBSD clean all
 ./cammill test.dxf
 ```
-generate installer-package ```cammill-freebsd-0.9.tgz```:
+Generate installer-package ```cammill-freebsd-0.9.tgz```:
 ```
 gmake TARGET=FREEBSD package 
 pkg install packages/cammill-freebsd-0.9.tgz
@@ -119,7 +120,7 @@ cd cammill
 make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- clean all 
 wine cammill.exe test-minimal.dxf
 ```
-generate installer-package ```cammill-installer.exe```:
+Generate installer-package ```cammill-installer.exe```:
 ```
 make TARGET=MINGW32 CROSS=/usr/src/mxe/usr/bin/i686-w64-mingw32.static- package 
 wine packages/cammill-installer.exe
