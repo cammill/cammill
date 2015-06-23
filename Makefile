@@ -293,7 +293,7 @@ test: ${PROGRAM}
 endif
 
 doc: ${PROGRAM}
-	sh utils/help2html.sh ./${PROGRAM} > doc/cmdline.html
+	test -e cammill.github.io && sh utils/help2html.sh ./${PROGRAM} > cammill.github.io/de/cmdline.html
 	test -e cammill.wiki/ && sh utils/help2md.sh ./${PROGRAM} > cammill.wiki/Commandline-Arguments.md
 
 
