@@ -711,6 +711,9 @@ void ArgsRead (int argc, char **argv) {
 		} else if (strcmp(argv[num], "-h") == 0 || strcmp(argv[num], "--help") == 0) {
 			SetupShowHelp();
 			exit(0);
+		} else if (strcmp(argv[num], "-v") == 0 || strcmp(argv[num], "--version") == 0) {
+			printf("%s\n", VERSION);
+			exit(0);
 		} else if (num != argc - 1) {
 			fprintf(stderr, "### unknown argument: %s ###\n", argv[num]);
 			SetupShowHelp();
