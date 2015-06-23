@@ -27,10 +27,11 @@ then
 	echo "ERROR(',' found)"
 	exit 1
 fi
-(for CMD in `cat "$1" | grep -v " *(.*)$"`
-do
-	echo $CMD | grep -v "^G[0-9]*[0-9]$\|^F[0-9][0-9]*$\|^[XYZIJ]-*[0-9][0-9\.]*$\|^[MT][0-9]*[1-9]$\|^S[0-9][0-9]*$"
-done) | grep "." && echo "ERROR(unknown codes found)" && exit 1 
+if cat "$1" | grep -v " *(.*)$" | tr " " "\n" | grep -v "^G[0-9]*[0-9]$\|^F[0-9][0-9]*$\|^[XYZIJ]-*[0-9][0-9\.]*$\|^[MT][0-9]*[1-9]$\|^S[0-9][0-9]*$" | grep "."
+then
+	echo "ERROR(unknown codes found)"
+	exit 1 
+fi
 
 echo "PASSED"
 exit 0
