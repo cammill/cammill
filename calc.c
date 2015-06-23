@@ -2703,16 +2703,12 @@ void init_objects (void) {
 		}
 	}
 	PARAMETER[P_O_SELECT].vint = -1;
-	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-	} else {
+	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 		gtk_list_store_clear(ListStore[P_O_SELECT]);
-	}
-	for (object_num = 0; object_num < line_last; object_num++) {
-		if (myOBJECTS[object_num].line[0] != 0) {
-			char tmp_str[128];	
-			snprintf(tmp_str, 128, "%i (%s)", object_num, myOBJECTS[object_num].layer);
-			if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-			} else {
+		for (object_num = 0; object_num < line_last; object_num++) {
+			if (myOBJECTS[object_num].line[0] != 0) {
+				char tmp_str[128];	
+				snprintf(tmp_str, 128, "%i (%s)", object_num, myOBJECTS[object_num].layer);
 				gtk_list_store_insert_with_values(ListStore[P_O_SELECT], NULL, object_num, 0, NULL, 1, tmp_str, -1);
 			}
 		}
@@ -2758,8 +2754,7 @@ void MaterialLoadList (const char* path) {
 		char val_str[1024];
 		while (fgets(line, 1024, stream)) {
 			if (line[0] != '#' && strstr(line, ";") >= 0) {
-				if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-				} else {
+				if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 					gtk_list_store_insert_with_values(ListStore[P_MAT_SELECT], NULL, -1, 0, NULL, 1, csv_getfield(line, 0, val_str), -1);
 				}
 				Material[MaterialMax].vc = atoi(csv_getfield(line, 1, val_str));
@@ -2774,8 +2769,7 @@ void MaterialLoadList (const char* path) {
 		fclose(stream);
 	} else {
 		fprintf(stderr, "unable to open '%s'\n", filename);
-		if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
-		} else {
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			gtk_list_store_insert_with_values(ListStore[P_MAT_SELECT], NULL, -1, 0, NULL, 1, "AL", -1);
 		}
 		Material[MaterialMax].vc = 200;
