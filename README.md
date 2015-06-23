@@ -16,7 +16,7 @@ CAMmill is a CAM application designed to take CAD files in DXF format, produce t
 * Support for milling MTEXT from dxf
 * LinuxCNC tool table import
 * Setup-Presets
-* Lua scriptable Post-Processor compatible with [SheetCam-tng](http://www.sheetcam.com/)
+* Lua scriptable Post-Processor compatible with [SheetCam](http://www.sheetcam.com/)
 * OpenGL GUI and batch-mode
 * Its Free!
 
@@ -26,8 +26,8 @@ Missing features: see [#6](https://github.com/cammill/cammill/issues/6). Please 
 
 see [Wiki](https://github.com/cammill/cammill/wiki)
 
-### Contact
+### Support
 
-* Homepage http://www.multixmedia.org/cammill/
-* IRC [#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
-* Facebook [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
+Join us on IRC ([#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) on Freenode), check out our [FAQ](https://github.com/cammill/cammill/wiki/Frequently%20Asked%20Questions), We're here to help!
+
+Facebook [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
