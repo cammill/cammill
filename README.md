@@ -1,6 +1,9 @@
 2D CAM-Tool for Linux, Windows and Mac OS X
 
-[![Build Status](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
+[license](https://img.shields.io/github/license/cammill/cammill.svg)
+[![travis](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
+[![release](https://img.shields.io/github/release/cammill/cammill.svg)](https://github.com/cammill/cammill/releases)
+[![issues](https://img.shields.io/github/issues/cammill/cammill.svg)](https://github.com/cammill/cammill/issues)
 
 Features:
 * Automatic Offsets (Inside / Outside)
@@ -106,7 +109,6 @@ gmake TARGET=OPENBSD clean all
 ```
 
 ### IRC
-
 [#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) (FreeNode)
 
 ### Facebook
