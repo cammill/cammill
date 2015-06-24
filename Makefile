@@ -186,7 +186,7 @@ package: install
 	rm -rf packages/windows/*.exe
 	mv ${INSTALL_PATH}/installer.exe packages/cammill-installer.exe
 	@echo "##"
-	@echo "## packages/cammill-installer.exe"
+	@echo "## packages/cammill-installer_$(VERSION).exe"
 	@echo "##"
 
 test: ${PROGRAM}
@@ -213,9 +213,9 @@ package:
 	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/Contents/MacOS/
 
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
-	mv cammill.dmg packages/cammill.dmg
+	mv cammill.dmg packages/cammill_$(VERSION).dmg
 	@echo "##"
-	@echo "## packages/cammill.dmg"
+	@echo "## packages/cammill_$(VERSION).dmg"
 	@echo "##"
 
 test: ${PROGRAM}
