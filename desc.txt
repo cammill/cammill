@@ -1,0 +1,17 @@
+2D CAM-Tool for Linux, Windows and Mac OS X
+
+Some key features include:
+    Automatic Offsets (Inside / Outside)
+    Normal and Climb milling
+    Rotary-Axis Support
+    Laser-Mode (inc. Offsets)
+    Tool/Material calculations for feedrate and tool-speed
+    Holding-Tab's
+    Support for milling MTEXT from dxf
+    LinuxCNC tool table import
+    Setup-Presets
+    Lua scriptable Post-Processor compatible with SheetCam
+    OpenGL GUI and batch-mode
+    Its Free!
+
+	Homepage: http://www.multixmedia.org/cammill/

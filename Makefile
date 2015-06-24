@@ -279,8 +279,7 @@ package: ${PROGRAM}
 	echo "Section: graphics" >> packages/debian/DEBIAN/control
 	echo "Priority: optional" >> packages/debian/DEBIAN/control
 	echo "Description: ${COMMENT}" >> packages/debian/DEBIAN/control
-	echo " 2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/debian/DEBIAN/control
-	echo "Homepage: http://www.multixmedia.org/cammill/" >> packages/debian/DEBIAN/control
+	cat desc.txt | sed "s|^| |g" >> packages/debian/DEBIAN/control
 	chmod -R -s packages/debian/ -R
 	chmod 0755 packages/debian/DEBIAN/ -R
 	dpkg-deb --build packages/debian
@@ -337,7 +336,7 @@ package: ${PROGRAM}
 	mkdir -p packages/openbsd/share/pixmaps
 	cp -p icons/icon_128.png packages/openbsd/share/pixmaps/${PROGRAM}.png
 
-	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
+	cat desc.txt >> packages/openbsd/+DESC
 	echo "@comment ${COMMENT}" > packages/openbsd/+CONTENTS
 	echo "@name ${PROGRAM}-${VERSION}" >> packages/openbsd/+CONTENTS
 	echo "@arch `uname -m`" >> packages/openbsd/+CONTENTS
@@ -414,8 +413,9 @@ package: ${PROGRAM}
 	#echo "users: [USER1, USER2]" >> packages/freebsd/+MANIFEST
 	#echo "groups: [GROUP1, GROUP2]" >> packages/freebsd/+MANIFEST
 	#echo "options: { OPT1: off, OPT2: on }" >> packages/freebsd/+MANIFEST
-	echo "desc: |-" >> packages/freebsd/+MANIFEST
-	echo "  2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/freebsd/+MANIFEST
+	echo "desc: {" >> packages/freebsd/+MANIFEST
+	cat desc.txt | sed "s|^| |g" >> packages/freebsd/+MANIFEST
+	echo "}" >> packages/freebsd/+MANIFEST
 	echo "categories: [graphics]" >> packages/freebsd/+MANIFEST
 	#echo "deps:" >> packages/freebsd/+MANIFEST
 	#echo "  libiconv: {origin: converters/libiconv, version: 1.13.1_2}" >> packages/freebsd/+MANIFEST
