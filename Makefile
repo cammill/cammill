@@ -252,18 +252,20 @@ package: ${PROGRAM}
 	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
 	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
 
-	echo "[Desktop Entry]" > /usr/share/applications/${PROGRAM}.desktop
-	echo "Version=${VERSION}" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Type=Application" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Name=CAMmill" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Comment=${COMMENT}" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "TryExec=${PROGRAM}" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Exec=${PROGRAM} %F" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Icon=cammill" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "Terminal=false" >> /usr/share/applications/${PROGRAM}.desktop
-	echo "" >> /usr/share/applications/${PROGRAM}.desktop
-	cp -p icons/icon_128.png /usr/share/pixmaps/${PROGRAM}.png
+	mkdir -p packages/debian/usr/share/applications
+	echo "[Desktop Entry]" > packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Name=${NAME}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/debian/usr/local/share/pixmaps
+	cp -p icons/icon_128.png packages/debian/usr/share/pixmaps/${PROGRAM}.png
 
 	mkdir -p packages/debian/DEBIAN/
 	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
@@ -318,17 +320,29 @@ package: ${PROGRAM}
 	mkdir -p packages/openbsd/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/openbsd/bin/${PROGRAM}
 
-	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
+	mkdir -p packages/openbsd/usr/share/applications
+	echo "[Desktop Entry]" > packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Name=${NAME}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/openbsd/usr/local/share/pixmaps
+	cp -p icons/icon_128.png packages/openbsd/usr/local/share/pixmaps/${PROGRAM}.png
 
+	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
 	echo "@comment ${COMMENT}" > packages/openbsd/+CONTENTS
 	echo "@name ${PROGRAM}-${VERSION}" >> packages/openbsd/+CONTENTS
 	echo "@arch `uname -m`" >> packages/openbsd/+CONTENTS
 	echo "+DESC" >> packages/openbsd/+CONTENTS
-
 	#echo "@sha 2hdzVfdHx5FWZ5A7gEOrE1uKtNiAWKMo3yuNnXuZAEQ=" >> packages/openbsd/+CONTENTS
 	#echo "@size 552" >> packages/openbsd/+CONTENTS
 	#echo "@depend devel/p5-WeakRef:p5-WeakRef-*:p5-WeakRef-0.01p4" >> packages/openbsd/+CONTENTS
-
 	echo "@cwd /usr/local" >> packages/openbsd/+CONTENTS
 
 	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$F" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
@@ -368,6 +382,21 @@ package: ${PROGRAM}
 	mkdir -p packages/freebsd/usr/local/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/freebsd/usr/local/bin/${PROGRAM}
 
+	mkdir -p packages/freebsd/usr/share/applications
+	echo "[Desktop Entry]" > packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Name=${NAME}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/freebsd/usr/local/share/pixmaps
+	cp -p icons/icon_128.png packages/freebsd/usr/local/share/pixmaps/${PROGRAM}.png
+
 	echo "name: ${PROGRAM}" > packages/freebsd/+MANIFEST
 	echo "version: ${VERSION}_0" >> packages/freebsd/+MANIFEST
 	echo "origin: graphics" >> packages/freebsd/+MANIFEST
@@ -390,7 +419,7 @@ package: ${PROGRAM}
 	#echo "  perl: {origin: lang/perl5.12, version: 5.12.4 }" >> packages/freebsd/+MANIFEST
 	#freeglut gtkglext gtksourceview2 lua51
 	echo "files: {" >> packages/freebsd/+MANIFEST
-	(for F in `find packages/freebsd${INSTALL_PATH} packages/freebsd/usr/local/bin/${PROGRAM} -type f` ; do echo "  `echo $$F | sed "s|^packages/freebsd||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> packages/freebsd/+MANIFEST
+	(for F in `find packages/freebsd -type f | grep -v "+" -type f | sort -u` ; do echo "  `echo $$F | sed "s|^packages/freebsd||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> packages/freebsd/+MANIFEST
 	echo "}" >> packages/freebsd/+MANIFEST
 	echo "scripts: {" >> packages/freebsd/+MANIFEST
 	echo "  pre-install:  {" >> packages/freebsd/+MANIFEST
@@ -402,7 +431,7 @@ package: ${PROGRAM}
 	echo "    echo post-install" >> packages/freebsd/+MANIFEST
 	echo "  }" >> packages/freebsd/+MANIFEST
 	echo "}" >> packages/freebsd/+MANIFEST
-	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czvpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
+	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czvpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/share ./usr/local/bin/${PROGRAM}
 	@echo "##"
 	@echo "## packages/cammill-freebsd-${VERSION}.tgz"
 	@echo "##"
