@@ -285,6 +285,7 @@ package: ${PROGRAM}
 	strip ${PROGRAM}
 	rm -rf packages/openbsd
 	mkdir -p packages/openbsd
+
 	mkdir -p packages/openbsd/cammill
 	cp ${PROGRAM} packages/openbsd/cammill/${PROGRAM}
 	chmod 755 packages/openbsd/cammill/${PROGRAM}
@@ -303,7 +304,7 @@ package: ${PROGRAM}
 	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
 
 	echo "@comment 2D CAM-Tool (DXF to GCODE)" > packages/openbsd/+CONTENTS
-	echo "@name: ${PROGRAM}-${VERSION}" >> packages/openbsd/+CONTENTS
+	echo "@name ${PROGRAM}-${VERSION}" >> packages/openbsd/+CONTENTS
 	echo "@arch `uname -m`" >> packages/openbsd/+CONTENTS
 	echo "+DESC" >> packages/openbsd/+CONTENTS
 
@@ -313,9 +314,9 @@ package: ${PROGRAM}
 
 	echo "@cwd /usr/local" >> packages/openbsd/+CONTENTS
 
-	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$FF" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
+	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$F" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
 
-	tar -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC ./
+	tar -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC cammill bin
 	@echo "##"
 	@echo "## packages/cammill-openbsd-${VERSION}.tgz"
 	@echo "##"
