@@ -74,6 +74,7 @@ endif
 ifeq (${TARGET}, OPENBSD)
 	COMP            ?= gcc
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51
+	INSTALL_PATH    ?= /usr/local/cammill
 endif
 
 COMP       ?= $(CROSS)clang
@@ -277,6 +278,45 @@ ifeq (${TARGET}, OPENBSD)
 
 depends:
 	pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
+
+package: ${PROGRAM}
+	rm -rf packages/openbsd
+	mkdir -p packages/openbsd
+
+	mkdir -p packages/openbsd/cammill
+	cp ${PROGRAM} packages/openbsd/cammill/${PROGRAM}
+	chmod 755 packages/openbsd/cammill/${PROGRAM}
+	mkdir -p packages/openbsd/cammill/posts
+	cp -p posts/* packages/openbsd/cammill/posts
+	mkdir -p packages/openbsd/cammill/textures
+	cp -p textures/* packages/openbsd/cammill/textures
+	mkdir -p packages/openbsd/cammill/icons
+	cp -p icons/* packages/openbsd/cammill/icons
+	mkdir -p packages/openbsd/cammill/fonts
+	cp -p fonts/* packages/openbsd/cammill/fonts
+	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/openbsd/cammill/
+	mkdir -p packages/openbsd/bin/
+	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/openbsd/bin/${PROGRAM}
+
+	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
+
+	echo "@comment 2D CAM-Tool (DXF to GCODE)" > packages/openbsd/+CONTENTS
+	echo "@name: ${PROGRAM}-${VERSION}" >> packages/openbsd/+CONTENTS
+	echo "@arch `uname -m`" >> packages/openbsd/+CONTENTS
+	echo "+DESC" >> packages/openbsd/+CONTENTS
+
+	#echo "@sha 2hdzVfdHx5FWZ5A7gEOrE1uKtNiAWKMo3yuNnXuZAEQ=" >> packages/openbsd/+CONTENTS
+	#echo "@size 552" >> packages/openbsd/+CONTENTS
+	#echo "@depend devel/p5-WeakRef:p5-WeakRef-*:p5-WeakRef-0.01p4" >> packages/openbsd/+CONTENTS
+
+	echo "@cwd /usr/local" >> packages/openbsd/+CONTENTS
+
+	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$FF" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
+
+	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
+	@echo "##"
+	@echo "## packages/cammill-openbsd-${VERSION}.tgz"
+	@echo "##"
 
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
