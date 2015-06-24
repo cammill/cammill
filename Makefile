@@ -42,8 +42,6 @@ ifeq (${TARGET}, DEFAULT)
 	endif
 endif
 
-
-
 ifeq (${TARGET}, MINGW32)
 	PROGRAM         ?= cammill.exe
 	LIBS            ?= -lm -lstdc++ -lgcc
@@ -89,7 +87,7 @@ MAINTAINER_EMAIL ?= oliver@multixmedia.org
 
 
 HERSHEY_FONTS_DIR = ./
-INSTALL_PATH ?= /opt/${PROGRAM}
+INSTALL_PATH ?= /usr/lib/${PROGRAM}
 
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./ -I./src
@@ -175,6 +173,8 @@ install: ${PROGRAM}
 	mkdir -p ${INSTALL_PATH}/fonts
 	cp -p fonts/* ${INSTALL_PATH}/fonts
 	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/
+	chown -R root:root ${INSTALL_PATH}/
+
 
 ifeq (${TARGET}, MINGW32)
 
@@ -249,7 +249,9 @@ package: ${PROGRAM}
 	cp -p fonts/* packages/debian${INSTALL_PATH}/fonts
 	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/debian${INSTALL_PATH}/
 	mkdir -p packages/debian/usr/bin
-	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/debian/usr/bin/${PROGRAM}
+
+	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/debian/usr/bin/${PROGRAM}
+
 	mkdir -p packages/debian/usr/share/man/man1/
 	help2man ./${PROGRAM} -n "${COMMENT}" | gzip -n -9 > packages/debian/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/
@@ -293,7 +295,7 @@ package: ${PROGRAM}
 
 	mkdir -p packages/debian/DEBIAN/
 	(for F in `find packages/debian -type f | grep -v "^packages/debian/DEBIAN/"`; do md5sum "$$F" | sed "s| packages/debian/| |g"; done) >> packages/debian/DEBIAN/md5sums
-	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
+	#(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> packages/debian/DEBIAN/control
 	echo "Version: $(VERSION)-`date +%s`" >> packages/debian/DEBIAN/control
@@ -306,9 +308,10 @@ package: ${PROGRAM}
 	echo "Description: ${COMMENT}" >> packages/debian/DEBIAN/control
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/debian/DEBIAN/control
 	chmod -R -s packages/debian/ -R
-	chmod 0755 packages/debian/DEBIAN/ -R
+	chown -R root:root packages/debian/DEBIAN/
+	chmod -R 0755 packages/debian/DEBIAN/
 	chmod 0644 packages/debian/DEBIAN/control
-	chmod 0644 packages/debian/DEBIAN/conffiles
+	#chmod 0644 packages/debian/DEBIAN/conffiles
 	chmod 0644 packages/debian/DEBIAN/md5sums
 	dpkg-deb --build packages/debian
 	cp packages/debian.deb packages/${PROGRAM}.deb
