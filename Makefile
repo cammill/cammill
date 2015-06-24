@@ -320,7 +320,7 @@ package: ${PROGRAM}
 	mkdir -p packages/openbsd/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/openbsd/bin/${PROGRAM}
 
-	mkdir -p packages/openbsd/usr/share/applications
+	mkdir -p packages/openbsd/usr/local/share/applications
 	echo "[Desktop Entry]" > packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Version=${VERSION}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Type=Application" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
@@ -382,7 +382,7 @@ package: ${PROGRAM}
 	mkdir -p packages/freebsd/usr/local/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/freebsd/usr/local/bin/${PROGRAM}
 
-	mkdir -p packages/freebsd/usr/share/applications
+	mkdir -p packages/freebsd/usr/local/share/applications
 	echo "[Desktop Entry]" > packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Version=${VERSION}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Type=Application" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
