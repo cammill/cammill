@@ -391,7 +391,7 @@ void SetupLoadPreset (char *cfgfile) {
 					} else if (PARAMETER[n].type == T_STRING) {
 						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 					} else if (PARAMETER[n].type == T_FILE) {
-						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vst));
+						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 					}
 				}
 			}
