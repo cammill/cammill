@@ -247,6 +247,7 @@ package: ${PROGRAM}
 	chmod -R -s packages/debian/ -R
 	chmod 0755 packages/debian/DEBIAN/ -R
 	dpkg-deb --build packages/debian
+	cp packages/debian.deb packages/${PROGRAM}.deb
 	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
 	@echo "##"
 	@echo "## packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb"
