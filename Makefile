@@ -187,6 +187,7 @@ ifeq (${TARGET}, OSX)
 
 package: install
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
+	mv cammill.dmg packages/cammill.dmg
 	@echo "##"
 	@echo "## packages/cammill.dmg"
 	@echo "##"
