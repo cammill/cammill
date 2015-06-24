@@ -396,7 +396,12 @@ void postcam_init_lua (const char* path, char *plugin) {
 	lua_stat = 1;
 
 	char tmp_str[PATH_MAX];
-	snprintf(tmp_str, PATH_MAX, "%sposts%s%s.scpost", path, DIR_SEP, plugin);
+
+	if (path[0] == 0) {
+		snprintf(tmp_str, PATH_MAX, "posts%s%s.scpost", DIR_SEP, plugin);
+	} else {
+		snprintf(tmp_str, PATH_MAX, "%sposts%s%s.scpost", path, DIR_SEP, plugin);
+	}
 	postcam_var_push_string("postfile", tmp_str);
 	postcam_call_function("load_post");
 

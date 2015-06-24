@@ -178,7 +178,11 @@ GtkWidget *dialog;
 
 void postcam_load_source (char *plugin) {
 	char tmp_str[PATH_MAX];
-	snprintf(tmp_str, PATH_MAX, "%s%sposts%s%s.scpost", program_path, DIR_SEP, DIR_SEP, plugin);
+	if (program_path[0] == 0) {
+		snprintf(tmp_str, PATH_MAX, "posts%s%s.scpost", DIR_SEP, plugin);
+	} else {
+		snprintf(tmp_str, PATH_MAX, "%s%sposts%s%s.scpost", program_path, DIR_SEP, DIR_SEP, plugin);
+	}
 	GtkTextBuffer *bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
 	gchar *file_buffer;
 	GError *error;
