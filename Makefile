@@ -299,7 +299,7 @@ package: ${PROGRAM}
 	#(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> packages/debian/DEBIAN/control
-	echo "Version: $(VERSION)-`date +%s`" >> packages/debian/DEBIAN/control
+	echo "Version: $(VERSION)" >> packages/debian/DEBIAN/control
 	echo "Architecture: `dpkg --print-architecture`" >> packages/debian/DEBIAN/control
 	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> packages/debian/DEBIAN/control
 	echo "Depends: libc6, libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> packages/debian/DEBIAN/control
