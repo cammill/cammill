@@ -112,6 +112,7 @@ enum {
 	P_W_POSY,
 	P_W_POSW,
 	P_W_POSH,
+	P_W_MAX,
 #ifdef USE_VNC
 	P_O_VNCSERVER,
 	P_O_VNCPORT,

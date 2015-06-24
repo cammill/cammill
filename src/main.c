@@ -755,8 +755,11 @@ void view_draw (void) {
 
 void handler_destroy (GtkWidget *widget, gpointer data) {
 	if (PARAMETER[P_O_AUTOSAVE].vint == 1) {
-		gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
-		gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
+//		PARAMETER[P_W_MAX].vint = gtk_window_is_max(GTK_WINDOW(window));
+//		if (PARAMETER[P_W_MAX].vint == 0) {
+			gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
+			gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
+//		}
 		SetupSave();
 	}
 	gtk_main_quit();
@@ -1063,8 +1066,11 @@ void handler_load_tooltable (GtkWidget *widget, gpointer data) {
 
 void handler_save_setup (GtkWidget *widget, gpointer data) {
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving setup..."), "saving setup...");
-	gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
-	gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
+//	PARAMETER[P_W_MAX].vint = gtk_window_is_max(GTK_WINDOW(window));
+//	if (PARAMETER[P_W_MAX].vint == 0) {
+		gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
+		gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
+//	}
 	SetupSave();
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving setup...done"), "saving setup...done");
 }
@@ -1387,9 +1393,23 @@ void handler_webkit_forward (GtkWidget *widget, gpointer data) {
 }
 #endif
 
+/*
+gboolean window_event (GtkWidget *widget, GdkEventWindowState *event, gpointer user_data) {
+    if (event->new_window_state & GDK_WINDOW_STATE_MAXIMIZED){
+		PARAMETER[P_W_MAX].vint = 1;
+	} else {
+		PARAMETER[P_W_MAX].vint = 0;
+	}
+	if (PARAMETER[P_W_MAX].vint == 0) {
+		gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
+		gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
+	}
+	return TRUE;
+}
+*/
+
 void create_gui () {
 	GtkWidget *vbox;
-
 	glCanvas = create_gl();
 	gtk_widget_set_usize(GTK_WIDGET(glCanvas), 800, 600);
 	gtk_signal_connect(GTK_OBJECT(glCanvas), "expose_event", GTK_SIGNAL_FUNC(handler_draw), NULL);  
@@ -1399,6 +1419,8 @@ void create_gui () {
 	gtk_signal_connect(GTK_OBJECT(glCanvas), "motion_notify_event", GTK_SIGNAL_FUNC(handler_motion), NULL);  
 	gtk_signal_connect(GTK_OBJECT(glCanvas), "key_press_event", GTK_SIGNAL_FUNC(handler_keypress), NULL);  
 	gtk_signal_connect(GTK_OBJECT(glCanvas), "scroll-event", GTK_SIGNAL_FUNC(handler_scrollwheel), NULL);  
+//	gtk_signal_connect(GTK_OBJECT(window),   "window-state-event", G_CALLBACK(window_event), NULL);
+//	g_signal_connect(G_OBJECT(window), "window-state-event", G_CALLBACK(window_event), NULL);
 
 	// top-menu
 	GtkWidget *MenuBar = gtk_menu_bar_new();
@@ -2016,10 +2038,15 @@ void create_gui () {
 	gtk_signal_connect(GTK_OBJECT(window), "delete_event", GTK_SIGNAL_FUNC (handler_destroy), NULL);
 	gtk_container_add (GTK_CONTAINER(window), vbox);
 
-	gtk_widget_show_all(window);
-
 	gtk_window_move(GTK_WINDOW(window), PARAMETER[P_W_POSX].vint, PARAMETER[P_W_POSY].vint);
 	gtk_window_resize(GTK_WINDOW(window), PARAMETER[P_W_POSW].vint, PARAMETER[P_W_POSH].vint);
+//	if (PARAMETER[P_W_MAX].vint == 1) {
+//		gtk_window_maximize(PARAMETER[P_W_MAX].vint);
+//	} else {
+//		gtk_window_unmaximize(PARAMETER[P_W_MAX].vint);
+//	}
+
+	gtk_widget_show_all(window);
 
 /*
 	Embedded Programms (-wid)

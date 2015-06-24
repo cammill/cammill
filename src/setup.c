@@ -117,6 +117,7 @@ PARA PARAMETER[] = {
 	{"Y-Position","Window",	"-wpy",		T_INT	,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Y-Position", 1, 0, 0},
 	{"Width","Window",	"-wpw",			T_INT	,	800,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Width", 1, 0, 0},
 	{"Height","Window",	"-wph",			T_INT	,	600,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Height", 1, 0, 0},
+	{"Maximized","Window",	"-wmax",		T_BOOL	,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Maximized", 1, 0, 0},
 #ifdef USE_VNC
 	{"VNC-Server",	"Misc",		"-vs",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "VNC-Server address", 0, 0, 0},
 	{"VNC-Port",	"Misc",		"-vp",	T_INT,		5900,	0.0,	0.0,	"",	0.0,	1.0,	35000.0,	"", 0, 0, "VNC-Server port", 0, 0, 0},
