@@ -184,9 +184,9 @@ package: install
 	cp -p icons/icon.ico ${INSTALL_PATH}/icon.ico
 	(cd ${INSTALL_PATH} ; makensis installer.nsis)
 	rm -rf packages/windows/*.exe
-	mv ${INSTALL_PATH}/installer.exe packages/cammill-installer.exe
+	mv ${INSTALL_PATH}/installer.exe packages/cammill-installer_${VERSION}.exe
 	@echo "##"
-	@echo "## packages/cammill-installer_$(VERSION).exe"
+	@echo "## packages/cammill-installer_${VERSION}.exe"
 	@echo "##"
 
 test: ${PROGRAM}
@@ -213,9 +213,9 @@ package:
 	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/Contents/MacOS/
 
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
-	mv cammill.dmg packages/cammill_$(VERSION).dmg
+	mv cammill.dmg packages/cammill_${VERSION}.dmg
 	@echo "##"
-	@echo "## packages/cammill_$(VERSION).dmg"
+	@echo "## packages/cammill_${VERSION}.dmg"
 	@echo "##"
 
 test: ${PROGRAM}
@@ -299,7 +299,7 @@ package: ${PROGRAM}
 	#(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> packages/debian/DEBIAN/control
-	echo "Version: $(VERSION)" >> packages/debian/DEBIAN/control
+	echo "Version: ${VERSION}" >> packages/debian/DEBIAN/control
 	echo "Architecture: `dpkg --print-architecture`" >> packages/debian/DEBIAN/control
 	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> packages/debian/DEBIAN/control
 	echo "Depends: libc6, libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> packages/debian/DEBIAN/control
@@ -337,9 +337,9 @@ package: ${PROGRAM}
 	lintian -I --show-overrides packages/debian.deb || true
 
 	cp packages/debian.deb packages/${PROGRAM}.deb
-	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
+	mv packages/debian.deb packages/${PROGRAM}_${VERSION}_`dpkg --print-architecture`.deb
 	@echo "##"
-	@echo "## packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb"
+	@echo "## packages/${PROGRAM}_${VERSION}_`dpkg --print-architecture`.deb"
 	@echo "##"
 
 test: ${PROGRAM}
