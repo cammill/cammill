@@ -2812,7 +2812,7 @@ void DrawCheckSize (void) {
 				max_y = myLINES[num2].y2;
 			}
 			if (myLINES[num2].type == TYPE_CIRCLE && max_x < myLINES[num2].cx + myLINES[num2].opt) {
-				max_y = myLINES[num2].cx + myLINES[num2].opt;
+				max_x = myLINES[num2].cx + myLINES[num2].opt;
 			}
 			if (myLINES[num2].type == TYPE_CIRCLE && max_y < myLINES[num2].cy + myLINES[num2].opt) {
 				max_y = myLINES[num2].cy + myLINES[num2].opt;
