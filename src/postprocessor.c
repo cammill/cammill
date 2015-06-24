@@ -321,7 +321,15 @@ static int append_output (lua_State *L) {
 		output_buffer[0] = 0;
 	} else {
 		int len = strlen(output_buffer) + strlen(text) + 1;
-		output_buffer = (char *)realloc((void *)output_buffer, len);
+		char *output_buffer_new = NULL;
+		output_buffer_new = (char *)realloc((void *)output_buffer, len);
+		if (output_buffer_new == NULL) {
+			fprintf(stderr, "Not enough memory\n");
+			exit 1;
+		} else {
+			output_buffer = output_buffer_new;
+		}
+		
 	}
 	strcat(output_buffer, text);
 	return 1;

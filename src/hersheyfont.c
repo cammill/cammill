@@ -68,6 +68,7 @@ hershey_jhf_load_glyph( struct hershey_glyph *hg, char *jhf_line )
     errno = 0;
 
     strncpy(buf, jhf_line+0, 5);
+    buf[5] = 0;
     glyphnum = strtoul(buf, &end, 10);
     buf[5] = 0;
     if ( errno )

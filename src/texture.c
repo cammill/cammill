@@ -71,6 +71,7 @@ int ImageLoad(char *filename, Image *image) {
 	}
 	if ((i = fread(image->data, size, 1, file)) != 1) {
 		printf("Error reading image data from %s.\n", filename);
+		fclose(file);
 		return 0;
 	}
 	for (i=0;i<size;i+=3) { // reverse all of the colors. (bgr -> rgb)

@@ -78,8 +78,20 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 		}
 		if (myLINES == NULL) {
 			myLINES = (_LINE *)malloc(sizeof(_LINE) * 5);
+			if (myLINES == NULL) {
+				fprintf(stderr, "Not enough memory\n");
+				exit 1;
+			}
 		} else {
-			myLINES = (_LINE *)realloc((void *)myLINES, sizeof(_LINE) * (line_last + 5));
+			_LINE *myLINES_new = NULL;
+			myLINES_new = (_LINE *)realloc((void *)myLINES, sizeof(_LINE) * (line_last + 5));
+			if (myLINES_new == NULL) {
+				fprintf(stderr, "Not enough memory\n");
+				exit 1;
+			} else {
+				myLINES = myLINES_new;
+			}
+		
 		}
 		if (strcmp(layer, "holding-tabs") == 0) {
 			myLINES[line_n].istab = 1;
