@@ -96,6 +96,10 @@ CFLAGS += -I./ -I./src
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
 CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
 
+ifeq (${TARGET}, DEFAULT)
+CFLAGS += -Wl,-z,relro,-z,now
+endif
+
 OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/font.o src/texture.o src/os-hacks.o
 
 # GTK+2.0 and LUA5.1
@@ -248,8 +252,12 @@ package: ${PROGRAM}
 	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/
 	cp -p README.md packages/debian/usr/share/doc/${PROGRAM}/README
 
-	echo "It was downloaded from http://htop.sourceforge.net" > packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "It was downloaded from https://github.com/cammill" > packages/debian/usr/share/doc/${PROGRAM}/copyright
 	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "Copyright 2014 - 2015 by Oliver Dippel <oliver@multixmedia.org>" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "Copyright 2014 - 2015 by McUles mcules@fpv-club.de" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "Copyright 2014 - 2015 by Jakob Flierl <@koppi>" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "Copyright 2014 - 2015 by Carlo <onekk>" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
 	echo "License:" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
 	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
 	echo "This program is free software; you can redistribute it and/or modify it" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
@@ -283,7 +291,6 @@ package: ${PROGRAM}
 	mkdir -p packages/debian/DEBIAN/
 	(for F in `find packages/debian -type f | grep -v "^packages/debian/DEBIAN/"`; do md5sum "$$F" | sed "s| packages/debian/| |g"; done) >> packages/debian/DEBIAN/md5sums
 	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
-	chmod 0644 packages/debian/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> packages/debian/DEBIAN/control
 	echo "Version: $(VERSION)-`date +%s`" >> packages/debian/DEBIAN/control
@@ -296,6 +303,9 @@ package: ${PROGRAM}
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/debian/DEBIAN/control
 	chmod -R -s packages/debian/ -R
 	chmod 0755 packages/debian/DEBIAN/ -R
+	chmod 0644 packages/debian/DEBIAN/control
+	chmod 0644 packages/debian/DEBIAN/conffiles
+	chmod 0644 packages/debian/DEBIAN/md5sums
 	dpkg-deb --build packages/debian
 	cp packages/debian.deb packages/${PROGRAM}.deb
 	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
