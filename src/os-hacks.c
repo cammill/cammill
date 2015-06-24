@@ -31,7 +31,8 @@ int get_home_dir(char* buffer) {
 size_t get_executable_path (char* buffer, size_t len) {
 	char *path_end;
 
-	if (!getcwd(buffer, sizeof(buffer))) {
+	if (getcwd(buffer, len) == NULL) {
+                fprintf(stderr, "getcwd() failed\n");
                 return -1;
         }
 
