@@ -224,6 +224,17 @@ test: ${PROGRAM}
 	rm -rf test.ngc
 
 endif
+ifeq (${TARGET}, SUSE)
+
+depends:
+	zypper install libgtk-2_0-0 libgtkglext-x11-1_0-0 libgtksourceview-2_0-0 git freeglut-devel lua51-devel make clang gtk2-devel gtkglext-devel gtksourceview2-devel gcc
+
+test: ${PROGRAM}
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
+	sh utils/gvalid.sh test.ngc
+	rm -rf test.ngc
+
+endif
 ifeq (${TARGET}, DEFAULT)
 
 gprof:
