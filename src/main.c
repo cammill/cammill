@@ -1012,7 +1012,7 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 		file_nosuffix_new = realloc(file_nosuffix, strlen(file_nosuffix) + 5);
 		if (file_nosuffix_new == NULL) {
 				fprintf(stderr, "Not enough memory\n");
-				exit 1;
+				exit(1);
 		} else {
 			file_nosuffix = file_nosuffix_new;
 		}
