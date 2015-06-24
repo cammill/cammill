@@ -307,14 +307,18 @@ package: ${PROGRAM}
 	echo "Homepage: ${HOMEPAGE}" >> packages/debian/DEBIAN/control
 	echo "Description: ${COMMENT}" >> packages/debian/DEBIAN/control
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/debian/DEBIAN/control
-
+	# bad hack, please use install command
 	chown -R root:root packages/debian/
 	chmod 0755 packages/debian/
-
 	chmod 0644 packages/debian/usr/share/doc/cammill/*
 	chmod 0644 packages/debian/usr/share/man/man1/cammill.1.gz
 	chmod 0644 packages/debian/usr/share/pixmaps/cammill.png
 	chmod 0644 packages/debian/usr/share/applications/cammill.desktop
+	chmod 0644 packages/debian/usr/share/doc/cammill/*
+	chmod 0644 packages/debian${INSTALL_PATH}/posts/*
+	chmod 0644 packages/debian${INSTALL_PATH}/textures/*
+	chmod 0644 packages/debian${INSTALL_PATH}/icons/*
+	chmod 0644 packages/debian${INSTALL_PATH}/fonts/*
 
 	chmod -R -s packages/debian/
 	chown -R root:root packages/debian/DEBIAN/
