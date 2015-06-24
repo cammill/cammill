@@ -320,20 +320,20 @@ package: ${PROGRAM}
 	mkdir -p packages/openbsd/bin/
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/openbsd/bin/${PROGRAM}
 
-	mkdir -p packages/openbsd/usr/local/share/applications
-	echo "[Desktop Entry]" > packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Version=${VERSION}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Type=Application" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Name=${NAME}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Comment=${COMMENT}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "TryExec=${PROGRAM}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Exec=${PROGRAM} %F" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Icon=${PROGRAM}" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Terminal=false" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "" >> packages/openbsd/usr/local/share/applications/${PROGRAM}.desktop
-	mkdir -p packages/openbsd/usr/local/share/pixmaps
-	cp -p icons/icon_128.png packages/openbsd/usr/local/share/pixmaps/${PROGRAM}.png
+	mkdir -p packages/openbsd/share/applications
+	echo "[Desktop Entry]" > packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Name=${NAME}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/openbsd/share/pixmaps
+	cp -p icons/icon_128.png packages/openbsd/share/pixmaps/${PROGRAM}.png
 
 	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
 	echo "@comment ${COMMENT}" > packages/openbsd/+CONTENTS
@@ -347,7 +347,7 @@ package: ${PROGRAM}
 
 	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$F" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
 
-	tar -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC cammill bin
+	tar -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC ${COMMENT} bin share
 	@echo "##"
 	@echo "## packages/cammill-openbsd-${VERSION}.tgz"
 	@echo "##"
