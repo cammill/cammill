@@ -262,6 +262,7 @@ package: ${PROGRAM}
 	echo "Exec=${PROGRAM} %F" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Icon=${PROGRAM}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Keywords=gcode;dxf;" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Terminal=false" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	mkdir -p packages/debian/usr/share/pixmaps
@@ -330,6 +331,7 @@ package: ${PROGRAM}
 	echo "Exec=${PROGRAM} %F" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Icon=${PROGRAM}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Keywords=gcode;dxf;" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Terminal=false" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	mkdir -p packages/openbsd/share/pixmaps
@@ -392,6 +394,7 @@ package: ${PROGRAM}
 	echo "Exec=${PROGRAM} %F" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Icon=${PROGRAM}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Keywords=gcode;dxf;" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Terminal=false" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	mkdir -p packages/freebsd/usr/local/share/pixmaps
