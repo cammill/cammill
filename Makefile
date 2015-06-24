@@ -275,8 +275,6 @@ package: ${PROGRAM}
 	git log | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
 	echo "${PROGRAM} (${VERSION}) unstable; urgency=low\n\n  * Git Release.\n  * take a look in to changelog.gz\n\n -- ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>  `date -R`\n" | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
 
-	#`git log | head -n3 | grep "^Date:" | sed "s|Date: *||g"`
-
 	mkdir -p packages/debian/usr/share/applications
 	echo "[Desktop Entry]" > packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Version=${VERSION}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
