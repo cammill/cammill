@@ -12,13 +12,13 @@ cat <<EOF
 <STYLE>
 	body {
 		background-color: #000000;
-		background-image: url('bg.png');
+		background-image: url('../pics/bg.png');
 		color: #FFFFFF;
 	}
 </STYLE>
 </HEAD>
 <BODY>
-<IMG src="logo.png">
+<IMG src="../pics/logo.png">
 <HR>
 <H2>Commandline-Options</H2>
 EOF
