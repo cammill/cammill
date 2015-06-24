@@ -566,7 +566,7 @@ void mainloop (void) {
 			char cmd_str[PATH_MAX];
 			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
                         int ret;
-			if (ret = system(cmd_str)) {
+			if ((ret = system(cmd_str))) {
                                 if (WIFEXITED(ret)) {
                                         fprintf(stderr, "exited, status=%d\n", WEXITSTATUS(ret));
                                 } else if (WIFSIGNALED(ret)) {
