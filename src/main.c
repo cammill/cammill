@@ -1975,7 +1975,7 @@ void create_gui () {
 
 	char iconfile[PATH_MAX];
 	if (program_path[0] == 0) {
-		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s", "icons", DIR_SEP, "logo-top.png");
 	} else {
 		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "logo-top.png");
 	}
