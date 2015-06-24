@@ -157,6 +157,9 @@ void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4], GLfl
 void object2poly (int object_num, double depth, double depth2, int invert) {
 	int num = 0;
 	int nverts = 0;
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+			return;
+	}
 	GLUtesselator *tobj;
 	GLdouble rect2[MAX_LINES][3];
 	if (PARAMETER[P_V_TEXTURES].vint == 1) {
