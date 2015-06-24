@@ -264,7 +264,7 @@ package: ${PROGRAM}
 	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Terminal=false" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
-	mkdir -p packages/debian/usr/local/share/pixmaps
+	mkdir -p packages/debian/usr/share/pixmaps
 	cp -p icons/icon_128.png packages/debian/usr/share/pixmaps/${PROGRAM}.png
 
 	mkdir -p packages/debian/DEBIAN/
