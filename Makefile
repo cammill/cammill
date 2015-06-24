@@ -231,7 +231,7 @@ gprof:
 	@echo "gprof ${PROGRAM} gmon.out"
 
 depends:
-	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
+	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev lintian
 
 package: ${PROGRAM}
 	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
@@ -332,6 +332,9 @@ package: ${PROGRAM}
 	#chmod 0644 packages/debian/DEBIAN/conffiles
 
 	dpkg-deb --build packages/debian
+
+	lintian -I --show-overrides packages/debian.deb || true
+
 	cp packages/debian.deb packages/${PROGRAM}.deb
 	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
 	@echo "##"
