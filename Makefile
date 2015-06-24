@@ -83,13 +83,13 @@ VERSION    ?= 0.9
 PROGRAM    ?= cammill
 PROGNAME   ?= CAMmill
 COMMENT    ?= 2D CAM-Tool (DXF to GCODE)
+HOMEPAGE   ?= http://www.multixmedia.org/cammill/
+MAINTAINER_NAME  ?= Oliver Dippel
+MAINTAINER_EMAIL ?= oliver@multixmedia.org
 
 
 HERSHEY_FONTS_DIR = ./
 INSTALL_PATH ?= /opt/${PROGRAM}
-
-MAINTAINER_NAME  ?= Oliver Dippel
-MAINTAINER_EMAIL ?= oliver@multixmedia.org
 
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./ -I./src
@@ -273,7 +273,9 @@ package: ${PROGRAM}
 	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
 
 	git log | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
-	git log | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
+	echo "${PROGRAM} (${VERSION}) unstable; urgency=low\n\n  * Git Release.\n  * take a look in to changelog.gz\n\n -- ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>  `date -R`\n" | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
+
+	#`git log | head -n3 | grep "^Date:" | sed "s|Date: *||g"`
 
 	mkdir -p packages/debian/usr/share/applications
 	echo "[Desktop Entry]" > packages/debian/usr/share/applications/${PROGRAM}.desktop
@@ -302,6 +304,7 @@ package: ${PROGRAM}
 	echo "Depends: libc6, libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> packages/debian/DEBIAN/control
 	echo "Section: graphics" >> packages/debian/DEBIAN/control
 	echo "Priority: optional" >> packages/debian/DEBIAN/control
+	echo "Homepage: ${HOMEPAGE}" >> packages/debian/DEBIAN/control
 	echo "Description: ${COMMENT}" >> packages/debian/DEBIAN/control
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/debian/DEBIAN/control
 	chmod -R -s packages/debian/ -R
@@ -431,7 +434,7 @@ package: ${PROGRAM}
 	echo "origin: graphics" >> packages/freebsd/+MANIFEST
 	echo "comment: ${COMMENT}" >> packages/freebsd/+MANIFEST
 	echo "arch: i386" >> packages/freebsd/+MANIFEST
-	echo "www: http://www.multixmedia.org/cammill/" >> packages/freebsd/+MANIFEST
+	echo "www: ${HOMEPAGE}" >> packages/freebsd/+MANIFEST
 	echo "maintainer: ${MAINTAINER_EMAIL}" >> packages/freebsd/+MANIFEST
 	echo "prefix: /opt" >> packages/freebsd/+MANIFEST
 	echo "licenselogic: or" >> packages/freebsd/+MANIFEST
