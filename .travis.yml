@@ -21,7 +21,21 @@ before_script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then git clone https://github.com/mxe/mxe.git;
   fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd mxe; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 200 make MXE_TARGETS='i686-w64-mingw32.static'
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static'
+  pkgconf; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static'
+  binutils; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make MXE_TARGETS='i686-w64-mingw32.static'
+  gcc-gmp; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make MXE_TARGETS='i686-w64-mingw32.static'
+  gcc-isl; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make MXE_TARGETS='i686-w64-mingw32.static'
+  gcc-mpfr; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make MXE_TARGETS='i686-w64-mingw32.static'
+  gcc-mpc; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make MXE_TARGETS='i686-w64-mingw32.static'
+  mingw-w64; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make MXE_TARGETS='i686-w64-mingw32.static'
   gcc; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make MXE_TARGETS='i686-w64-mingw32.static'
   gtk2; fi
