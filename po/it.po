@@ -262,10 +262,10 @@ msgstr "mostra griglia fissaggi"
 msgid "depth of the holding-tabs"
 msgstr "profondita dei punti di fissaggio"
 
-msgid "Lenght"
+msgid "Length"
 msgstr "Lung. Fissaggi"
 
-msgid "lenght of the holding-tabs"
+msgid "length of the holding-tabs"
 msgstr "lunghezza dei punti di fissaggio"
 
 msgid "Triangle-Type"

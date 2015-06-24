@@ -404,10 +404,10 @@ msgstr "Afficher la table rainuree"
 msgid "depth of the holding-tabs"
 msgstr "Hauteur du bridage"
 
-msgid "Lenght"
+msgid "Length"
 msgstr "Longueur"
 
-msgid "lenght of the holding-tabs"
+msgid "length of the holding-tabs"
 msgstr "Largeur des brides"
 
 msgid "Triangle-Type"

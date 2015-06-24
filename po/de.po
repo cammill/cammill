@@ -409,10 +409,10 @@ msgstr "Halte-Raster anzeigen"
 msgid "depth of the holding-tabs"
 msgstr "Tiefe der Halte-Laschen"
 
-msgid "Lenght"
+msgid "Length"
 msgstr "Länge der Halte-Laschen"
 
-msgid "lenght of the holding-tabs"
+msgid "length of the holding-tabs"
 msgstr "Tiefe der Halte-Laschen"
 
 msgid "Triangle-Type"

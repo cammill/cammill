@@ -75,7 +75,7 @@ PARA PARAMETER[] = {
 	{"Activate",	"Holding-Tabs",	"-hu",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "using holding-tabs", 0, 0, 0},
 	{"Show Grid",	"Holding-Tabs",	"-tg",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "show tab-grid", 0, 0, 0},
 	{"Depth",	"Holding-Tabs",	"-htd",	T_DOUBLE,	0,	0.0,	-2.0,	"",	-40.0,	1.0,	0.01,		"mm", 1, 1, "depth of the holding-tabs", 0, 0, 0},
-	{"Lenght",	"Holding-Tabs",	"-htl",	T_DOUBLE,	0,	0.0,	5.0,	"",	0.1,	0.1,	40.0,		"mm", 1, 1, "lenght of the holding-tabs", 0, 0, 0},
+	{"Length",	"Holding-Tabs",	"-htl",	T_DOUBLE,	0,	0.0,	5.0,	"",	0.1,	0.1,	40.0,		"mm", 1, 1, "length of the holding-tabs", 0, 0, 0},
 	{"Triangle-Type","Holding-Tabs","-htt",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "type of the holding-tabs", 0, 0, 0},
 	{"On Open","Holding-Tabs","-ht",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "holding-tabs on open contours", 0, 0, 0},
 	{"On Inside","Holding-Tabs","-hti",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "holding-tabs on inside-contours", 0, 0, 0},
