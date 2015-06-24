@@ -244,13 +244,25 @@ package: ${PROGRAM}
 	mkdir -p packages/debian/usr/bin
 	ln -sf ${INSTALL_PATH}/${PROGRAM} packages/debian/usr/bin/${PROGRAM}
 	mkdir -p packages/debian/usr/share/man/man1/
-	help2man ./${PROGRAM} -n "${COMMENT}" | gzip -9 > packages/debian/usr/share/man/man1/${PROGRAM}.1.gz
+	help2man ./${PROGRAM} -n "${COMMENT}" | gzip -n -9 > packages/debian/usr/share/man/man1/${PROGRAM}.1.gz
 	mkdir -p packages/debian/usr/share/doc/${PROGRAM}/
 	cp -p README.md packages/debian/usr/share/doc/${PROGRAM}/README
-	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/copyright
-	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/LICENSE.txt
-	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
-	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
+
+	echo "It was downloaded from http://htop.sourceforge.net" > packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "License:" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "This program is free software; you can redistribute it and/or modify it" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "under the terms of the GNU General Public License as published by the" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "Free Software Foundation; either version 2, or (at your option) any" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "later version." >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "On Debian systems, the complete text of the GNU General Public License" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "can be found in the file /usr/share/common-licenses/GPL-3" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+	echo "" >> packages/debian/usr/share/doc/${PROGRAM}/copyright
+
+	git log | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
+	git log | gzip -n -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
 
 	mkdir -p packages/debian/usr/share/applications
 	echo "[Desktop Entry]" > packages/debian/usr/share/applications/${PROGRAM}.desktop
@@ -269,7 +281,9 @@ package: ${PROGRAM}
 	cp -p icons/icon_128.png packages/debian/usr/share/pixmaps/${PROGRAM}.png
 
 	mkdir -p packages/debian/DEBIAN/
+	(for F in `find packages/debian -type f | grep -v "^packages/debian/DEBIAN/"`; do md5sum "$$F" | sed "s| packages/debian/| |g"; done) >> packages/debian/DEBIAN/md5sums
 	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
+	chmod 0644 packages/debian/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> packages/debian/DEBIAN/control
 	echo "Version: $(VERSION)-`date +%s`" >> packages/debian/DEBIAN/control
