@@ -203,11 +203,11 @@ void SetupShowHelp (void) {
 }
 
 void SetupSave (void) {
-	char cfgfile[2048];
+	char cfgfile[PATH_MAX];
 	FILE *cfg_fp;
 	int n = 0;
 	char homedir[PATH_MAX];
-        get_home_dir(homedir);
+	get_home_dir(homedir);
 	setlocale(LC_NUMERIC, "C");
 	snprintf(cfgfile, PATH_MAX, "%s%s.cammill.cfg", homedir, DIR_SEP);
 	cfg_fp = fopen(cfgfile, "w");
@@ -283,7 +283,7 @@ void SetupSavePreset (char *cfgfile) {
 }
 
 void SetupLoad (void) {
-	char cfgfile[2048];
+	char cfgfile[PATH_MAX];
 	char line2[2048];
 	FILE *cfg_fp;
 	int n = 0;
@@ -291,7 +291,7 @@ void SetupLoad (void) {
 		ExpanderStat[n] = 0;
 	}
 	char homedir[PATH_MAX];
-        get_home_dir(homedir);
+	get_home_dir(homedir);
 	setlocale(LC_NUMERIC, "C");
 	snprintf(cfgfile, PATH_MAX, "%s%s.cammill.cfg", homedir, DIR_SEP);
 	cfg_fp = fopen(cfgfile, "r");
