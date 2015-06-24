@@ -49,6 +49,9 @@ msgstr "Werkzeugtabelle"
 msgid "About"
 msgstr "Über CAMmill"
 
+msgid "Batchmode"
+msgstr "Batch-Modus"
+
 #: src/main.c:1398
 msgid "_File"
 msgstr "Datei"
@@ -81,6 +84,9 @@ msgstr "Voreinstellungen speichern"
 msgid "Save Setup"
 msgstr "Einstellungen speichern"
 
+msgid "Setup-Autosave"
+msgstr "Setup beim Beenden speichern"
+
 #: src/main.c:1452
 msgid "_Help"
 msgstr "Hilfe"
@@ -111,7 +117,7 @@ msgstr "Fräsen"
 
 #: src/main.c:1561 src/main.c:1583
 msgid "Tabs"
-msgstr "Halte-Laschen"
+msgstr "Haltelaschen"
 
 #: src/main.c:1562 src/main.c:1584
 msgid "Rotary"
@@ -203,7 +209,7 @@ msgid "Helplines"
 msgstr "Hilfslinien"
 
 msgid "show helplines"
-msgstr "Hilfslinien zeigen"
+msgstr "Hilfslinien anzeigen"
 
 msgid "ShowGrid"
 msgstr "Raster anzeigen"
@@ -219,6 +225,9 @@ msgstr "Werkzeug-Durchmesser anzeigen"
 
 msgid "Textures"
 msgstr "Texturen"
+
+msgid "Bitmap file to load for texture rendering"
+msgstr "Bitmap-Datei für Textur"
 
 msgid "show textures"
 msgstr "Texturen anzeigen"
@@ -338,10 +347,10 @@ msgid "end depth"
 msgstr "Tiefe"
 
 msgid "Z-Step"
-msgstr "Z-Schritte"
+msgstr "Z-Schritt"
 
 msgid "depth per step"
-msgstr "Z-Schritte pro Durchgang"
+msgstr "Z-Schritt pro Durchgang"
 
 msgid "Save-Move"
 msgstr "Sichere-Z-Position"
@@ -395,28 +404,28 @@ msgid "output objects whithout offsets / for debuging"
 msgstr "Ausgabe der Objekte ohne Werkzeugkorrektur"
 
 msgid "Use Taps"
-msgstr "Halte-Laschen"
+msgstr "Haltelaschen"
 
 msgid "using holding-tabs"
-msgstr "Halte-Laschen nutzen"
+msgstr "Haltelaschen nutzen"
 
 msgid "Show Grid"
 msgstr "Raster anzeigen"
 
 msgid "show tab-grid"
-msgstr "Halte-Raster anzeigen"
+msgstr "Halteraster anzeigen"
 
 msgid "depth of the holding-tabs"
-msgstr "Tiefe der Halte-Laschen"
+msgstr "Tiefe der Haltelaschen"
 
 msgid "Length"
-msgstr "Länge der Halte-Laschen"
+msgstr "Länge"
 
 msgid "length of the holding-tabs"
-msgstr "Tiefe der Halte-Laschen"
+msgstr "Tiefe der Haltelaschen"
 
 msgid "Triangle-Type"
-msgstr "Dreiecks-Form"
+msgstr "Dreieck (An), Rechteck (Aus)"
 
 msgid "type of the holding-tabs"
 msgstr "Typ der Haltelaschen"
@@ -425,13 +434,13 @@ msgid "X-Grid"
 msgstr "X-Raster"
 
 msgid "X-grid of the holding-tabs"
-msgstr "X-Raster der Haltelachen"
+msgstr "X-Raster der Haltelaschen"
 
 msgid "Y-Grid"
 msgstr "Y-Raster"
 
 msgid "Y-grid of the holding-tabs"
-msgstr "Y-Raster der Haltelachen"
+msgstr "Y-Raster der Haltelaschen"
 
 msgid "Fastmove-Speed"
 msgstr "Maximale-Geschwindigkeit"
@@ -479,7 +488,7 @@ msgid "object selection"
 msgstr "Objekt-Auswahl"
 
 msgid "Use"
-msgstr "Benutzen"
+msgstr "Verwenden"
 
 msgid "Overwrite"
 msgstr "Überschreiben"
@@ -490,8 +499,14 @@ msgstr "Werkzeugkorrektur"
 msgid "Pocket"
 msgstr "Taschen"
 
+msgid "mill pockets inside"
+msgstr "Taschen innen fräsen"
+
 msgid "Pocket cutting"
 msgstr "Taschen-Fräsen"
+
+msgid "Pocket-Stepover"
+msgstr "Taschen-Fräsen Überlappung"
 
 msgid "Laser"
 msgstr "Laser"
@@ -500,10 +515,10 @@ msgid "Laser cutting"
 msgstr "Läser-Schneiden"
 
 msgid "Holding-Tab's"
-msgstr "Halte-Laschen"
+msgstr "Haltelaschen"
 
 msgid "use holding tabs"
-msgstr "Halte-Laschen nutzen"
+msgstr "Haltelaschen nutzen"
 
 msgid "Order"
 msgstr "Reihenfolge"
@@ -581,7 +596,7 @@ msgid "SVG-Drawings"
 msgstr "SVG-Zeichnungen"
 
 msgid "On Open"
-msgstr "An Offenen"
+msgstr "An offenen Konturen"
 
 msgid "holding-tabs on open contours"
 msgstr "Haltelaschen an offenen Konturen setzen"
