@@ -198,7 +198,7 @@ void dxf_read (char *file) {
 
 	clear_dxfoptions();
 
-	char last_0[256];
+	char last_0[1024];
 	strcpy(last_0, "");
 
 	int lwpl_flag = 0;
