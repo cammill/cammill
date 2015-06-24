@@ -1079,7 +1079,11 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_widget_modify_font(label, pango_font_description_from_string("Tahoma 16"));
 
 	char iconfile[PATH_MAX];
-	snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo.png");
+	if (program_path[0] == 0) {
+		snprintf(iconfile, PATH_MAX, "%s%s%s", "icons", DIR_SEP, "logo.png");
+	} else {
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "logo.png");
+	}
 	GtkWidget *image = gtk_image_new_from_file(iconfile);
 	GtkWidget *box = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
 	gtk_box_pack_start(GTK_BOX(box), image, TRUE, TRUE, 0);
@@ -1970,8 +1974,11 @@ void create_gui () {
 	gtk_container_set_border_width(GTK_CONTAINER(SizeInfo), 4);
 
 	char iconfile[PATH_MAX];
-	snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo-top.png");
-
+	if (program_path[0] == 0) {
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo.png");
+	} else {
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "logo-top.png");
+	}
 	GtkWidget *LogoIMG = gtk_image_new_from_file(iconfile);
 	GtkWidget *Logo = gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(Logo), LogoIMG);
@@ -1994,7 +2001,11 @@ void create_gui () {
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
-	snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "icon_128.png");
+	if (program_path[0] == 0) {
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo_128.png");
+	} else {
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "icon_128.png");
+	}
 	gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf(iconfile));
 
 	gtk_signal_connect(GTK_OBJECT(window), "destroy_event", GTK_SIGNAL_FUNC (handler_destroy), NULL);
