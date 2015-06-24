@@ -58,7 +58,7 @@ ifeq (${TARGET}, OSX)
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
-	INSTALL_PATH    ?= packages/osx/CAMmill
+	INSTALL_PATH    ?= packages/osx/CAMmill/Contents/MacOS
 endif
 
 ifeq (${TARGET}, FREEBSD)
