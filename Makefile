@@ -98,7 +98,8 @@ CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
 ifeq (${TARGET}, DEFAULT)
 LIBS += -Wl,-z,relro,-z,now
 CFLAGS += -D_FORTIFY_SOURCE=2
-CFLAGS += -fstack-protector-strong -Wformat -Werror=format-security
+CFLAGS += -Wformat -Werror=format-security
+#CFLAGS += -fstack-protector-strong
 endif
 
 OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/font.o src/texture.o src/os-hacks.o
