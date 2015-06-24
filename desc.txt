@@ -14,5 +14,3 @@ Some key features include:
     OpenGL GUI and batch-mode
     Its Free!
 
-    Homepage: http://www.multixmedia.org/cammill/
-
