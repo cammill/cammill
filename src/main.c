@@ -755,6 +755,8 @@ void view_draw (void) {
 
 void handler_destroy (GtkWidget *widget, gpointer data) {
 	if (PARAMETER[P_O_AUTOSAVE].vint == 1) {
+		gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
+		gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
 		SetupSave();
 	}
 	gtk_main_quit();
@@ -1061,6 +1063,8 @@ void handler_load_tooltable (GtkWidget *widget, gpointer data) {
 
 void handler_save_setup (GtkWidget *widget, gpointer data) {
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving setup..."), "saving setup...");
+	gtk_window_get_size(GTK_WINDOW(window), &PARAMETER[P_W_POSW].vint, &PARAMETER[P_W_POSH].vint);
+	gtk_window_get_position(GTK_WINDOW(window), &PARAMETER[P_W_POSX].vint, &PARAMETER[P_W_POSY].vint);
 	SetupSave();
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving setup...done"), "saving setup...done");
 }
@@ -2013,6 +2017,9 @@ void create_gui () {
 	gtk_container_add (GTK_CONTAINER(window), vbox);
 
 	gtk_widget_show_all(window);
+
+	gtk_window_move(GTK_WINDOW(window), PARAMETER[P_W_POSX].vint, PARAMETER[P_W_POSY].vint);
+	gtk_window_resize(GTK_WINDOW(window), PARAMETER[P_W_POSW].vint, PARAMETER[P_W_POSH].vint);
 
 /*
 	Embedded Programms (-wid)
