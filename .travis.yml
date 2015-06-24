@@ -1,3 +1,6 @@
+env:
+  global:
+    - secure: "hYlS6Pv733Uw0S5S1qdaRZJfGcr7SyhxHghVhgjsBUGWfdU/n4sa1nkqMmClgtsnYuppAD5X1jWgGcdfEnIRooz4WtQo28S/DmtnYZ3HfO7ypAXF3yld8vMVFD5jkpwpav98YWNKfkJXliuk1ArAwQU7mT0WL7VeCQ1OutfCtC0io7FT/H6BMgAY717oCaZ5nGLH+WYbYTDB+rEhA/1drfO3mAq0kymtkBoaKw688knjOAVen6phdaPU6JEAGJo4R5gAkx8yTFZWsmLMpU+WvPwWWfemyu1nDLQm1dZjd33F7Hip8NooD2kIxPqf+g2FvXbTbL3PZD5fZ1k1Eayf7cP3RIM7UkK7er5rqlHh+1PiLp3k2bMth8z3613K64y4FFD1VZVuxovpXg4D3lzJ/nVEdPhCVDkNvtFCNK6FjiZsNPr/r+EwLvSonwvs73xYSKYlxFNVilAl0g9AP49wQjDuNY7zCi1KqvoaP7w6CKnVmf7ZdSrwFO8QqH9tydx5pi1s8MrieOASGHaieFm36KL2LnWEq0U5GFI25LQ87nfwA5k8QQSeTW4eW96Eko4f+B71wv0cdThzI6cyD867/JA7rOsjoSOTKh1OwblDtwEVrJIah0sXbgJ8y002fh2wmXzuV5jNn9R235oDIKmf7UqLkeuMQajPPNSSZwx8VuU="
 before_install:
 - env | sort
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then echo "deb http://mxedeb.redjohn.tk/repos/apt/debian/ wheezy main" | sudo tee -a /etc/apt/sources.list ; fi
@@ -82,4 +85,11 @@ deploy:
       condition: "$TRAVIS_OS_NAME = osx"
       tags: true
       repo: cammill/cammill
-
+addons:
+  coverity_scan:
+    project:
+      name: "cammill/cammill"
+      description: "2D CAM tool for Linux/BSD, Windows and Mac OS X"
+      build_command_prepend: "make clean"
+      build_command: "make"
+      branch_pattern: master
