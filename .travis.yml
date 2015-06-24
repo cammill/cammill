@@ -1,5 +1,6 @@
 before_install:
 - env | sort
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo echo "deb http://mxedeb.redjohn.tk/repos/apt/debian/ wheezy main" >> /etc/apt/sources.list ; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq update; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -fyq install; fi
 install:
@@ -10,6 +11,19 @@ install:
   autopoint bash bison bzip2 cmake flex gettext git g++ gperf intltool libffi-dev
   libtool libltdl-dev libssl-dev libxml-parser-perl make openssl patch perl pkg-config
   python ruby scons sed unzip wget xz-utils g++-multilib libc6-dev-i386 nsis tcl; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-pkgconf
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-binutils
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-gmp
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-isl
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpfr
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpc
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-mingw-w64
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtk2
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-lua
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtkglext
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtksourceview
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-freeglut
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo su - -c "( cd /usr/share/nsis ; wget -O UltraModernUI_1.00_2010-11-11.zip http://freefr.dl.sourceforge.net/project/ultramodernui/UltraModernUI/UltraModernUI%201.00b2-dev/UltraModernUI_1.00_2010-11-11.zip ; unzip -x UltraModernUI_1.00_2010-11-11.zip )"; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/lib:/opt/X11/lib/pkgconfig;
   fi
@@ -18,89 +32,6 @@ install:
   brew install lua gettext; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then brew link gettext --force; fi
 before_script:
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then git clone https://github.com/mxe/mxe.git;
-  fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd mxe; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  pkgconf; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  binutils; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gcc-gmp; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gcc-isl; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gcc-mpfr; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gcc-mpc; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  mingw-w64; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 60 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gcc; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  libiconv; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gettext; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  zlib; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  libpng; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  jpeg; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  xz; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  tiff; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  jasper; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  pcre; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  libffi; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  expat; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  dbus; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  glib; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  atk; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  bzip2; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  freetype-bootstrap; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  fontconfig; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  lzo; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  pixman; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  cairo; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  icu4c; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  harfbuzz; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  freetype; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  pango; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gdk-pixbuf; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gtk2; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  lua; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gtkglext; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  libxml2; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  gtksourceview; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then travis_wait 45 make JOBS=1 MXE_TARGETS='i686-w64-mingw32.static'
-  freeglut; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then export PATH=`pwd`/usr/bin:$PATH; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then cd ..; fi
 script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make clean all; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make package; fi

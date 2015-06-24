@@ -47,7 +47,7 @@ endif
 ifeq (${TARGET}, MINGW32)
 	PROGRAM         ?= cammill.exe
 	LIBS            ?= -lm -lstdc++ -lgcc
-	CROSS           ?= i686-w64-mingw32.static-
+	CROSS           ?= /usr/lib/mxe/usr/bin/i686-w64-mingw32.static-
 	COMP            ?= ${CROSS}gcc
 	PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 	INSTALL_PATH    ?= packages/windows/CAMmill
