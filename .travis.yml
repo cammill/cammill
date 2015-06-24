@@ -11,19 +11,19 @@ install:
   autopoint bash bison bzip2 cmake flex gettext git g++ gperf intltool libffi-dev
   libtool libltdl-dev libssl-dev libxml-parser-perl make openssl patch perl pkg-config
   python ruby scons sed unzip wget xz-utils g++-multilib libc6-dev-i386 nsis tcl; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-pkgconf
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-binutils
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-gmp
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-isl
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpfr
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpc
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-mingw-w64
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtk2
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-lua
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtkglext
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtksourceview
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-freeglut
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-pkgconf; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-binutils; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-gmp; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-isl; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpfr; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpc; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-mingw-w64; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtk2; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-lua; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtkglext; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtksourceview; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-freeglut; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo su - -c "( cd /usr/share/nsis ; wget -O UltraModernUI_1.00_2010-11-11.zip http://freefr.dl.sourceforge.net/project/ultramodernui/UltraModernUI/UltraModernUI%201.00b2-dev/UltraModernUI_1.00_2010-11-11.zip ; unzip -x UltraModernUI_1.00_2010-11-11.zip )"; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/lib:/opt/X11/lib/pkgconfig;
   fi
