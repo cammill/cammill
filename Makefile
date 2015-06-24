@@ -81,7 +81,7 @@ COMP       ?= $(CROSS)clang
 PKG_CONFIG ?= $(CROSS)pkg-config
 VERSION    ?= 0.9
 PROGRAM    ?= cammill
-NAME       ?= CAMmill
+PROGNAME   ?= CAMmill
 COMMENT    ?= 2D CAM-Tool (DXF to GCODE)
 
 
@@ -276,7 +276,7 @@ package: ${PROGRAM}
 	echo "[Desktop Entry]" > packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Version=${VERSION}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Type=Application" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
-	echo "Name=${NAME}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
+	echo "Name=${PROGNAME}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Comment=${COMMENT}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "TryExec=${PROGRAM}" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
 	echo "Exec=${PROGRAM} %F" >> packages/debian/usr/share/applications/${PROGRAM}.desktop
@@ -348,7 +348,7 @@ package: ${PROGRAM}
 	echo "[Desktop Entry]" > packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Version=${VERSION}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Type=Application" >> packages/openbsd/share/applications/${PROGRAM}.desktop
-	echo "Name=${NAME}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
+	echo "Name=${PROGNAME}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Comment=${COMMENT}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "TryExec=${PROGRAM}" >> packages/openbsd/share/applications/${PROGRAM}.desktop
 	echo "Exec=${PROGRAM} %F" >> packages/openbsd/share/applications/${PROGRAM}.desktop
@@ -411,7 +411,7 @@ package: ${PROGRAM}
 	echo "[Desktop Entry]" > packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Version=${VERSION}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Type=Application" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
-	echo "Name=${NAME}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
+	echo "Name=${PROGNAME}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Comment=${COMMENT}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "TryExec=${PROGRAM}" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
 	echo "Exec=${PROGRAM} %F" >> packages/freebsd/usr/local/share/applications/${PROGRAM}.desktop
