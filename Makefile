@@ -1,5 +1,5 @@
 
-#TARGETS: DEFAULT, FREEBSD, MINGW32, NETBSD, OSX, OPENBSD
+#TARGETS: DEFAULT, FREEBSD, MINGW32, NETBSD, OSX, OPENBSD, SUSE
 TARGET ?= DEFAULT
 
 #autodetect system
@@ -50,7 +50,6 @@ ifeq (${TARGET}, MINGW32)
 	PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 	INSTALL_PATH    ?= packages/windows/CAMmill
 endif
-
 ifeq (${TARGET}, OSX)
 	CFLAGS          += "-Wno-deprecated"
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
@@ -58,17 +57,17 @@ ifeq (${TARGET}, OSX)
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
 	INSTALL_PATH    ?= packages/osx/CAMmill
 endif
-
+ifeq (${TARGET}, SUSE)
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
+endif
 ifeq (${TARGET}, FREEBSD)
 	COMP            ?= clang
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua-5.1
 endif
-
 ifeq (${TARGET}, NETBSD)
 	COMP            ?= gcc
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua-5.1
 endif
-
 ifeq (${TARGET}, OPENBSD)
 	COMP            ?= gcc
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua51
