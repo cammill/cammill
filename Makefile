@@ -187,6 +187,7 @@ endif
 ifeq (${TARGET}, OSX)
 
 package:
+	strip ${PROGRAM}
 	mkdir -p ${INSTALL_PATH}/Contents/MacOS
 	cp ${PROGRAM} ${INSTALL_PATH}/Contents/MacOS/${PROGRAM}
 	chmod 755 ${INSTALL_PATH}/Contents/MacOS/${PROGRAM}
@@ -223,6 +224,7 @@ depends:
 	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
 
 package: ${PROGRAM}
+	strip ${PROGRAM}
 	rm -rf packages/debian
 	mkdir -p packages/debian${INSTALL_PATH}
 	cp -p ${PROGRAM} packages/debian${INSTALL_PATH}/${PROGRAM}
@@ -280,9 +282,9 @@ depends:
 	pkg_add git gcc gmake freeglut gtk+ gtksourceview gtkglext lua
 
 package: ${PROGRAM}
+	strip ${PROGRAM}
 	rm -rf packages/openbsd
 	mkdir -p packages/openbsd
-
 	mkdir -p packages/openbsd/cammill
 	cp ${PROGRAM} packages/openbsd/cammill/${PROGRAM}
 	chmod 755 packages/openbsd/cammill/${PROGRAM}
@@ -330,9 +332,9 @@ depends:
 	pkg install git gmake pkgconf gettext freeglut gtkglext gtksourceview2 lua51
 
 package: ${PROGRAM}
+	strip ${PROGRAM}
 	rm -rf packages/freebsd
 	mkdir -p packages/freebsd
-
 	mkdir -p packages/freebsd${INSTALL_PATH}
 	cp ${PROGRAM} packages/freebsd${INSTALL_PATH}/${PROGRAM}
 	chmod 755 packages/freebsd${INSTALL_PATH}/${PROGRAM}
