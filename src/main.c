@@ -1970,7 +1970,7 @@ void create_gui () {
 	gtk_container_set_border_width(GTK_CONTAINER(SizeInfo), 4);
 
 	char iconfile[PATH_MAX];
-	snprintf(iconfile, PATH_MAX, "%s%s", program_path, "icons/logo-top.png");
+	snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo-top.png");
 
 	GtkWidget *LogoIMG = gtk_image_new_from_file(iconfile);
 	GtkWidget *Logo = gtk_event_box_new();
@@ -1994,7 +1994,7 @@ void create_gui () {
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
-	snprintf(iconfile, PATH_MAX, "%s%s", program_path, "icons/logo-top.png");
+	snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "icon_128.png");
 	gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf(iconfile));
 
 	gtk_signal_connect(GTK_OBJECT(window), "destroy_event", GTK_SIGNAL_FUNC (handler_destroy), NULL);
