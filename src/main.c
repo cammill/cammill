@@ -2165,7 +2165,7 @@ int main (int argc, char *argv[]) {
 	ArgsRead(argc, argv);
 //	SetupShow();
 
-	strncpy(output_extension, "ngc", sizeof(output_extension,));
+	strncpy(output_extension, "ngc", sizeof(output_extension));
 	strncpy(output_info, "", sizeof(output_info));
 
 	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
