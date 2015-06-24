@@ -77,10 +77,10 @@ endif
 
 COMP       ?= $(CROSS)clang
 PKG_CONFIG ?= $(CROSS)pkg-config
-VERSION    ?= 0.9
 PROGRAM    ?= cammill
 PROGNAME   ?= CAMmill
 COMMENT    ?= 2D CAM-Tool (DXF to GCODE)
+VERSION    ?= $(shell if [ ! -d ".git" ]; then echo "0.9"; else echo -n `git describe --tags --match "v*" | sed 's/^v//'`; fi)
 HOMEPAGE   ?= http://www.multixmedia.org/cammill/
 MAINTAINER_NAME  ?= Oliver Dippel
 MAINTAINER_EMAIL ?= oliver@multixmedia.org
