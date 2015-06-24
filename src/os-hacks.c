@@ -31,7 +31,9 @@ int get_home_dir(char* buffer) {
 size_t get_executable_path (char* buffer, size_t len) {
 	char *path_end;
 
-	getcwd(buffer, sizeof(buffer));
+	if (!getcwd(buffer, sizeof(buffer))) {
+                return -1;
+        }
 
 #ifndef __MINGW32__
 	if (readlink("/proc/self/exe", buffer, len) <= 0) {
