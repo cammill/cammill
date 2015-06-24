@@ -313,7 +313,7 @@ package: ${PROGRAM}
 
 	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$FF" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
 
-	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/bin/${PROGRAM}
+	tar -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC ./
 	@echo "##"
 	@echo "## packages/cammill-openbsd-${VERSION}.tgz"
 	@echo "##"
