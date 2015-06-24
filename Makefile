@@ -58,7 +58,7 @@ ifeq (${TARGET}, OSX)
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
     PKG_CONFIG_PATH ?= /opt/X11/lib/pkgconfig
-	INSTALL_PATH    ?= packages/osx/CAMmill/Contents/MacOS
+	INSTALL_PATH    ?= packages/osx/CAMmill
 endif
 
 ifeq (${TARGET}, FREEBSD)
@@ -185,7 +185,20 @@ test: ${PROGRAM}
 endif
 ifeq (${TARGET}, OSX)
 
-package: install
+package:
+	mkdir -p ${INSTALL_PATH}/Contents/MacOS
+	cp ${PROGRAM} ${INSTALL_PATH}/Contents/MacOS/${PROGRAM}
+	chmod 755 ${INSTALL_PATH}/Contents/MacOS/${PROGRAM}
+	mkdir -p ${INSTALL_PATH}/Contents/MacOS/posts
+	cp -p posts/* ${INSTALL_PATH}/Contents/MacOS/posts
+	mkdir -p ${INSTALL_PATH}/Contents/MacOS/textures
+	cp -p textures/* ${INSTALL_PATH}/Contents/MacOS/textures
+	mkdir -p ${INSTALL_PATH}/Contents/MacOS/icons
+	cp -p icons/* ${INSTALL_PATH}/Contents/MacOS/icons
+	mkdir -p ${INSTALL_PATH}/Contents/MacOS/fonts
+	cp -p fonts/* ${INSTALL_PATH}/Contents/MacOS/fonts
+	cp -p LICENSE.txt material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf ${INSTALL_PATH}/Contents/MacOS/
+
 	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${INSTALL_PATH}
 	mv cammill.dmg packages/cammill.dmg
 	@echo "##"
