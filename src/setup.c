@@ -350,7 +350,7 @@ void SetupLoad (void) {
 						} else if (PARAMETER[n].type == T_STRING) {
 							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 						} else if (PARAMETER[n].type == T_FILE) {
-							strcpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 						}
 					}
 				}
