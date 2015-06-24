@@ -319,6 +319,10 @@ package: ${PROGRAM}
 	chmod 0644 packages/debian${INSTALL_PATH}/textures/*
 	chmod 0644 packages/debian${INSTALL_PATH}/icons/*
 	chmod 0644 packages/debian${INSTALL_PATH}/fonts/*
+	chmod 0644 packages/debian${INSTALL_PATH}/material.tbl
+	chmod 0644 packages/debian${INSTALL_PATH}/tool.tbl
+	chmod 0644 packages/debian${INSTALL_PATH}/postprocessor.lua
+	chmod 0644 packages/debian${INSTALL_PATH}/*.dxf
 
 	chmod -R -s packages/debian/
 	chown -R root:root packages/debian/DEBIAN/
