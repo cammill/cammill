@@ -565,7 +565,20 @@ void mainloop (void) {
 		if (PARAMETER[P_POST_CMD].vstr[0] != 0) {
 			char cmd_str[PATH_MAX];
 			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
-			system(cmd_str);
+                        int ret;
+			if (ret = system(cmd_str)) {
+                                if (WIFEXITED(ret)) {
+                                        fprintf(stderr, "exited, status=%d\n", WEXITSTATUS(ret));
+                                } else if (WIFSIGNALED(ret)) {
+                                        fprintf(stderr, "killed by signal %d\n", WTERMSIG(ret));
+                                } else if (WIFSTOPPED(ret)) {
+                                        fprintf(stderr, "stopped by signal %d\n", WSTOPSIG(ret));
+                                } else if (WIFCONTINUED(ret)) {
+                                        fprintf(stderr, "continued\n");
+                                } else {
+                                        fprintf(stderr, "not recognized\n");
+                                }
+                        }
 		}
 		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
