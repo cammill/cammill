@@ -307,12 +307,22 @@ package: ${PROGRAM}
 	echo "Homepage: ${HOMEPAGE}" >> packages/debian/DEBIAN/control
 	echo "Description: ${COMMENT}" >> packages/debian/DEBIAN/control
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/debian/DEBIAN/control
-	chmod -R -s packages/debian/ -R
+
+	chown -R root:root packages/debian/
+	chmod 0755 packages/debian/
+
+	chmod 0644 packages/debian/usr/share/doc/cammill/*
+	chmod 0644 packages/debian/usr/share/man/man1/cammill.1.gz
+	chmod 0644 packages/debian/usr/share/pixmaps/cammill.png
+	chmod 0644 packages/debian/usr/share/applications/cammill.desktop
+
+	chmod -R -s packages/debian/
 	chown -R root:root packages/debian/DEBIAN/
 	chmod -R 0755 packages/debian/DEBIAN/
 	chmod 0644 packages/debian/DEBIAN/control
-	#chmod 0644 packages/debian/DEBIAN/conffiles
 	chmod 0644 packages/debian/DEBIAN/md5sums
+	#chmod 0644 packages/debian/DEBIAN/conffiles
+
 	dpkg-deb --build packages/debian
 	cp packages/debian.deb packages/${PROGRAM}.deb
 	mv packages/debian.deb packages/${PROGRAM}_$(VERSION)_`dpkg --print-architecture`.deb
