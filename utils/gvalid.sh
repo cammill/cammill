@@ -37,7 +37,7 @@ then
 	echo "ERROR(',' found)"
 	exit 1
 fi
-if cat "$1" | tr -d "\r" | grep -v " *(.*)$" | tr " " "\n" | grep -v "^G[0-9]*[0-9]$\|^F[0-9][0-9]*$\|^[XYZIJ]-*[0-9][0-9\.]*$\|^[MT][0-9]*[1-9]$\|^S[0-9][0-9]*$" | grep "."
+if cat "$1" | tr -d "\r" | grep -v " *(.*)$" | tr " " "\n" | grep -v "^G[0-9]*[0-9]$" | grep -v "^F[0-9][0-9]*$" | grep -v "^[XYZIJ]-*[0-9][0-9\.]*$" | grep -v "^[MT][0-9]*[1-9]$" | grep -v "^S[0-9][0-9]*$" | grep "."
 then
 	echo "ERROR(unknown codes found)"
 	exit 1 
@@ -45,3 +45,9 @@ fi
 
 echo "PASSED"
 exit 0
+
+
+
+
+
+
