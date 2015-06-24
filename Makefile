@@ -96,8 +96,11 @@ CFLAGS += -I./ -I./src
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
 CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
 
+# debian hardening flags
 ifeq (${TARGET}, DEFAULT)
-CFLAGS += -Wl,-z,relro,-z,now
+LIBS += -Wl,-z,relro,-z,now
+CFLAGS += -D_FORTIFY_SOURCE=2
+CFLAGS += -fstack-protector-strong -Wformat -Werror=format-security
 endif
 
 OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/font.o src/texture.o src/os-hacks.o
