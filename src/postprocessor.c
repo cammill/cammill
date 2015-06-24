@@ -337,7 +337,7 @@ static int append_output (lua_State *L) {
 
 static int set_extension (lua_State *L) {
 	const char *str = lua_tostring(L, -1);
-	strcpy(output_extension, (char *)str);
+	strncpy(output_extension, (char *)str, sizeof(output_extension));
 	return 1;
 }
 

@@ -688,7 +688,7 @@ void ToolLoadTable (void) {
 					tooltbl_diameters[tooln] = toold;
 					tool_descr[tooln][0] = 0;
 					if (strstr(line2, ";") > 0) {
-						strcpy(tool_descr[tooln], strstr(line2, ";") + 1);
+						strncpy(tool_descr[tooln], strstr(line2, ";") + 1, sizeof(tool_descr[tooln]));
 					}
 					snprintf(tmp_str, sizeof(tmp_str), "#%i D%0.2fmm (%s)", tooln, tooltbl_diameters[tooln], tool_descr[tooln]);
 					if (PARAMETER[P_O_BATCHMODE].vint != 1) {
@@ -713,7 +713,7 @@ void ArgsRead (int argc, char **argv) {
 //		exit(1);
 	}
 	PARAMETER[P_V_DXF].vstr[0] = 0;
-	strcpy(PARAMETER[P_MFILE].vstr, "-");
+	strncpy(PARAMETER[P_MFILE].vstr, "-", sizeof(PARAMETER[P_MFILE].vstr));
 	for (num = 1; num < argc; num++) {
 		if (SetupArgCheck(argv[num], argv[num + 1]) == 1) {
 			num++;
@@ -728,7 +728,7 @@ void ArgsRead (int argc, char **argv) {
 			SetupShowHelp();
 			exit(1);
 		} else {
-			strcpy(PARAMETER[P_V_DXF].vstr, argv[argc - 1]);
+			strncpy(PARAMETER[P_V_DXF].vstr, argv[argc - 1], sizeof(PARAMETER[P_V_DXF].vstr));
 		}
 	}
 }
@@ -884,7 +884,7 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		strcpy(PARAMETER[P_V_DXF].vstr, filename);
+		strncpy(PARAMETER[P_V_DXF].vstr, filename, sizeof(PARAMETER[P_V_DXF].vstr));
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading dxf..."), "reading dxf...");
 		loading = 1;
 #ifdef USE_G3D
@@ -1002,11 +1002,11 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_add_pattern(ffilter, ext_str);
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 	if (PARAMETER[P_MFILE].vstr[0] == 0) {
-		char dir[2048];
-		strcpy(dir, PARAMETER[P_V_DXF].vstr);
+		char dir[PATH_MAX];
+		strncpy(dir, PARAMETER[P_V_DXF].vstr, sizeof(dir));
 		dirname(dir);
-		char file[2048];
-		strcpy(file, basename(PARAMETER[P_V_DXF].vstr));
+		char file[PATH_MAX];
+		strncpy(file, basename(PARAMETER[P_V_DXF].vstr), sizeof(file));
 		char *file_nosuffix = suffix_remove(file);
 		char *file_nosuffix_new = NULL;
 		file_nosuffix_new = realloc(file_nosuffix, strlen(file_nosuffix) + 5);
@@ -1033,7 +1033,7 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		strcpy(PARAMETER[P_MFILE].vstr, filename);
+		strncpy(PARAMETER[P_MFILE].vstr, filename, sizeof(PARAMETER[P_MFILE].vstr));
 		g_free(filename);
 		save_gcode = 1;
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
@@ -1075,7 +1075,7 @@ void handler_load_tooltable (GtkWidget *widget, gpointer data) {
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
-		strcpy(PARAMETER[P_TOOL_TABLE].vstr, filename);
+		strncpy(PARAMETER[P_TOOL_TABLE].vstr, filename, sizeof(PARAMETER[P_TOOL_TABLE].vstr));
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading tooltable..."), "loading tooltable...");
 		ToolLoadTable();
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading tooltable...done"), "loading tooltable...done");
@@ -1278,9 +1278,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	} else if (PARAMETER[n].type == T_BOOL) {
 		PARAMETER[n].vint = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
 	} else if (PARAMETER[n].type == T_STRING) {
-		strcpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)));
+		strncpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)), sizeof(PARAMETER[n].vstr));
 	} else if (PARAMETER[n].type == T_FILE) {
-		strcpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)));
+		strncpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)), sizeof(PARAMETER[n].vstr));
 	}
 
 	if (n == P_O_SELECT && PARAMETER[P_O_SELECT].vint != -1) {
@@ -1315,7 +1315,7 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
 		PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
 		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
-		strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
+		strncpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture, sizeof(PARAMETER[P_MAT_TEXTURE].vstr));
 	}
 
 	if (n == P_O_TOLERANCE) {
@@ -2093,7 +2093,7 @@ void load_files () {
 				if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 					gtk_list_store_insert_with_values(ListStore[P_H_POST], NULL, -1, 0, NULL, 1, pname, -1);
 				}
-				strcpy(postcam_plugins[n++], pname);
+				strncpy(postcam_plugins[n++], pname, sizeof(postcam_plugins[n++]));
 				postcam_plugins[n][0] = 0;
 				free(pname);
 				if (PARAMETER[P_H_POST].vint == -1) {
@@ -2132,7 +2132,7 @@ void load_files () {
 	PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
 	PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
 	PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
-	strcpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture);
+	strncpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture, sizeof(PARAMETER[P_MAT_TEXTURE].vstr));
 
 	/* import DXF */
 	loading = 1;
@@ -2165,8 +2165,8 @@ int main (int argc, char *argv[]) {
 	ArgsRead(argc, argv);
 //	SetupShow();
 
-	strcpy(output_extension, "ngc");
-	strcpy(output_info, "");
+	strncpy(output_extension, "ngc", sizeof(output_extension,));
+	strncpy(output_info, "", sizeof(output_info));
 
 	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
 		save_gcode = 1;

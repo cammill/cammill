@@ -348,9 +348,9 @@ void SetupLoad (void) {
 						} else if (PARAMETER[n].type == T_BOOL) {
 							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
 						} else if (PARAMETER[n].type == T_STRING) {
-							strcpy(PARAMETER[n].vstr, line2 + strlen(name_str));
+							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 						} else if (PARAMETER[n].type == T_FILE) {
-							strcpy(PARAMETER[n].vstr, line2 + strlen(name_str));
+							strcpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 						}
 					}
 				}
@@ -389,9 +389,9 @@ void SetupLoadPreset (char *cfgfile) {
 					} else if (PARAMETER[n].type == T_BOOL) {
 						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
 					} else if (PARAMETER[n].type == T_STRING) {
-						strcpy(PARAMETER[n].vstr, line2 + strlen(name_str));
+						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
 					} else if (PARAMETER[n].type == T_FILE) {
-						strcpy(PARAMETER[n].vstr, line2 + strlen(name_str));
+						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vst));
 					}
 				}
 			}
@@ -415,9 +415,9 @@ int SetupArgCheck (char *arg, char *arg2) {
 			} else if (PARAMETER[n].type == T_BOOL) {
 				PARAMETER[n].vint = atoi(arg2);
 			} else if (PARAMETER[n].type == T_STRING) {
-				strcpy(PARAMETER[n].vstr, arg2);
+				strncpy(PARAMETER[n].vstr, arg2, sizeof(PARAMETER[n].vstr));
 			} else if (PARAMETER[n].type == T_FILE) {
-				strcpy(PARAMETER[n].vstr, arg2);
+				strncpy(PARAMETER[n].vstr, arg2, sizeof(PARAMETER[n].vstr));
 			}
 			return 1;
 		}
