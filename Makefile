@@ -80,9 +80,12 @@ endif
 COMP       ?= $(CROSS)clang
 PKG_CONFIG ?= $(CROSS)pkg-config
 VERSION    ?= 0.9
+PROGRAM    ?= cammill
+NAME       ?= CAMmill
+COMMENT    ?= 2D CAM-Tool (DXF to GCODE)
+
 
 HERSHEY_FONTS_DIR = ./
-PROGRAM ?= cammill
 INSTALL_PATH ?= /opt/${PROGRAM}
 
 MAINTAINER_NAME  ?= Oliver Dippel
@@ -247,7 +250,21 @@ package: ${PROGRAM}
 	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/copyright
 	cp -p LICENSE.txt packages/debian/usr/share/doc/${PROGRAM}/LICENSE.txt
 	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.gz
-	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz 
+	git log | gzip -9 > packages/debian/usr/share/doc/${PROGRAM}/changelog.Debian.gz
+
+	echo "[Desktop Entry]" > /usr/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Name=CAMmill" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Icon=cammill" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> /usr/share/applications/${PROGRAM}.desktop
+	echo "" >> /usr/share/applications/${PROGRAM}.desktop
+	cp -p icons/icon_128.png /usr/share/pixmaps/${PROGRAM}.png
+
 	mkdir -p packages/debian/DEBIAN/
 	(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> packages/debian/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > packages/debian/DEBIAN/control
@@ -258,7 +275,7 @@ package: ${PROGRAM}
 	echo "Depends: libc6, libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> packages/debian/DEBIAN/control
 	echo "Section: graphics" >> packages/debian/DEBIAN/control
 	echo "Priority: optional" >> packages/debian/DEBIAN/control
-	echo "Description: 2D CAM-Tool (DXF to GCODE)" >> packages/debian/DEBIAN/control
+	echo "Description: ${COMMENT}" >> packages/debian/DEBIAN/control
 	echo " 2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/debian/DEBIAN/control
 	echo "Homepage: http://www.multixmedia.org/cammill/" >> packages/debian/DEBIAN/control
 	chmod -R -s packages/debian/ -R
@@ -303,7 +320,7 @@ package: ${PROGRAM}
 
 	echo "2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/openbsd/+DESC
 
-	echo "@comment 2D CAM-Tool (DXF to GCODE)" > packages/openbsd/+CONTENTS
+	echo "@comment ${COMMENT}" > packages/openbsd/+CONTENTS
 	echo "@name ${PROGRAM}-${VERSION}" >> packages/openbsd/+CONTENTS
 	echo "@arch `uname -m`" >> packages/openbsd/+CONTENTS
 	echo "+DESC" >> packages/openbsd/+CONTENTS
@@ -354,7 +371,7 @@ package: ${PROGRAM}
 	echo "name: ${PROGRAM}" > packages/freebsd/+MANIFEST
 	echo "version: ${VERSION}_0" >> packages/freebsd/+MANIFEST
 	echo "origin: graphics" >> packages/freebsd/+MANIFEST
-	echo "comment: 2D CAM-Tool (DXF to GCODE)" >> packages/freebsd/+MANIFEST
+	echo "comment: ${COMMENT}" >> packages/freebsd/+MANIFEST
 	echo "arch: i386" >> packages/freebsd/+MANIFEST
 	echo "www: http://www.multixmedia.org/cammill/" >> packages/freebsd/+MANIFEST
 	echo "maintainer: ${MAINTAINER_EMAIL}" >> packages/freebsd/+MANIFEST
