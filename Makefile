@@ -227,7 +227,7 @@ depends:
 	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev
 
 package: ${PROGRAM}
-	strip ${PROGRAM}
+	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
 	rm -rf packages/debian
 	mkdir -p packages/debian${INSTALL_PATH}
 	cp -p ${PROGRAM} packages/debian${INSTALL_PATH}/${PROGRAM}
@@ -427,16 +427,18 @@ package: ${PROGRAM}
 	#echo "users: [USER1, USER2]" >> packages/freebsd/+MANIFEST
 	#echo "groups: [GROUP1, GROUP2]" >> packages/freebsd/+MANIFEST
 	#echo "options: { OPT1: off, OPT2: on }" >> packages/freebsd/+MANIFEST
-	echo "desc: {" >> packages/freebsd/+MANIFEST
-	cat desc.txt | sed "s|^| |g" >> packages/freebsd/+MANIFEST
-	echo "}" >> packages/freebsd/+MANIFEST
+	echo "desc: |-" >> packages/freebsd/+MANIFEST
+	echo " 2D CAM-Tool for Linux, Windows and Mac OS X" >> packages/freebsd/+MANIFEST
+	#echo "desc: {" >> packages/freebsd/+MANIFEST
+	#cat desc.txt | sed "s|^| |g" >> packages/freebsd/+MANIFEST
+	#echo "}" >> packages/freebsd/+MANIFEST
 	echo "categories: [graphics]" >> packages/freebsd/+MANIFEST
 	#echo "deps:" >> packages/freebsd/+MANIFEST
 	#echo "  libiconv: {origin: converters/libiconv, version: 1.13.1_2}" >> packages/freebsd/+MANIFEST
 	#echo "  perl: {origin: lang/perl5.12, version: 5.12.4 }" >> packages/freebsd/+MANIFEST
 	#freeglut gtkglext gtksourceview2 lua51
 	echo "files: {" >> packages/freebsd/+MANIFEST
-	(for F in `find packages/freebsd -type f | grep -v "+" -type f | sort -u` ; do echo "  `echo $$F | sed "s|^packages/freebsd||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> packages/freebsd/+MANIFEST
+	(for F in `find packages/freebsd -type f | grep -v "+"` ; do echo "  `echo $$F | sed "s|^packages/freebsd||g"`: \"`sha256 $$F | cut -d" " -f4`\"" ; done) >> packages/freebsd/+MANIFEST
 	echo "}" >> packages/freebsd/+MANIFEST
 	echo "scripts: {" >> packages/freebsd/+MANIFEST
 	echo "  pre-install:  {" >> packages/freebsd/+MANIFEST
