@@ -2048,7 +2048,7 @@ void create_gui () {
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	if (program_path[0] == 0) {
-		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "logo_128.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "icon_128.png");
 	} else {
 		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "icon_128.png");
 	}
