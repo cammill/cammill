@@ -290,9 +290,9 @@ package: ${PROGRAM}
 	#echo "" >> packages/suse.spec
 	#(for F in `find packages/suse -type f | grep -v "^packages/suse.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse.spec
 	echo "" >> packages/suse.spec
-	cp -a packages/suse.spec /usr/src/redhat/SPECS/${PROGRAM}.spec
-	(cd packages/suse ; tar czpf /usr/src/redhat/SOURCES/${PROGRAM}-${VERSION}.tar.gz ./)
-	rpmbuild --bb /usr/src/redhat/SPECS/${PROGRAM}.spec
+	cp -a packages/suse.spec /usr/src/packages/SPECS/${PROGRAM}.spec
+	(cd packages/suse ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ./)
+	rpmbuild --bb /usr/src/packages/SPECS/${PROGRAM}.spec
 	
 
 test: ${PROGRAM}
