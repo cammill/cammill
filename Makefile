@@ -285,7 +285,7 @@ package: ${PROGRAM}
 	echo "/usr/bin/eject" >> packages/suse.spec
 	echo "/usr/man/man1/eject.1" >> packages/suse.spec
 	echo "" >> packages/suse.spec
-	(for F in `find packages/suse -type f | grep -v "^packages/debian/suse.spec"`; do echo "$$F" | sed "s| packages/suse/| |g"; done) >> packages/suse.spec
+	(for F in `find packages/suse -type f | grep -v "^packages/suse.spec"`; do echo "$$F" | sed "s|packages/suse/||g"; done) >> packages/suse.spec
 
 
 test: ${PROGRAM}
