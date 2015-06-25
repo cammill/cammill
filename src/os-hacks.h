@@ -24,8 +24,12 @@ ssize_t getline(char **linep, size_t *n, FILE *fp);
 #endif
 #endif
 
+#ifndef WIFSIGNALED
 #define WIFSIGNALED(x) 0
+#endif
 
+#ifndef WTERMSIG
 #define WTERMSIG(x) SIGTERM
+#endif
 
 #endif
