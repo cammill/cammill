@@ -264,10 +264,12 @@ package: ${PROGRAM}
 	echo "Summary: ${COMMENT}" > packages/suse.spec
 	echo "Name: ${PROGRAM}" >> packages/suse.spec
 	echo "Version: ${VERSION}" >> packages/suse.spec
-	echo "Release: 0" >> packages/suse.spec
-	echo "Copyright: GPL" >> packages/suse.spec
+	echo "Release: 1" >> packages/suse.spec
+	echo "License: GPL" >> packages/suse.spec
 	echo "Group: Utilities/System" >> packages/suse.spec
-	echo "Source: https://github.com/cammill" >> packages/suse.spec
+	echo "BuildRoot: %{_tmppath}/%{name}-root" >> packages/suse.spec
+	echo "Requires: bash" >> packages/suse.spec
+	echo "Source0: shell-script-%{version}.tar.gz" >> packages/suse.spec
 	echo "%description" >> packages/suse.spec
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/suse.spec
 	echo "" >> packages/suse.spec
@@ -275,16 +277,23 @@ package: ${PROGRAM}
 	echo "%setup" >> packages/suse.spec
 	echo "" >> packages/suse.spec
 	echo "%build" >> packages/suse.spec
-	echo "make all" >> packages/suse.spec
 	echo "" >> packages/suse.spec
 	echo "%install" >> packages/suse.spec
+	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse.spec
+	echo "mkdir -p ${RPM_BUILD_ROOT}" >> packages/suse.spec
+	echo "cp -a * ${RPM_BUILD_ROOT}" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	echo "%clean" >> packages/suse.spec
+	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse.spec
 	echo "" >> packages/suse.spec
 	echo "%files" >> packages/suse.spec
-	echo "%doc README COPYING ChangeLog" >> packages/suse.spec
+	#echo "" >> packages/suse.spec
+	#(for F in `find packages/suse -type f | grep -v "^packages/suse.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse.spec
 	echo "" >> packages/suse.spec
-	(for F in `find packages/suse -type f | grep -v "^packages/suse.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse.spec
-	echo "" >> packages/suse.spec
-
+	cp -a packages/suse.spec /usr/src/redhat/SPECS/${PROGRAM}.spec
+	(cd packages/suse ; tar czpf /usr/src/redhat/SOURCES/${PROGRAM}-${VERSION}.tar.gz ./)
+	rpmbuild --bb /usr/src/redhat/SPECS/${PROGRAM}.spec
+	
 
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
@@ -469,7 +478,7 @@ package: ${PROGRAM}
 
 	(for F in `find packages/openbsd -type f | grep -v "+"` ; do echo "$$F" | sed "s|^packages/openbsd/||g" ; echo "@sha `sha256 $$F | cut -d" " -f4`"; echo "@size `stat -f %z $$F`"; echo "@ts `stat -f %m $$F`"; done) >> packages/openbsd/+CONTENTS
 
-	tar -C packages/openbsd/ -czvpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC ${PROGRAM} bin share
+	tar -C packages/openbsd/ -czpPf packages/cammill-openbsd-${VERSION}.tgz +CONTENTS +DESC ${PROGRAM} bin share
 	@echo "##"
 	@echo "## packages/cammill-openbsd-${VERSION}.tgz"
 	@echo "##"
@@ -557,7 +566,7 @@ package: ${PROGRAM}
 	echo "    echo post-install" >> packages/freebsd/+MANIFEST
 	echo "  }" >> packages/freebsd/+MANIFEST
 	echo "}" >> packages/freebsd/+MANIFEST
-	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czvpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/share ./usr/local/bin/${PROGRAM}
+	tar -s "|.${INSTALL_PATH}|${INSTALL_PATH}|" -s "|./usr/local|/usr/local|" -C packages/freebsd/ -czpPf packages/cammill-freebsd-${VERSION}.tgz +MANIFEST .${INSTALL_PATH} ./usr/local/share ./usr/local/bin/${PROGRAM}
 	@echo "##"
 	@echo "## packages/cammill-freebsd-${VERSION}.tgz"
 	@echo "##"
