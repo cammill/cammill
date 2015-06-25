@@ -140,10 +140,16 @@ PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo 
 PO_MERGE = $(foreach PO,$(LANGS),msgmerge --no-fuzzy-matching --width=512 --backup=none --previous --update po/$(PO).po lang.pot\;)
 PO_SED = $(foreach PO,$(LANGS),sed -i \'s/^.~ //g\' po/$(PO).po\;)
 
-info:
-	@echo ${TARGET}
+all: info lang ${PROGRAM}
 
-all: lang ${PROGRAM}
+info:
+	@echo ""
+	@echo "## TARGET:       ${TARGET}"
+	@echo "## PROGRAM:      ${PROGRAM}"
+	@echo "## VERSION:      ${VERSION}"
+	@echo "## PKGS:         ${PKGS}"
+	@echo "## INSTALL_PATH: ${INSTALL_PATH}"
+	@echo ""
 
 updatepo:
 	xgettext -k_ src/*.c -o lang.pot
