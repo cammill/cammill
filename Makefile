@@ -74,6 +74,11 @@ ifeq (${TARGET}, SUSE)
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lxcb -lXau -lgcc -lc
 endif
 ifeq (${TARGET}, FEDORA)
+	COMP            ?= gcc
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
+	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lgcc -lc
+endif
+ifeq (${TARGET}, CENTOS)
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lgcc -lc
 endif
@@ -417,7 +422,11 @@ endif
 ifeq (${TARGET}, CENTOS)
 
 depends:
-	yum install gtkglext-devel gtksourceview2-devel lua-devel freeglut-devel make clang gcc gtk+-devel rpm-build git
+	yum install gtkglext-devel lua-devel freeglut-devel make gcc gtk2-devel rpm-build git
+	rpm --import http://winswitch.org/gpg.asc
+	cd /etc/yum.repos.d/
+	curl -O https://winswitch.org/downloads/CentOS/winswitch.repo
+	yum install gtkglext-devel
 
 package: ${PROGRAM}
 	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
