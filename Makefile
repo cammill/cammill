@@ -72,7 +72,7 @@ ifeq (${TARGET}, SUSE)
 endif
 ifeq (${TARGET}, FEDORA)
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
-	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lxcb -lXau -lgcc -lc
+	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lgcc -lc
 endif
 ifeq (${TARGET}, FREEBSD)
 	COMP            ?= clang
@@ -363,10 +363,12 @@ package: ${PROGRAM}
 	echo "/usr/bin/${PROGRAM}" >> packages/fedora/${PROGRAM}.spec
 	(for F in `find packages/fedora/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|packages/fedora/${PROGRAM}-${VERSION}||g"; done) >> packages/fedora/${PROGRAM}.spec
 	echo "" >> packages/fedora/${PROGRAM}.spec
-	cp -a packages/fedora/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
-	(cd packages/fedora ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
-	rpmbuild --bb /usr/src/packages/SPECS/${PROGRAM}.spec
-	mv /usr/src/packages/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm
+	mkdir -p ~/rpmbuild/SOURCES
+	mkdir -p ~/rpmbuild/SPECS
+	cp -a packages/fedora/${PROGRAM}.spec ~/rpmbuild/SPECS/${PROGRAM}.spec
+	(cd packages/fedora ; tar czpf ~/rpmbuild/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+	rpmbuild --bb ~/rpmbuild/SPECS/${PROGRAM}.spec
+	mv ~/rpmbuild/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm
 	@echo "##"
 	@echo "## packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm"
 	@echo "##"
