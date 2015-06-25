@@ -293,7 +293,10 @@ package: ${PROGRAM}
 	cp -a packages/suse/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
 	(cd packages/suse ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
 	rpmbuild --bb /usr/src/packages/SPECS/${PROGRAM}.spec
-	
+	mv /usr/src/packages/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/suse-${PROGRAM}-${VERSION}-1.`uname -m`.rpm
+	@echo "##"
+	@echo "## packages/suse-${PROGRAM}-${VERSION}-1.`uname -m`.rpm"
+	@echo "##"
 
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
