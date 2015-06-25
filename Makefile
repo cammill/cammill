@@ -268,6 +268,22 @@ package: ${PROGRAM}
 	mkdir -p packages/suse/${PROGRAM}-${VERSION}/usr/bin
 	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/suse/${PROGRAM}-${VERSION}/usr/bin/${PROGRAM}
 
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Name=${PROGNAME}" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/suse/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png packages/suse/${PROGRAM}-${VERSION}/usr/share/pixmaps/${PROGRAM}.png
+
 	echo "Summary: ${COMMENT}" > packages/suse/${PROGRAM}.spec
 	echo "Name: ${PROGRAM}" >> packages/suse/${PROGRAM}.spec
 	echo "Version: ${VERSION}" >> packages/suse/${PROGRAM}.spec
@@ -333,6 +349,22 @@ package: ${PROGRAM}
 	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/
 	mkdir -p packages/fedora/${PROGRAM}-${VERSION}/usr/bin
 	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/fedora/${PROGRAM}-${VERSION}/usr/bin/${PROGRAM}
+
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Name=${PROGNAME}" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/fedora/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png packages/fedora/${PROGRAM}-${VERSION}/usr/share/pixmaps/${PROGRAM}.png
 
 	echo "Summary: ${COMMENT}" > packages/fedora/${PROGRAM}.spec
 	echo "Name: ${PROGRAM}" >> packages/fedora/${PROGRAM}.spec
