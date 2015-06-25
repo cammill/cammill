@@ -19,7 +19,7 @@ ifeq (${TARGET}, DEFAULT)
 			ifneq ("$(wildcard /etc/SuSE-release)","")
 				TARGET = SUSE
 			endif
-			ifeq (,$(wildcard /etc/redhat-release))
+			ifneq ("$(wildcard /etc/redhat-release)","")
 				TARGET = REDHAT
 			endif
 		endif
