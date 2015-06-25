@@ -246,52 +246,52 @@ depends:
 package: ${PROGRAM}
 	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
 	rm -rf packages/suse
-	mkdir -p packages/suse${INSTALL_PATH}
-	cp -p ${PROGRAM} packages/suse${INSTALL_PATH}/${PROGRAM}
-	chmod 755 packages/suse${INSTALL_PATH}/${PROGRAM}
-	mkdir -p packages/suse${INSTALL_PATH}/posts
-	cp -p posts/* packages/suse${INSTALL_PATH}/posts
-	mkdir -p packages/suse${INSTALL_PATH}/textures
-	cp -p textures/* packages/suse${INSTALL_PATH}/textures
-	mkdir -p packages/suse${INSTALL_PATH}/icons
-	cp -p icons/* packages/suse${INSTALL_PATH}/icons
-	mkdir -p packages/suse${INSTALL_PATH}/fonts
-	cp -p fonts/* packages/suse${INSTALL_PATH}/fonts
-	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/suse${INSTALL_PATH}/
-	mkdir -p packages/suse/usr/bin
-	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/suse/usr/bin/${PROGRAM}
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${PROGRAM} packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/${PROGRAM}
+	chmod 755 packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/${PROGRAM}
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/suse/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p packages/suse/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/suse/${PROGRAM}-${VERSION}/usr/bin/${PROGRAM}
 
-	echo "Summary: ${COMMENT}" > packages/suse.spec
-	echo "Name: ${PROGRAM}" >> packages/suse.spec
-	echo "Version: ${VERSION}" >> packages/suse.spec
-	echo "Release: 1" >> packages/suse.spec
-	echo "License: GPL" >> packages/suse.spec
-	echo "Group: Utilities/System" >> packages/suse.spec
-	echo "BuildRoot: %{_tmppath}/%{name}-root" >> packages/suse.spec
-	echo "Requires: bash" >> packages/suse.spec
-	echo "Source0: ${PROGRAM}-%{version}.tar.gz" >> packages/suse.spec
-	echo "%description" >> packages/suse.spec
-	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/suse.spec
-	echo "" >> packages/suse.spec
-	echo "%prep" >> packages/suse.spec
-	echo "%setup" >> packages/suse.spec
-	echo "" >> packages/suse.spec
-	echo "%build" >> packages/suse.spec
-	echo "" >> packages/suse.spec
-	echo "%install" >> packages/suse.spec
-	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse.spec
-	echo "mkdir -p ${RPM_BUILD_ROOT}" >> packages/suse.spec
-	echo "cp -a * ${RPM_BUILD_ROOT}" >> packages/suse.spec
-	echo "" >> packages/suse.spec
-	echo "%clean" >> packages/suse.spec
-	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse.spec
-	echo "" >> packages/suse.spec
-	echo "%files" >> packages/suse.spec
-	#echo "" >> packages/suse.spec
-	#(for F in `find packages/suse -type f | grep -v "^packages/suse.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse.spec
-	echo "" >> packages/suse.spec
-	cp -a packages/suse.spec /usr/src/packages/SPECS/${PROGRAM}.spec
-	(cd packages/suse ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ./)
+	echo "Summary: ${COMMENT}" > packages/suse/${PROGRAM}.spec
+	echo "Name: ${PROGRAM}" >> packages/suse/${PROGRAM}.spec
+	echo "Version: ${VERSION}" >> packages/suse/${PROGRAM}.spec
+	echo "Release: 1" >> packages/suse/${PROGRAM}.spec
+	echo "License: GPL" >> packages/suse/${PROGRAM}.spec
+	echo "Group: Utilities/System" >> packages/suse/${PROGRAM}.spec
+	echo "BuildRoot: %{_tmppath}/%{name}-root" >> packages/suse/${PROGRAM}.spec
+	echo "Requires: bash" >> packages/suse/${PROGRAM}.spec
+	echo "Source0: ${PROGRAM}-%{version}.tar.gz" >> packages/suse/${PROGRAM}.spec
+	echo "%description" >> packages/suse/${PROGRAM}.spec
+	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/suse/${PROGRAM}.spec
+	echo "" >> packages/suse/${PROGRAM}.spec
+	echo "%prep" >> packages/suse/${PROGRAM}.spec
+	echo "%setup" >> packages/suse/${PROGRAM}.spec
+	echo "" >> packages/suse/${PROGRAM}.spec
+	echo "%build" >> packages/suse/${PROGRAM}.spec
+	echo "" >> packages/suse/${PROGRAM}.spec
+	echo "%install" >> packages/suse/${PROGRAM}.spec
+	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "mkdir -p ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "cp -a * ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "" >> packages/suse/${PROGRAM}.spec
+	echo "%clean" >> packages/suse/${PROGRAM}.spec
+	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "" >> packages/suse/${PROGRAM}.spec
+	echo "%files" >> packages/suse/${PROGRAM}.spec
+	#echo "" >> packages/suse/${PROGRAM}.spec
+	#(for F in `find packages/suse -type f | grep -v "^packages/suse/${PROGRAM}.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse/${PROGRAM}.spec
+	echo "" >> packages/suse/${PROGRAM}.spec
+	cp -a packages/suse/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
+	(cd packages/suse ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
 	rpmbuild --bb /usr/src/packages/SPECS/${PROGRAM}.spec
 	
 
