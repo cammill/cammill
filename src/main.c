@@ -2097,8 +2097,9 @@ void load_files () {
 				if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 					gtk_list_store_insert_with_values(ListStore[P_H_POST], NULL, -1, 0, NULL, 1, pname, -1);
 				}
-				strncpy(postcam_plugins[n++], pname, sizeof(postcam_plugins[n++]));
+				strncpy(postcam_plugins[n], pname, sizeof(postcam_plugins[n]));
 				postcam_plugins[n][0] = 0;
+                                n++;
 				free(pname);
 				if (PARAMETER[P_H_POST].vint == -1) {
 					PARAMETER[P_H_POST].vint = 0;
