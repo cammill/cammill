@@ -16,7 +16,7 @@ ifeq (${TARGET}, DEFAULT)
 		UNAME_S := $(shell uname -s)
 		ifeq ($(UNAME_S),Linux)
 			TARGET = DEFAULT
-			ifeq (,$(wildcard /etc/SuSE-release))
+			ifneq ("$(wildcard /etc/SuSE-release)","")
 				TARGET = SUSE
 			endif
 			ifeq (,$(wildcard /etc/redhat-release))
@@ -140,6 +140,8 @@ PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo 
 PO_MERGE = $(foreach PO,$(LANGS),msgmerge --no-fuzzy-matching --width=512 --backup=none --previous --update po/$(PO).po lang.pot\;)
 PO_SED = $(foreach PO,$(LANGS),sed -i \'s/^.~ //g\' po/$(PO).po\;)
 
+info:
+	@echo ${TARGET}
 
 all: lang ${PROGRAM}
 
