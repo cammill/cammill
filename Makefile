@@ -25,6 +25,9 @@ ifeq (${TARGET}, DEFAULT)
 			ifneq ("$(wildcard /etc/fedora-release)","")
 				TARGET = FEDORA
 			endif
+			ifneq ("$(wildcard /etc/centos-release)","")
+				TARGET = CENTOS
+			endif
 		endif
 		ifeq ($(UNAME_S),FreeBSD)
 			TARGET = FREEBSD
@@ -403,6 +406,90 @@ package: ${PROGRAM}
 	mv ~/rpmbuild/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm
 	@echo "##"
 	@echo "## packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm"
+	@echo "##"
+
+test: ${PROGRAM}
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
+	sh utils/gvalid.sh test.ngc
+	rm -rf test.ngc
+
+endif
+ifeq (${TARGET}, CENTOS)
+
+depends:
+	yum install gtkglext-devel gtksourceview2-devel lua-devel freeglut-devel make clang gcc gtk+-devel rpm-build git
+
+package: ${PROGRAM}
+	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
+	rm -rf packages/centos
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${PROGRAM} packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/${PROGRAM}
+	chmod 755 packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/${PROGRAM}
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/centos/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/centos/${PROGRAM}-${VERSION}/usr/bin/${PROGRAM}
+
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Type=Application" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Name=${PROGNAME}" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Comment=${COMMENT}" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "TryExec=${PROGRAM}" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Exec=${PROGRAM} %F" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Icon=${PROGRAM}" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "Terminal=false" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	echo "" >> packages/centos/${PROGRAM}-${VERSION}/usr/share/applications/${PROGRAM}.desktop
+	mkdir -p packages/centos/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png packages/centos/${PROGRAM}-${VERSION}/usr/share/pixmaps/${PROGRAM}.png
+
+	echo "Summary: ${COMMENT}" > packages/centos/${PROGRAM}.spec
+	echo "Name: ${PROGRAM}" >> packages/centos/${PROGRAM}.spec
+	echo "Version: ${VERSION}" >> packages/centos/${PROGRAM}.spec
+	echo "Release: 1" >> packages/centos/${PROGRAM}.spec
+	echo "License: GPL" >> packages/centos/${PROGRAM}.spec
+	echo "Group: Utilities/System" >> packages/centos/${PROGRAM}.spec
+	echo "BuildRoot: %{_tmppath}/%{name}-root" >> packages/centos/${PROGRAM}.spec
+	echo "Requires: bash" >> packages/centos/${PROGRAM}.spec
+	echo "Source0: ${PROGRAM}-%{version}.tar.gz" >> packages/centos/${PROGRAM}.spec
+	echo "%description" >> packages/centos/${PROGRAM}.spec
+	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/centos/${PROGRAM}.spec
+	echo "" >> packages/centos/${PROGRAM}.spec
+	echo "%prep" >> packages/centos/${PROGRAM}.spec
+	echo "%setup" >> packages/centos/${PROGRAM}.spec
+	echo "" >> packages/centos/${PROGRAM}.spec
+	echo "%build" >> packages/centos/${PROGRAM}.spec
+	echo "" >> packages/centos/${PROGRAM}.spec
+	echo "%install" >> packages/centos/${PROGRAM}.spec
+	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/centos/${PROGRAM}.spec
+	echo "mkdir -p \$${RPM_BUILD_ROOT}" >> packages/centos/${PROGRAM}.spec
+	echo "cp -a * \$${RPM_BUILD_ROOT}" >> packages/centos/${PROGRAM}.spec
+	echo "" >> packages/centos/${PROGRAM}.spec
+	echo "%clean" >> packages/centos/${PROGRAM}.spec
+	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/centos/${PROGRAM}.spec
+	echo "" >> packages/centos/${PROGRAM}.spec
+	echo "%files" >> packages/centos/${PROGRAM}.spec
+	echo "/usr/bin/${PROGRAM}" >> packages/centos/${PROGRAM}.spec
+	(for F in `find packages/centos/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|packages/centos/${PROGRAM}-${VERSION}||g"; done) >> packages/centos/${PROGRAM}.spec
+	echo "" >> packages/centos/${PROGRAM}.spec
+	mkdir -p ~/rpmbuild/SOURCES
+	mkdir -p ~/rpmbuild/SPECS
+	cp -a packages/centos/${PROGRAM}.spec ~/rpmbuild/SPECS/${PROGRAM}.spec
+	(cd packages/centos ; tar czpf ~/rpmbuild/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+	rpmbuild --bb ~/rpmbuild/SPECS/${PROGRAM}.spec
+	mv ~/rpmbuild/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-centos.`uname -m`.rpm
+	@echo "##"
+	@echo "## packages/${PROGRAM}-${VERSION}-1-centos.`uname -m`.rpm"
 	@echo "##"
 
 test: ${PROGRAM}
