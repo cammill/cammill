@@ -72,7 +72,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 			if (strcmp(LayerNames[num], layer) == 0) {
 				break;
 			} else if (LayerNames[num][0] == 0) {
-				strcpy(LayerNames[num], layer);
+				strncpy(LayerNames[num], layer, sizeof(LayerNames[num]));
 				break;
 			}
 		}
@@ -104,7 +104,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 			myLINES[line_n].used = 1;
 		}
 		myLINES[line_n].type = type;
-		strcpy(myLINES[line_n].layer, layer);
+		strncpy(myLINES[line_n].layer, layer, sizeof(myLINES[line_n].layer));
 		myLINES[line_n].x1 = x1;
 		myLINES[line_n].y1 = y1;
 		myLINES[line_n].x2 = x2;
@@ -114,7 +114,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 		myLINES[line_n].opt = opt;
 		myLINES[line_n].marked = 0;
 		myLINES[line_n].in_object = -1;
-		strcpy(myLINES[line_n].block, block_name);
+		strncpy(myLINES[line_n].block, block_name, sizeof(myLINES[line_n].block));
 		myLINES[line_n].blockdata = block;
 		line_n++;
 
@@ -220,7 +220,7 @@ void dxf_read (char *file) {
 						block = 1;
 						block_x = atof(dxf_options[OPTION_POINT_X]);
 						block_y = atof(dxf_options[OPTION_POINT_Y]);
-						strcpy(block_name, dxf_options[OPTION_BLOCKNAME]);
+						strncpy(block_name, dxf_options[OPTION_BLOCKNAME], sizeof(block_name));
 					} else if (strcmp(last_0, "ENDBLK") == 0) {
 						block = 0;
 						block_name[0] = 0;
@@ -237,7 +237,7 @@ void dxf_read (char *file) {
 						if (scale_y == 0.0) {
 							scale_y = 1.0;
 						}
-						strcpy(block_name, dxf_options[2]);
+						strncpy(block_name, dxf_options[2], sizeof(block_name));
 						int num = 0;
 						int last = line_last;
 						for (num = 0; num < last - 1; num++) {
@@ -405,11 +405,11 @@ void dxf_read (char *file) {
 					}
 					clear_dxfoptions();
 				}
-				strcpy(last_0, line2);
+				strncpy(last_0, line2, sizeof(last_0));
 			}
 //			printf("## %i: %s\n", dxfoption, line2);
 			if (dxfoption < 256) {
-				strcpy(dxf_options[dxfoption], line2);
+				strncpy(dxf_options[dxfoption], line2, sizeof(dxf_options[dxfoption]));
 				if (strcmp(last_0, "LWPOLYLINE") == 0) {
 					if (dxfoption == 10) {
 					} else if (dxfoption == 20) {
