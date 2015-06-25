@@ -269,7 +269,7 @@ package: ${PROGRAM}
 	echo "Group: Utilities/System" >> packages/suse.spec
 	echo "BuildRoot: %{_tmppath}/%{name}-root" >> packages/suse.spec
 	echo "Requires: bash" >> packages/suse.spec
-	echo "Source0: shell-script-%{version}.tar.gz" >> packages/suse.spec
+	echo "Source0: ${PROGRAM}-%{version}.tar.gz" >> packages/suse.spec
 	echo "%description" >> packages/suse.spec
 	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/suse.spec
 	echo "" >> packages/suse.spec
