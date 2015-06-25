@@ -243,6 +243,51 @@ ifeq (${TARGET}, SUSE)
 depends:
 	zypper install libgtk-2_0-0 libgtkglext-x11-1_0-0 libgtksourceview-2_0-0 git freeglut-devel lua51-devel make clang gtk2-devel gtkglext-devel gtksourceview2-devel gcc
 
+package: ${PROGRAM}
+	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
+	rm -rf packages/suse
+	mkdir -p packages/suse${INSTALL_PATH}
+	cp -p ${PROGRAM} packages/suse${INSTALL_PATH}/${PROGRAM}
+	chmod 755 packages/suse${INSTALL_PATH}/${PROGRAM}
+	mkdir -p packages/suse${INSTALL_PATH}/posts
+	cp -p posts/* packages/suse${INSTALL_PATH}/posts
+	mkdir -p packages/suse${INSTALL_PATH}/textures
+	cp -p textures/* packages/suse${INSTALL_PATH}/textures
+	mkdir -p packages/suse${INSTALL_PATH}/icons
+	cp -p icons/* packages/suse${INSTALL_PATH}/icons
+	mkdir -p packages/suse${INSTALL_PATH}/fonts
+	cp -p fonts/* packages/suse${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/suse${INSTALL_PATH}/
+	mkdir -p packages/suse/usr/bin
+	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/suse/usr/bin/${PROGRAM}
+
+	echo "Summary: ${COMMENT}" > packages/suse.spec
+	echo "Name: ${PROGRAM}" >> packages/suse.spec
+	echo "Version: ${VERSION}" >> packages/suse.spec
+	echo "Release: 0" >> packages/suse.spec
+	echo "Copyright: GPL" >> packages/suse.spec
+	echo "Group: Utilities/System" >> packages/suse.spec
+	echo "Source: https://github.com/cammill" >> packages/suse.spec
+	echo "%description" >> packages/suse.spec
+	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	echo "%prep" >> packages/suse.spec
+	echo "%setup" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	echo "%build" >> packages/suse.spec
+	echo "make all" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	echo "%install" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	echo "%files" >> packages/suse.spec
+	echo "%doc README COPYING ChangeLog" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	echo "/usr/bin/eject" >> packages/suse.spec
+	echo "/usr/man/man1/eject.1" >> packages/suse.spec
+	echo "" >> packages/suse.spec
+	(for F in `find packages/suse -type f | grep -v "^packages/debian/suse.spec"`; do echo "$$F" | sed "s| packages/suse/| |g"; done) >> packages/suse.spec
+
+
 test: ${PROGRAM}
 	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
 	sh utils/gvalid.sh test.ngc
