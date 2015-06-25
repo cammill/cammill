@@ -241,7 +241,7 @@ endif
 ifeq (${TARGET}, SUSE)
 
 depends:
-	zypper install libgtk-2_0-0 libgtkglext-x11-1_0-0 libgtksourceview-2_0-0 git freeglut-devel lua51-devel make clang gtk2-devel gtkglext-devel gtksourceview2-devel gcc
+	zypper install libgtk-2_0-0 libgtkglext-x11-1_0-0 libgtksourceview-2_0-0 git freeglut-devel lua51-devel make clang gtk2-devel gtkglext-devel gtksourceview2-devel gcc rpm-build
 
 package: ${PROGRAM}
 	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
@@ -293,9 +293,9 @@ package: ${PROGRAM}
 	cp -a packages/suse/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
 	(cd packages/suse ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
 	rpmbuild --bb /usr/src/packages/SPECS/${PROGRAM}.spec
-	mv /usr/src/packages/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/suse-${PROGRAM}-${VERSION}-1.`uname -m`.rpm
+	mv /usr/src/packages/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-suse.`uname -m`.rpm
 	@echo "##"
-	@echo "## packages/suse-${PROGRAM}-${VERSION}-1.`uname -m`.rpm"
+	@echo "## packages/${PROGRAM}-${VERSION}-1-suse.`uname -m`.rpm"
 	@echo "##"
 
 test: ${PROGRAM}
