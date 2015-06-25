@@ -22,6 +22,9 @@ ifeq (${TARGET}, DEFAULT)
 			ifneq ("$(wildcard /etc/redhat-release)","")
 				TARGET = REDHAT
 			endif
+			ifneq ("$(wildcard /etc/fedora-release)","")
+				TARGET = FEDORA
+			endif
 		endif
 		ifeq ($(UNAME_S),FreeBSD)
 			TARGET = FREEBSD
@@ -64,6 +67,10 @@ ifeq (${TARGET}, OSX)
 	INSTALL_PATH    ?= packages/osx/CAMmill
 endif
 ifeq (${TARGET}, SUSE)
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
+	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lxcb -lXau -lgcc -lc
+endif
+ifeq (${TARGET}, FEDORA)
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lxcb -lXau -lgcc -lc
 endif
@@ -296,6 +303,72 @@ package: ${PROGRAM}
 	mv /usr/src/packages/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-suse.`uname -m`.rpm
 	@echo "##"
 	@echo "## packages/${PROGRAM}-${VERSION}-1-suse.`uname -m`.rpm"
+	@echo "##"
+
+test: ${PROGRAM}
+	./${PROGRAM} -bm 1 test-minimal.dxf > test.ngc
+	sh utils/gvalid.sh test.ngc
+	rm -rf test.ngc
+
+endif
+ifeq (${TARGET}, FEDORA)
+
+depends:
+	yum install gtkglext-devel gtksourceview2-devel lua-devel freeglut-devel make clang gcc gtk+-devel rpm-build git
+
+package: ${PROGRAM}
+	strip --remove-section=.comment --remove-section=.note ${PROGRAM}
+	rm -rf packages/fedora
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${PROGRAM} packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/${PROGRAM}
+	chmod 755 packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/${PROGRAM}
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf packages/fedora/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p packages/fedora/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${PROGRAM}/${PROGRAM} packages/fedora/${PROGRAM}-${VERSION}/usr/bin/${PROGRAM}
+
+	echo "Summary: ${COMMENT}" > packages/fedora/${PROGRAM}.spec
+	echo "Name: ${PROGRAM}" >> packages/fedora/${PROGRAM}.spec
+	echo "Version: ${VERSION}" >> packages/fedora/${PROGRAM}.spec
+	echo "Release: 1" >> packages/fedora/${PROGRAM}.spec
+	echo "License: GPL" >> packages/fedora/${PROGRAM}.spec
+	echo "Group: Utilities/System" >> packages/fedora/${PROGRAM}.spec
+	echo "BuildRoot: %{_tmppath}/%{name}-root" >> packages/fedora/${PROGRAM}.spec
+	echo "Requires: bash" >> packages/fedora/${PROGRAM}.spec
+	echo "Source0: ${PROGRAM}-%{version}.tar.gz" >> packages/fedora/${PROGRAM}.spec
+	echo "%description" >> packages/fedora/${PROGRAM}.spec
+	cat desc.txt | grep ".." | sed "s|^| |g" >> packages/fedora/${PROGRAM}.spec
+	echo "" >> packages/fedora/${PROGRAM}.spec
+	echo "%prep" >> packages/fedora/${PROGRAM}.spec
+	echo "%setup" >> packages/fedora/${PROGRAM}.spec
+	echo "" >> packages/fedora/${PROGRAM}.spec
+	echo "%build" >> packages/fedora/${PROGRAM}.spec
+	echo "" >> packages/fedora/${PROGRAM}.spec
+	echo "%install" >> packages/fedora/${PROGRAM}.spec
+	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/fedora/${PROGRAM}.spec
+	echo "mkdir -p \$${RPM_BUILD_ROOT}" >> packages/fedora/${PROGRAM}.spec
+	echo "cp -a * \$${RPM_BUILD_ROOT}" >> packages/fedora/${PROGRAM}.spec
+	echo "" >> packages/fedora/${PROGRAM}.spec
+	echo "%clean" >> packages/fedora/${PROGRAM}.spec
+	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/fedora/${PROGRAM}.spec
+	echo "" >> packages/fedora/${PROGRAM}.spec
+	echo "%files" >> packages/fedora/${PROGRAM}.spec
+	echo "/usr/bin/${PROGRAM}" >> packages/fedora/${PROGRAM}.spec
+	(for F in `find packages/fedora/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|packages/fedora/${PROGRAM}-${VERSION}||g"; done) >> packages/fedora/${PROGRAM}.spec
+	echo "" >> packages/fedora/${PROGRAM}.spec
+	cp -a packages/fedora/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
+	(cd packages/fedora ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+	rpmbuild --bb /usr/src/packages/SPECS/${PROGRAM}.spec
+	mv /usr/src/packages/RPMS/`uname -m`/${PROGRAM}-${VERSION}-1.`uname -m`.rpm packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm
+	@echo "##"
+	@echo "## packages/${PROGRAM}-${VERSION}-1-fedora.`uname -m`.rpm"
 	@echo "##"
 
 test: ${PROGRAM}
