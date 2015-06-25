@@ -42,7 +42,7 @@ script:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make TARGET=MINGW32 clean all; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo make TARGET=MINGW32 package; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then make TARGET=MINGW32 clean; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo chmod -R a+r packages; sudo chmod a+x packages fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo chmod -R a+r packages; sudo chmod a+x packages; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make clean; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then make TARGET=OSX clean all; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sudo make TARGET=OSX package; fi
