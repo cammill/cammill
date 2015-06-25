@@ -287,6 +287,7 @@ package: ${PROGRAM}
 	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%files" >> packages/suse/${PROGRAM}.spec
+	echo "/usr/bin/${PROGRAM}" >> packages/suse/${PROGRAM}.spec
 	(for F in `find packages/suse/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|packages/suse/${PROGRAM}-${VERSION}||g"; done) >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	cp -a packages/suse/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
