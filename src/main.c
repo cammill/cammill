@@ -57,7 +57,9 @@
 #include <string.h>
 #include <sys/time.h>
 #include <sys/types.h>
+#ifndef __MINGW32__
 #include <sys/wait.h>
+#endif
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #endif
