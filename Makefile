@@ -279,12 +279,12 @@ package: ${PROGRAM}
 	echo "%build" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%install" >> packages/suse/${PROGRAM}.spec
-	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
-	echo "mkdir -p ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
-	echo "cp -a * ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "rm -rf $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "mkdir -p $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "cp -a * $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%clean" >> packages/suse/${PROGRAM}.spec
-	echo "rm -rf ${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "rm -rf $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%files" >> packages/suse/${PROGRAM}.spec
 	#echo "" >> packages/suse/${PROGRAM}.spec
