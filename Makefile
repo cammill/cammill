@@ -279,16 +279,15 @@ package: ${PROGRAM}
 	echo "%build" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%install" >> packages/suse/${PROGRAM}.spec
-	echo "rm -rf $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
-	echo "mkdir -p $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
-	echo "cp -a * $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "mkdir -p \$${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "cp -a * \$${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%clean" >> packages/suse/${PROGRAM}.spec
-	echo "rm -rf $${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
+	echo "rm -rf \$${RPM_BUILD_ROOT}" >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	echo "%files" >> packages/suse/${PROGRAM}.spec
-	#echo "" >> packages/suse/${PROGRAM}.spec
-	#(for F in `find packages/suse -type f | grep -v "^packages/suse/${PROGRAM}.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse/${PROGRAM}.spec
+	(for F in `find packages/suse -type f | grep -v "^packages/suse/${PROGRAM}.spec"`; do echo "$$F" | sed "s|packages/suse||g"; done) >> packages/suse/${PROGRAM}.spec
 	echo "" >> packages/suse/${PROGRAM}.spec
 	cp -a packages/suse/${PROGRAM}.spec /usr/src/packages/SPECS/${PROGRAM}.spec
 	(cd packages/suse ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
