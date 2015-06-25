@@ -575,12 +575,8 @@ void mainloop (void) {
                                         fprintf(stderr, "exited, status=%d\n", WEXITSTATUS(ret));
                                 } else if (WIFSIGNALED(ret)) {
                                         fprintf(stderr, "killed by signal %d\n", WTERMSIG(ret));
-                                } else if (WIFSTOPPED(ret)) {
-                                        fprintf(stderr, "stopped by signal %d\n", WSTOPSIG(ret));
-                                } else if (WIFCONTINUED(ret)) {
-                                        fprintf(stderr, "continued\n");
                                 } else {
-                                        fprintf(stderr, "not recognized\n");
+                                        fprintf(stderr, "not recognized: %d\n", ret);
                                 }
                         }
 		}
