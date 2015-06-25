@@ -37,9 +37,14 @@ size_t get_executable_path (char* buffer, size_t len) {
         }
 
 #ifndef __MINGW32__
-	if (readlink("/proc/self/exe", buffer, len) <= 0) {
-		return -1;
-	}
+        char *res = realpath("/proc/self/exe", NULL);
+        if (res == NULL) {
+                fprintf(stderr, "realpath() failed\n");
+                return -1;
+        } else {
+                snprintf(buffer, len, "%s", res);
+        }
+        free(res);
 #else
 //	HMODULE hModule = GetModuleHandle(NULL);
 //	if (hModule != NULL) {
