@@ -16,6 +16,12 @@ ifeq (${TARGET}, DEFAULT)
 		UNAME_S := $(shell uname -s)
 		ifeq ($(UNAME_S),Linux)
 			TARGET = DEFAULT
+			ifeq (,$(wildcard /etc/SuSE-release))
+				TARGET = SUSE
+			endif
+			ifeq (,$(wildcard /etc/redhat-release))
+				TARGET = REDHAT
+			endif
 		endif
 		ifeq ($(UNAME_S),FreeBSD)
 			TARGET = FREEBSD
