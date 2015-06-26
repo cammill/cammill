@@ -919,7 +919,8 @@ package: ${BINARY}
 	echo "  cp -a * \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 
-	(cd build/${DISTRIBUTION} ; tar czpf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+	(cd build/${DISTRIBUTION} ; tar czpf ${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+
 	makepkg -i build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
 	mv /usr/src/packages/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz
