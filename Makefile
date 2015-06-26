@@ -892,7 +892,7 @@ package: ${BINARY}
 	echo "pkgname=${PROGRAM}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "pkgver=${VERSION}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "pkgrel=1" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "pkgdesc="${COMMENT}"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "pkgdesc=\"${COMMENT}\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "arch=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "url=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "license=('GPL')" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
