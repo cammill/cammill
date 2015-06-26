@@ -1,9 +1,9 @@
 
 #TARGETS: DEBIAN, FREEBSD, MINGW32, NETBSD, OSX, OPENBSD, SUSE
-TARGET ?= DEBIAN
+TARGET ?= NONE
 
 #autodetect system
-ifeq (${TARGET}, )
+ifeq (${TARGET}, NONE)
 	ifeq ($(OS),Windows_NT)
 		ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
 			MACHINE = AMD64
@@ -160,7 +160,7 @@ endif
 OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/font.o src/texture.o src/os-hacks.o
 
 # GTK+2.0 and LUA5.1
-PKGS ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
+PKGS   ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS += "-DGSEAL_ENABLE"
 CFLAGS += "-DVERSION=\"${VERSION}\""
