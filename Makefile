@@ -888,37 +888,37 @@ package: ${BINARY}
 	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps
 	cp -p icons/icon_128.png build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps/${BINARY}.png
 
-	echo "# Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" > build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "pkgname=${PROGRAM}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "pkgver=${VERSION}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "pkgrel=1" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "pkgdesc=\"${COMMENT}\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "arch=('${MACHINE}')" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "url=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "license=('GPL')" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "groups=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "depends=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "makedepends=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "optdepends=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "provides=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "conflicts=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "replaces=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "backup=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "options=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "install=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "changelog=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "source=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "noextract=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "sha256sums=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "build() {" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "package() {" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "  cd .." >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "  cp -a \"\$$pkgname-\$$pkgver\"/* \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	makepkg --asroot -e build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "# Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" > build/${DISTRIBUTION}/PKGBUILD
+	echo "pkgname=${PROGRAM}" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "pkgver=${VERSION}" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "pkgrel=1" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "pkgdesc=\"${COMMENT}\"" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "arch=('${MACHINE}')" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "url=" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "license=('GPL')" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "groups=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "depends=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "makedepends=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "optdepends=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "provides=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "conflicts=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "replaces=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "backup=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "options=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "install=" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "changelog=" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "source=" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "noextract=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "sha256sums=()" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "build() {" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "}" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "package() {" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "  cd .." >> build/${DISTRIBUTION}/PKGBUILD
+	echo "  cp -a \"\$$pkgname-\$$pkgver\"/* \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "}" >> build/${DISTRIBUTION}/PKGBUILD
+	(cd build/${DISTRIBUTION} ; makepkg --asroot -e)
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
 	mv /usr/src/packages/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz
 	@echo "##"
