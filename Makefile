@@ -202,7 +202,15 @@ PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo 
 PO_MERGE = $(foreach PO,$(LANGS),msgmerge --no-fuzzy-matching --width=512 --backup=none --previous --update po/$(PO).po lang.pot\;)
 PO_SED = $(foreach PO,$(LANGS),sed -i \'s/^.~ //g\' po/$(PO).po\;)
 
+ifeq (${TARGET}, DEBIAN)
+
 all: info lang ${BINARY}
+
+else
+
+all: info ${BINARY}
+
+endif
 
 info:
 	@echo ""
