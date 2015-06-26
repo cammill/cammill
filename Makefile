@@ -30,6 +30,9 @@ ifeq (${TARGET}, NONE)
 			ifneq ("$(wildcard /etc/debian_version)","")
 				TARGET = DEBIAN
 			endif
+			ifneq ("$(wildcard /etc/arch-release)","")
+				TARGET = ARCHLINUX
+			endif
 		endif
 		ifeq ($(SYSTEM),FreeBSD)
 			TARGET = FREEBSD
@@ -824,6 +827,14 @@ test: ${BINARY}
 	./${BINARY} -bm 1 test-minimal.dxf > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc
+
+endif
+ifeq (${TARGET}, ARCHLINUX)
+
+depends:
+	pacman -Syy
+	pacman-key --refresh-keys
+	for PKG in mesa-libgl gtk2 gtkglext gtksourceview2 git freeglut pkg-config lua51 make clang gcc libunistring do yes | pacman -S $PKG || true	done
 
 endif
 
