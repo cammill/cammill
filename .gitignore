@@ -14,5 +14,6 @@ cammill
 *.pot
 intl/*
 packages
+build
 cammill.wiki
 cammill.github.io
