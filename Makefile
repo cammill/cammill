@@ -62,7 +62,7 @@ ifeq (${TARGET}, OSX)
 	SYSTEM          ?= $(shell uname -s)
 	MACHINE         ?= $(shell uname -m)
 	RELEASE         ?= $(shell lsb_release -s -r)
-	DISTRIBUTION    ?= $(shell lsb_release -s -i)
+	DISTRIBUTION    ?= $(shell lsb_release -s -i | tr " " "_")
 	CFLAGS          += "-Wno-deprecated"
 	LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 	PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
@@ -73,7 +73,7 @@ ifeq (${TARGET}, DEBIAN)
 	SYSTEM          ?= $(shell uname -s)
 	MACHINE         ?= $(shell dpkg --print-architecture)
 	RELEASE         ?= $(shell lsb_release -s -r)
-	DISTRIBUTION    ?= $(shell lsb_release -s -i)
+	DISTRIBUTION    ?= $(shell lsb_release -s -i | tr " " "_")
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 endif
@@ -81,7 +81,7 @@ ifeq (${TARGET}, SUSE)
 	SYSTEM          ?= $(shell uname -s)
 	MACHINE         ?= $(shell uname -m)
 	RELEASE         ?= $(shell lsb_release -s -r)
-	DISTRIBUTION    ?= $(shell lsb_release -s -i)
+	DISTRIBUTION    ?= $(shell lsb_release -s -i | tr " " "_")
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lxcb -lXau -lgcc -lc
 endif
@@ -89,7 +89,7 @@ ifeq (${TARGET}, FEDORA)
 	SYSTEM          ?= $(shell uname -s)
 	MACHINE         ?= $(shell uname -m)
 	RELEASE         ?= $(shell lsb_release -s -r)
-	DISTRIBUTION    ?= $(shell lsb_release -s -i)
+	DISTRIBUTION    ?= $(shell lsb_release -s -i | tr " " "_")
 	COMP            ?= gcc
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lgcc -lc
@@ -98,7 +98,7 @@ ifeq (${TARGET}, CENTOS)
 	SYSTEM          ?= $(shell uname -s)
 	MACHINE         ?= $(shell uname -m)
 	RELEASE         ?= $(shell lsb_release -s -r)
-	DISTRIBUTION    ?= $(shell lsb_release -s -i)
+	DISTRIBUTION    ?= $(shell lsb_release -s -i | tr " " "_")
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 	LIBS            ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lgcc -lc
 endif
