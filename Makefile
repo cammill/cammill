@@ -912,6 +912,7 @@ package: ${BINARY}
 	echo "sha256sums=()" >> build/${DISTRIBUTION}/PKGBUILD
 	echo "" >> build/${DISTRIBUTION}/PKGBUILD
 	echo "build() {" >> build/${DISTRIBUTION}/PKGBUILD
+	echo "  echo -n" >> build/${DISTRIBUTION}/PKGBUILD
 	echo "}" >> build/${DISTRIBUTION}/PKGBUILD
 	echo "" >> build/${DISTRIBUTION}/PKGBUILD
 	echo "package() {" >> build/${DISTRIBUTION}/PKGBUILD
