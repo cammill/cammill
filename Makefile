@@ -136,7 +136,7 @@ ifeq (${TARGET}, ARCHLINUX)
 	RELEASE         ?= $(shell uname -r | cut -d"-" -f1)
 	DISTRIBUTION    ?= ${SYSTEM}
 	COMP            ?= clang
-	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1 glib-2.0
+	PKGS            ?= gtk+-x11-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1 glib-2.0
 	INSTALL_PATH    ?= /usr/lib/cammill
 endif
 
