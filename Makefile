@@ -601,7 +601,7 @@ package: ${BINARY}
 	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/usr/bin/${BINARY}
 
 	mkdir -p build/${DISTRIBUTION}/usr/share/man/man1/
-	help2man ./${BINARY} -n "${COMMENT}" | gzip -n -9 > build/${DISTRIBUTION}/usr/share/man/man1/${BINARY}.1.gz
+	help2man ./${BINARY} -N -n "${COMMENT}" | gzip -n -9 > build/${DISTRIBUTION}/usr/share/man/man1/${BINARY}.1.gz
 	mkdir -p build/${DISTRIBUTION}/usr/share/doc/${BINARY}/
 	cp -p README.md build/${DISTRIBUTION}/usr/share/doc/${BINARY}/README
 
