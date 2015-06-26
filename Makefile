@@ -801,7 +801,7 @@ package: ${BINARY}
 	echo "version: ${VERSION}_0" >> build/${DISTRIBUTION}/+MANIFEST
 	echo "origin: graphics" >> build/${DISTRIBUTION}/+MANIFEST
 	echo "comment: ${COMMENT}" >> build/${DISTRIBUTION}/+MANIFEST
-	echo "arch: i386" >> build/${DISTRIBUTION}/+MANIFEST
+	echo "arch: ${MACHINE}" >> build/${DISTRIBUTION}/+MANIFEST
 	echo "www: ${HOMEPAGE}" >> build/${DISTRIBUTION}/+MANIFEST
 	echo "maintainer: ${MAINTAINER_EMAIL}" >> build/${DISTRIBUTION}/+MANIFEST
 	echo "prefix: /opt" >> build/${DISTRIBUTION}/+MANIFEST
@@ -853,6 +853,79 @@ depends:
 	pacman -Syy
 	pacman-key --refresh-keys
 	for PKG in mesa-libgl gtk2 gtkglext gtksourceview2 git freeglut pkg-config lua51 make clang gcc libunistring glib2 do yes | pacman -S $PKG || true	done
+
+package: ${BINARY}
+	strip --remove-section=.comment --remove-section=.note ${BINARY}
+	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin/${BINARY}
+
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Type=Application" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Terminal=false" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps/${BINARY}.png
+
+	echo "# Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" > build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "pkgname=${PROGRAM}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "pkgver=${VERSION}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "pkgrel=1" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "pkgdesc="${COMMENT}"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "arch=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "url=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "license=('GPL')" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "groups=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "depends=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "makedepends=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "optdepends=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "provides=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "conflicts=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "replaces=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "backup=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "options=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "install=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "changelog=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "source=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "noextract=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "sha256sums=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "build() {" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "package() {" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "  cd \"\$$pkgname-\$$pkgver\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "  cp -a * \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+
+	(cd build/${DISTRIBUTION} ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+	makepkg -i /usr/src/packages/SPECS/${BINARY}.spec
+	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
+	mv /usr/src/packages/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm
+	@echo "##"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm"
+	@echo "##"
 
 test: ${BINARY}
 	./${BINARY} -bm 1 test-minimal.dxf > test.ngc
