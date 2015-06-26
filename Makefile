@@ -893,7 +893,7 @@ package: ${BINARY}
 	echo "pkgver=${VERSION}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "pkgrel=1" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "pkgdesc=\"${COMMENT}\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "arch=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "arch=('${MACHINE}')" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "url=" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "license=('GPL')" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "groups=()" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
@@ -915,13 +915,10 @@ package: ${BINARY}
 	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "package() {" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "  cd \"\$$pkgname-\$$pkgver\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-	echo "  cp -a * \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "  cd .." >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	echo "  cp -a \"\$$pkgname-\$$pkgver\"/* \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
-
-	(cd build/${DISTRIBUTION} ; tar czpf ${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
-
-	makepkg -i build/${DISTRIBUTION}/${BINARY}.PKGINFO
+	makepkg --asroot -e build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
 	mv /usr/src/packages/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz
 	@echo "##"
