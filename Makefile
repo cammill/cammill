@@ -134,7 +134,7 @@ ifeq (${TARGET}, ARCHLINUX)
 	SYSTEM          ?= $(shell uname -s)
 	MACHINE         ?= $(shell uname -m)
 	RELEASE         ?= $(shell uname -r | cut -d"-" -f1)
-	DISTRIBUTION    ?= ${SYSTEM}
+	DISTRIBUTION    ?= Arch-Linux
 	COMP            ?= clang
 	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 	INSTALL_PATH    ?= /usr/lib/cammill
@@ -919,12 +919,12 @@ package: ${BINARY}
 	echo "  cp -a * \"\$$pkgdir/\"" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	echo "}" >> build/${DISTRIBUTION}/${BINARY}.PKGINFO
 
-	(cd build/${DISTRIBUTION} ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
-	makepkg -i /usr/src/packages/SPECS/${BINARY}.spec
+	(cd build/${DISTRIBUTION} ; tar czpf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
+	makepkg -i build/${DISTRIBUTION}/${BINARY}.PKGINFO
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv /usr/src/packages/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm
+	mv /usr/src/packages/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz"
 	@echo "##"
 
 test: ${BINARY}
