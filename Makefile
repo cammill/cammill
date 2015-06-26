@@ -854,6 +854,11 @@ depends:
 	pacman-key --refresh-keys
 	for PKG in mesa-libgl gtk2 gtkglext gtksourceview2 git freeglut pkg-config lua51 make clang gcc libunistring glib2 do yes | pacman -S $PKG || true	done
 
+test: ${BINARY}
+	./${BINARY} -bm 1 test-minimal.dxf > test.ngc
+	sh utils/gvalid.sh test.ngc
+	rm -rf test.ngc
+
 endif
 
 doc: ${BINARY}
