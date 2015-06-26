@@ -921,9 +921,9 @@ package: ${BINARY}
 	echo "}" >> build/${DISTRIBUTION}/PKGBUILD
 	(cd build/${DISTRIBUTION} ; makepkg --asroot -e)
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv build/${DISTRIBUTION}/${PROGRAM}-${VERSION}-1.${MACHINE}.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz
+	mv build/${DISTRIBUTION}/${PROGRAM}-${VERSION}-1-${MACHINE}.pkg.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-1-${MACHINE}.pkg.tar.xz
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.tar.xz"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-1-${MACHINE}.pkg.tar.xz"
 	@echo "##"
 
 test: ${BINARY}
