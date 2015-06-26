@@ -136,7 +136,7 @@ ifeq (${TARGET}, ARCHLINUX)
 	RELEASE         ?= $(shell uname -r | cut -d"-" -f1)
 	DISTRIBUTION    ?= ${SYSTEM}
 	COMP            ?= clang
-	PKGS            ?= gtk+-x11-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1 glib-2.0 atk
+	PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 	INSTALL_PATH    ?= /usr/lib/cammill
 endif
 
@@ -852,7 +852,7 @@ ifeq (${TARGET}, ARCHLINUX)
 depends:
 	pacman -Syy
 	pacman-key --refresh-keys
-	for PKG in mesa-libgl gtk2 gtkglext gtksourceview2 git freeglut pkg-config lua51 make clang gcc libunistring glibc do yes | pacman -S $PKG || true	done
+	for PKG in mesa-libgl gtk2 gtkglext gtksourceview2 git freeglut pkg-config lua51 make clang gcc libunistring glib2 do yes | pacman -S $PKG || true	done
 
 endif
 
