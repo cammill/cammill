@@ -321,7 +321,7 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	rm -rf build/${DISTRIBUTION}
 	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
 	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
 	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
@@ -404,7 +404,7 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	rm -rf build/${DISTRIBUTION}
 	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
 	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
 	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
@@ -493,7 +493,7 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	rm -rf build/${DISTRIBUTION}
 	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
 	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
 	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
@@ -856,7 +856,7 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	rm -rf build/${DISTRIBUTION}
 	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
 	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
 	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
