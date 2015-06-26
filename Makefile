@@ -300,37 +300,37 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}
-	cp -p ${BINARY} build/${DISTRIBUTION}${INSTALL_PATH}/${BINARY}
-	chmod 755 build/${DISTRIBUTION}${INSTALL_PATH}/${BINARY}
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/posts
-	cp -p posts/* build/${DISTRIBUTION}${INSTALL_PATH}/posts
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/textures
-	cp -p textures/* build/${DISTRIBUTION}${INSTALL_PATH}/textures
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/icons
-	cp -p icons/* build/${DISTRIBUTION}${INSTALL_PATH}/icons
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/fonts
-	cp -p fonts/* build/${DISTRIBUTION}${INSTALL_PATH}/fonts
-	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}${INSTALL_PATH}/
-	mkdir -p build/${DISTRIBUTION}/usr/bin
-	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/usr/bin/${BINARY}
+	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin/${BINARY}
 
-	mkdir -p build/${DISTRIBUTION}/usr/share/applications
-	echo "[Desktop Entry]" > build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Type=Application" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Terminal=false" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	mkdir -p build/${DISTRIBUTION}/usr/share/pixmaps
-	cp -p icons/icon_128.png build/${DISTRIBUTION}/usr/share/pixmaps/${BINARY}.png
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Type=Application" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Terminal=false" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps/${BINARY}.png
 
 	echo "Summary: ${COMMENT}" > build/${DISTRIBUTION}/${BINARY}.spec
 	echo "Name: ${BINARY}" >> build/${DISTRIBUTION}/${BINARY}.spec
@@ -359,7 +359,7 @@ package: ${BINARY}
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "%files" >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "/usr/bin/${BINARY}" >> build/${DISTRIBUTION}/${BINARY}.spec
-	(for F in `find build/${DISTRIBUTION} -type f`; do echo "$$F" | sed "s|build/${DISTRIBUTION}||g"; done) >> build/${DISTRIBUTION}/${BINARY}.spec
+	(for F in `find build/${DISTRIBUTION}/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|build/${DISTRIBUTION}/${PROGRAM}-${VERSION}||g"; done) >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.spec
 	cp -a build/${DISTRIBUTION}/${BINARY}.spec /usr/src/packages/SPECS/${BINARY}.spec
 	(cd build/${DISTRIBUTION} ; tar czpf /usr/src/packages/SOURCES/${PROGRAM}-${VERSION}.tar.gz ${PROGRAM}-${VERSION})
@@ -383,37 +383,37 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}
-	cp -p ${BINARY} build/${DISTRIBUTION}${INSTALL_PATH}/${BINARY}
-	chmod 755 build/${DISTRIBUTION}${INSTALL_PATH}/${BINARY}
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/posts
-	cp -p posts/* build/${DISTRIBUTION}${INSTALL_PATH}/posts
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/textures
-	cp -p textures/* build/${DISTRIBUTION}${INSTALL_PATH}/textures
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/icons
-	cp -p icons/* build/${DISTRIBUTION}${INSTALL_PATH}/icons
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/fonts
-	cp -p fonts/* build/${DISTRIBUTION}${INSTALL_PATH}/fonts
-	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}${INSTALL_PATH}/
-	mkdir -p build/${DISTRIBUTION}/usr/bin
-	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/usr/bin/${BINARY}
+	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin/${BINARY}
 
-	mkdir -p build/${DISTRIBUTION}/usr/share/applications
-	echo "[Desktop Entry]" > build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Type=Application" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Terminal=false" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	mkdir -p build/${DISTRIBUTION}/usr/share/pixmaps
-	cp -p icons/icon_128.png build/${DISTRIBUTION}/usr/share/pixmaps/${BINARY}.png
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Type=Application" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Terminal=false" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps/${BINARY}.png
 
 	echo "Summary: ${COMMENT}" > build/${DISTRIBUTION}/${BINARY}.spec
 	echo "Name: ${BINARY}" >> build/${DISTRIBUTION}/${BINARY}.spec
@@ -442,7 +442,7 @@ package: ${BINARY}
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "%files" >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "/usr/bin/${BINARY}" >> build/${DISTRIBUTION}/${BINARY}.spec
-	(for F in `find build/${DISTRIBUTION} -type f`; do echo "$$F" | sed "s|build/${DISTRIBUTION}||g"; done) >> build/${DISTRIBUTION}/${BINARY}.spec
+	(for F in `find build/${DISTRIBUTION}/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|build/${DISTRIBUTION}/${PROGRAM}-${VERSION}||g"; done) >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.spec
 	mkdir -p ~/rpmbuild/SOURCES
 	mkdir -p ~/rpmbuild/SPECS
@@ -472,37 +472,37 @@ depends:
 
 package: ${BINARY}
 	strip --remove-section=.comment --remove-section=.note ${BINARY}
-	rm -rf build/${DISTRIBUTION}
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}
-	cp -p ${BINARY} build/${DISTRIBUTION}${INSTALL_PATH}/${BINARY}
-	chmod 755 build/${DISTRIBUTION}${INSTALL_PATH}/${BINARY}
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/posts
-	cp -p posts/* build/${DISTRIBUTION}${INSTALL_PATH}/posts
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/textures
-	cp -p textures/* build/${DISTRIBUTION}${INSTALL_PATH}/textures
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/icons
-	cp -p icons/* build/${DISTRIBUTION}${INSTALL_PATH}/icons
-	mkdir -p build/${DISTRIBUTION}${INSTALL_PATH}/fonts
-	cp -p fonts/* build/${DISTRIBUTION}${INSTALL_PATH}/fonts
-	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}${INSTALL_PATH}/
-	mkdir -p build/${DISTRIBUTION}/usr/bin
-	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/usr/bin/${BINARY}
+	rm -rf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}
+	cp -p ${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	chmod 755 build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/${BINARY}
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	cp -p posts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/posts
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	cp -p textures/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/textures
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	cp -p icons/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/icons
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p fonts/* build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/fonts
+	cp -p material.tbl postprocessor.lua tool.tbl cammill.dxf test.dxf test-minimal.dxf build/${DISTRIBUTION}/${PROGRAM}-${VERSION}${INSTALL_PATH}/
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin
+	ln -sf ../lib/${BINARY}/${BINARY} build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/bin/${BINARY}
 
-	mkdir -p build/${DISTRIBUTION}/usr/share/applications
-	echo "[Desktop Entry]" > build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Type=Application" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "Terminal=false" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	echo "" >> build/${DISTRIBUTION}/usr/share/applications/${BINARY}.desktop
-	mkdir -p build/${DISTRIBUTION}/usr/share/pixmaps
-	cp -p icons/icon_128.png build/${DISTRIBUTION}/usr/share/pixmaps/${BINARY}.png
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications
+	echo "[Desktop Entry]" > build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Version=${VERSION}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Type=Application" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Name=${PROGNAME}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Comment=${COMMENT}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "TryExec=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Exec=${BINARY} %F" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Icon=${BINARY}" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Keywords=cam;cnc;gcode;dxf;" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "Terminal=false" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	echo "" >> build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/applications/${BINARY}.desktop
+	mkdir -p build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps
+	cp -p icons/icon_128.png build/${DISTRIBUTION}/${PROGRAM}-${VERSION}/usr/share/pixmaps/${BINARY}.png
 
 	echo "Summary: ${COMMENT}" > build/${DISTRIBUTION}/${BINARY}.spec
 	echo "Name: ${BINARY}" >> build/${DISTRIBUTION}/${BINARY}.spec
@@ -531,7 +531,7 @@ package: ${BINARY}
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "%files" >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "/usr/bin/${BINARY}" >> build/${DISTRIBUTION}/${BINARY}.spec
-	(for F in `find build/${DISTRIBUTION} -type f`; do echo "$$F" | sed "s|build/${DISTRIBUTION}||g"; done) >> build/${DISTRIBUTION}/${BINARY}.spec
+	(for F in `find build/${DISTRIBUTION}/${PROGRAM}-${VERSION} -type f`; do echo "$$F" | sed "s|build/${DISTRIBUTION}/${PROGRAM}-${VERSION}||g"; done) >> build/${DISTRIBUTION}/${BINARY}.spec
 	echo "" >> build/${DISTRIBUTION}/${BINARY}.spec
 	mkdir -p ~/rpmbuild/SOURCES
 	mkdir -p ~/rpmbuild/SPECS
