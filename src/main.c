@@ -182,9 +182,9 @@ GtkWidget *dialog;
 void postcam_load_source (char *plugin) {
 	char tmp_str[PATH_MAX];
 	if (program_path[0] == 0) {
-		snprintf(tmp_str, PATH_MAX, "posts%s%s.scpost", DIR_SEP, plugin);
+		snprintf(tmp_str, PATH_MAX, "../lib/cammill/posts%s%s.scpost", DIR_SEP, plugin);
 	} else {
-		snprintf(tmp_str, PATH_MAX, "%s%sposts%s%s.scpost", program_path, DIR_SEP, DIR_SEP, plugin);
+		snprintf(tmp_str, PATH_MAX, "%s%s../lib/cammill/posts%s%s.scpost", program_path, DIR_SEP, DIR_SEP, plugin);
 	}
 	GtkTextBuffer *bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
 	gchar *file_buffer;
@@ -200,7 +200,7 @@ void postcam_load_source (char *plugin) {
 
 void postcam_save_source (const char* path, char *plugin) {
 	char tmp_str[PATH_MAX];
-	snprintf(tmp_str, PATH_MAX, "%s%sposts%s%s.scpost", path, DIR_SEP, DIR_SEP, plugin);
+	snprintf(tmp_str, PATH_MAX, "%s%s../lib/cammill/posts%s%s.scpost", path, DIR_SEP, DIR_SEP, plugin);
 	FILE *fp = fopen(tmp_str, "w");
 	if (fp != NULL) {
 		GtkTextIter start, end;
@@ -671,7 +671,7 @@ void ToolLoadTable (void) {
 		tt_fp = fopen(PARAMETER[P_TOOL_TABLE].vstr, "r");
 		if (tt_fp == NULL) {
 			fprintf(stderr, "Can not open Tooltable-File: %s\n", PARAMETER[P_TOOL_TABLE].vstr);
-			exit(EXIT_FAILURE);
+			return;
 		}
 		tooltbl_diameters[0] = 1;
 		n = 0;
@@ -880,7 +880,7 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 #endif
 
 	if (PARAMETER[P_TOOL_TABLE].vstr[0] == 0) {
-		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), "./");
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), "../share/cammill/");
 	} else {
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), PARAMETER[P_V_DXF].vstr);
 	}
@@ -1071,7 +1071,7 @@ void handler_load_tooltable (GtkWidget *widget, gpointer data) {
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 
 	if (PARAMETER[P_TOOL_TABLE].vstr[0] == 0) {
-		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "./");
+		gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "../share/cammill/");
 	} else {
 		gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (dialog), PARAMETER[P_TOOL_TABLE].vstr);
 	}
@@ -1113,9 +1113,9 @@ void handler_about (GtkWidget *widget, gpointer data) {
 
 	char iconfile[PATH_MAX];
 	if (program_path[0] == 0) {
-		snprintf(iconfile, PATH_MAX, "%s%s%s", "icons", DIR_SEP, "logo.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s", "../share/cammill/icons", DIR_SEP, "logo.png");
 	} else {
-		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "logo.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "../share/cammill/icons", DIR_SEP, "logo.png");
 	}
 	GtkWidget *image = gtk_image_new_from_file(iconfile);
 	GtkWidget *box = gtk_dialog_get_content_area(GTK_DIALOG(dialog));
@@ -2024,9 +2024,9 @@ void create_gui () {
 
 	char iconfile[PATH_MAX];
 	if (program_path[0] == 0) {
-		snprintf(iconfile, PATH_MAX, "%s%s%s", "icons", DIR_SEP, "logo-top.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s", "../share/cammill/icons", DIR_SEP, "logo-top.png");
 	} else {
-		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "logo-top.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "../share/cammill/icons", DIR_SEP, "logo-top.png");
 	}
 	GtkWidget *LogoIMG = gtk_image_new_from_file(iconfile);
 	GtkWidget *Logo = gtk_event_box_new();
@@ -2051,9 +2051,9 @@ void create_gui () {
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
 	if (program_path[0] == 0) {
-		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "icons", DIR_SEP, "icon_128.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s", program_path, "../share/cammill/icons", DIR_SEP, "icon_128.png");
 	} else {
-		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "icons", DIR_SEP, "icon_128.png");
+		snprintf(iconfile, PATH_MAX, "%s%s%s%s%s", program_path, DIR_SEP, "../share/cammill/icons", DIR_SEP, "icon_128.png");
 	}
 	gtk_window_set_icon(GTK_WINDOW(window), create_pixbuf(iconfile));
 
@@ -2084,9 +2084,9 @@ void load_files () {
 	struct dirent *ent;
 	char dir_posts[PATH_MAX];
 	if (program_path[0] == 0) {
-		snprintf(dir_posts, PATH_MAX, "%s", "posts");
+		snprintf(dir_posts, PATH_MAX, "%s", "../lib/cammill/posts");
 	} else {
-		snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "posts");
+		snprintf(dir_posts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "../lib/cammill/posts");
 	}
 	// fprintf(stderr, "postprocessor directory: '%s'\n", dir_posts);
 	if ((dir = opendir(dir_posts)) != NULL) {

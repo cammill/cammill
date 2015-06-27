@@ -12,6 +12,7 @@ cammill
 *.deb
 *.tgz
 *.pot
+bin/*
 intl/*
 packages
 build
