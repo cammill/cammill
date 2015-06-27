@@ -38,7 +38,8 @@ lang:
 	@echo ${PO_MSGFMT} | sh
 
 ${BINARY}: ${OBJS}
-		$(COMP) -o ${BINARY} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
+	mkdir -p bin
+	$(COMP) -o ${BINARY} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
 
 %.o: %.c
 		$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
