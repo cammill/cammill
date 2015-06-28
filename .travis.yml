@@ -63,9 +63,6 @@ notifications:
     use_notice: true
 git:
   depth: 5
-matrix:
-  allow_failures:
-  - os: osx
 deploy:
   - provider: releases
     api_key:
