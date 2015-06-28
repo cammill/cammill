@@ -15,7 +15,7 @@ endif
 ifeq (${TARGET}, CENTOS)
 
 SYSTEM           ?= $(shell uname -s)
-MACHINE          ?= $(shell uname -m)
+MACHINE          ?= $(shell uname -m | sed "s|i686|i386|g")
 RELEASE          ?= $(shell lsb_release -s -r)
 DISTRIBUTION     ?= $(shell lsb_release -s -i | tr " " "_")
 PKGS             ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
