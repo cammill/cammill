@@ -22,7 +22,7 @@ COMP             ?= gcc
 PKGS             ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 LIBS             ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lgcc -lc
 INSTALL_PATH     ?= /usr
-RPMBASEDIR       ?= ~/rpmbuild/packages
+RPMBASEDIR       ?= ~/rpmbuild
 
 
 depends:
