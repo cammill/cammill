@@ -88,6 +88,7 @@ package: peinstall
 	echo "Source: ${PROGRAM}" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Version: ${VERSION}" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Architecture: `dpkg --print-architecture`" >> ${PKG_INSTALL_PATH}/DEBIAN/control
+	echo "Installed-Size: `du -k ${PKG_INSTALL_PATH} | grep total | awk '{print $1}'`" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Depends: libc6, libgtksourceview2.0-0, libgtkglext1, liblua5.1-0" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Section: graphics" >> ${PKG_INSTALL_PATH}/DEBIAN/control
