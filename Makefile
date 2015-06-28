@@ -49,7 +49,7 @@ clean:
 	rm -rf ${BINARY}
 
 install: ${BINARY}
-	strip --remove-section=.comment --remove-section=.note ${BINARY}
+	${STRIP_CMD} ${BINARY}
 	install -m 0755 -d ${INSTALL_PATH}
 	install -m 0755 -d ${INSTALL_PATH}/bin
 	install -m 0755 -d ${INSTALL_PATH}/lib/cammill
@@ -73,7 +73,7 @@ install: ${BINARY}
 	install -m 0644 share/doc/cammill/examples/*.dxf ${INSTALL_PATH}/share/doc/cammill/examples/
 
 pinstall: ${BINARY}
-	strip --remove-section=.comment --remove-section=.note ${BINARY}
+	${STRIP_CMD} ${BINARY}
 	install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}
 	install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/bin
 	install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/${PROGRAM}

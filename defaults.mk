@@ -14,6 +14,9 @@ PKG_CONFIG ?= $(CROSS)pkg-config
 TESTFILE = share/doc/cammill/examples/test-minimal.dxf
 HERSHEY_FONTS_DIR = ./
 INSTALL_PATH ?= /usr/local
+PKG_INSTALL_PATH = build/${DISTRIBUTION}/${PROGRAM}-${VERSION}
+
+STRIP_CMD ?= strip --remove-section=.comment --remove-section=.note
 
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./ -I./src
@@ -60,4 +63,3 @@ PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo 
 PO_MERGE = $(foreach PO,$(LANGS),msgmerge --no-fuzzy-matching --width=512 --backup=none --previous --update po/$(PO).po lang.pot\;)
 PO_SED = $(foreach PO,$(LANGS),sed -i \'s/^.~ //g\' po/$(PO).po\;)
 
-PKG_INSTALL_PATH = build/${DISTRIBUTION}/${PROGRAM}-${VERSION}

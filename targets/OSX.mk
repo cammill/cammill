@@ -12,15 +12,14 @@ endif
 
 ifeq (${TARGET}, OSX)
 
-SYSTEM          ?= $(shell uname -s)
-MACHINE         ?= $(shell uname -m)
-RELEASE         ?= $(shell lsb_release -s -r)
-DISTRIBUTION    ?= $(shell lsb_release -s -i | tr " " "_")
-CFLAGS          += "-Wno-deprecated"
-LIBS            ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
-PKGS            ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
-INSTALL_PATH    ?= OSX/CAMmill
-
+SYSTEM           ?= $(shell uname -s)
+MACHINE          ?= $(shell uname -m)
+RELEASE          ?= $(shell lsb_release -s -r)
+DISTRIBUTION     ?= $(shell lsb_release -s -i | tr " " "_")
+LIBS             ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
+PKGS             ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
+INSTALL_PATH     ?= OSX/CAMmill
+STRIP_CMD        ?= strip
 
 package: pinstall
 	sh utils/osx-app.sh ${BINARY} ${VERSION} ${PKG_INSTALL_PATH}
