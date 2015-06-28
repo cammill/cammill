@@ -32,7 +32,7 @@ peinstall: pinstall
 	cp -p LICENSE.txt ${PKG_INSTALL_PATH}/${INSTALL_PATH}/LICENSE.txt
 
 package: peinstall
-	(cd ${PKG_INSTALL_PATH}/${INSTALL_PATH} ; tclsh ../../../utils/create-win-installer.tclsh > installer.nsis)
+	(cd ${PKG_INSTALL_PATH}/${INSTALL_PATH} ; tclsh ../../../../../utils/create-win-installer.tclsh > installer.nsis)
 	(cd ${PKG_INSTALL_PATH}/${INSTALL_PATH} ; makensis installer.nsis)
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
 	mv ${PKG_INSTALL_PATH}/${INSTALL_PATH}/installer.exe packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.exe
