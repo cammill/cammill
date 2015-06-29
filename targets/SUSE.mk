@@ -79,7 +79,7 @@ rpmspec:
 	echo "Summary: ${COMMENT}" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
 	echo "Name: ${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
 	echo "Version: ${VERSION}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
-	echo "Release: 1" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
+	echo "Release: ${VRELEASE}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
 	echo "License: GPL" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
 	echo "Group: Utilities/System" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
 	echo "BuildRoot: %{_tmppath}/%{name}-root" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/${PROGRAM}.spec
@@ -115,9 +115,9 @@ package: peinstall rpmspec
 	rpmbuild --bb ${RPMBASEDIR}/SPECS/${PROGRAM}.spec
 
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv ${RPMBASEDIR}/RPMS/*/${PROGRAM}-${VERSION}-1.*.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_*.rpm
+	mv ${RPMBASEDIR}/RPMS/*/${PROGRAM}-${VERSION}-${VRELEASE}.*.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_*.rpm
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.rpm"
 	@echo "##"
 
 test: ${BINARY}

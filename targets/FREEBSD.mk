@@ -73,7 +73,7 @@ peinstall: pinstall
 
 manifest:
 	echo "name: ${BINARY}" > ${PKG_INSTALL_PATH}/+MANIFEST
-	echo "version: ${VERSION}_0" >> ${PKG_INSTALL_PATH}/+MANIFEST
+	echo "version: ${VERSION}_${VRELEASE}" >> ${PKG_INSTALL_PATH}/+MANIFEST
 	echo "origin: graphics" >> ${PKG_INSTALL_PATH}/+MANIFEST
 	echo "comment: ${COMMENT}" >> ${PKG_INSTALL_PATH}/+MANIFEST
 	echo "arch: ${MACHINE}" >> ${PKG_INSTALL_PATH}/+MANIFEST
@@ -112,9 +112,9 @@ manifest:
 
 package: peinstall manifest
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	tar -C ${PKG_INSTALL_PATH}/ -czpPf packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.tgz +MANIFEST `echo ${INSTALL_PATH} | sed "s|^/||g"`
+	tar -C ${PKG_INSTALL_PATH}/ -czpPf packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${VRELEASE}_${MACHINE}.tgz +MANIFEST `echo ${INSTALL_PATH} | sed "s|^/||g"`
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.tgz"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${VRELEASE}_${MACHINE}.tgz"
 	@echo "##"
 
 test: ${BINARY}

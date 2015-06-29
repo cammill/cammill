@@ -86,7 +86,7 @@ package: peinstall
 	#(for F in material.tbl tool.tbl postprocessor.lua posts/* ; do echo "${INSTALL_PATH}/$$F" ; done) >> ${PKG_INSTALL_PATH}/DEBIAN/conffiles
 	echo "Package: ${PROGRAM}" > ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Source: ${PROGRAM}" >> ${PKG_INSTALL_PATH}/DEBIAN/control
-	echo "Version: ${VERSION}" >> ${PKG_INSTALL_PATH}/DEBIAN/control
+	echo "Version: ${VERSION}-${VRELEASE}" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Architecture: `dpkg --print-architecture`" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Installed-Size: `du -sk ${PKG_INSTALL_PATH}|awk '{ print $$1 }'`" >> ${PKG_INSTALL_PATH}/DEBIAN/control
 	echo "Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" >> ${PKG_INSTALL_PATH}/DEBIAN/control
@@ -105,9 +105,9 @@ package: peinstall
 	dpkg-deb --build ${PKG_INSTALL_PATH}
 	lintian -I --show-overrides ${PKG_INSTALL_PATH}.deb || true
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv ${PKG_INSTALL_PATH}.deb packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.deb
+	mv ${PKG_INSTALL_PATH}.deb packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.deb
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.deb"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.deb"
 	@echo "##"
 
 test: ${BINARY}

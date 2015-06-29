@@ -54,7 +54,7 @@ peinstall: pinstall
 
 	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications
 	echo "[Desktop Entry]" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
-	echo "Version=${VERSION}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
+	echo "Version=${VERSION}-${VRELEASE}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	echo "Type=Application" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	echo "Name=${PROGNAME}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	echo "Comment=${COMMENT}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
@@ -74,7 +74,7 @@ peinstall: pinstall
 contents:
 	cat DESCRIPTION >> ${PKG_INSTALL_PATH}/+DESC
 	echo "@comment ${COMMENT}" > ${PKG_INSTALL_PATH}/+CONTENTS
-	echo "@name ${PROGRAM}-${VERSION}" >> ${PKG_INSTALL_PATH}/+CONTENTS
+	echo "@name ${PROGRAM}-${VERSION}-${VRELEASE}" >> ${PKG_INSTALL_PATH}/+CONTENTS
 	echo "@arch ${MACHINE}" >> ${PKG_INSTALL_PATH}/+CONTENTS
 	echo "+DESC" >> ${PKG_INSTALL_PATH}/+CONTENTS
 	#echo "@sha 2hdzVfdHx5FWZ5A7gEOrE1uKtNiAWKMo3yuNnXuZAEQ=" >> ${PKG_INSTALL_PATH}/+CONTENTS
@@ -85,9 +85,9 @@ contents:
 
 package: peinstall contents
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	tar -C ${PKG_INSTALL_PATH}/ -czpPf packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.tgz +CONTENTS +DESC ${BINARY} bin share
+	tar -C ${PKG_INSTALL_PATH}/ -czpPf packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.tgz +CONTENTS +DESC ${BINARY} bin share
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${MACHINE}.tgz"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.tgz"
 	@echo "##"
 
 test: ${BINARY}

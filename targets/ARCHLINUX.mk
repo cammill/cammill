@@ -79,7 +79,7 @@ pkgbuild:
 	echo "# Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" > ${PKG_INSTALL_PATH}/../PKGBUILD
 	echo "pkgname=${PROGRAM}" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	echo "pkgver=${VERSION}" >> ${PKG_INSTALL_PATH}/../PKGBUILD
-	echo "pkgrel=1" >> ${PKG_INSTALL_PATH}/../PKGBUILD
+	echo "pkgrel=${VRELEASE}" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	echo "pkgdesc=\"${COMMENT}\"" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	echo "arch=('${MACHINE}')" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	echo "url=" >> ${PKG_INSTALL_PATH}/../PKGBUILD
@@ -111,9 +111,9 @@ pkgbuild:
 package: peinstall pkgbuild
 	(cd ${PKG_INSTALL_PATH}/../ ; makepkg --asroot -e)
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv ${PKG_INSTALL_PATH}/../${PROGRAM}-${VERSION}-1-${MACHINE}.pkg.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-1-${MACHINE}.pkg.tar.xz
+	mv ${PKG_INSTALL_PATH}/../${PROGRAM}-${VERSION}-${VRELEASE}-${MACHINE}.pkg.tar.xz packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-${VRELEASE}-${MACHINE}.pkg.tar.xz
 	@echo "##"
-	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-1-${MACHINE}.pkg.tar.xz"
+	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-${VRELEASE}-${MACHINE}.pkg.tar.xz"
 	@echo "##"
 
 test: ${BINARY}
