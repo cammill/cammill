@@ -15,7 +15,7 @@ endif
 ifeq (${TARGET}, CENTOS)
 
 SYSTEM           ?= $(shell uname -s)
-MACHINE          ?= $(shell uname -m | sed "s|i686|i386|g")
+MACHINE          ?= $(shell uname -m)
 RELEASE          ?= $(shell lsb_release -s -r)
 DISTRIBUTION     ?= $(shell lsb_release -s -i | tr " " "_")
 PKGS             ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
@@ -120,7 +120,7 @@ package: peinstall rpmspec
 	rpmbuild --bb ${RPMBASEDIR}/SPECS/${PROGRAM}.spec
 
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv ${RPMBASEDIR}/RPMS/${MACHINE}/${PROGRAM}-${VERSION}-1.${MACHINE}.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm
+	mv ${RPMBASEDIR}/RPMS/*/${PROGRAM}-${VERSION}-1.*.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm
 	@echo "##"
 	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-1_${MACHINE}.rpm"
 	@echo "##"
