@@ -15,7 +15,7 @@ ifeq (${TARGET}, OSX)
 SYSTEM           ?= $(shell uname -s)
 MACHINE          ?= $(shell uname -m)
 RELEASE          ?= $(shell sw_vers -productVersion)
-DISTRIBUTION     ?= $(shell sw_vers -productName | tr -d" ")
+DISTRIBUTION     ?= $(shell sw_vers -productName | sed "s|  *||g")
 LIBS             ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 PKGS             ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 INSTALL_PATH     ?= OSX/CAMmill
@@ -35,7 +35,7 @@ depends:
 	brew link gettext --force
 
 package: pinstall
-	sh utils/osx-app.sh ${BINARY} ${VERSION} ${PKG_INSTALL_PATH}
+	sh utils/osx-app.sh ${PROGRAM} ${VERSION} ${PKG_INSTALL_PATH}
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
 	mv ${PROGRAM}.dmg packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.dmg
 	@echo "##"

@@ -24,7 +24,7 @@ dmg_bottomright_y=`expr $dmg_topleft_y + $dmg_height`
 echo "## create structure ##"
 mkdir -p ${INSTALL_PATH}/Contents/Resources
 mkdir -p ${INSTALL_PATH}/Contents/MacOS/lib
-cp "$EXE" ${INSTALL_PATH}/Contents/MacOS/${applicationName}.bin
+cp "bin/$EXE" ${INSTALL_PATH}/Contents/MacOS/${applicationName}.bin
 
 echo "#!/bin/bash" > ${INSTALL_PATH}/Contents/MacOS/${applicationName}
 echo "cd \`dirname \$0\`" >> ${INSTALL_PATH}/Contents/MacOS/${applicationName}
