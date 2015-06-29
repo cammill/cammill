@@ -6,8 +6,8 @@ HOMEPAGE    ?= http://www.multixmedia.org/${PROGRAM}/
 MAINTAINER_NAME  ?= Oliver Dippel
 MAINTAINER_EMAIL ?= oliver@multixmedia.org
 
-VERSION     ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test|t|g" | cut -d"-" -f1)
-VRELEASE    ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test|t|g" | cut -d"-" -f2)
+VERSION     ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test-*|t|g" | cut -d"-" -f1)
+VRELEASE    ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test-*|t|g" | cut -d"-" -f2)
 
 VERSION     ?= 0.9
 VRELEASE    ?= 0
