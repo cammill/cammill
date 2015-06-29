@@ -141,12 +141,36 @@ desktop_file_unix:
 	@echo "Exec=${PROGRAM} %F" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "Icon=${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "Categories=Graphics;2DGraphics;Engineering;GTK;" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
+	@echo "MimeType=image/vnd.dxf" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "Keywords=cam;cnc;gcode;dxf;" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "Terminal=false" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps
+	@install -m 0644 share/${PROGRAM}/icons/icon_128.png ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps/${PROGRAM}.png
 
-peinstall_unix: pinstall copyright_file desktop_file_unix
+mime_file_unix:
+	@echo "generate mime file"
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/mime/packages
+	@echo "image/vnd.dxf; ${PROGNAME} '%f'; test=test -n \"\$$DISPLAY\"; description=\"Drawing Exchange Format\"; nametemplate=%s.dxf" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/mime/packages/${PROGRAM}
+	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/mime/packages/${PROGRAM}
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages
+	@echo "<?xml version=\"1.0\"?>" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+	@echo "<mime-info xmlns='http://www.freedesktop.org/standards/shared-mime-info'>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+	@echo "  <mime-type type=\"image/vnd.dxf\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+	@echo "    <glob pattern=\"*.dxf\"/>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+	@echo "  </mime-type>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+	@echo "</mime-info>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/mime/packages/${PROGRAM}.xml
+
+icons_unix:
+	@echo "install icons"
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/icons/hicolor/scalable/apps
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/icons/hicolor/48x48/apps
+	@install -m 0644 share/cammill/icons/icon.svg ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/icons/hicolor/scalable/apps/${PROGRAM}.svg
+	@install -m 0644 share/cammill/icons/icon_48.png ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/icons/hicolor/48x48/apps/${PROGRAM}.png
+
+peinstall_unix: pinstall copyright_file desktop_file_unix mime_file_unix icons_unix
 	@echo "install unix extra files"
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/man/man1/
 	@help2man ./${BINARY} -N -n "${COMMENT}" | gzip -n -9 > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/man/man1/${PROGRAM}.1.gz
@@ -154,9 +178,6 @@ peinstall_unix: pinstall copyright_file desktop_file_unix
 	@install -m 0644 README.md ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/README
 	@git log | gzip -n -9 > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/changelog.gz
 	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/changelog.gz
-	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps
-	@install -m 0644 share/${PROGRAM}/icons/icon_128.png ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps/${PROGRAM}.png
-	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps/${PROGRAM}.png
 
 rpmspec:
 	@echo "generate rpmsec"
