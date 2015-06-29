@@ -55,12 +55,8 @@ CFLAGS += "-DVERSION=\"${VERSION}\""
 ALL_LIBS = $(LIBS) $(PKGS:%=`$(PKG_CONFIG) % --libs`)
 CFLAGS += $(PKGS:%=`$(PKG_CONFIG) % --cflags`)
 
-LANGS += de
-LANGS += it
-LANGS += fr
-
-PO_MKDIR = mkdir -p $(foreach PO,$(LANGS),intl/$(PO)_$(shell echo $(PO) | tr "a-z" "A-Z").UTF-8/LC_MESSAGES)
-PO_MSGFMT = $(foreach PO,$(LANGS),msgfmt po/$(PO).po -o intl/$(PO)_$(shell echo $(PO) | tr "a-z" "A-Z").UTF-8/LC_MESSAGES/${BINARY}.mo\;)
+LANGS ?= $(shell ls po/*.po | sed "s|^po/||g" | cut -d"." -f1)
+LANG_MO = $(foreach PO,$(LANGS), share/locale/$(PO)/LC_MESSAGES/${PROGRAM}.mo)
 PO_MERGE = $(foreach PO,$(LANGS),msgmerge --no-fuzzy-matching --width=512 --backup=none --previous --update po/$(PO).po lang.pot\;)
 PO_SED = $(foreach PO,$(LANGS),sed -i \'s/^.~ //g\' po/$(PO).po\;)
 

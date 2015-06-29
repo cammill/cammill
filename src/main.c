@@ -2159,7 +2159,7 @@ int main (int argc, char *argv[]) {
 
 	get_executable_path(program_path, sizeof(program_path));
 
-	bindtextdomain("cammill", "intl");
+//	bindtextdomain("cammill", "intl");
 	textdomain("cammill");
 
 	// force dots in printf

@@ -24,7 +24,7 @@ info:
 	@echo "	INSTALL_PATH    ${INSTALL_PATH}"
 	@echo ""
 
-updatepo:
+update_po:
 	xgettext -k_ src/*.c -o lang.pot
 	@echo ${PO_MERGE}
 	@echo ${PO_MERGE} | sh
@@ -32,11 +32,13 @@ updatepo:
 	@echo ${PO_SED} | sh
 	rm -rf lang.pot
 
-lang:
-	@echo ${PO_MKDIR}
-	@echo ${PO_MKDIR} | sh
-	@echo ${PO_MSGFMT}
-	@echo ${PO_MSGFMT} | sh
+share/locale/%/LC_MESSAGES/cammill.mo: po/%.po
+	@echo "format lang $(shell basename $<)"
+	@install -m 0755 -d $(shell dirname $@)
+	@msgfmt $< -o $@
+	@chmod 0644 $@
+
+lang: ${LANG_MO}
 
 ${BINARY}: ${OBJS} ${EXTRA_OBJS}
 	@echo "linking ${BINARY}"
@@ -51,9 +53,8 @@ clean:
 	rm -rf ${OBJS}
 	rm -rf ${BINARY}
 
-install: ${BINARY}
+install: ${BINARY} lang
 	@echo "install files"
-	@${STRIP_CMD} ${BINARY}
 	@install -m 0755 -d ${INSTALL_PATH}
 	@install -m 0755 -d ${INSTALL_PATH}/bin
 	@install -m 0755 -d ${INSTALL_PATH}/lib/cammill
@@ -75,10 +76,13 @@ install: ${BINARY}
 	@install -m 0644 share/cammill/textures/*.bmp ${INSTALL_PATH}/share/cammill/textures/
 	@install -m 0644 share/cammill/fonts/*.jhf ${INSTALL_PATH}/share/cammill/fonts/
 	@install -m 0644 share/doc/cammill/examples/*.dxf ${INSTALL_PATH}/share/doc/cammill/examples/
+	@install -m 0755 -d ${INSTALL_PATH}/share/locale
+	@cp -R -p share/locale/* ${INSTALL_PATH}/share/locale/
+	@${STRIP_CMD} ${INSTALL_PATH}/${BINARY}
 
-pinstall: ${BINARY}
+pinstall: ${BINARY} lang
 	@echo "install package files"
-	@${STRIP_CMD} ${BINARY}
+	@rm -rf ${PKG_INSTALL_PATH}
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/bin
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/${PROGRAM}
@@ -100,16 +104,13 @@ pinstall: ${BINARY}
 	@install -m 0644 share/${PROGRAM}/textures/*.bmp ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/textures/
 	@install -m 0644 share/${PROGRAM}/fonts/*.jhf ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/fonts/
 	@install -m 0644 share/doc/${PROGRAM}/examples/*.dxf ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/examples/
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale
+	@cp -R -p share/locale/* ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/
+	@${STRIP_CMD} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${BINARY}
 
-peinstall_unix: pinstall
-	@echo "install unix extra files"
-
-	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/man/man1/
-	@help2man ./${BINARY} -N -n "${COMMENT}" | gzip -n -9 > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/man/man1/${PROGRAM}.1.gz
-
+copyright_file:
+	@echo "generate copyright file"
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/
-	@install -m 0644 README.md ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/README
-
 	@echo "It was downloaded from https://github.com/${PROGRAM}" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/copyright
 	@echo "" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/copyright
 	@echo "Copyright 2014 - 2015 by Oliver Dippel <oliver@multixmedia.org>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/copyright
@@ -128,10 +129,9 @@ peinstall_unix: pinstall
 	@echo "" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/copyright
 	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/copyright
 
-	@git log | gzip -n -9 > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/changelog.gz
-	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/changelog.gz
-
-	@mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications
+desktop_file_unix:
+	@echo "generate desktop file"
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications
 	@echo "[Desktop Entry]" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "Version=${VERSION}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@echo "Type=Application" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
@@ -146,7 +146,15 @@ peinstall_unix: pinstall
 	@echo "" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/applications/${PROGRAM}.desktop
 
-	@mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps
+peinstall_unix: pinstall copyright_file desktop_file_unix
+	@echo "install unix extra files"
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/man/man1/
+	@help2man ./${BINARY} -N -n "${COMMENT}" | gzip -n -9 > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/man/man1/${PROGRAM}.1.gz
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/
+	@install -m 0644 README.md ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/README
+	@git log | gzip -n -9 > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/changelog.gz
+	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/changelog.gz
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps
 	@install -m 0644 share/${PROGRAM}/icons/icon_128.png ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps/${PROGRAM}.png
 	@chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/pixmaps/${PROGRAM}.png
 
@@ -185,7 +193,7 @@ rpmspec:
 
 debian_control:
 	@echo "generate debian-control"
-	@mkdir -p ${PKG_INSTALL_PATH}/DEBIAN/
+	@install -m 0755 -d ${PKG_INSTALL_PATH}/DEBIAN/
 	@(for F in `find ${PKG_INSTALL_PATH} -type f | grep -v "^${PKG_INSTALL_PATH}/DEBIAN/"`; do md5sum "$$F" | sed "s| ${PKG_INSTALL_PATH}/| |g"; done) >> ${PKG_INSTALL_PATH}/DEBIAN/md5sums
 	@echo "Package: ${PROGRAM}" > ${PKG_INSTALL_PATH}/DEBIAN/control
 	@echo "Source: ${PROGRAM}" >> ${PKG_INSTALL_PATH}/DEBIAN/control

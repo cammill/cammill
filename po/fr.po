@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cammill\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-23 21:33+0200\n"
+"POT-Creation-Date: 2015-06-29 17:06+0200\n"
 "PO-Revision-Date: 2015-05-31 18:10+0100\n"
 "Last-Translator: Alexandre GALODE <deusyss@yahoo.fr>\n"
 "Language-Team: Alexandre GALODE <deusyss@yahoo.fr>\n"
@@ -20,180 +20,180 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/main.c:544
+#: src/main.c:551
 #, c-format
 msgid "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"
 msgstr ""
 
-#: src/main.c:830
+#: src/main.c:851
 msgid "Load Drawing"
 msgstr "Charger un dessin"
 
-#: src/main.c:840
+#: src/main.c:861
 msgid "DXF-Drawings"
 msgstr "Dessins DXF"
 
-#: src/main.c:847
+#: src/main.c:868
 msgid "3D-Objects"
 msgstr ""
 
-#: src/main.c:971 src/main.c:1475
+#: src/main.c:992 src/main.c:1528
 msgid "Save Output As.."
 msgstr "Sauvegarder sous"
 
-#: src/main.c:1030 src/main.c:1429
+#: src/main.c:1058 src/main.c:1482
 msgid "Load Tooltable"
 msgstr "Charger une table d'outils"
 
-#: src/main.c:1040
+#: src/main.c:1068
 msgid "Tooltable"
 msgstr "Table d'outils"
 
-#: src/main.c:1072 src/main.c:1457
+#: src/main.c:1105 src/main.c:1510
 msgid "About"
 msgstr "A propos de..."
 
-#: src/main.c:1398
+#: src/main.c:1451
 msgid "_File"
 msgstr ""
 
-#: src/main.c:1405
+#: src/main.c:1458
 msgid "_Load DXF"
 msgstr ""
 
-#: src/main.c:1411
+#: src/main.c:1464
 msgid "_Reload DXF"
 msgstr ""
 
-#: src/main.c:1417
+#: src/main.c:1470
 msgid "_Save Output As.."
 msgstr ""
 
-#: src/main.c:1423
+#: src/main.c:1476
 msgid "_Save Output"
 msgstr ""
 
-#: src/main.c:1433 src/main.c:1493
+#: src/main.c:1486 src/main.c:1546
 msgid "Load Preset"
 msgstr "Charger un Preset"
 
-#: src/main.c:1437 src/main.c:1498
+#: src/main.c:1490 src/main.c:1551
 msgid "Save Preset"
 msgstr "Sauvegarder les reglages"
 
-#: src/main.c:1441 src/main.c:1485
+#: src/main.c:1494 src/main.c:1538
 msgid "Save Setup"
 msgstr "Sauvegarder la configuration"
 
-#: src/main.c:1452
+#: src/main.c:1505
 msgid "_Help"
 msgstr ""
 
-#: src/main.c:1465
+#: src/main.c:1518
 msgid "Load DXF"
 msgstr "Charger un DXF"
 
-#: src/main.c:1470
+#: src/main.c:1523
 msgid "Reload DXF"
 msgstr "Recharger le DXF"
 
-#: src/main.c:1480
+#: src/main.c:1533
 msgid "Save Output"
 msgstr "Sauvegarder le GCODE"
 
-#: src/main.c:1558 src/main.c:1580
+#: src/main.c:1611 src/main.c:1633
 msgid "View"
 msgstr "Vue"
 
-#: src/main.c:1559 src/main.c:1581
+#: src/main.c:1612 src/main.c:1634
 msgid "Tool"
 msgstr "Outil"
 
-#: src/main.c:1560 src/main.c:1582
+#: src/main.c:1613 src/main.c:1635
 msgid "Milling"
 msgstr "Usinage"
 
-#: src/main.c:1561 src/main.c:1583
+#: src/main.c:1614 src/main.c:1636
 msgid "Tabs"
 msgstr "Bridage"
 
-#: src/main.c:1562 src/main.c:1584
+#: src/main.c:1615 src/main.c:1637
 msgid "Rotary"
 msgstr "Tournage"
 
-#: src/main.c:1563 src/main.c:1585
+#: src/main.c:1616 src/main.c:1638
 msgid "Tangencial"
 msgstr "Tangenciel"
 
-#: src/main.c:1564 src/main.c:1586
+#: src/main.c:1617 src/main.c:1639
 msgid "Machine"
 msgstr "Machine"
 
-#: src/main.c:1565 src/main.c:1587
+#: src/main.c:1618 src/main.c:1640
 msgid "Material"
 msgstr "Materiau"
 
-#: src/main.c:1566 src/main.c:1588
+#: src/main.c:1619 src/main.c:1641
 msgid "Objects"
 msgstr "Objets"
 
-#: src/main.c:1567 src/main.c:1589
+#: src/main.c:1620 src/main.c:1642
 msgid "Misc"
 msgstr "Divers"
 
-#: src/main.c:1688
+#: src/main.c:1741
 msgid "On/Off"
 msgstr "On/Off"
 
-#: src/main.c:1772
+#: src/main.c:1825
 msgid "None"
 msgstr "Sans"
 
-#: src/main.c:1773
+#: src/main.c:1826
 msgid "Inside"
 msgstr "Interieur"
 
-#: src/main.c:1774
+#: src/main.c:1827
 msgid "Outside"
 msgstr "Exterieur"
 
-#: src/main.c:1776
+#: src/main.c:1829
 msgid "-5 First"
 msgstr "-5 (Eleve)"
 
-#: src/main.c:1781
+#: src/main.c:1834
 msgid "0 Auto"
 msgstr "0 (Auto)"
 
-#: src/main.c:1786
+#: src/main.c:1839
 msgid "5 Last"
 msgstr "5 (basse)"
 
-#: src/main.c:1796
+#: src/main.c:1849
 msgid "Expander"
 msgstr "Etendue"
 
-#: src/main.c:1797
+#: src/main.c:1850
 msgid "Notebook-Tabs"
 msgstr "Onglets"
 
-#: src/main.c:1903
+#: src/main.c:1956
 msgid "3D-View"
 msgstr "Vue 3D"
 
-#: src/main.c:1906 src/main.c:2115
+#: src/main.c:1959 src/main.c:2184
 msgid "Output"
 msgstr "Sortie"
 
-#: src/main.c:1910
+#: src/main.c:1963
 msgid "PostProcessor"
 msgstr "Post-Processeur"
 
-#: src/main.c:1916
+#: src/main.c:1969
 msgid "VNC"
 msgstr "VNC"
 
-#: src/main.c:1928
+#: src/main.c:1981
 msgid "Documentation"
 msgstr "Documentation"
 
