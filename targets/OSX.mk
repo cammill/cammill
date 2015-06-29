@@ -21,6 +21,19 @@ PKGS             ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 INSTALL_PATH     ?= OSX/CAMmill
 STRIP_CMD        ?= strip
 
+
+depends:
+	xcode-select --install
+	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	brew update
+	brew install Caskroom/cask/xquartz
+	brew update
+	brew install gtkglext
+	brew install gtksourceview
+	brew install lua
+	brew install gettext
+	brew link gettext --force
+
 package: pinstall
 	sh utils/osx-app.sh ${BINARY} ${VERSION} ${PKG_INSTALL_PATH}
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
