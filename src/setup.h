@@ -7,7 +7,7 @@ typedef struct{
 	int vint;
 	float vfloat;
 	double vdouble;
-	char vstr[2048];
+	char vstr[PATH_MAX];
 	double min;
 	double step;
 	double max;

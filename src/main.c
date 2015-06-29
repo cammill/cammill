@@ -1265,10 +1265,10 @@ GtkWidget *create_gl () {
 }
 
 void ParameterChanged (GtkWidget *widget, gpointer data) {
+	int n = GPOINTER_TO_INT(data);
 	if (loading == 1) {
 		return;
 	}
-	int n = (int)data;
 //	printf("UPDATED(%i): %s\n", n, PARAMETER[n].name);
 	if (PARAMETER[n].type == T_FLOAT) {
 		PARAMETER[n].vfloat = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(widget));
@@ -1285,7 +1285,6 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	} else if (PARAMETER[n].type == T_FILE) {
 		strncpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)), sizeof(PARAMETER[n].vstr));
 	}
-
 	if (n == P_O_SELECT && PARAMETER[P_O_SELECT].vint != -1) {
 		int object_num = PARAMETER[P_O_SELECT].vint;
 		PARAMETER[P_O_USE].vint = myOBJECTS[object_num].use;
@@ -1311,7 +1310,6 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		myOBJECTS[object_num].order = PARAMETER[P_O_ORDER].vint;
 		myOBJECTS[object_num].tabs = PARAMETER[P_O_TABS].vint;
 	}
-
 	if (n == P_MAT_SELECT) {
 		int mat_num = PARAMETER[P_MAT_SELECT].vint;
 		PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
@@ -1320,7 +1318,6 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
 		strncpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture, sizeof(PARAMETER[P_MAT_TEXTURE].vstr));
 	}
-
 	if (n == P_O_TOLERANCE) {
 		loading = 1;
 		init_objects();
@@ -1329,11 +1326,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	if (n != P_O_PARAVIEW && strncmp(PARAMETER[n].name, "Translate", 9) != 0 && strncmp(PARAMETER[n].name, "Rotate", 6) != 0 && strncmp(PARAMETER[n].name, "Zoom", 4) != 0) {
 		update_post = 1;
 	}
-
 	if (n == P_O_PARAVIEW) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "please save setup and restart cammill !"), "please save setup and restart cammill !");
 	}
-
 }
 
 void ParameterUpdate (void) {
@@ -1431,6 +1426,54 @@ gboolean window_event (GtkWidget *widget, GdkEventWindowState *event, gpointer u
 }
 */
 
+
+void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *data, guint ttype, guint time, gpointer *NA);
+void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer *NA);
+gboolean DnDdrop (GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, gpointer *NA);
+gboolean DnDmotion (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *seld, guint ttype, guint time, gpointer *NA);
+
+gboolean DnDmotion (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *seld, guint ttype, guint time, gpointer *NA) {
+	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "drop..."), "drop...");
+	return TRUE;
+}
+
+gboolean DnDdrop (GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, gpointer *NA) {
+	return TRUE;
+}
+
+void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *sdata, guint ttype, guint time, gpointer *NA) {
+	int n = 0;
+	char *string = (gchar *)gtk_selection_data_get_data(sdata);
+	if (strstr(string, ".dxf\0") > 0 || strstr(string, ".DXF\0") > 0) {
+		if (strncmp(string, "file://", 7) == 0) {
+			strncpy(PARAMETER[P_V_DXF].vstr, string + 7, PATH_MAX);
+			for (n = 0; n < strlen(PARAMETER[P_V_DXF].vstr); n++) {
+				if (PARAMETER[P_V_DXF].vstr[n] == '\r' || PARAMETER[P_V_DXF].vstr[n] == '\n') {
+					PARAMETER[P_V_DXF].vstr[n] = 0;
+					break;
+				}
+			}
+			fprintf(stderr, "open dxf: ##%s##\n", PARAMETER[P_V_DXF].vstr);
+			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading dxf..."), "loading dxf...");
+			loading = 1;
+			dxf_read(PARAMETER[P_V_DXF].vstr);
+			init_objects();
+			loading = 0;
+			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading dxf...done"), "loading dxf...done");
+		}
+	} else {
+		fprintf(stderr, "unknown data: %s\n", string);
+	}
+}
+
+void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer *NA) {
+}
+
+
+
+
+
+
 void create_gui () {
 	GtkWidget *vbox;
 	glCanvas = create_gl();
@@ -1445,6 +1488,15 @@ void create_gui () {
 //	gtk_signal_connect(GTK_OBJECT(window),   "window-state-event", G_CALLBACK(window_event), NULL);
 //	g_signal_connect(G_OBJECT(window), "window-state-event", G_CALLBACK(window_event), NULL);
 
+	// Drag & Drop
+	gtk_drag_dest_set(glCanvas, GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY);
+	gtk_drag_dest_add_text_targets(glCanvas);
+	gtk_drag_dest_add_uri_targets(glCanvas);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-drop", G_CALLBACK(DnDdrop), NULL);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-motion", G_CALLBACK(DnDmotion), NULL);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-data-received", G_CALLBACK(DnDreceive), NULL);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-leave", G_CALLBACK(DnDleave), NULL);
+
 	// top-menu
 	GtkWidget *MenuBar = gtk_menu_bar_new();
 	GtkWidget *MenuItem;
@@ -1453,51 +1505,51 @@ void create_gui () {
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(FileMenu), FileMenuList);
 	gtk_menu_bar_append(GTK_MENU_BAR(MenuBar), FileMenu);
 
-        GtkAccelGroup *accel_group = gtk_accel_group_new();
+	GtkAccelGroup *accel_group = gtk_accel_group_new();
 
-		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Load DXF"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
-                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-                                           GDK_o, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-                
-		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Reload DXF"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_reload_dxf), NULL);
-                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-                                           GDK_r, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-                
-		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output As.."));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
-                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-                                           GDK_s, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Load DXF"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
+			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+									   GDK_o, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			
+	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Reload DXF"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_reload_dxf), NULL);
+			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+									   GDK_r, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+			
+	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output As.."));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
+			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+									   GDK_s, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
-		MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode), NULL);
-                gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-                                           GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode), NULL);
+			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
+									   GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Load Tooltable"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("Load Tooltable"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Load Preset"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_preset), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("Load Preset"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_preset), NULL);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Save Preset"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_preset), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("Save Preset"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_preset), NULL);
 
-		MenuItem = gtk_menu_item_new_with_label(_("Save Setup"));
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_setup), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("Save Setup"));
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_setup), NULL);
 
-		MenuItem = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel_group);
-		gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
-		gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_destroy), NULL);
+	MenuItem = gtk_image_menu_item_new_from_stock(GTK_STOCK_QUIT, accel_group);
+	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_destroy), NULL);
 
 	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                 
@@ -1552,7 +1604,6 @@ void create_gui () {
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSavePreset, -1);
 	g_signal_connect(G_OBJECT(ToolItemSavePreset), "clicked", GTK_SIGNAL_FUNC(handler_save_preset), NULL);
 
-
 	GtkToolItem *ToolItemSep1 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep1, -1); 
 
@@ -1579,7 +1630,6 @@ void create_gui () {
 
 	GtkToolItem *ToolItemSep2 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep2, -1); 
-
 
 	GtkWidget *NbBox;
 	int ViewNum = 0;
@@ -1858,19 +1908,19 @@ void create_gui () {
 		if (PARAMETER[n].readonly == 1) {
 			gtk_widget_set_sensitive(GTK_WIDGET(ParamValue[n]), FALSE);
 		} else if (PARAMETER[n].type == T_FLOAT) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		} else if (PARAMETER[n].type == T_DOUBLE) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		} else if (PARAMETER[n].type == T_INT) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		} else if (PARAMETER[n].type == T_SELECT) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		} else if (PARAMETER[n].type == T_BOOL) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "toggled", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "toggled", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		} else if (PARAMETER[n].type == T_STRING) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		} else if (PARAMETER[n].type == T_FILE) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), (gpointer)n);
+			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
 		}
 	}
 
@@ -2151,6 +2201,7 @@ void load_files () {
 		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
 	}
+	loading = 0;
 	init_objects();
 }
 

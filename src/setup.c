@@ -5,6 +5,15 @@
 #include <unistd.h>
 #include <locale.h>
 
+#ifdef __linux__
+#include <linux/limits.h> // for PATH_MAX
+#elif _WIN32
+#include <windows.h>
+#else
+#include <limits.h>
+#endif
+
+
 #include "os-hacks.h"
 #ifndef __MINGW32__
 #include <pwd.h>
