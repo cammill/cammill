@@ -115,7 +115,7 @@ package: peinstall rpmspec
 	rpmbuild --bb ${RPMBASEDIR}/SPECS/${PROGRAM}.spec
 
 	mkdir -p packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/
-	mv ${RPMBASEDIR}/RPMS/*/${PROGRAM}-${VERSION}-${VRELEASE}.*.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_*.rpm
+	mv ${RPMBASEDIR}/RPMS/*/${PROGRAM}-${VERSION}-${VRELEASE}.*.rpm packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.rpm
 	@echo "##"
 	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.rpm"
 	@echo "##"
