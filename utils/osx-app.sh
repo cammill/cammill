@@ -110,7 +110,7 @@ fi
 
 echo "## copy background-image ##"
 mkdir -p /Volumes/${applicationName}/.background
-cp icons/logo.png /Volumes/${applicationName}/.background/icon.png
+cp $UTILS_PATH/../share/cammill/icons/logo.png /Volumes/${applicationName}/.background/icon.png
 cp $UTILS_PATH/dmg-background.png /Volumes/${applicationName}/.background/dmg-background.png
 
 echo "## configure dmg-image ##"
