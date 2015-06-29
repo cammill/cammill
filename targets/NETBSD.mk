@@ -1,6 +1,6 @@
 
 #autodetect system
-ifeq (${TARGET}, NONE)
+ifeq (${TARGET}, AUTO)
 	ifeq ($(OS),Windows_NT)
 	else
 		SYSTEM ?= $(shell uname -s)

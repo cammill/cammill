@@ -1,6 +1,6 @@
 
 #autodetect system
-ifeq (${TARGET}, NONE)
+ifeq (${TARGET}, AUTO)
 	ifeq ($(OS),Windows_NT)
 		ifeq ($(PROCESSOR_ARCHITECTURE),AMD64)
 			MACHINE = AMD64
