@@ -1426,12 +1426,6 @@ gboolean window_event (GtkWidget *widget, GdkEventWindowState *event, gpointer u
 }
 */
 
-
-void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *data, guint ttype, guint time, gpointer *NA);
-void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer *NA);
-gboolean DnDdrop (GtkWidget *widget, GdkDragContext *context, gint x, gint y, guint time, gpointer *NA);
-gboolean DnDmotion (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *seld, guint ttype, guint time, gpointer *NA);
-
 gboolean DnDmotion (GtkWidget *widget, GdkDragContext *context, gint x, gint y, GtkSelectionData *seld, guint ttype, guint time, gpointer *NA) {
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "drop..."), "drop...");
 	return TRUE;
@@ -1453,7 +1447,7 @@ void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, Gtk
 					break;
 				}
 			}
-			fprintf(stderr, "open dxf: ##%s##\n", PARAMETER[P_V_DXF].vstr);
+			//fprintf(stderr, "open dxf: ##%s##\n", PARAMETER[P_V_DXF].vstr);
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading dxf..."), "loading dxf...");
 			loading = 1;
 			dxf_read(PARAMETER[P_V_DXF].vstr);
@@ -1467,12 +1461,8 @@ void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, Gtk
 }
 
 void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer *NA) {
+	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), ""), "");
 }
-
-
-
-
-
 
 void create_gui () {
 	GtkWidget *vbox;
