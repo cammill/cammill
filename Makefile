@@ -19,6 +19,7 @@ info:
 	@echo "	DISTRIBUTION    ${DISTRIBUTION}"
 	@echo "	BINARY          ${BINARY}"
 	@echo "	VERSION         ${VERSION}"
+	@echo "	VRELEASE        ${VRELEASE}"
 	@echo "	COMP            ${COMP}"
 	@echo "	PKGS:           ${PKGS}"
 	@echo "	INSTALL_PATH    ${INSTALL_PATH}"
