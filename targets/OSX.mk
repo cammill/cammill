@@ -14,8 +14,8 @@ ifeq (${TARGET}, OSX)
 
 SYSTEM           ?= $(shell uname -s)
 MACHINE          ?= $(shell uname -m)
-RELEASE          ?= $(shell lsb_release -s -r)
-DISTRIBUTION     ?= $(shell lsb_release -s -i | tr " " "_")
+RELEASE          ?= $(shell sw_vers -productVersion)
+DISTRIBUTION     ?= $(shell sw_vers -productName | tr -d" ")
 LIBS             ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 PKGS             ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 INSTALL_PATH     ?= OSX/CAMmill

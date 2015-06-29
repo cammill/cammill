@@ -90,7 +90,7 @@ do
 done
 
 echo "## create/copy icons ##"
-cp $UTILS_PATH/../icons/icon.icns ${INSTALL_PATH}/Contents/Resources/${applicationName}.icns
+cp $UTILS_PATH/../share/cammill/icons/icon.icns ${INSTALL_PATH}/Contents/Resources/${applicationName}.icns
 
 echo "## creating dmg-image ##"
 umount /Volumes/${applicationName} 2>/dev/null
