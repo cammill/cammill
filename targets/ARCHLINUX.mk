@@ -32,7 +32,7 @@ pkgbuild_archlinux:
 	@echo "generate pkgbuild"
 	@echo "# Maintainer: ${MAINTAINER_NAME} <${MAINTAINER_EMAIL}>" > ${PKG_INSTALL_PATH}/../PKGBUILD
 	@echo "pkgname=${PROGRAM}" >> ${PKG_INSTALL_PATH}/../PKGBUILD
-	@echo "pkgver=${VERSION}" >> ${PKG_INSTALL_PATH}/../PKGBUILD
+	@echo "pkgver=`echo ${VERSION} | sed "s|[a-zA-Z].*||g"`" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	@echo "pkgrel=${VRELEASE}" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	@echo "pkgdesc=\"${COMMENT}\"" >> ${PKG_INSTALL_PATH}/../PKGBUILD
 	@echo "arch=('${MACHINE}')" >> ${PKG_INSTALL_PATH}/../PKGBUILD
