@@ -2,11 +2,15 @@
 PROGRAM     ?= cammill
 PROGNAME    ?= CAMmill
 COMMENT     ?= 2D CAM-Tool (DXF to GCODE)
-VERSION     ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test|t|g" | cut -d"-" -f1 || echo 0.9)
-VRELEASE    ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test|t|g" | cut -d"-" -f2 || echo 1)
 HOMEPAGE    ?= http://www.multixmedia.org/${PROGRAM}/
 MAINTAINER_NAME  ?= Oliver Dippel
 MAINTAINER_EMAIL ?= oliver@multixmedia.org
+
+VERSION     ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test|t|g" | cut -d"-" -f1)
+VRELEASE    ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test|t|g" | cut -d"-" -f2)
+
+VERSION     ?= 0.9
+VRELEASE    ?= 0
 
 BINARY     ?= bin/${PROGRAM}
 COMP       ?= $(CROSS)clang
