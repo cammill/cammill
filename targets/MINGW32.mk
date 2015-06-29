@@ -25,6 +25,13 @@ COMP            ?= ${CROSS}gcc
 PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 INSTALL_PATH    ?= Windows/CAMmill
 TESTFILE        ?= share/doc/cammill/examples/test-minimal.dxf
+EXTRA_OBJS      ?= src/icons.res
+
+src/icons.rc: ./share/cammill/icons/icon.ico
+	echo "id ICON \"./share/cammill/icons/icon.ico\"" > src/icons.rc
+
+src/icons.res: src/icons.rc
+	$(CROSS)windres src/icons.rc -O coff -o src/icons.res
 
 peinstall: pinstall
 	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/

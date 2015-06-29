@@ -12,6 +12,8 @@ cammill
 *.deb
 *.tgz
 *.pot
+*.res
+*.rc
 bin/*
 intl/*
 packages
