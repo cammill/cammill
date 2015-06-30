@@ -33,23 +33,16 @@ dmg_bottomright_y = $(shell expr ${dmg_topleft_y} + ${dmg_height})
 
 
 peinstall_osx:
-	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
-	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib
-	mkdir -p ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Resources/
+	install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
+	install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib
+	install -m 0755 -d ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Resources/
 
-	cp -a ${BINARY} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
+	@echo "generate start-script"
+	@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 
-	#@echo "generate start-script"
-	#@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	#@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	#@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	#chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-
-	@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
-	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
-	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
-	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
-	
 	@echo "generate Info.plist"
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
 	@echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
@@ -85,15 +78,11 @@ peinstall_osx:
 	umount /Volumes/${PROGNAME} 2>/dev/null || true
 	rm -rf ${PROGNAME}.temp.dmg ${PROGNAME}.dmg
 	hdiutil create -srcfolder "${PKG_INSTALL_PATH}/${APP_PATH}/" -volname "${PROGNAME}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 50M ${PROGNAME}.temp.dmg
-
 	hdiutil attach -readwrite -noverify -noautoopen "${PROGNAME}.temp.dmg" | egrep '^/dev/' | sed 1q | awk '{print $$1}' > device.osx
-
 	mkdir -p /Volumes/${PROGNAME}/.background
-	cp share/cammill/icons/logo.png /Volumes/${PROGNAME}/.background/icon.png
+	cp share/cammill/icons/icon_128.png /Volumes/${PROGNAME}/.background/icon.png
 	cp utils/dmg-background.png /Volumes/${PROGNAME}/.background/dmg-background.png
-
 	ln -s /Applications /Volumes/${PROGNAME}/Applications
-
 	@echo "generate osascript"
 	@echo "   tell application \"Finder\"" > script.osa
 	@echo "     tell disk \"${PROGNAME}\"" >> script.osa
@@ -117,14 +106,16 @@ peinstall_osx:
 	@echo "   end tell" >> script.osa
 	cat script.osa | osascript
 
+	cp share/cammill/icons/icon.icns /Volumes/${PROGNAME}/.VolumeIcon.icns
+	SetFile -c icnC /Volumes/${PROGNAME}/.VolumeIcon.icns
+	SetFile -a C /Volumes/${PROGNAME}
+
 	sync
 	hdiutil detach $(shell cat device.osx) 2>/dev/null || true
 	hdiutil convert "${PROGNAME}.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${PROGNAME}"
 	rm -f ${PROGNAME}.temp.dmg
-
 	rm -rf dmg-background.png
-
-	#rm -rf script.osa device.osx
+	rm -rf script.osa device.osx
 
 
 
