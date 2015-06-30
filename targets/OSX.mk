@@ -18,7 +18,8 @@ RELEASE          ?= $(shell sw_vers -productVersion)
 DISTRIBUTION     ?= $(shell sw_vers -productName | sed "s|  *||g")
 LIBS             ?= -framework OpenGL -framework GLUT -lm -lpthread -lstdc++ -lc
 PKGS             ?= gtk+-2.0 gtkglext-1.0 gtksourceview-2.0 lua
-INSTALL_PATH     ?= OSX/CAMmill.app/MacOS
+APP_PATH         ?= OSX/CAMmill.app
+INSTALL_PATH     ?= ${APP_PATH}/Contents/MacOS
 STRIP_CMD        ?= strip
 
 
@@ -34,7 +35,7 @@ dmg_bottomright_y = $(shell expr ${dmg_topleft_y} + ${dmg_height})
 peinstall_osx:
 	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
 	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib
-	mkdir -p ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Resources/
+	mkdir -p ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Resources/
 
 	cp -a ${BINARY} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
 
@@ -50,40 +51,40 @@ peinstall_osx:
 	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
 	
 	@echo "generate Info.plist"
-	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "<plist version=\"1.0\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "<dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleGetInfoString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleExecutable</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleIdentifier</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>org.multixmedia.www</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleName</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleIconFile</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>${PROGRAM}.icns</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleShortVersionString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>${VERSION}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundleInfoDictionaryVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>6.0</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>CFBundlePackageType</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <string>APPL</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>IFMajorVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <integer>0</integer>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <key>IFMinorVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "  <integer>1</integer>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "</dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	@echo "</plist>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "<plist version=\"1.0\">" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "<dict>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleGetInfoString</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleExecutable</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleIdentifier</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>org.multixmedia.www</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleName</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleIconFile</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>${PROGRAM}.icns</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleShortVersionString</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>${VERSION}</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundleInfoDictionaryVersion</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>6.0</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>CFBundlePackageType</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <string>APPL</string>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>IFMajorVersion</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <integer>0</integer>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <key>IFMinorVersion</key>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "  <integer>1</integer>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "</dict>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
+	@echo "</plist>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
 
-	cp share/cammill/icons/icon.icns ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Resources/${PROGRAM}.icns
+	cp share/cammill/icons/icon.icns ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Resources/${PROGRAM}.icns
 
 	cp ./utils/dmg-background.png dmg-background.png
 
 	umount /Volumes/${PROGNAME} 2>/dev/null || true
 	rm -rf ${PROGNAME}.temp.dmg ${PROGNAME}.dmg
-	hdiutil create -srcfolder "${PKG_INSTALL_PATH}/${INSTALL_PATH}/../" -volname "${PROGNAME}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 50M ${PROGNAME}.temp.dmg
+	hdiutil create -srcfolder "${PKG_INSTALL_PATH}/${APP_PATH}/" -volname "${PROGNAME}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 50M ${PROGNAME}.temp.dmg
 
 	hdiutil attach -readwrite -noverify -noautoopen "${PROGNAME}.temp.dmg" | egrep '^/dev/' | sed 1q | awk '{print $$1}' > device.osx
 
