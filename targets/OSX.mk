@@ -74,7 +74,6 @@ peinstall_osx:
 	@echo "</plist>" >> ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
 
 	cp share/cammill/icons/icon.icns ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Resources/${PROGRAM}.icns
-
 	cp ./utils/dmg-background.png dmg-background.png
 
 	umount /Volumes/${PROGNAME} 2>/dev/null || true
@@ -119,7 +118,6 @@ peinstall_osx:
 	rm -f ${PROGNAME}.temp.dmg
 	rm -rf dmg-background.png
 	rm -rf script.osa device.osx
-
 
 depends:
 	xcode-select --install
