@@ -9,8 +9,12 @@ MAINTAINER_EMAIL ?= oliver@multixmedia.org
 VERSION     ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test-*|t|g" | cut -d"-" -f1)
 VRELEASE    ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test-*|t|g" | cut -d"-" -f2)
 
-VERSION     ?= 0.9
-VRELEASE    ?= 0
+ifeq ("$(VERSION)","")
+VERSION      = 0.9
+endif
+ifeq ("$(VRELEASE)","")
+VRELEASE     = 0
+endif
 
 BINARY     ?= bin/${PROGRAM}
 COMP       ?= $(CROSS)clang
