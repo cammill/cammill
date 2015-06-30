@@ -113,7 +113,7 @@ peinstall_osx:
 	cat script.osa | osascript
 
 	sync
-	hdiutil detach $(shell cat device.osx) 2>/dev/null || true
+	hdiutil detach `cat device.osx 2>/dev/null` || true
 	hdiutil convert "${PROGNAME}.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${PROGNAME}"
 	rm -f ${PROGNAME}.temp.dmg
 	rm -rf dmg-background.png
