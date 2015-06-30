@@ -83,6 +83,11 @@ peinstall_osx:
 	cp share/cammill/icons/icon_128.png /Volumes/${PROGNAME}/.background/icon.png
 	cp utils/dmg-background.png /Volumes/${PROGNAME}/.background/dmg-background.png
 	ln -s /Applications /Volumes/${PROGNAME}/Applications
+
+	cp share/cammill/icons/icon.icns /Volumes/${PROGNAME}/.VolumeIcon.icns
+	SetFile -c icnC /Volumes/${PROGNAME}/.VolumeIcon.icns
+	SetFile -a C /Volumes/${PROGNAME}
+
 	@echo "generate osascript"
 	@echo "   tell application \"Finder\"" > script.osa
 	@echo "     tell disk \"${PROGNAME}\"" >> script.osa
@@ -105,10 +110,6 @@ peinstall_osx:
 	@echo "     end tell" >> script.osa
 	@echo "   end tell" >> script.osa
 	cat script.osa | osascript
-
-	cp share/cammill/icons/icon.icns /Volumes/${PROGNAME}/.VolumeIcon.icns
-	SetFile -c icnC /Volumes/${PROGNAME}/.VolumeIcon.icns
-	SetFile -a C /Volumes/${PROGNAME}
 
 	sync
 	hdiutil detach $(shell cat device.osx) 2>/dev/null || true
