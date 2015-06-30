@@ -47,7 +47,7 @@ package: peinstall
 	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.exe"
 	@echo "##"
 
-test: ${BINARY}
+test: binary
 	wine ${BINARY} -bm 1 ${TESTFILE} > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc

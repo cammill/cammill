@@ -49,7 +49,7 @@ package: peinstall_unix rpmspec
 package_install:
 	rpm -i packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.rpm
 
-test: ${BINARY}
+test: binary
 	./${BINARY} -bm 1 ${TESTFILE} > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc

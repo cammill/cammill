@@ -20,7 +20,7 @@ COMP            ?= gcc
 PKGS            ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua-5.1
 INSTALL_PATH    ?= /usr
 
-test: ${BINARY}
+test: binary
 	./${BINARY} -bm 1 ${TESTFILE} > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc

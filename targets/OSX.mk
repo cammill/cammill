@@ -138,7 +138,7 @@ package: pinstall peinstall_osx
 	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}-${VRELEASE}_${MACHINE}.dmg"
 	@echo "##"
 
-test: ${BINARY}
+test: binary
 	./${BINARY} -bm 1 ${TESTFILE} > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc

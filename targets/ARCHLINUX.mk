@@ -71,7 +71,7 @@ package: peinstall_unix pkgbuild_archlinux
 	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}-${VERSION}-${VRELEASE}-${MACHINE}.pkg.tar.xz"
 	@echo "##"
 
-test: ${BINARY}
+test: binary
 	./${BINARY} -bm 1 ${TESTFILE} > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc

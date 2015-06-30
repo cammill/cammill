@@ -71,7 +71,7 @@ package: peinstall_unix manifest_freebsd
 	@echo "## packages/${DISTRIBUTION}/${RELEASE}/${MACHINE}/${PROGRAM}_${VERSION}_${VRELEASE}_${MACHINE}.tgz"
 	@echo "##"
 
-test: ${BINARY}
+test: binary
 	./${BINARY} -bm 1 ${TESTFILE} > test.ngc
 	sh utils/gvalid.sh test.ngc
 	rm -rf test.ngc

@@ -34,15 +34,22 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 #else
 	char *res = realpath(argv, NULL);
 	if (res == NULL) {
-			fprintf(stderr, "realpath() failed\n");
-			return -1;
+			res = realpath("/proc/self/exe", NULL);
+			if (res == NULL) {
+				fprintf(stderr, "realpath() failed\n");
+				return -1;
+			} else {
+				snprintf(buffer, len, "%s", res);
+			}
 	} else {
 			snprintf(buffer, len, "%s", res);
 	}
 	free(res);
 #endif
+	fprintf(stderr, "%s - %s\n", argv, buffer);
 	dirname(buffer);
 	strcat(buffer, "/");
+	fprintf(stderr, "%s - %s\n", argv, buffer);
 	return (size_t)strlen(buffer);
 }
 
