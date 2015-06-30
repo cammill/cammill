@@ -110,6 +110,7 @@ pinstall: ${BINARY} lang
 	@install -m 0644 share/doc/${PROGRAM}/examples/*.dxf ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/examples/
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale
 	@cp -R -p share/locale/* ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/
+	chown -R root:root ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/
 	chmod -R 0755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/
 	chmod 0644 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/*/LC_MESSAGES/${PROGRAM}.mo
 	@${STRIP_CMD} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${BINARY}
