@@ -13,7 +13,7 @@ ifeq ("$(VERSION)","")
 VERSION      = 0.9
 endif
 ifeq ("$(VRELEASE)","")
-VRELEASE     = 0
+VRELEASE     = 1
 endif
 
 BINARY     ?= bin/${PROGRAM}
