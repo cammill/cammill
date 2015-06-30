@@ -110,11 +110,11 @@ peinstall_osx:
 	@echo "           eject" >> script.osa
 	@echo "     end tell" >> script.osa
 	@echo "   end tell" >> script.osa
-	cat script.osa | osascript
+	cat script.osa | osascript || true
 
 	sync
 	hdiutil detach `cat device.osx 2>/dev/null` || true
-	hdiutil convert "${PROGNAME}.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${PROGNAME}"
+	hdiutil convert "${PROGNAME}.temp.dmg" -format UDZO -imagekey zlib-level=9 -o "${PROGNAME}" || true
 	rm -f ${PROGNAME}.temp.dmg
 	rm -rf dmg-background.png
 	rm -rf script.osa device.osx
