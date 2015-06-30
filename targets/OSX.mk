@@ -48,13 +48,13 @@ peinstall_osx:
 	echo "<plist version=\"1.0\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "<dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <key>CFBundleGetInfoString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <key>CFBundleExecutable</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <key>CFBundleIdentifier</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <string>org.multixmedia.www</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <key>CFBundleName</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <key>CFBundleIconFile</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <string>${PROGRAM}.icns</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	echo "  <key>CFBundleShortVersionString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
@@ -72,9 +72,7 @@ peinstall_osx:
 
 	cp share/cammill/icons/icon.icns ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Resources/${PROGRAM}.icns
 
-
 	cp ./utils/dmg-background.png dmg-background.png
-
 
 	umount /Volumes/${PROGNAME} 2>/dev/null || true
 	rm -rf ${PROGNAME}.temp.dmg ${PROGNAME}.dmg
