@@ -43,7 +43,8 @@ peinstall_osx:
 	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-
+	cp -a ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
+	
 	@echo "generate Info.plist"
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 	@echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
