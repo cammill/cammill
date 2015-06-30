@@ -43,7 +43,7 @@ peinstall_osx:
 	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 
-	sh utils/osx-copy-libs.sh ${APP_PATH} ${BINARY}
+	sh utils/osx-copy-libs.sh ${PKG_INSTALL_PATH}/${APP_PATH} ${BINARY}
 
 	@echo "generate Info.plist"
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${APP_PATH}/Contents/Info.plist
