@@ -38,37 +38,39 @@ peinstall_osx:
 
 	cp -a ${BINARY} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
 
-	echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	@echo "generate start-script"
+	@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	
-	echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "<plist version=\"1.0\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "<dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleGetInfoString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleExecutable</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleIdentifier</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>org.multixmedia.www</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleName</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleIconFile</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${PROGRAM}.icns</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleShortVersionString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>${VERSION}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundleInfoDictionaryVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>6.0</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>CFBundlePackageType</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <string>APPL</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>IFMajorVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <integer>0</integer>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <key>IFMinorVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "  <integer>1</integer>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "</dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
-	echo "</plist>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+
+	@echo "generate Info.plist"
+	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "<plist version=\"1.0\">" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "<dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleGetInfoString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleExecutable</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>${PROGRAM}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleIdentifier</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>org.multixmedia.www</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleName</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>${PROGNAME}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleIconFile</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>${PROGRAM}.icns</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleShortVersionString</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>${VERSION}</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundleInfoDictionaryVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>6.0</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>CFBundlePackageType</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <string>APPL</string>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>IFMajorVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <integer>0</integer>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <key>IFMinorVersion</key>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "  <integer>1</integer>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "</dict>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
+	@echo "</plist>" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
 
 	cp share/cammill/icons/icon.icns ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Resources/${PROGRAM}.icns
 
@@ -86,26 +88,27 @@ peinstall_osx:
 
 	ln -s /Applications /Volumes/${PROGNAME}/Applications
 
-	echo "   tell application \"Finder\"" > script.osa
-	echo "     tell disk \"${PROGNAME}\"" >> script.osa
-	echo "           open" >> script.osa
-	echo "           set current view of container window to icon view" >> script.osa
-	echo "           set toolbar visible of container window to false" >> script.osa
-	echo "           set statusbar visible of container window to false" >> script.osa
-	echo "           set the bounds of container window to {${dmg_topleft_x}, ${dmg_topleft_y}, ${dmg_bottomright_x}, ${dmg_bottomright_y}}" >> script.osa
-	echo "           set theViewOptions to the icon view options of container window" >> script.osa
-	echo "           set arrangement of theViewOptions to not arranged" >> script.osa
-	echo "           set icon size of theViewOptions to 104" >> script.osa
-	echo "           set background picture of theViewOptions to file \".background:${dmg_back}\"" >> script.osa
-	echo "           set position of item \"${PROGNAME}\" of container window to {120, 180}" >> script.osa
-	echo "           set position of item \"Applications\" of container window to {400, 180}" >> script.osa
-	echo "           close" >> script.osa
-	echo "           open" >> script.osa
-	echo "           update without registering applications" >> script.osa
-	echo "           delay 5" >> script.osa
-	echo "           eject" >> script.osa
-	echo "     end tell" >> script.osa
-	echo "   end tell" >> script.osa
+	@echo "generate osascript"
+	@echo "   tell application \"Finder\"" > script.osa
+	@echo "     tell disk \"${PROGNAME}\"" >> script.osa
+	@echo "           open" >> script.osa
+	@echo "           set current view of container window to icon view" >> script.osa
+	@echo "           set toolbar visible of container window to false" >> script.osa
+	@echo "           set statusbar visible of container window to false" >> script.osa
+	@echo "           set the bounds of container window to {${dmg_topleft_x}, ${dmg_topleft_y}, ${dmg_bottomright_x}, ${dmg_bottomright_y}}" >> script.osa
+	@echo "           set theViewOptions to the icon view options of container window" >> script.osa
+	@echo "           set arrangement of theViewOptions to not arranged" >> script.osa
+	@echo "           set icon size of theViewOptions to 104" >> script.osa
+	@echo "           set background picture of theViewOptions to file \".background:${dmg_back}\"" >> script.osa
+	@echo "           set position of item \"${PROGNAME}\" of container window to {120, 180}" >> script.osa
+	@echo "           set position of item \"Applications\" of container window to {400, 180}" >> script.osa
+	@echo "           close" >> script.osa
+	@echo "           open" >> script.osa
+	@echo "           update without registering applications" >> script.osa
+	@echo "           delay 5" >> script.osa
+	@echo "           eject" >> script.osa
+	@echo "     end tell" >> script.osa
+	@echo "   end tell" >> script.osa
 	cat script.osa | osascript
 
 	sync
