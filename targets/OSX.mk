@@ -99,7 +99,7 @@ peinstall_osx:
 	echo "           set arrangement of theViewOptions to not arranged" >> script.osa
 	echo "           set icon size of theViewOptions to 104" >> script.osa
 	echo "           set background picture of theViewOptions to file \".background:'${dmg_back}'\"" >> script.osa
-	echo "           set position of item \"'${applicationName}'\" of container window to {120, 180}" >> script.osa
+	echo "           set position of item \"'${PROGNAME}'\" of container window to {120, 180}" >> script.osa
 	echo "           set position of item \"'Applications'\" of container window to {400, 180}" >> script.osa
 	echo "           close" >> script.osa
 	echo "           open" >> script.osa
