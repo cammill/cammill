@@ -88,26 +88,26 @@ peinstall_osx:
 
 	ln -s /Applications /Volumes/${PROGNAME}/Applications
 
-	echo"   tell application \"Finder\"" > script.osa
-	echo"     tell disk \"'${PROGNAME}'\"" >> script.osa
-	echo"           open" >> script.osa
-	echo"           set current view of container window to icon view" >> script.osa
-	echo"           set toolbar visible of container window to false" >> script.osa
-	echo"           set statusbar visible of container window to false" >> script.osa
-	echo"           set the bounds of container window to {'${dmg_topleft_x}', '${dmg_topleft_y}', '${dmg_bottomright_x}', '${dmg_bottomright_y}'}" >> script.osa
-	echo"           set theViewOptions to the icon view options of container window" >> script.osa
-	echo"           set arrangement of theViewOptions to not arranged" >> script.osa
-	echo"           set icon size of theViewOptions to 104" >> script.osa
-	echo"           set background picture of theViewOptions to file \".background:'${dmg_back}'\"" >> script.osa
-	echo"           set position of item \"'${applicationName}'\" of container window to {120, 180}" >> script.osa
-	echo"           set position of item \"'Applications'\" of container window to {400, 180}" >> script.osa
-	echo"           close" >> script.osa
-	echo"           open" >> script.osa
-	echo"           update without registering applications" >> script.osa
-	echo"           delay 5" >> script.osa
-	echo"           eject" >> script.osa
-	echo"     end tell" >> script.osa
-	echo"   end tell" >> script.osa
+	echo "   tell application \"Finder\"" > script.osa
+	echo "     tell disk \"'${PROGNAME}'\"" >> script.osa
+	echo "           open" >> script.osa
+	echo "           set current view of container window to icon view" >> script.osa
+	echo "           set toolbar visible of container window to false" >> script.osa
+	echo "           set statusbar visible of container window to false" >> script.osa
+	echo "           set the bounds of container window to {'${dmg_topleft_x}', '${dmg_topleft_y}', '${dmg_bottomright_x}', '${dmg_bottomright_y}'}" >> script.osa
+	echo "           set theViewOptions to the icon view options of container window" >> script.osa
+	echo "           set arrangement of theViewOptions to not arranged" >> script.osa
+	echo "           set icon size of theViewOptions to 104" >> script.osa
+	echo "           set background picture of theViewOptions to file \".background:'${dmg_back}'\"" >> script.osa
+	echo "           set position of item \"'${applicationName}'\" of container window to {120, 180}" >> script.osa
+	echo "           set position of item \"'Applications'\" of container window to {400, 180}" >> script.osa
+	echo "           close" >> script.osa
+	echo "           open" >> script.osa
+	echo "           update without registering applications" >> script.osa
+	echo "           delay 5" >> script.osa
+	echo "           eject" >> script.osa
+	echo "     end tell" >> script.osa
+	echo "   end tell" >> script.osa
 	cat script.osa | osascript
 
 	sync
@@ -116,6 +116,7 @@ peinstall_osx:
 	rm -f ${PROGNAME}.temp.dmg
 
 	rm -rf dmg-background.png
+
 	#rm -rf script.osa device.osx
 
 
