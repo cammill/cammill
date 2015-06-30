@@ -38,11 +38,11 @@ peinstall_osx:
 
 	cp -a ${BINARY} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/
 
-	@echo "generate start-script"
-	@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	#@echo "generate start-script"
+	#@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	#@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	#@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
+	#chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 
 	@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
 	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
