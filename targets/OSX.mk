@@ -43,7 +43,11 @@ peinstall_osx:
 	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
 	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM}
-	cp -a ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGRAM} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
+
+	@echo "#!/bin/bash" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
+	@echo "cd \"\`dirname \$$0\`/bin\"" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
+	@echo "./${PROGRAM}" >> ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
+	chmod 755 ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${PROGNAME}
 	
 	@echo "generate Info.plist"
 	@echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${PKG_INSTALL_PATH}/${INSTALL_PATH}/../Contents/Info.plist
