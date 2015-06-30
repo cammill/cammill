@@ -6,6 +6,7 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <libgen.h>
 
 #ifdef __MINGW32__
 #include <windows.h>
@@ -27,53 +28,22 @@ int get_home_dir(char* buffer) {
 #endif
 }
 
-
-size_t get_executable_path (char* buffer, size_t len) {
-	char *path_end;
-
-	if (getcwd(buffer, len) == NULL) {
-                fprintf(stderr, "getcwd() failed\n");
-                return -1;
-        }
-
-#ifndef __MINGW32__
-        char *res = realpath("/proc/self/exe", NULL);
-        if (res == NULL) {
-                fprintf(stderr, "realpath() failed\n");
-                return -1;
-        } else {
-                snprintf(buffer, len, "%s", res);
-        }
-        free(res);
+size_t get_executable_path (char *argv, char* buffer, size_t len) {
+#ifdef __MINGW32__
+	GetModuleFileName(NULL, buffer, len);
 #else
-//	HMODULE hModule = GetModuleHandle(NULL);
-//	if (hModule != NULL) {
-		// When passing NULL to GetModuleHandle, it returns handle of exe itself
-//		GetModuleFileName(hModule, buffer, (sizeof(buffer)));
-//	}
-	buffer[0] = 0;
-#endif
-
-	/* Find the last occurence of a forward slash, the path separator.  */
-#ifndef __MINGW32__
-	path_end = strrchr (buffer, '/');
-#else
-	path_end = strrchr (buffer, '\\');
-#endif        
-	if (path_end == NULL) {
-		return -1;
+	char *res = realpath(argv, NULL);
+	if (res == NULL) {
+			fprintf(stderr, "realpath() failed\n");
+			return -1;
+	} else {
+			snprintf(buffer, len, "%s", res);
 	}
-
-	/* Advance to the character past the last slash.  */
-	++path_end;
-
-	/* Obtain the directory containing the program by truncating the
-	path after the last slash.  */
-
-	*path_end = '\0';
-	/* The length of the path is the number of characters up through the
-	last slash.  */
-	return (size_t)(path_end - buffer);
+	free(res);
+#endif
+	dirname(buffer);
+	strcat(buffer, "/");
+	return (size_t)strlen(buffer);
 }
 
 ssize_t getdelim(char **linep, size_t *n, int delim, FILE *fp){

@@ -2198,7 +2198,7 @@ void load_files () {
 int main (int argc, char *argv[]) {
 	char tmp_str[1024];
 
-	get_executable_path(program_path, sizeof(program_path));
+	get_executable_path(argv[0], program_path, sizeof(program_path));
 
 //	bindtextdomain("cammill", "intl");
 	textdomain("cammill");
