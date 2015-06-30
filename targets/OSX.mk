@@ -82,7 +82,7 @@ peinstall_osx:
 
 	hdiutil attach -readwrite -noverify -noautoopen "${PROGNAME}.temp.dmg" | egrep '^/dev/' | sed 1q | awk '{print $$1}' > device.osx
 
-	mkdir -p /Volumes/${applicationName}/.background
+	mkdir -p /Volumes/${PROGNAME}/.background
 	cp share/cammill/icons/logo.png /Volumes/${PROGNAME}/.background/icon.png
 	cp utils/dmg-background.png /Volumes/${PROGNAME}/.background/dmg-background.png
 
