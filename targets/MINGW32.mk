@@ -18,7 +18,6 @@ SYSTEM          ?= Windows
 RELEASE         ?= MinGW
 DISTRIBUTION    ?= Windows
 MACHINE         ?= IA32
-BINARY          ?= bin/${PROGRAM}.exe
 LIBS            ?= -lm -lstdc++ -lgcc
 CROSS           ?= /usr/lib/mxe/usr/bin/i686-w64-mingw32.static-
 COMP            ?= ${CROSS}gcc
@@ -26,6 +25,7 @@ PKGS            ?= gtk+-2.0 gtk+-win32-2.0 gtkglext-1.0 gtksourceview-2.0 lua
 INSTALL_PATH    ?= Windows/CAMmill
 TESTFILE        ?= share/doc/cammill/examples/test-minimal.dxf
 EXTRA_OBJS      ?= src/icons.res
+BINARY          ?= bin/cammill.exe
 
 src/icons.rc: ./share/cammill/icons/icon.ico
 	echo "id ICON \"./share/cammill/icons/icon.ico\"" > src/icons.rc

@@ -16,6 +16,10 @@ ifeq ("$(VRELEASE)","")
 VRELEASE     = 1
 endif
 
+ifeq (${TARGET}, MINGW32)
+BINARY          ?= bin/${PROGRAM}.exe
+endif
+
 BINARY     ?= bin/${PROGRAM}
 COMP       ?= $(CROSS)clang
 PKG_CONFIG ?= $(CROSS)pkg-config
