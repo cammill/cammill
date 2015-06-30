@@ -78,7 +78,7 @@ peinstall_osx:
 
 	umount /Volumes/${PROGNAME} 2>/dev/null || true
 	rm -rf ${PROGNAME}.temp.dmg ${PROGNAME}.dmg
-	hdiutil create -srcfolder "${PKG_INSTALL_PATH}/${INSTALL_PATH}" -volname "${PROGNAME}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 50M ${PROGNAME}.temp.dmg
+	hdiutil create -srcfolder "${PKG_INSTALL_PATH}/${INSTALL_PATH}/../" -volname "${PROGNAME}" -fs HFS+ -fsargs "-c c=64,a=16,e=16" -format UDRW -size 50M ${PROGNAME}.temp.dmg
 
 	hdiutil attach -readwrite -noverify -noautoopen "${PROGNAME}.temp.dmg" | egrep '^/dev/' | sed 1q | awk '{print $$1}' > device.osx
 
