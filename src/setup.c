@@ -127,7 +127,7 @@ PARA PARAMETER[] = {
 	{"Width","Window",	"-wpw",			T_INT	,	800,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Width", 1, 0, 0},
 	{"Height","Window",	"-wph",			T_INT	,	600,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Height", 1, 0, 0},
 	{"Maximized","Window",	"-wmax",		T_BOOL	,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Maximized", 1, 0, 0},
-	{"LodPath","Misc",	"-mlp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 0, 0, 0},
+	{"LoadPath","Misc",	"-mlp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 0, 0, 0},
 	{"SavePath","Misc",	"-msp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 0, 0, 0},
 	{"PresetPath","Misc",	"-mpp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 0, 0, 0},
 #ifdef USE_VNC
