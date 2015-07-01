@@ -113,11 +113,14 @@ enum {
 	P_W_POSW,
 	P_W_POSH,
 	P_W_MAX,
+	P_M_LOADPATH,
+	P_M_SAVEPATH,
+	P_M_PRESETPATH,
 #ifdef USE_VNC
 	P_O_VNCSERVER,
 	P_O_VNCPORT,
 #endif
-	P_LAST,
+	P_LAST
 };
 
 extern PARA PARAMETER[];

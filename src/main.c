@@ -572,16 +572,16 @@ void mainloop (void) {
 		if (PARAMETER[P_POST_CMD].vstr[0] != 0) {
 			char cmd_str[PATH_MAX];
 			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
-                        int ret;
+			int ret;
 			if ((ret = system(cmd_str))) {
-                                if (WIFEXITED(ret)) {
-                                        fprintf(stderr, "exited, status=%d\n", WEXITSTATUS(ret));
-                                } else if (WIFSIGNALED(ret)) {
-                                        fprintf(stderr, "killed by signal %d\n", WTERMSIG(ret));
-                                } else {
-                                        fprintf(stderr, "not recognized: %d\n", ret);
-                                }
-                        }
+				if (WIFEXITED(ret)) {
+					fprintf(stderr, "exited, status=%d\n", WEXITSTATUS(ret));
+				} else if (WIFSIGNALED(ret)) {
+					fprintf(stderr, "killed by signal %d\n", WTERMSIG(ret));
+				} else {
+					fprintf(stderr, "not recognized: %d\n", ret);
+				}
+			}
 		}
 		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code...done"), "saving g-code...done");
@@ -841,6 +841,10 @@ void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 #else
 		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
+		if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+			strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
+			dirname(PARAMETER[P_M_LOADPATH].vstr);
+		}
 		init_objects();
 		loading = 0;
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf...done"), "reloading dxf...done");
@@ -878,11 +882,16 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_add_pattern(ffilter, "*.3DS");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 #endif
-
-	if (PARAMETER[P_TOOL_TABLE].vstr[0] == 0) {
-		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), "../share/cammill/");
+	if (PARAMETER[P_M_LOADPATH].vstr[0] == 0) {
+		char loadpath[PATH_MAX];
+		if (program_path[0] == 0) {
+			snprintf(loadpath, PATH_MAX, "%s", "../share/doc/cammill/examples");
+		} else {
+			snprintf(loadpath, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "../share/doc/cammill/examples");
+		}
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), loadpath);
 	} else {
-		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), PARAMETER[P_V_DXF].vstr);
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), PARAMETER[P_M_LOADPATH].vstr);
 	}
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
@@ -899,6 +908,10 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 #else
 		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
+		if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+			strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
+			dirname(PARAMETER[P_M_LOADPATH].vstr);
+		}
 		init_objects();
 		loading = 0;
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading dxf...done"), "reading dxf...done");
@@ -922,12 +935,20 @@ void handler_load_preset (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_add_pattern(ffilter, "*.preset");
 	gtk_file_filter_add_pattern(ffilter, "*.PRESET");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "./");
+	if (PARAMETER[P_M_PRESETPATH].vstr[0] == 0) {
+		char homedir[PATH_MAX];
+		get_home_dir(homedir);
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), homedir);
+	} else {
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), PARAMETER[P_M_PRESETPATH].vstr);
+	}
 	if (gtk_dialog_run (GTK_DIALOG (dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading preset..."), "reading preset...");
 		SetupLoadPreset(filename);
+		strncpy(PARAMETER[P_M_PRESETPATH].vstr, filename, PATH_MAX);
+		dirname(PARAMETER[P_M_PRESETPATH].vstr);
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading preset...done"), "reading preset...done");
 		g_free(filename);
 	}
@@ -943,19 +964,26 @@ void handler_save_preset (GtkWidget *widget, gpointer data) {
 		GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
 	gtk_file_chooser_set_do_overwrite_confirmation (GTK_FILE_CHOOSER (dialog), TRUE);
-
 	GtkFileFilter *ffilter;
 	ffilter = gtk_file_filter_new();
 	gtk_file_filter_set_name(ffilter, "Preset");
 	gtk_file_filter_add_pattern(ffilter, "*.preset");
 	gtk_file_filter_add_pattern(ffilter, "*.PRESET");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
-	gtk_file_chooser_set_current_folder (GTK_FILE_CHOOSER (dialog), "./");
+	if (PARAMETER[P_M_PRESETPATH].vstr[0] == 0) {
+		char homedir[PATH_MAX];
+		get_home_dir(homedir);
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), homedir);
+	} else {
+		gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), PARAMETER[P_M_PRESETPATH].vstr);
+	}
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving Preset..."), "saving Preset...");
 		SetupSavePreset(filename);
+		strncpy(PARAMETER[P_M_PRESETPATH].vstr, filename, PATH_MAX);
+		dirname(PARAMETER[P_M_PRESETPATH].vstr);
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving Preset...done"), "saving Preset...done");
 		g_free(filename);
 	}
@@ -1006,7 +1034,7 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 	if (PARAMETER[P_MFILE].vstr[0] == 0) {
 		char dir[PATH_MAX];
-		strncpy(dir, PARAMETER[P_V_DXF].vstr, sizeof(dir));
+		strncpy(dir, PARAMETER[P_V_DXF].vstr, strlen(dir));
 		dirname(dir);
 		char file[PATH_MAX];
 		strncpy(file, basename(PARAMETER[P_V_DXF].vstr), sizeof(file));
@@ -1030,7 +1058,13 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), file_nosuffix);
 		free(file_nosuffix);
 	} else {
-		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER (dialog), PARAMETER[P_MFILE].vstr);
+		if (PARAMETER[P_M_SAVEPATH].vstr[0] == 0) {
+			char homedir[PATH_MAX];
+			get_home_dir(homedir);
+			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), homedir);
+		} else {
+			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), PARAMETER[P_M_SAVEPATH].vstr);
+		}
 	}
 
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
@@ -1038,6 +1072,10 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
 		strncpy(PARAMETER[P_MFILE].vstr, filename, sizeof(PARAMETER[P_MFILE].vstr));
 		g_free(filename);
+		if (PARAMETER[P_MFILE].vstr[0] != 0 && PARAMETER[P_MFILE].vstr[0] != '-') {
+			strncpy(PARAMETER[P_M_SAVEPATH].vstr, PARAMETER[P_MFILE].vstr, PATH_MAX);
+			dirname(PARAMETER[P_M_SAVEPATH].vstr);
+		}
 		save_gcode = 1;
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
 	}
@@ -1046,11 +1084,15 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 
 void handler_save_gcode (GtkWidget *widget, gpointer data) {
 	if (PARAMETER[P_MFILE].vstr[0] == 0) {
-                handler_save_gcode_as(widget, data);
-        } else {
-                save_gcode = 1;
-                gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
-        }
+		handler_save_gcode_as(widget, data);
+	} else {
+		save_gcode = 1;
+		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
+	}
+	if (PARAMETER[P_MFILE].vstr[0] != 0 && PARAMETER[P_MFILE].vstr[0] != '-') {
+		strncpy(PARAMETER[P_M_SAVEPATH].vstr, PARAMETER[P_MFILE].vstr, PATH_MAX);
+		dirname(PARAMETER[P_M_SAVEPATH].vstr);
+	}
 }
 
 void handler_load_tooltable (GtkWidget *widget, gpointer data) {
@@ -1451,6 +1493,10 @@ void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, Gtk
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading dxf..."), "loading dxf...");
 			loading = 1;
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+				strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
+				dirname(PARAMETER[P_M_LOADPATH].vstr);
+			}
 			init_objects();
 			loading = 0;
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading dxf...done"), "loading dxf...done");
@@ -2191,8 +2237,12 @@ void load_files () {
 		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
 	}
-	loading = 0;
+	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+		strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
+		dirname(PARAMETER[P_M_LOADPATH].vstr);
+	}
 	init_objects();
+	loading = 0;
 }
 
 int main (int argc, char *argv[]) {
