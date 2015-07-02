@@ -184,7 +184,8 @@ void dxf_read (char *file) {
 		free(myLINES);
 		myLINES = NULL;
 	}
-
+	// set default to mm
+	PARAMETER[P_O_UNIT].vint = 1;
 	strcpy(dxf_typename[TYPE_NONE], "None");
 	strcpy(dxf_typename[TYPE_LINE], "Line");
 	strcpy(dxf_typename[TYPE_ARC], "Arc");
