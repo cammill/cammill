@@ -10,7 +10,11 @@ function OnInit()
 	axisX = "X"
 	axisY = "Y"
 	axisZ = "Z"
-	post.Text("G21 (Metric)\n")
+	if unit == "inch" then
+		post.Text("G20 (Imperial/inch)\n")
+	else
+		post.Text("G21 (Metric/mm)\n")
+	end
 	post.Text("G40 (No Offsets)\n")
 	post.Text("G90 (Absolute-Mode)\n")
         post.Text(" ( GRBL Support only G61 mode )\n")

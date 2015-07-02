@@ -327,7 +327,7 @@ void draw_helplines (void) {
 		glTranslatef(lenX, -offXYZ, 0.0);
 		glPushMatrix();
 		glTranslatef(-lenX / 2.0, -arrow_d * 2.0 - 11.0, 0.0);
-		snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenX);
+		snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenX, PARAMETER[P_O_UNIT].vstr);
 		output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
 		glPopMatrix();
 		glRotatef(-90.0, 0.0, 1.0, 0.0);
@@ -379,7 +379,7 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(arrow_d * 2.0 + 1.0, lenY / 2.0, 0.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
-	snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenY);
+	snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenY, PARAMETER[P_O_UNIT].vstr);
 	glPushMatrix();
 	glTranslatef(0.0, 4.0, 0.0);
 	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
@@ -410,7 +410,7 @@ void draw_helplines (void) {
 	glTranslatef(lenX, -offXYZ, 0.0);
 	glPushMatrix();
 	glTranslatef(-lenX / 2.0, -arrow_d * 2.0 - 1.0, 0.0);
-	snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenX);
+	snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenX, PARAMETER[P_O_UNIT].vstr);
 	glPushMatrix();
 	glTranslatef(0.0, -4.0, 0.0);
 	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
@@ -442,7 +442,7 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(arrow_d * 2.0 - 1.0, -arrow_d * 2.0 - 1.0, lenZ / 2.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
-	snprintf(tmp_str, sizeof(tmp_str), "%0.2fmm", lenZ);
+	snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenZ, PARAMETER[P_O_UNIT].vstr);
 	glPushMatrix();
 	glTranslatef(0.0, -4.0, 0.0);
 	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
@@ -548,9 +548,9 @@ void mainloop (void) {
 			double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
 			milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
 			milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
-			snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"), mill_distance_xy, mill_distance_z, move_distance_xy, move_distance_z, milltime);
+			snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"), mill_distance_xy, PARAMETER[P_O_UNIT].vstr, mill_distance_z, PARAMETER[P_O_UNIT].vstr, move_distance_xy, PARAMETER[P_O_UNIT].vstr, move_distance_z, PARAMETER[P_O_UNIT].vstr, milltime);
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
-			snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1fmm / Height=%0.1fmm", size_x, size_y);
+			snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1f%s / Height=%0.1f%s", size_x, PARAMETER[P_O_UNIT].vstr, size_y, PARAMETER[P_O_UNIT].vstr);
 			gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
 			glEndList();
 		}
@@ -693,7 +693,7 @@ void ToolLoadTable (void) {
 					if (strstr(line2, ";") > 0) {
 						strncpy(tool_descr[tooln], strstr(line2, ";") + 1, sizeof(tool_descr[tooln]));
 					}
-					snprintf(tmp_str, sizeof(tmp_str), "#%i D%0.2fmm (%s)", tooln, tooltbl_diameters[tooln], tool_descr[tooln]);
+					snprintf(tmp_str, sizeof(tmp_str), "#%i D%0.2f%s (%s)", tooln, tooltbl_diameters[tooln], PARAMETER[P_O_UNIT].vstr, tool_descr[tooln]);
 					if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 						gtk_list_store_insert_with_values(ListStore[P_TOOL_SELECT], NULL, -1, 0, NULL, 1, tmp_str, -1);
 					}
@@ -779,6 +779,46 @@ void handler_destroy (GtkWidget *widget, gpointer data) {
 		SetupSave();
 	}
 	gtk_main_quit();
+}
+
+void handler_tool_mm2inch (GtkWidget *widget, gpointer data) {
+	int num;
+	loading = 1;
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1) {
+			myLINES[num].x1 /= 25.4;
+			myLINES[num].y1 /= 25.4;
+			myLINES[num].x2 /= 25.4;
+			myLINES[num].y2 /= 25.4;
+			myLINES[num].cx /= 25.4;
+			myLINES[num].cy /= 25.4;
+		}
+	}
+	if (strcmp(PARAMETER[P_O_UNIT].vstr, "mm") == 0) {
+		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+	}
+	init_objects();
+	loading = 0;
+}
+
+void handler_tool_inch2mm (GtkWidget *widget, gpointer data) {
+	int num;
+	loading = 1;
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1) {
+			myLINES[num].x1 *= 25.4;
+			myLINES[num].y1 *= 25.4;
+			myLINES[num].x2 *= 25.4;
+			myLINES[num].y2 *= 25.4;
+			myLINES[num].cx *= 25.4;
+			myLINES[num].cy *= 25.4;
+		}
+	}
+	if (strcmp(PARAMETER[P_O_UNIT].vstr, "inch") == 0) {
+			strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+	}
+	init_objects();
+	loading = 0;
 }
 
 void handler_rotate_drawing (GtkWidget *widget, gpointer data) {
@@ -1590,6 +1630,29 @@ void create_gui () {
 	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
                 
 
+	GtkWidget *ToolsMenu = gtk_menu_item_new_with_mnemonic(_("_Tools"));
+	GtkWidget *ToolsMenuList = gtk_menu_new();
+	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ToolsMenu), ToolsMenuList);
+	gtk_menu_bar_append(GTK_MENU_BAR(MenuBar), ToolsMenu);
+
+	MenuItem = gtk_menu_item_new_with_label(_("mm->inch"));
+	gtk_menu_append(GTK_MENU(ToolsMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_tool_mm2inch), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("inch->mm"));
+	gtk_menu_append(GTK_MENU(ToolsMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_tool_inch2mm), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("rotate"));
+	gtk_menu_append(GTK_MENU(ToolsMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_rotate_drawing), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("flip-x"));
+	gtk_menu_append(GTK_MENU(ToolsMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_flip_x_drawing), NULL);
+	MenuItem = gtk_menu_item_new_with_label(_("flip-y"));
+	gtk_menu_append(GTK_MENU(ToolsMenuList), MenuItem);
+	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);
+
+
+
 	GtkWidget *HelpMenu = gtk_menu_item_new_with_mnemonic(_("_Help"));
 	GtkWidget *HelpMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(HelpMenu), HelpMenuList);
@@ -2103,7 +2166,7 @@ void create_gui () {
 	gtk_paned_pack2(GTK_PANED(hbox), NbBox2, TRUE, TRUE);
 	gtk_paned_set_position(GTK_PANED(hbox), PannedStat);
 
-	SizeInfoLabel = gtk_label_new("Width=0mm / Height=0mm");
+	SizeInfoLabel = gtk_label_new("Width=0 / Height=0");
 	GtkWidget *SizeInfo = gtk_event_box_new();
 	gtk_container_add(GTK_CONTAINER(SizeInfo), SizeInfoLabel);
 	gtk_container_set_border_width(GTK_CONTAINER(SizeInfo), 4);

@@ -33,6 +33,14 @@
 #include <string.h>
 #include <math.h>
 #include <dxf.h>
+#ifdef __linux__
+#include <linux/limits.h> // for PATH_MAX
+#elif _WIN32
+#include <windows.h>
+#else
+#include <limits.h>
+#endif
+#include <setup.h>
 #include <font.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
@@ -399,6 +407,13 @@ void dxf_read (char *file) {
 						double p_s = atof(dxf_options[OPTION_MTEXT_SIZE]);
 						output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[8], p_x1, p_y1, 0.0, p_s);
 						mtext_n++;
+					} else if (strcmp(last_0, "$MEASUREMENT") == 0) {
+						int mesurement = atoi(dxf_options[OPTION_MEASUREMENT]);
+						if (mesurement == 0) {
+							strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+						} else {
+							strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+						}
 					} else {
 						pl_flag = 0;
 						lwpl_flag = 0;
