@@ -409,10 +409,12 @@ void dxf_read (char *file) {
 						mtext_n++;
 					} else if (strcmp(last_0, "$MEASUREMENT") == 0) {
 						int mesurement = atoi(dxf_options[OPTION_MEASUREMENT]);
-						if (mesurement == 0) {
-							strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
-						} else {
+						if (mesurement == 1) {
+							PARAMETER[P_O_UNIT].vint = 1;
 							strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+						} else {
+							PARAMETER[P_O_UNIT].vint = 0;
+							strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
 						}
 					} else {
 						pl_flag = 0;

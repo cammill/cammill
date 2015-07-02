@@ -794,8 +794,8 @@ void handler_tool_mm2inch (GtkWidget *widget, gpointer data) {
 			myLINES[num].cy /= 25.4;
 		}
 	}
-	if (strcmp(PARAMETER[P_O_UNIT].vstr, "mm") == 0) {
-		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+	if (PARAMETER[P_O_UNIT].vint == 1) {
+		PARAMETER[P_O_UNIT].vint = 0;
 	}
 	init_objects();
 	loading = 0;
@@ -814,8 +814,8 @@ void handler_tool_inch2mm (GtkWidget *widget, gpointer data) {
 			myLINES[num].cy *= 25.4;
 		}
 	}
-	if (strcmp(PARAMETER[P_O_UNIT].vstr, "inch") == 0) {
-			strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+	if (PARAMETER[P_O_UNIT].vint == 0) {
+		PARAMETER[P_O_UNIT].vint = 1;
 	}
 	init_objects();
 	loading = 0;
@@ -1411,12 +1411,22 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	if (n == P_O_PARAVIEW) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "please save setup and restart cammill !"), "please save setup and restart cammill !");
 	}
+	if (PARAMETER[P_O_UNIT].vint == 1) {
+		strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+	} else {
+		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+	}
 }
 
 void ParameterUpdate (void) {
 	char path[1024];
 	char value2[1024];
 	int n = 0;
+	if (PARAMETER[P_O_UNIT].vint == 1) {
+		strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+	} else {
+		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+	}
 	for (n = 0; n < P_LAST; n++) {
 		if (PARAMETER[n].type == T_FLOAT) {
 			if (PARAMETER[n].vfloat != gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(ParamValue[n]))) {
@@ -1997,6 +2007,9 @@ void create_gui () {
 
 	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Expander"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Notebook-Tabs"), -1);
+
+	gtk_list_store_insert_with_values(ListStore[P_O_UNIT], NULL, -1, 0, NULL, 1, "inch", -1);
+	gtk_list_store_insert_with_values(ListStore[P_O_UNIT], NULL, -1, 0, NULL, 1, "mm", -1);
 
 	g_signal_connect(G_OBJECT(ParamButton[P_MFILE]), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_TOOL_TABLE]), "clicked", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
