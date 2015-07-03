@@ -1130,8 +1130,6 @@ void mill_objects (void) {
 					}
 				}
 			} else {
-#pragma omp parallel
-{
 				for (nnum = 0; nnum < line_last; nnum++) {
 					if (myOBJECTS[object_num2].line[nnum] != 0 && ((myOBJECTS[object_num2].force == 1 && myOBJECTS[object_num2].offset == 1) || (myOBJECTS[object_num2].force == 0 && myOBJECTS[object_num2].inside == 1)) && myOBJECTS[object_num2].visited == 0) {
 						int lnum2 = myOBJECTS[object_num2].line[nnum];
@@ -1144,7 +1142,6 @@ void mill_objects (void) {
 						}
 					}
 				}
-}
 			}
 			nnum = 0;
 			if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0 && myOBJECTS[object_num2].visited == 0) {
@@ -1910,14 +1907,16 @@ void object_draw (FILE *fd_out, int object_num) {
 				} else {
 					glColor4f(1.0, 1.0, 1.0, 1.0);
 				}
-				snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
+			}
+			snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 				output_text_gl_center(tmp_str, (float)x + (float)r, (float)y, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
-				if (PARAMETER[P_V_HELPLINES].vint == 1) {
-					if (myOBJECTS[object_num].closed == 1 && myOBJECTS[object_num].inside == 0) {
-						object2poly(object_num, 0.0, mill_depth_real, 0);
-					} else if (myOBJECTS[object_num].inside == 1 && mill_depth_real > PARAMETER[P_M_DEPTH].vdouble) {
-						object2poly(object_num, mill_depth_real - 0.001, mill_depth_real - 0.001, 1);
-					}
+			}
+			if (PARAMETER[P_V_HELPLINES].vint == 1) {
+				if (myOBJECTS[object_num].closed == 1 && myOBJECTS[object_num].inside == 0) {
+					object2poly(object_num, 0.0, mill_depth_real, 0);
+				} else if (myOBJECTS[object_num].inside == 1 && mill_depth_real > PARAMETER[P_M_DEPTH].vdouble) {
+					object2poly(object_num, mill_depth_real - 0.001, mill_depth_real - 0.001, 1);
 				}
 			}
 		}
@@ -1933,11 +1932,13 @@ void object_draw (FILE *fd_out, int object_num) {
 				} else {
 					glColor4f(0.0, 1.0, 0.0, 1.0);
 				}
-				draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
-				if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || PARAMETER[P_M_TEXT].vint == 1)) {
-					draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (PARAMETER[P_TOOL_DIAMETER].vdouble));
-				}
-				glLineWidth(1);
+			}
+			draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
+			if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || PARAMETER[P_M_TEXT].vint == 1)) {
+				draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (PARAMETER[P_TOOL_DIAMETER].vdouble));
+			}
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+					glLineWidth(1);
 			}
 			if (PARAMETER[P_M_NCDEBUG].vint == 1) {
 				if (num == 0) {
@@ -1991,7 +1992,9 @@ void object_draw (FILE *fd_out, int object_num) {
 							}
 						}
 						snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
-						output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
+						if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+							output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
+						}
 					}
 				}
 			}
