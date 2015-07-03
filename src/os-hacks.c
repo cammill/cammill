@@ -46,6 +46,13 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 #ifdef __APPLE__
 	if (_NSGetExecutablePath(buffer, &len) == 0) {
 		printf("executable path is %s\n", buffer);
+		char *res = realpath(buffer, NULL);
+		if (res == NULL) {
+			fprintf(stderr, "realpath() failed\n");
+		} else {
+			snprintf(buffer, len, "%s", res);
+			free(res);
+		}
 	} else {
 		printf("buffer too small; need size %u\n", len);
 	}
@@ -58,11 +65,12 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 				return -1;
 			} else {
 				snprintf(buffer, len, "%s", res);
+				free(res);
 			}
 	} else {
-			snprintf(buffer, len, "%s", res);
+		snprintf(buffer, len, "%s", res);
+		free(res);
 	}
-	free(res);
 #endif
 #endif
 	fprintf(stderr, "%s - %s\n", argv, buffer);
