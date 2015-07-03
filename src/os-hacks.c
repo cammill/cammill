@@ -53,8 +53,6 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 			snprintf(buffer, len, "%s", res);
 			free(res);
 		}
-	} else {
-		printf("buffer too small; need size %u\n", len);
 	}
 #else
 	char *res = realpath(argv, NULL);
