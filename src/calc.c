@@ -353,6 +353,9 @@ void object2poly (int object_num, double depth, double depth2, int invert) {
 
 
 void DrawLine (float x1, float y1, float x2, float y2, float z, float w) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	float angle = atan2(y2 - y1, x2 - x1);
 	float t2sina1 = w / 2 * sin(angle);
 	float t2cosa1 = w / 2 * cos(angle);
@@ -365,6 +368,9 @@ void DrawLine (float x1, float y1, float x2, float y2, float z, float w) {
 }
 
 void DrawArrow (float x1, float y1, float x2, float y2, float z, float w) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	float dx = x2 - x1;
 	float dy = y2 - y1;
 	float len = sqrt(dx * dx + dy * dy);
@@ -388,6 +394,9 @@ void DrawArrow (float x1, float y1, float x2, float y2, float z, float w) {
 }
 
 void draw_line_wrap_conn (float x1, float y1, float depth1, float depth2) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	float ry = 0.0;
 	float rz = 0.0;
 	glBegin(GL_LINES);
@@ -399,6 +408,9 @@ void draw_line_wrap_conn (float x1, float y1, float depth1, float depth2) {
 }
 
 void draw_line_wrap (float x1, float y1, float x2, float y2, float depth) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	float radius = (PARAMETER[P_MAT_DIAMETER].vdouble / 2.0) + depth;
 	float dX = x2 - x1;
 	float dY = y2 - y1;
@@ -435,6 +447,9 @@ void draw_line_wrap (float x1, float y1, float x2, float y2, float depth) {
 }
 
 void draw_oline (float x1, float y1, float x2, float y2, float depth) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
 		draw_line_wrap(x1, y1, x2, y2, 0.0);
 		draw_line_wrap(x1, y1, x2, y2, depth);
@@ -458,6 +473,9 @@ void draw_oline (float x1, float y1, float x2, float y2, float depth) {
 }
 
 void draw_line2 (float x1, float y1, float z1, float x2, float y2, float z2, float width) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
 		draw_line_wrap(x1, y1, x2, y2, 0.0);
 		draw_line_wrap(x1, y1, x2, y2, z1);
@@ -487,6 +505,9 @@ void draw_line2 (float x1, float y1, float z1, float x2, float y2, float z2, flo
 }
 
 void draw_line (float x1, float y1, float z1, float x2, float y2, float z2, float width) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
 		glColor4f(1.0, 0.0, 1.0, 1.0);
 		draw_line_wrap(x1, y1, x2, y2, 0.0);
@@ -520,6 +541,9 @@ void draw_line (float x1, float y1, float z1, float x2, float y2, float z2, floa
 }
 
 void draw_line3 (float x1, float y1, float z1, float x2, float y2, float z2) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
 		glColor4f(1.0, 0.0, 1.0, 1.0);
 		draw_line_wrap(x1, y1, x2, y2, z1);
@@ -958,14 +982,16 @@ void mill_z (int gcmd, double z) {
 		postcam_call_function("OnMove");
 	}
 	if (mill_start_all != 0) {
-		glColor4f(0.0, 1.0, 1.0, 1.0);
-		if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
-			draw_line_wrap_conn((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)z);
-		} else {
-			glBegin(GL_LINES);
-			glVertex3f((float)mill_last_x, (float)mill_last_y, (float)mill_last_z);
-			glVertex3f((float)mill_last_x, (float)mill_last_y, (float)z);
-			glEnd();
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+			glColor4f(0.0, 1.0, 1.0, 1.0);
+			if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
+				draw_line_wrap_conn((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)z);
+			} else {
+				glBegin(GL_LINES);
+				glVertex3f((float)mill_last_x, (float)mill_last_y, (float)mill_last_z);
+				glVertex3f((float)mill_last_x, (float)mill_last_y, (float)z);
+				glEnd();
+			}
 		}
 	}
 	mill_last_z = z;
@@ -1280,16 +1306,17 @@ void mill_objects (void) {
 	}
 
 	// show marked lines
-	int lnum = 0;
-	for (lnum = 0; lnum < line_last; lnum++) {
-		if (myLINES[lnum].marked == 1) {
-			glLineWidth(20);
-			glColor4f(1.0, 0.0, 0.0, 0.5);
-			draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.1);
-			glLineWidth(1);
+	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+		int lnum = 0;
+		for (lnum = 0; lnum < line_last; lnum++) {
+			if (myLINES[lnum].marked == 1) {
+				glLineWidth(20);
+				glColor4f(1.0, 0.0, 0.0, 0.5);
+				draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.1);
+				glLineWidth(1);
+			}
 		}
 	}
-
 }
 
 void mill_end (void) {
@@ -1411,11 +1438,13 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								tx2 = maxn - nx;
 							}
 							if (PARAMETER[P_M_ROTARYMODE].vint == 0 && PARAMETER[P_T_GRID].vint == 1) {
-								glColor4f(0.0, 0.0, 1.0, 0.1);
-								glBegin(GL_LINES);
-								glVertex3f(tx1, ty1, PARAMETER[P_T_DEPTH].vdouble);
-								glVertex3f(tx2, ty2, PARAMETER[P_T_DEPTH].vdouble);
-								glEnd();
+								if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+									glColor4f(0.0, 0.0, 1.0, 0.1);
+									glBegin(GL_LINES);
+									glVertex3f(tx1, ty1, PARAMETER[P_T_DEPTH].vdouble);
+									glVertex3f(tx2, ty2, PARAMETER[P_T_DEPTH].vdouble);
+									glEnd();
+								}
 							}
 							if (mill_last_z < PARAMETER[P_T_DEPTH].vdouble && (intersect_check(mill_last_x, mill_last_y, x, y, tx1 + 0.0002, ty1 + 0.0002, tx2 + 0.0002, ty2 + 0.0002, &i_x, &i_y) == 1 || intersect_check(x, y, mill_last_x, mill_last_y, tx1 + 0.0002, ty1 + 0.0002, tx2 + 0.0002, ty2 + 0.0002, &i_x, &i_y) == 1)) {
 								double alpha1 = vector_angle(mill_last_x, mill_last_y, i_x, i_y);
@@ -1441,26 +1470,28 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								postcam_var_push_double("currentX", _X(i_x2));
 								postcam_var_push_double("currentY", _Y(i_y2));
 								if (PARAMETER[P_T_TYPE].vint == 0) {
-									if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-										glColor4f(1.0, 1.0, 0.0, 0.5);
-										glBegin(GL_QUADS);
-										glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glEnd();
-										glBegin(GL_QUADS);
-										glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glEnd();
-										glBegin(GL_QUADS);
-										glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glEnd();
+									if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+										if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
+											glColor4f(1.0, 1.0, 0.0, 0.5);
+											glBegin(GL_QUADS);
+											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glEnd();
+											glBegin(GL_QUADS);
+											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glEnd();
+											glBegin(GL_QUADS);
+											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glEnd();
+										}
 									}
 									postcam_var_push_double("endZ", _Z(PARAMETER[P_T_DEPTH].vdouble));
 									postcam_call_function("OnMove");
@@ -1474,20 +1505,22 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 									postcam_call_function("OnMove");
 									postcam_var_push_double("currentZ", _Z(mill_last_z));
 								} else {
-									if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-										glColor4f(1.0, 1.0, 0.0, 0.5);
-										glBegin(GL_QUADS);
-										glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x, i_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x, i_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glEnd();
-										glBegin(GL_QUADS);
-										glVertex3f(i_x, i_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x, i_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-										glEnd();
+									if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+										if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
+											glColor4f(1.0, 1.0, 0.0, 0.5);
+											glBegin(GL_QUADS);
+											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x, i_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x, i_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glEnd();
+											glBegin(GL_QUADS);
+											glVertex3f(i_x, i_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x, i_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glEnd();
+										}
 									}
 									postcam_var_push_double("endX", _X(i_x));
 									postcam_var_push_double("endY", _Y(i_y));
@@ -1530,11 +1563,13 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								ty2 = maxn - ny;
 							}
 							if (PARAMETER[P_M_ROTARYMODE].vint == 0 && PARAMETER[P_T_GRID].vint == 1) {
-								glColor4f(0.0, 0.0, 1.0, 0.1);
-								glBegin(GL_LINES);
-								glVertex3f(tx1, ty1, PARAMETER[P_T_DEPTH].vdouble);
-								glVertex3f(tx2, ty2, PARAMETER[P_T_DEPTH].vdouble);
-								glEnd();
+								if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+									glColor4f(0.0, 0.0, 1.0, 0.1);
+									glBegin(GL_LINES);
+									glVertex3f(tx1, ty1, PARAMETER[P_T_DEPTH].vdouble);
+									glVertex3f(tx2, ty2, PARAMETER[P_T_DEPTH].vdouble);
+									glEnd();
+								}
 							}
 							if (mill_last_z < PARAMETER[P_T_DEPTH].vdouble && (intersect_check(mill_last_x, mill_last_y, x, y, tx1 + 0.0002, ty1 + 0.0002, tx2 + 0.0002, ty2 + 0.0002, &i_x, &i_y) == 1 || intersect_check(x, y, mill_last_x, mill_last_y, tx1 + 0.0002, ty1 + 0.0002, tx2 + 0.0002, ty2 + 0.0002, &i_x, &i_y) == 1)) {
 								double alpha1 = vector_angle(mill_last_x, mill_last_y, i_x, i_y);
@@ -1561,25 +1596,27 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								postcam_var_push_double("currentY", _Y(i_y2));
 								if (PARAMETER[P_T_TYPE].vint == 0) {
 									if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-										glColor4f(1.0, 1.0, 0.0, 0.5);
-										glBegin(GL_QUADS);
-										glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
-										glEnd();
-										glBegin(GL_QUADS);
-										glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-										glEnd();
-										glBegin(GL_QUADS);
-										glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-										glEnd();
+										if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+											glColor4f(1.0, 1.0, 0.0, 0.5);
+											glBegin(GL_QUADS);
+											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glEnd();
+											glBegin(GL_QUADS);
+											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glEnd();
+											glBegin(GL_QUADS);
+											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glEnd();
+										}
 									}
 									postcam_var_push_double("endZ", _Z(PARAMETER[P_T_DEPTH].vdouble));
 									postcam_call_function("OnMove");
@@ -1594,19 +1631,21 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 									postcam_var_push_double("currentZ", _Z(mill_last_z));
 								} else {
 									if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-										glColor4f(1.0, 1.0, 0.0, 0.5);
-										glBegin(GL_QUADS);
-										glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
-										glEnd();
-										glBegin(GL_QUADS);
-										glVertex3f(i_x - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-										glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-										glVertex3f(i_x + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-										glEnd();
+										if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+											glColor4f(1.0, 1.0, 0.0, 0.5);
+											glBegin(GL_QUADS);
+											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glEnd();
+											glBegin(GL_QUADS);
+											glVertex3f(i_x - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glEnd();
+										}
 									}
 									postcam_var_push_double("endX", _X(i_x));
 									postcam_var_push_double("endY", _Y(i_y));
@@ -1688,8 +1727,10 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 		}
 	} else {
 		if (mill_start_all != 0) {
-			glColor4f(0.0, 1.0, 1.0, 1.0);
-			draw_line3((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z);
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				glColor4f(0.0, 1.0, 1.0, 1.0);
+				draw_line3((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z);
+			}
 		}
 		postcam_var_push_int("feedRate", feed);
 		postcam_var_push_double("currentX", _X(mill_last_x));
@@ -1822,19 +1863,17 @@ void object_draw (FILE *fd_out, int object_num) {
 	lasermode = myOBJECTS[object_num].laser;
 	mill_depth_real = myOBJECTS[object_num].depth;
 
-	glLoadName(object_num);
-
-
-	if (PARAMETER[P_O_SELECT].vint == object_num) {
-		glColor4f(1.0, 0.0, 0.0, 0.3);
-		glBegin(GL_QUADS);
-		glVertex3f(myOBJECTS[object_num].min_x - PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].min_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-		glVertex3f(myOBJECTS[object_num].max_x + PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].min_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-		glVertex3f(myOBJECTS[object_num].max_x + PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].max_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-		glVertex3f(myOBJECTS[object_num].min_x - PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].max_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-		glEnd();
-	}
-	if (PARAMETER[P_M_NCDEBUG].vint == 1) {
+	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+		glLoadName(object_num);
+		if (PARAMETER[P_O_SELECT].vint == object_num) {
+			glColor4f(1.0, 0.0, 0.0, 0.3);
+			glBegin(GL_QUADS);
+			glVertex3f(myOBJECTS[object_num].min_x - PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].min_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].max_x + PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].min_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].max_x + PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].max_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].min_x - PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].max_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+			glEnd();
+		}
 	}
 	if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
 		int lnum = myOBJECTS[object_num].line[0];
@@ -1853,28 +1892,32 @@ void object_draw (FILE *fd_out, int object_num) {
 			double angle1 = toRad(an);
 			double x1 = r * cos(angle1);
 			double y1 = r * sin(angle1);
-			if (PARAMETER[P_O_SELECT].vint == object_num) {
-				glColor4f(1.0, 0.0, 0.0, 1.0);
-			} else {
-				glColor4f(0.0, 1.0, 0.0, 1.0);
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				if (PARAMETER[P_O_SELECT].vint == object_num) {
+					glColor4f(1.0, 0.0, 0.0, 1.0);
+				} else {
+					glColor4f(0.0, 1.0, 0.0, 1.0);
+				}
+				draw_oline(last_x, last_y, (float)x + x1, (float)y + y1, mill_depth_real);
 			}
-			draw_oline(last_x, last_y, (float)x + x1, (float)y + y1, mill_depth_real);
 			last_x = (float)x + x1;
 			last_y = (float)y + y1;
 		}
 		if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-			if (object_num == PARAMETER[P_O_SELECT].vint) {
-				glColor4f(1.0, 0.0, 0.0, 1.0);
-			} else {
-				glColor4f(1.0, 1.0, 1.0, 1.0);
-			}
-			snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
-			output_text_gl_center(tmp_str, (float)x + (float)r, (float)y, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
-			if (PARAMETER[P_V_HELPLINES].vint == 1) {
-				if (myOBJECTS[object_num].closed == 1 && myOBJECTS[object_num].inside == 0) {
-					object2poly(object_num, 0.0, mill_depth_real, 0);
-				} else if (myOBJECTS[object_num].inside == 1 && mill_depth_real > PARAMETER[P_M_DEPTH].vdouble) {
-					object2poly(object_num, mill_depth_real - 0.001, mill_depth_real - 0.001, 1);
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				if (object_num == PARAMETER[P_O_SELECT].vint) {
+					glColor4f(1.0, 0.0, 0.0, 1.0);
+				} else {
+					glColor4f(1.0, 1.0, 1.0, 1.0);
+				}
+				snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
+				output_text_gl_center(tmp_str, (float)x + (float)r, (float)y, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
+				if (PARAMETER[P_V_HELPLINES].vint == 1) {
+					if (myOBJECTS[object_num].closed == 1 && myOBJECTS[object_num].inside == 0) {
+						object2poly(object_num, 0.0, mill_depth_real, 0);
+					} else if (myOBJECTS[object_num].inside == 1 && mill_depth_real > PARAMETER[P_M_DEPTH].vdouble) {
+						object2poly(object_num, mill_depth_real - 0.001, mill_depth_real - 0.001, 1);
+					}
 				}
 			}
 		}
@@ -1884,16 +1927,18 @@ void object_draw (FILE *fd_out, int object_num) {
 	for (num = 0; num < line_last; num++) {
 		if (myOBJECTS[object_num].line[num] != 0) {
 			int lnum = myOBJECTS[object_num].line[num];
-			if (PARAMETER[P_O_SELECT].vint == object_num) {
-				glColor4f(1.0, 0.0, 0.0, 1.0);
-			} else {
-				glColor4f(0.0, 1.0, 0.0, 1.0);
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				if (PARAMETER[P_O_SELECT].vint == object_num) {
+					glColor4f(1.0, 0.0, 0.0, 1.0);
+				} else {
+					glColor4f(0.0, 1.0, 0.0, 1.0);
+				}
+				draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
+				if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || PARAMETER[P_M_TEXT].vint == 1)) {
+					draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (PARAMETER[P_TOOL_DIAMETER].vdouble));
+				}
+				glLineWidth(1);
 			}
-			draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
-			if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || PARAMETER[P_M_TEXT].vint == 1)) {
-				draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (PARAMETER[P_TOOL_DIAMETER].vdouble));
-			}
-			glLineWidth(1);
 			if (PARAMETER[P_M_NCDEBUG].vint == 1) {
 				if (num == 0) {
 					if (lasermode == 1) {
@@ -1938,10 +1983,12 @@ void object_draw (FILE *fd_out, int object_num) {
 			if (num == 0) {
 				if (myLINES[lnum].type != TYPE_MTEXT || PARAMETER[P_M_TEXT].vint == 1) {
 					if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-						if (object_num == PARAMETER[P_O_SELECT].vint) {
-							glColor4f(1.0, 0.0, 0.0, 1.0);
-						} else {
-							glColor4f(1.0, 1.0, 1.0, 1.0);
+						if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+							if (object_num == PARAMETER[P_O_SELECT].vint) {
+								glColor4f(1.0, 0.0, 0.0, 1.0);
+							} else {
+								glColor4f(1.0, 1.0, 1.0, 1.0);
+							}
 						}
 						snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
 						output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
@@ -1972,8 +2019,9 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 	double first_y = 0.0;
 	double last_x = 0.0;
 	double last_y = 0.0;
-	glLoadName(object_num);
-
+	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+		glLoadName(object_num);
+	}
 	/* find last line in object */
 	for (num = 0; num < line_last; num++) {
 		if (myOBJECTS[object_num].line[num] != 0) {
@@ -2302,8 +2350,9 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	mill_depth_real = myOBJECTS[object_num].depth;
 	overcut = myOBJECTS[object_num].overcut;
 	lasermode = myOBJECTS[object_num].laser;
-	glLoadName(object_num);
-
+	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+		glLoadName(object_num);
+	}
 	tool_offset = PARAMETER[P_TOOL_DIAMETER].vdouble / 2.0;
 	if (myOBJECTS[object_num].use == 0) {
 		return;
@@ -3006,7 +3055,7 @@ void slice_3d (char *file, float z) {
 			while(olist != NULL) {
 				object = (G3DObject *)olist->data;
 
-				glBegin(GL_TRIANGLES);
+//				glBegin(GL_TRIANGLES);
 				for (i = 0; i < (int)object->_num_faces; i++) {
 					float p1x = object->vertex_data[object->_indices[i*3+0]*3+0];
 					float p1y = object->vertex_data[object->_indices[i*3+0]*3+1];
