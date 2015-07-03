@@ -1360,6 +1360,9 @@ GtkWidget *create_gl () {
 }
 
 void ParameterChanged (GtkWidget *widget, gpointer data) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	int n = GPOINTER_TO_INT(data);
 	if (loading == 1) {
 		return;
@@ -1432,6 +1435,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 }
 
 void ParameterUpdate (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	char path[1024];
 	char value2[1024];
 	int n = 0;
