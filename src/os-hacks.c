@@ -51,7 +51,7 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 #ifdef __APPLE__
 	uint32_t ilen = (uint32_t)len;
 	if (_NSGetExecutablePath(buffer, &ilen) == 0) {
-		printf("executable path is %s\n", buffer);
+		fprintf(stderr, "executable path is %s\n", buffer);
 		char *res = realpath(buffer, NULL);
 		if (res == NULL) {
 			fprintf(stderr, "realpath() failed\n");
