@@ -263,6 +263,9 @@ void onExit (void) {
 }
 
 void draw_grid (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	if (PARAMETER[P_M_ROTARYMODE].vint == 0 && PARAMETER[P_V_GRID].vint == 1) {
 		float gridXYZ = PARAMETER[P_V_HELP_GRID].vfloat * 10.0;
 		float gridXYZmin = PARAMETER[P_V_HELP_GRID].vfloat;
@@ -299,6 +302,9 @@ void draw_grid (void) {
 }
 
 void draw_helplines (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	char tmp_str[128];
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
 		GLUquadricObj *quadratic = gluNewQuadric();
@@ -506,20 +512,19 @@ void mainloop (void) {
 	}
 
 	if (update_post == 1) {
-		glDeleteLists(1, 1);
-		glNewList(1, GL_COMPILE);
-
-		draw_grid();
-		if (PARAMETER[P_V_HELPLINES].vint == 1) {
-			if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-				draw_helplines();
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+			glDeleteLists(1, 1);
+			glNewList(1, GL_COMPILE);
+			draw_grid();
+			if (PARAMETER[P_V_HELPLINES].vint == 1) {
+				if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
+					draw_helplines();
+				}
 			}
 		}
-
 		mill_begin(program_path);
 		mill_objects();
 		mill_end();
-
 		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			// update GUI
 			GtkTextIter startLua, endLua;
@@ -552,7 +557,9 @@ void mainloop (void) {
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
 			snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1f%s / Height=%0.1f%s", size_x, PARAMETER[P_O_UNIT].vstr, size_y, PARAMETER[P_O_UNIT].vstr);
 			gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
-			glEndList();
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				glEndList();
+			}
 		}
 	}
 
@@ -737,6 +744,9 @@ void ArgsRead (int argc, char **argv) {
 }
 
 void view_init_gl(void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(glCanvas);
 	GdkGLContext *glcontext = gtk_widget_get_gl_context(glCanvas);
 	if (gdk_gl_drawable_gl_begin(gldrawable, glcontext)) {
@@ -752,6 +762,9 @@ void view_init_gl(void) {
 }
 
 void view_draw (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
+		return;
+	}
 	GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(glCanvas);
 	GdkGLContext *glcontext = gtk_widget_get_gl_context(glCanvas);
 	if (gdk_gl_drawable_gl_begin(gldrawable, glcontext)) {
