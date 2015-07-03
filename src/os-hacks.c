@@ -8,6 +8,11 @@
 #include <unistd.h>
 #include <libgen.h>
 
+#ifdef __APPLE__
+#include <mach-o/dyld.h>
+#endif
+
+
 #ifdef __MINGW32__
 #include <windows.h>
 #include <shfolder.h>
@@ -44,7 +49,8 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 	GetModuleFileName(NULL, buffer, len);
 #else
 #ifdef __APPLE__
-	if (_NSGetExecutablePath(buffer, &len) == 0) {
+	uint32_t ilen = (uint32_t)len;
+	if (_NSGetExecutablePath(buffer, &ilen) == 0) {
 		printf("executable path is %s\n", buffer);
 		char *res = realpath(buffer, NULL);
 		if (res == NULL) {
