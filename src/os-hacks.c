@@ -28,9 +28,27 @@ int get_home_dir(char* buffer) {
 #endif
 }
 
+void my_dirname (char *path) {
+	int n;
+	int len = strlen(path);
+	for (n = len - 1; n >= 0; n--) {
+		if (path[n] == '/' || path[n] == '\\') {
+			path[n] = 0;
+			break;
+		}
+	}
+}
+
 size_t get_executable_path (char *argv, char* buffer, size_t len) {
 #ifdef __MINGW32__
 	GetModuleFileName(NULL, buffer, len);
+#else
+#ifdef __APPLE__
+	if (_NSGetExecutablePath(buffer, &len) == 0) {
+		printf("executable path is %s\n", buffer);
+	} else {
+		printf("buffer too small; need size %u\n", len);
+	}
 #else
 	char *res = realpath(argv, NULL);
 	if (res == NULL) {
@@ -46,8 +64,9 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 	}
 	free(res);
 #endif
+#endif
 	fprintf(stderr, "%s - %s\n", argv, buffer);
-	dirname(buffer);
+	my_dirname(buffer);
 	strcat(buffer, "/");
 	fprintf(stderr, "%s - %s\n", argv, buffer);
 	return (size_t)strlen(buffer);
