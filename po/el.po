@@ -1,0 +1,531 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2015-07-05 10:07-0400\n"
+"Last-Translator: koppi <jakob.flierl@gmail.com>\n"
+"Language-Team: Greek\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: el\n"
+"X-Crowdin-File: cammill.po\n"
+"Language: el_GR\n"
+
+msgid "View"
+msgstr "Προβολή"
+
+msgid "Tool"
+msgstr "Εργαλείο"
+
+msgid "Milling"
+msgstr "Αυλάκωση"
+
+msgid "Tabs"
+msgstr "Γλωττίδες"
+
+msgid "Rotary"
+msgstr "Περιστροφικός"
+
+msgid "Tangencial"
+msgstr "Εφαπτομενικός"
+
+msgid "Machine"
+msgstr "Μηχανή"
+
+msgid "Material"
+msgstr "Υλικό"
+
+msgid "Objects"
+msgstr "Αντικείμενα"
+
+msgid "Misc"
+msgstr "Διάφορα"
+
+msgid "Zoom"
+msgstr "Εστίαση"
+
+msgid "view-zoom"
+msgstr "Εστίαση προβολής"
+
+msgid "Helplines"
+msgstr "Βοηθητικές γραμμές"
+
+msgid "show helplines"
+msgstr "Εμφάνιση βοηθητικών γραμμών"
+
+msgid "ShowGrid"
+msgstr "Εμφάνιση πλέγματος"
+
+msgid "show grid"
+msgstr "εμφάνιση πλέγματος"
+
+msgid "ShowTool"
+msgstr "Εμφάνιση εργαλείου"
+
+msgid "show tool-diameter"
+msgstr "Εμφάνιση διαμέτρου εργαλείου"
+
+msgid "Textures"
+msgstr "Υφές"
+
+msgid "show textures"
+msgstr "εμφάνιση υφών"
+
+msgid "Rotate-X"
+msgstr "Περιστροφή Χ"
+
+msgid "View-Rotate X"
+msgstr "Προβολή περιστροφής Χ"
+
+msgid "Rotate-Y"
+msgstr "Περιστροφή Υ"
+
+msgid "View-Rotate Y"
+msgstr "Προβολή περιστροφής Υ"
+
+msgid "Rotate-Z"
+msgstr "Περιστροφή Ζ"
+
+msgid "View-Rotate Z"
+msgstr "Προβολή περιστροφής Ζ"
+
+msgid "Translate-X"
+msgstr "Μετακίνηση Χ"
+
+msgid "View-Translate X"
+msgstr "Προβολή μετακίνησης Χ"
+
+msgid "Translate-Y"
+msgstr "Μετακίνηση Υ"
+
+msgid "View-Translate Y"
+msgstr "Προβολή μετακίνησης Υ"
+
+msgid "Grid-Size"
+msgstr "Μέγεθος πλέγματος"
+
+msgid "size of the grid"
+msgstr "μέγεθος του πλέγματος"
+
+msgid "Arrow-Scale"
+msgstr "Κλίμακα τόξου"
+
+msgid "size of arrows"
+msgstr "μέγεθος των τόξων"
+
+msgid "DXF-File"
+msgstr "Αρχείο DXF"
+
+msgid "dxf-filename"
+msgstr "Όνομα αρχείου dxf"
+
+msgid "Select"
+msgstr "Επιλογή"
+
+msgid "selected tool from tooltable"
+msgstr "επιλεγμένο εργαλείο από τον πίνακα εργαλείων"
+
+msgid "Number"
+msgstr "Αριθμός"
+
+msgid "tool-number"
+msgstr "Αριθμός εργαλείου"
+
+msgid "Diameter"
+msgstr "Διάμετρος"
+
+msgid "tool-diameter"
+msgstr "διάμετρος εργαλείου"
+
+msgid "CalcSpeed"
+msgstr "Ταχύτητα υπολογισμού"
+
+msgid "calculated spindle-speed"
+msgstr "υπολογισμένη ταχύτητα άξονα"
+
+msgid "Speed"
+msgstr "Ταχύτητα"
+
+msgid "real spindle-speed"
+msgstr "υπολογισμένη ταχύτητα άξονα"
+
+msgid "Flutes"
+msgstr "Αυλακώσεις"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "Αυλακώσεις στο εργαλείο, για τον υπολογισμό της μέγιστης ταχύτητας του εργαλείου και του ρυθμού τροφοδοσίας"
+
+msgid "Table"
+msgstr "Πίνακας"
+
+msgid "the tooltable filename"
+msgstr "το όνομα αρχείου του πίνακα εργαλείων"
+
+msgid "MaxFeedRate"
+msgstr "Μέγιστος ρυθμός τροφοδοσίας"
+
+msgid "calculated maximum feedrate"
+msgstr "υπολογισμένος μέγιστος ρυθμός τροφοδοσίας"
+
+msgid "FeedRate"
+msgstr "Ρυθμός τροφοδοσίας"
+
+msgid "real feedrate"
+msgstr "πραγματικός ρυθμός τροφοδοσίας"
+
+msgid "PlungeRate"
+msgstr "Ρυθμός βύθισης"
+
+msgid "plunge feedrate"
+msgstr "ρυθμός τροφοδοσίας βύθισης"
+
+msgid "Depth"
+msgstr "Βάθος"
+
+msgid "end depth"
+msgstr "τέλος βάθους"
+
+msgid "Z-Step"
+msgstr "Βήμα Ζ"
+
+msgid "depth per step"
+msgstr "βάθος ανά βήμα"
+
+msgid "Save-Move"
+msgstr "Αποθήκευση μετακίνησης"
+
+msgid "save move z-position"
+msgstr "αποθήκευση μετακίνησης θέσης z"
+
+msgid "use this object"
+msgstr "χρήση αυτού του αντικειμένου"
+
+msgid "override global parameters for this object"
+msgstr "αντικατάσταση των γενικών παραμέτρων για αυτό το αντικείμενο"
+
+msgid "Overcut"
+msgstr "Περιθώριο κοπής"
+
+msgid "overcutting edges"
+msgstr "άκρες περιθωρίου κοπής"
+
+msgid "Lasermode"
+msgstr "Κατάσταση λέιζερ"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "κατάσταση λέιζερ, βάθος=0,0, ενεργοποίηση/απενεργοποίηση ανά αντικείμενο"
+
+msgid "Climb"
+msgstr "Άνοδος"
+
+msgid "Climb Milling"
+msgstr "Αυλάκωση ανόδου"
+
+msgid "reverse milling direction / climb milling"
+msgstr "αντιστροφή κατεύθυνσης αυλάκωσης / αυλάκωσης ανόδου"
+
+msgid "NoOffsets"
+msgstr "Χωρίς μετατοπίσεις"
+
+msgid "without tool-offsets"
+msgstr "χωρίς μετατοπίσεις εργαλείου"
+
+msgid "Mill Text"
+msgstr "Κείμενο αυλάκωσης"
+
+msgid "mill mtext from dxf-files"
+msgstr "Μύλος mtext από αρχεία dxf"
+
+msgid "NC-Debug"
+msgstr "Αποσφαλμάτωση NC"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "αντικείμενα εξόδου χωρίς μετατοπίσεις / για αποσφαλμάτωση"
+
+msgid "Use Taps"
+msgstr "Χρήση γλωττίδων"
+
+msgid "using holding-tabs"
+msgstr "χρήση γλωττίδων συγκράτησης"
+
+msgid "Show Grid"
+msgstr "Εμφάνιση πλέγματος"
+
+msgid "show tab-grid"
+msgstr "Εμφάνιση πλέγματος γλωττίδων"
+
+msgid "depth of the holding-tabs"
+msgstr "βάθος των γλωττίδων συγκράτησης"
+
+msgid "Lenght"
+msgstr "Μήκος"
+
+msgid "lenght of the holding-tabs"
+msgstr "μήκος των γλωττίδων συγκράτησης"
+
+msgid "Triangle-Type"
+msgstr "Τριγωνικός τύπος"
+
+msgid "type of the holding-tabs"
+msgstr "τύπος των γλωττίδων συγκράτησης"
+
+msgid "X-Grid"
+msgstr "Πλέγμα Χ"
+
+msgid "X-grid of the holding-tabs"
+msgstr "Πλέγμα Χ των γλωττίδων συγκράτησης"
+
+msgid "Y-Grid"
+msgstr "Πλέγμα Υ"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Πλέγμα Υ των γλωττίδων συγκράτησης"
+
+msgid "Fastmove-Speed"
+msgstr "Ταχύτητα γρήγορης μετακίνησης"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "ταχύτητα γρήγορης κίνησης της μηχανής, για τον υπολογισμό του χρόνου  αυλάκωσης"
+
+msgid "Post"
+msgstr "Μετά"
+
+msgid "post-processor selection"
+msgstr "επιλογή μετεπεξεργαστή"
+
+msgid "Output-File"
+msgstr "Αρχείο εξόδου"
+
+msgid "gcode-output filename"
+msgstr "όνομα αρχείου εξόδου gcode"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "επιλογή υλικού για υπολογισμό του ρυθμού τροφοδοσίας και της ταχύτητας άξονα"
+
+msgid "Cutting Speed"
+msgstr "Ταχύτητα κοπής"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "Τροφοδοσία/Δόντι@<4mm"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "Ταχύτητα/Δοντι@<8mm"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "Ταχύτητα/Δόντι@<12mm"
+
+msgid "Texture"
+msgstr "Υφή"
+
+msgid "Post-Command"
+msgstr "Μεταεντολή"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "μετα-εντολή για την εκκίνηση ενός σεναρίου μετά την αποθήκευση του gcode (μπορείτε να χρησιμοποιήσετε αυτό για να αντιγράψετε το gcode στην cnc μηχανή σας)"
+
+msgid "object selection"
+msgstr "επιλογή αντικειμένου"
+
+msgid "Use"
+msgstr "Χρήση"
+
+msgid "Overwrite"
+msgstr "Αντικατάσταση"
+
+msgid "Offset"
+msgstr "Μετατόπιση"
+
+msgid "Pocket"
+msgstr "Κοιλότητα"
+
+msgid "Pocket cutting"
+msgstr "Κοπή κοιλότητας"
+
+msgid "Laser"
+msgstr "Λέιζερ"
+
+msgid "Laser cutting"
+msgstr "Κοπή με λέιζερ"
+
+msgid "Holding-Tab's"
+msgstr "Γλωττίδες συγκράτησης"
+
+msgid "use holding tabs"
+msgstr "χρήση γλωττίδων συγκράτησης"
+
+msgid "Order"
+msgstr "Σειρά"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "σειρά αυλάκωσης (Auto= πρώτα εσωτερικά μετά εξωτερικά, -1-> -5 = πρώτη αυλάκωση, 1 -> 5 = τελευταία αυλάκωση)"
+
+msgid "Activate"
+msgstr "Eνεργοποίηση"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "κατάσταση περιστροφής για 2Δ προβολή σε άξονα περιστροφής"
+
+msgid "Axis"
+msgstr "Άξονας"
+
+msgid "axis that used as rotating axis"
+msgstr "ο άξονας που χρησιμοποιήθηκε ως άξονας περιστροφής"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "η διάμετρος του υλικού για την κατάσταση περιστροφής"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "κοπή εφαπτομενικού μαχαιριού, βάθος=0,0"
+
+msgid "axis that used as tangencial axis"
+msgstr "ο άξονας που χρησιμοποιήθηκε ως εφαπτομενικός άξονας"
+
+msgid "MaxAngle"
+msgstr "Μέγιστη γωνία"
+
+msgid "maximum angle before push up the knife"
+msgstr "μέγιστη γωνία πριν την ώθηση προς τα πάνω του μαχαιριού"
+
+msgid "Tolerance"
+msgstr "Ανοχή"
+
+msgid "Tollerance between points to close objects"
+msgstr "Ανοχή μεταξύ σημείων που κλείνουν αντικείμενα"
+
+msgid "Parameter"
+msgstr "Παράμετρος"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Γλωττίδες ή επεκτάσεις για παράμετρο"
+
+msgid "VNC-Server"
+msgstr "Διακομιστής VNC"
+
+msgid "VNC-Server address"
+msgstr "Διεύθυνση διακομιστή VNC"
+
+msgid "VNC-Port"
+msgstr "Θύρα VNC"
+
+msgid "VNC-Server port"
+msgstr "Θύρα διακομιστή VNC"
+
+msgid "On/Off"
+msgstr "Ενεργό/Ανενεργό"
+
+msgid "3D-View"
+msgstr "Προβολή 3Δ"
+
+msgid "Output"
+msgstr "Έξοδος"
+
+msgid "PostProcessor"
+msgstr "Μετεπεξεργαστής"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Τεκμηρίωση"
+
+msgid "-5 First"
+msgstr "-5 Πρώτο"
+
+msgid "0 Auto"
+msgstr "0 Αυτόματο"
+
+msgid "5 Last"
+msgstr "5 τελευταίο"
+
+msgid "None"
+msgstr "Κανένα"
+
+msgid "Inside"
+msgstr "Μέσα"
+
+msgid "Outside"
+msgstr "Έξω"
+
+msgid "Expander"
+msgstr "Επέκταση"
+
+msgid "Notebook-Tabs"
+msgstr "Καρτέλες σημειωματαρίου"
+
+msgid "Help"
+msgstr "Βοήθεια"
+
+msgid "About"
+msgstr "Περί"
+
+msgid "File"
+msgstr "Αρχείο"
+
+msgid "Load DXF"
+msgstr "Φόρτωση DXF"
+
+msgid "Reload DXF"
+msgstr "Επαναφόρτωση DXF"
+
+msgid "Load Preset"
+msgstr "Φόρτωση προεπιλογής"
+
+msgid "Save Preset"
+msgstr "Αποθήκευση προεπιλογής"
+
+msgid "Save Output"
+msgstr "Αποθήκευση εξόδου"
+
+msgid "Save Output As.."
+msgstr "Αποθήκευση εξόδου ως.."
+
+msgid "Load Tooltable"
+msgstr "Φόρτωση πίνακα εργαλείων"
+
+msgid "Save Setup"
+msgstr "Αποθήκευση ρύθμισης"
+
+msgid "Quit"
+msgstr "Έξοδος"
+
+msgid "Preset"
+msgstr "Προεπιλογή"
+
+msgid "Tooltable"
+msgstr "Πίνακας εργαλείων"
+
+msgid "Load Drawing"
+msgstr "Φόρτωση σχεδίου"
+
+msgid "DXF-Drawings"
+msgstr "Σχέδια DXF"
+
+msgid "DWG-Drawings"
+msgstr "Σχέδια DWG"
+
+msgid "SVG-Drawings"
+msgstr "Σχέδια SVG"
+
+msgid "On Open"
+msgstr "Με το άνοιγμα"
+
+msgid "holding-tabs on open contours"
+msgstr "γλωττίδες συγκράτησης σε ανοικτά περιγράμματα"
+
+msgid "On Inside"
+msgstr "Εσωτερικά"
+
+msgid "holding-tabs on inside-contours"
+msgstr "γλωττίδες συγκράτησης σε εσωτερικά περιγράμματα"
+
+msgid "On Outside"
+msgstr "Εξωτερικά"
+
+msgid "holding-tabs on outside-contours"
+msgstr "γλωττίδες συγκράτησης σε εξωτερικά περιγράμματα"
+

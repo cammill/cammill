@@ -1,0 +1,531 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2015-07-05 10:07-0400\n"
+"Last-Translator: koppi <jakob.flierl@gmail.com>\n"
+"Language-Team: Vietnamese\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: vi\n"
+"X-Crowdin-File: cammill.po\n"
+"Language: vi_VN\n"
+
+msgid "View"
+msgstr "Giao diện"
+
+msgid "Tool"
+msgstr "Công cụ"
+
+msgid "Milling"
+msgstr "Máy phay"
+
+msgid "Tabs"
+msgstr "Thẻ"
+
+msgid "Rotary"
+msgstr "Trục quay"
+
+msgid "Tangencial"
+msgstr "Tiếp tuyến"
+
+msgid "Machine"
+msgstr "Máy"
+
+msgid "Material"
+msgstr "Vật liệu"
+
+msgid "Objects"
+msgstr "Các đối tượng"
+
+msgid "Misc"
+msgstr "Hỗn hợp"
+
+msgid "Zoom"
+msgstr "Thu phóng"
+
+msgid "view-zoom"
+msgstr "xem phóng to"
+
+msgid "Helplines"
+msgstr "Đường dây nóng"
+
+msgid "show helplines"
+msgstr "Hiển thị đường dây nóng"
+
+msgid "ShowGrid"
+msgstr "Lưới hiển thị"
+
+msgid "show grid"
+msgstr "Hiển thị lưới"
+
+msgid "ShowTool"
+msgstr "Công cụ hiển thị"
+
+msgid "show tool-diameter"
+msgstr "Hiển thị đường kính công cụ"
+
+msgid "Textures"
+msgstr "Kết cấu"
+
+msgid "show textures"
+msgstr "Hiển thị kết cấu"
+
+msgid "Rotate-X"
+msgstr "Xoay trục X"
+
+msgid "View-Rotate X"
+msgstr "Hiển thị xoay trục X"
+
+msgid "Rotate-Y"
+msgstr "Xoay trục Y"
+
+msgid "View-Rotate Y"
+msgstr "Hiển thị xoay trục Y"
+
+msgid "Rotate-Z"
+msgstr "Xoay trục Z"
+
+msgid "View-Rotate Z"
+msgstr "Hiển trị xoay trục Z"
+
+msgid "Translate-X"
+msgstr "Dịch trục X"
+
+msgid "View-Translate X"
+msgstr "Hiển thị dịch trục X"
+
+msgid "Translate-Y"
+msgstr "Dịch trục Y"
+
+msgid "View-Translate Y"
+msgstr "Hiển thị dịch trục Y"
+
+msgid "Grid-Size"
+msgstr "Kích thước lưới"
+
+msgid "size of the grid"
+msgstr "Kích thước của lưới"
+
+msgid "Arrow-Scale"
+msgstr "Mũi tên điều chỉnh"
+
+msgid "size of arrows"
+msgstr "Kích thước mũi tên"
+
+msgid "DXF-File"
+msgstr "Tập tin DXF"
+
+msgid "dxf-filename"
+msgstr "tên tập tin dxf"
+
+msgid "Select"
+msgstr "Chọn"
+
+msgid "selected tool from tooltable"
+msgstr "công cụ được chọn từ bảng công cụ"
+
+msgid "Number"
+msgstr "Số"
+
+msgid "tool-number"
+msgstr "công cụ số"
+
+msgid "Diameter"
+msgstr "Đường kính"
+
+msgid "tool-diameter"
+msgstr "công cụ đường kính"
+
+msgid "CalcSpeed"
+msgstr "Tốc độ tính toán"
+
+msgid "calculated spindle-speed"
+msgstr "tốc độ trục chính đã được tính toán"
+
+msgid "Speed"
+msgstr "Tốc độ"
+
+msgid "real spindle-speed"
+msgstr "tốc độ trục chính thực tế"
+
+msgid "Flutes"
+msgstr "Rãnh dọc"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "rãnh dọc của công cụ, để tính toán tốc độ công cụ và chỉ số cắt"
+
+msgid "Table"
+msgstr "Bảng"
+
+msgid "the tooltable filename"
+msgstr "tên tập tin bảng công cụ"
+
+msgid "MaxFeedRate"
+msgstr "Chỉ số cắt tối đa"
+
+msgid "calculated maximum feedrate"
+msgstr "chỉ số cắt tối đa đã tính toán"
+
+msgid "FeedRate"
+msgstr "Tỉ lệ cắt"
+
+msgid "real feedrate"
+msgstr "tỉ lệ cắt thực tế"
+
+msgid "PlungeRate"
+msgstr "Chỉ số bước nhảy"
+
+msgid "plunge feedrate"
+msgstr "bước nhảy của chỉ số cắt"
+
+msgid "Depth"
+msgstr "Chiều sâu"
+
+msgid "end depth"
+msgstr "chiều sâu đầu cuối"
+
+msgid "Z-Step"
+msgstr "Bước Z"
+
+msgid "depth per step"
+msgstr "độ sâu một bước"
+
+msgid "Save-Move"
+msgstr "Lưu, di chuyển"
+
+msgid "save move z-position"
+msgstr "lưu di chuyển vị trí trục z"
+
+msgid "use this object"
+msgstr "sử dụng đối tượng này"
+
+msgid "override global parameters for this object"
+msgstr "ghi đè lên các biến số toàn cục cho đối tượng này"
+
+msgid "Overcut"
+msgstr "Cắt rìa"
+
+msgid "overcutting edges"
+msgstr "Cắt rìa các cạnh"
+
+msgid "Lasermode"
+msgstr "Chế độ laser"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "chế độ laser, chiều sâu = 0, bật/tắt cho từng đối tượng"
+
+msgid "Climb"
+msgstr "Leo lên"
+
+msgid "Climb Milling"
+msgstr "Máy phay leo"
+
+msgid "reverse milling direction / climb milling"
+msgstr "đảo ngược hướng phay / leo lên phay"
+
+msgid "NoOffsets"
+msgstr "Không offset"
+
+msgid "without tool-offsets"
+msgstr "không công cụ offset"
+
+msgid "Mill Text"
+msgstr "Văn bản phay"
+
+msgid "mill mtext from dxf-files"
+msgstr "mtext máy phay từ tập tin dxf"
+
+msgid "NC-Debug"
+msgstr "NC-gỡ lỗi"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "đầu ra các đối tượng không có offset / dành cho gỡ lỗi"
+
+msgid "Use Taps"
+msgstr "Sử dụng vòi nước"
+
+msgid "using holding-tabs"
+msgstr "sử dụng tab tổ chức"
+
+msgid "Show Grid"
+msgstr "Hiển thị lưới"
+
+msgid "show tab-grid"
+msgstr "Hiển thị lưới tab"
+
+msgid "depth of the holding-tabs"
+msgstr "độ sâu của các tab tổ chức"
+
+msgid "Lenght"
+msgstr "Chiều dài"
+
+msgid "lenght of the holding-tabs"
+msgstr "chiều dài của các tab tổ chức"
+
+msgid "Triangle-Type"
+msgstr "Loại tam giác"
+
+msgid "type of the holding-tabs"
+msgstr "loại tab tổ chức"
+
+msgid "X-Grid"
+msgstr "Lưới theo trục X"
+
+msgid "X-grid of the holding-tabs"
+msgstr "Lưới theo trục X của tab tổ chức"
+
+msgid "Y-Grid"
+msgstr "Lưới theo trục Y"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Lưới theo trục Y của tab tổ chức"
+
+msgid "Fastmove-Speed"
+msgstr "Tốc độ di chuyển nhanh"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "tốc độ di chuyển nhanh của máy, để tính thời gian phay"
+
+msgid "Post"
+msgstr "Đăng"
+
+msgid "post-processor selection"
+msgstr "Lựa chọn xử lý đăng"
+
+msgid "Output-File"
+msgstr "Tập tin đầu ra"
+
+msgid "gcode-output filename"
+msgstr "tên tập tin đầu ra gcode"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "Các lựa chọn tài liệu để tính toán chỉ số cắt và quay"
+
+msgid "Cutting Speed"
+msgstr "Tốc độ cắt"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "Cắt/Răng@<4mm"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "Cắt/Răng@<8mm"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "Cắt/Răng@<12mm"
+
+msgid "Texture"
+msgstr "Kết cấu"
+
+msgid "Post-Command"
+msgstr "Lẹnh đăng"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "lệnh đăng để kích hoạt kịch bản sau khi lưu trữ gocde (bạn có thể sử dụng cái này để sao chép gcode vào máy CNC của bạn)"
+
+msgid "object selection"
+msgstr "lựa chọn đối tượng"
+
+msgid "Use"
+msgstr "Sử dụng"
+
+msgid "Overwrite"
+msgstr "Ghi đè"
+
+msgid "Offset"
+msgstr "Offset"
+
+msgid "Pocket"
+msgstr "Đường bao"
+
+msgid "Pocket cutting"
+msgstr "Đường bao cắt"
+
+msgid "Laser"
+msgstr "Laser"
+
+msgid "Laser cutting"
+msgstr "Cắt laser"
+
+msgid "Holding-Tab's"
+msgstr "Tab tổ chức"
+
+msgid "use holding tabs"
+msgstr "sử dụng tab tổ chức"
+
+msgid "Order"
+msgstr "Thứ tự"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "Thứ tự phay (Tự động = đầu tư bên trong sau đó bên ngoài, -1->-3 = phay đầu tiên; 1->5 = phay cuối cùng)"
+
+msgid "Activate"
+msgstr "Kích hoạt"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "Chế độ xoay đối với dự án 2D trên trục quay"
+
+msgid "Axis"
+msgstr "Trục"
+
+msgid "axis that used as rotating axis"
+msgstr "trục sử dụng như trục quay"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "đường kính của các nguyên liệu cho chế độ quay"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "Cắt tiếp điểm giao cắt, chiều sâu = 0.0"
+
+msgid "axis that used as tangencial axis"
+msgstr "trục sử dụng như trục tiếp tuyến"
+
+msgid "MaxAngle"
+msgstr "Góc lớn nhất"
+
+msgid "maximum angle before push up the knife"
+msgstr "góc tối đa trước khi đẩy lên con dao"
+
+msgid "Tolerance"
+msgstr "Sai số"
+
+msgid "Tollerance between points to close objects"
+msgstr "Sai số giữ các điểm để bao đóng đối tượng"
+
+msgid "Parameter"
+msgstr "Tham số"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Tab hoặc mở rộng cho biến số"
+
+msgid "VNC-Server"
+msgstr "Máy chủ VNC"
+
+msgid "VNC-Server address"
+msgstr "Đại chỉ máy chủ VNC"
+
+msgid "VNC-Port"
+msgstr "Cổng VNC"
+
+msgid "VNC-Server port"
+msgstr "Cổng máy chủ VNC"
+
+msgid "On/Off"
+msgstr "Tắt/Mở"
+
+msgid "3D-View"
+msgstr "Hiển thị 3D"
+
+msgid "Output"
+msgstr "Đầu ra"
+
+msgid "PostProcessor"
+msgstr "Bộ xử lý phía sau"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Tài liệu"
+
+msgid "-5 First"
+msgstr "-5 Đầu tiên"
+
+msgid "0 Auto"
+msgstr "0 Tự động"
+
+msgid "5 Last"
+msgstr "5 Cuối cùng"
+
+msgid "None"
+msgstr "Không có"
+
+msgid "Inside"
+msgstr "Bên trong"
+
+msgid "Outside"
+msgstr "Bên ngoài"
+
+msgid "Expander"
+msgstr "Mở rộng hơn"
+
+msgid "Notebook-Tabs"
+msgstr "Tab cho notebook"
+
+msgid "Help"
+msgstr "Trợ giúp"
+
+msgid "About"
+msgstr "Thông tin"
+
+msgid "File"
+msgstr "Tập tin"
+
+msgid "Load DXF"
+msgstr "Tải DXF"
+
+msgid "Reload DXF"
+msgstr "Tải lại DXF"
+
+msgid "Load Preset"
+msgstr "Tải cài sẵn"
+
+msgid "Save Preset"
+msgstr "Lưu cài đặt trước"
+
+msgid "Save Output"
+msgstr "Lưu trữ đầu ra"
+
+msgid "Save Output As.."
+msgstr "Lưu trữ đầu ra thành .."
+
+msgid "Load Tooltable"
+msgstr "Tải bảng công cụ"
+
+msgid "Save Setup"
+msgstr "Lưu thiết lập"
+
+msgid "Quit"
+msgstr "Thoát"
+
+msgid "Preset"
+msgstr "Cài sẵn"
+
+msgid "Tooltable"
+msgstr "Bảng công cụ"
+
+msgid "Load Drawing"
+msgstr "Tải bản vẽ"
+
+msgid "DXF-Drawings"
+msgstr "Bản vẽ DXF"
+
+msgid "DWG-Drawings"
+msgstr "Bản vẽ DWG"
+
+msgid "SVG-Drawings"
+msgstr "Bản vẽ SVG"
+
+msgid "On Open"
+msgstr "Đang mở"
+
+msgid "holding-tabs on open contours"
+msgstr "Tab tổ chức trong đường mở bao quanh"
+
+msgid "On Inside"
+msgstr "Đang bên trong"
+
+msgid "holding-tabs on inside-contours"
+msgstr "Tab tổ chức trong đường bên trong"
+
+msgid "On Outside"
+msgstr "Đang bên ngoài"
+
+msgid "holding-tabs on outside-contours"
+msgstr "Tab tổ chức trong đường bên ngoài"
+

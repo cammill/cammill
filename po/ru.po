@@ -1,0 +1,531 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2015-07-05 10:07-0400\n"
+"Last-Translator: koppi <jakob.flierl@gmail.com>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: cammill.po\n"
+"Language: ru_RU\n"
+
+msgid "View"
+msgstr "Вид"
+
+msgid "Tool"
+msgstr "Инструмент"
+
+msgid "Milling"
+msgstr "Фрезерование"
+
+msgid "Tabs"
+msgstr "Вкладки"
+
+msgid "Rotary"
+msgstr "Вращение"
+
+msgid "Tangencial"
+msgstr "Tangencial"
+
+msgid "Machine"
+msgstr "Станок"
+
+msgid "Material"
+msgstr "Материал"
+
+msgid "Objects"
+msgstr "Объекты"
+
+msgid "Misc"
+msgstr "Разное"
+
+msgid "Zoom"
+msgstr "Масштаб"
+
+msgid "view-zoom"
+msgstr "масштаб просмотра"
+
+msgid "Helplines"
+msgstr "Вспомогательные линии"
+
+msgid "show helplines"
+msgstr "Показать вспомогательные линии"
+
+msgid "ShowGrid"
+msgstr "Показать сетку"
+
+msgid "show grid"
+msgstr "показать сетку"
+
+msgid "ShowTool"
+msgstr "Показать инструмент"
+
+msgid "show tool-diameter"
+msgstr "показать диаметр инструмента"
+
+msgid "Textures"
+msgstr "Текстуры"
+
+msgid "show textures"
+msgstr "показать текстуры"
+
+msgid "Rotate-X"
+msgstr "X-вращение"
+
+msgid "View-Rotate X"
+msgstr "Вращение по оси X"
+
+msgid "Rotate-Y"
+msgstr "Y-вращение"
+
+msgid "View-Rotate Y"
+msgstr "Вращение по оси Y"
+
+msgid "Rotate-Z"
+msgstr "Z-вращение"
+
+msgid "View-Rotate Z"
+msgstr "Вращение по оси Z"
+
+msgid "Translate-X"
+msgstr "X-перемещение"
+
+msgid "View-Translate X"
+msgstr "Перемещение по оси X"
+
+msgid "Translate-Y"
+msgstr "Y-перемещение"
+
+msgid "View-Translate Y"
+msgstr "Перемещение по оси Y"
+
+msgid "Grid-Size"
+msgstr "Размер сетки"
+
+msgid "size of the grid"
+msgstr "размер сетки"
+
+msgid "Arrow-Scale"
+msgstr "Размер стрелок"
+
+msgid "size of arrows"
+msgstr "размер стрелок"
+
+msgid "DXF-File"
+msgstr "Файл DXF"
+
+msgid "dxf-filename"
+msgstr "имя файла DXF"
+
+msgid "Select"
+msgstr "Выбрать"
+
+msgid "selected tool from tooltable"
+msgstr "выбранный инструмент из набора инструментов"
+
+msgid "Number"
+msgstr "Номер"
+
+msgid "tool-number"
+msgstr "номер инструмента"
+
+msgid "Diameter"
+msgstr "Диаметр"
+
+msgid "tool-diameter"
+msgstr "диаметр инструмента"
+
+msgid "CalcSpeed"
+msgstr "Расчётная скорость"
+
+msgid "calculated spindle-speed"
+msgstr "расчётная скорость шпинделя"
+
+msgid "Speed"
+msgstr "Скорость"
+
+msgid "real spindle-speed"
+msgstr "реальная скорость шпинделя"
+
+msgid "Flutes"
+msgstr "Канавки"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "канавки инструмента, для вычисления максимальной скорости инструмента и максимальной скорости его подачи"
+
+msgid "Table"
+msgstr "Таблица"
+
+msgid "the tooltable filename"
+msgstr "имя файла набора инструментов"
+
+msgid "MaxFeedRate"
+msgstr "MaxFeedRate"
+
+msgid "calculated maximum feedrate"
+msgstr "calculated maximum feedrate"
+
+msgid "FeedRate"
+msgstr "Скорость подачи"
+
+msgid "real feedrate"
+msgstr "реальная скорость подачи"
+
+msgid "PlungeRate"
+msgstr "PlungeRate"
+
+msgid "plunge feedrate"
+msgstr "plunge feedrate"
+
+msgid "Depth"
+msgstr "Глубина"
+
+msgid "end depth"
+msgstr "конечная глубина"
+
+msgid "Z-Step"
+msgstr "Z-шаг"
+
+msgid "depth per step"
+msgstr "глубина за шаг"
+
+msgid "Save-Move"
+msgstr "Save-Move"
+
+msgid "save move z-position"
+msgstr "save move z-position"
+
+msgid "use this object"
+msgstr "использовать этот объект"
+
+msgid "override global parameters for this object"
+msgstr "override global parameters for this object"
+
+msgid "Overcut"
+msgstr "Overcut"
+
+msgid "overcutting edges"
+msgstr "overcutting edges"
+
+msgid "Lasermode"
+msgstr "Lasermode"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "lasermode, depth=0.0, turn on/off per object"
+
+msgid "Climb"
+msgstr "Climb"
+
+msgid "Climb Milling"
+msgstr "Climb Milling"
+
+msgid "reverse milling direction / climb milling"
+msgstr "reverse milling direction / climb milling"
+
+msgid "NoOffsets"
+msgstr "NoOffsets"
+
+msgid "without tool-offsets"
+msgstr "без инструмента смещения"
+
+msgid "Mill Text"
+msgstr "Mill Text"
+
+msgid "mill mtext from dxf-files"
+msgstr "mill mtext from dxf-files"
+
+msgid "NC-Debug"
+msgstr "NC-Debug"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "output objects whithout offsets / for debuging"
+
+msgid "Use Taps"
+msgstr "Use Taps"
+
+msgid "using holding-tabs"
+msgstr "using holding-tabs"
+
+msgid "Show Grid"
+msgstr "Показать сетку"
+
+msgid "show tab-grid"
+msgstr "show tab-grid"
+
+msgid "depth of the holding-tabs"
+msgstr "depth of the holding-tabs"
+
+msgid "Lenght"
+msgstr "Длина"
+
+msgid "lenght of the holding-tabs"
+msgstr "lenght of the holding-tabs"
+
+msgid "Triangle-Type"
+msgstr "Triangle-Type"
+
+msgid "type of the holding-tabs"
+msgstr "type of the holding-tabs"
+
+msgid "X-Grid"
+msgstr "X-сетка"
+
+msgid "X-grid of the holding-tabs"
+msgstr "X-grid of the holding-tabs"
+
+msgid "Y-Grid"
+msgstr "Y-сетка"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Y-grid of the holding-tabs"
+
+msgid "Fastmove-Speed"
+msgstr "Fastmove-Speed"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "fast-move speed of the machine, to calculate the milling-time"
+
+msgid "Post"
+msgstr "Post"
+
+msgid "post-processor selection"
+msgstr "post-processor selection"
+
+msgid "Output-File"
+msgstr "Выходной файл"
+
+msgid "gcode-output filename"
+msgstr "gcode-output filename"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "выбор материала для вычисления скорости подачи и скорости шпинделя"
+
+msgid "Cutting Speed"
+msgstr "Скорость резки"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "Feed/Tooth@<4mm"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "Feed/Tooth@<8mm"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "Feed/Tooth@<12mm"
+
+msgid "Texture"
+msgstr "Текстура"
+
+msgid "Post-Command"
+msgstr "Post-Command"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+
+msgid "object selection"
+msgstr "выбор объектов"
+
+msgid "Use"
+msgstr "Использовать"
+
+msgid "Overwrite"
+msgstr "Заменить"
+
+msgid "Offset"
+msgstr "Смещение"
+
+msgid "Pocket"
+msgstr "Pocket"
+
+msgid "Pocket cutting"
+msgstr "Pocket cutting"
+
+msgid "Laser"
+msgstr "Лазер"
+
+msgid "Laser cutting"
+msgstr "Лазерная резка"
+
+msgid "Holding-Tab's"
+msgstr "Holding-Tab's"
+
+msgid "use holding tabs"
+msgstr "use holding tabs"
+
+msgid "Order"
+msgstr "Порядок"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+
+msgid "Activate"
+msgstr "Активировать"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "rotarymode to project 2D on rotating axis"
+
+msgid "Axis"
+msgstr "Ось"
+
+msgid "axis that used as rotating axis"
+msgstr "ось, которая используется как ось вращения"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "diameter of the material for the rotary-mode"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "tangencial-knife cutting, depth=0.0"
+
+msgid "axis that used as tangencial axis"
+msgstr "axis that used as tangencial axis"
+
+msgid "MaxAngle"
+msgstr "Максимальный угол"
+
+msgid "maximum angle before push up the knife"
+msgstr "maximum angle before push up the knife"
+
+msgid "Tolerance"
+msgstr "Допуск"
+
+msgid "Tollerance between points to close objects"
+msgstr "Tollerance between points to close objects"
+
+msgid "Parameter"
+msgstr "Параметр"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Tabs or Expander for Parameter"
+
+msgid "VNC-Server"
+msgstr "Сервер VNC"
+
+msgid "VNC-Server address"
+msgstr "Адрес сервера VNC"
+
+msgid "VNC-Port"
+msgstr "Порт VNC"
+
+msgid "VNC-Server port"
+msgstr "Порт сервера VNC"
+
+msgid "On/Off"
+msgstr "Вкл/выкл"
+
+msgid "3D-View"
+msgstr "3D-вид"
+
+msgid "Output"
+msgstr "Выходные данные"
+
+msgid "PostProcessor"
+msgstr "Постпроцессор"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Документация"
+
+msgid "-5 First"
+msgstr "-5 — первый"
+
+msgid "0 Auto"
+msgstr "0 — авто"
+
+msgid "5 Last"
+msgstr "5 — последний"
+
+msgid "None"
+msgstr "Нет"
+
+msgid "Inside"
+msgstr "Внутри"
+
+msgid "Outside"
+msgstr "Снаружи"
+
+msgid "Expander"
+msgstr "Расширитель"
+
+msgid "Notebook-Tabs"
+msgstr "Notebook-Tabs"
+
+msgid "Help"
+msgstr "Справка"
+
+msgid "About"
+msgstr "О приложении"
+
+msgid "File"
+msgstr "Файл"
+
+msgid "Load DXF"
+msgstr "Загрузить DXF"
+
+msgid "Reload DXF"
+msgstr "Перезагрузить DXF"
+
+msgid "Load Preset"
+msgstr "Загрузить шаблон"
+
+msgid "Save Preset"
+msgstr "Сохранить шаблон"
+
+msgid "Save Output"
+msgstr "Сохранить выходные данные"
+
+msgid "Save Output As.."
+msgstr "Сохранить выходные данные как…"
+
+msgid "Load Tooltable"
+msgstr "Загрузить набор инструментов"
+
+msgid "Save Setup"
+msgstr "Сохранить настройки"
+
+msgid "Quit"
+msgstr "Завершить"
+
+msgid "Preset"
+msgstr "Шаблон"
+
+msgid "Tooltable"
+msgstr "Набор инструментов"
+
+msgid "Load Drawing"
+msgstr "Загрузить чертёж"
+
+msgid "DXF-Drawings"
+msgstr "Чертёж DXF"
+
+msgid "DWG-Drawings"
+msgstr "Чертёж DWG"
+
+msgid "SVG-Drawings"
+msgstr "Чертёж SVG"
+
+msgid "On Open"
+msgstr "On Open"
+
+msgid "holding-tabs on open contours"
+msgstr "holding-tabs on open contours"
+
+msgid "On Inside"
+msgstr "Внутри"
+
+msgid "holding-tabs on inside-contours"
+msgstr "holding-tabs on inside-contours"
+
+msgid "On Outside"
+msgstr "Снаружи"
+
+msgid "holding-tabs on outside-contours"
+msgstr "holding-tabs on outside-contours"
+
