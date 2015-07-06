@@ -63,7 +63,11 @@ size_t get_executable_path (char *argv, char* buffer, size_t len) {
 #else
 	char *res = realpath(argv, NULL);
 	if (res == NULL) {
+#ifdef TARGET_FREEBSD
+			res = realpath("/proc/curproc/file", NULL);
+#else
 			res = realpath("/proc/self/exe", NULL);
+#endif
 			if (res == NULL) {
 				fprintf(stderr, "realpath() failed\n");
 				return -1;
