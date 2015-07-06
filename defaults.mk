@@ -31,6 +31,11 @@ LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau
 CFLAGS += -I./ -I./src
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
 CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
+CFLAGS += "-DTARGET=\"${TARGET}\""
+CFLAGS += "-DSYSTEM=\"${SYSTEM}\""
+CFLAGS += "-DMACHINE=\"${MACHINE}\""
+CFLAGS += "-DVERSION=\"${VERSION}\""
+CFLAGS += "-DVRELEASE=\"${VRELEASE}\""
 
 # debian hardening flags
 ifeq (${TARGET}, DEBIAN)
@@ -46,7 +51,6 @@ OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o 
 PKGS   ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS += "-DGSEAL_ENABLE"
-CFLAGS += "-DVERSION=\"${VERSION}\""
 
 # LIBG3D
 #PKGS += libg3d
