@@ -152,16 +152,8 @@ GtkWidget *glCanvas;
 GtkWidget *gCodeView;
 GtkWidget *gCodeViewLua;
 GtkWidget *hbox;
-GtkWidget *ViewExpander;
-GtkWidget *ToolExpander;
-GtkWidget *MillingExpander;
-GtkWidget *TabsExpander;
-GtkWidget *RotaryExpander;
-GtkWidget *TangencialExpander;
-GtkWidget *MachineExpander;
-GtkWidget *MaterialExpander;
-GtkWidget *ObjectsExpander;
-GtkWidget *MiscExpander;
+GtkWidget *GroupExpander[G_LAST];
+
 int PannedStat;
 int ExpanderStat[20];
 
@@ -1760,120 +1752,40 @@ void create_gui () {
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep2, -1); 
 
 	GtkWidget *NbBox;
-	int ViewNum = 0;
-	int ToolNum = 0;
-	int MillingNum = 0;
-	int HoldingNum = 0;
-	int RotaryNum = 0;
-	int TangencialNum = 0;
-	int MachineNum = 0;
-	int MaterialNum = 0;
-	int ObjectsNum = 0;
-	int MiscNum = 0;
-	GtkWidget *ViewBox = gtk_vbox_new(0, 0);
-	GtkWidget *ToolBox = gtk_vbox_new(0, 0);
-	GtkWidget *MillingBox = gtk_vbox_new(0, 0);
-	GtkWidget *HoldingBox = gtk_vbox_new(0, 0);
-	GtkWidget *RotaryBox = gtk_vbox_new(0, 0);
-	GtkWidget *TangencialBox = gtk_vbox_new(0, 0);
-	GtkWidget *MachineBox = gtk_vbox_new(0, 0);
-	GtkWidget *MaterialBox = gtk_vbox_new(0, 0);
-	GtkWidget *ObjectsBox = gtk_vbox_new(0, 0);
-	GtkWidget *MiscBox = gtk_vbox_new(0, 0);
+	int GroupNum[G_LAST];
+	int n = 0;
+	GtkWidget *GroupBox[G_LAST];
+	for (n = 0; n < G_LAST; n++) {
+		GroupBox[n] = gtk_vbox_new(0, 0);
+	}
+
 	if (PARAMETER[P_O_PARAVIEW].vint == 1) {
 		NbBox = gtk_table_new(2, 2, FALSE);
 		GtkWidget *notebook = gtk_notebook_new();
 		gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook), TRUE);
 		gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
 		gtk_table_attach_defaults(GTK_TABLE(NbBox), notebook, 0, 1, 0, 1);
-		GtkWidget *ViewLabel = gtk_label_new(_("View"));
-		GtkWidget *ToolLabel = gtk_label_new(_("Tool"));
-		GtkWidget *MillingLabel = gtk_label_new(_("Milling"));
-		GtkWidget *HoldingLabel = gtk_label_new(_("Tabs"));
-		GtkWidget *RotaryLabel = gtk_label_new(_("Rotary"));
-		GtkWidget *TangencialLabel = gtk_label_new(_("Tangencial"));
-		GtkWidget *MachineLabel = gtk_label_new(_("Machine"));
-		GtkWidget *MaterialLabel = gtk_label_new(_("Material"));
-		GtkWidget *ObjectsLabel = gtk_label_new(_("Objects"));
-		GtkWidget *MiscLabel = gtk_label_new(_("Misc"));
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), ViewBox, ViewLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), ToolBox, ToolLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), MillingBox, MillingLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), HoldingBox, HoldingLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), RotaryBox, RotaryLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), TangencialBox, TangencialLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), MachineBox, MachineLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), MaterialBox, MaterialLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), ObjectsBox, ObjectsLabel);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), MiscBox, MiscLabel);
+		GtkWidget *GroupLabel[G_LAST];
+		for (n = 0; n < G_LAST; n++) {
+			GroupLabel[n] = gtk_label_new(_(GROUPS[n].name));
+			gtk_notebook_append_page(GTK_NOTEBOOK(notebook), GroupBox[n], GroupLabel[n]);
+		}
 	} else {
 		GtkWidget *ExpanderBox = gtk_vbox_new(0, 0);
-		ViewExpander = gtk_expander_new(_("View"));
-		ToolExpander = gtk_expander_new(_("Tool"));
-		MillingExpander = gtk_expander_new(_("Milling"));
-		TabsExpander = gtk_expander_new(_("Tabs"));
-		RotaryExpander = gtk_expander_new(_("Rotary"));
-		TangencialExpander = gtk_expander_new(_("Tangencial"));
-		MachineExpander = gtk_expander_new(_("Machine"));
-		MaterialExpander = gtk_expander_new(_("Material"));
-		ObjectsExpander = gtk_expander_new(_("Objects"));
-		MiscExpander = gtk_expander_new(_("Misc"));
-		gtk_expander_set_expanded(GTK_EXPANDER(ViewExpander), ExpanderStat[0]);
-		gtk_expander_set_expanded(GTK_EXPANDER(ToolExpander), ExpanderStat[1]);
-		gtk_expander_set_expanded(GTK_EXPANDER(MillingExpander), ExpanderStat[2]);
-		gtk_expander_set_expanded(GTK_EXPANDER(TabsExpander), ExpanderStat[3]);
-		gtk_expander_set_expanded(GTK_EXPANDER(RotaryExpander), ExpanderStat[4]);
-		gtk_expander_set_expanded(GTK_EXPANDER(TangencialExpander), ExpanderStat[5]);
-		gtk_expander_set_expanded(GTK_EXPANDER(MachineExpander), ExpanderStat[6]);
-		gtk_expander_set_expanded(GTK_EXPANDER(MaterialExpander), ExpanderStat[7]);
-		gtk_expander_set_expanded(GTK_EXPANDER(ObjectsExpander), ExpanderStat[8]);
-		gtk_expander_set_expanded(GTK_EXPANDER(MiscExpander), ExpanderStat[9]);
-		GtkWidget *ViewBoxFrame = gtk_frame_new("");
-		GtkWidget *ToolBoxFrame = gtk_frame_new("");
-		GtkWidget *MillingBoxFrame = gtk_frame_new("");
-		GtkWidget *TabsBoxFrame = gtk_frame_new("");
-		GtkWidget *RotaryBoxFrame = gtk_frame_new("");
-		GtkWidget *TangencialBoxFrame = gtk_frame_new("");
-		GtkWidget *MachineBoxFrame = gtk_frame_new("");
-		GtkWidget *MaterialBoxFrame = gtk_frame_new("");
-		GtkWidget *ObjectsBoxFrame = gtk_frame_new("");
-		GtkWidget *MiscBoxFrame = gtk_frame_new("");
-		gtk_container_add(GTK_CONTAINER(ViewBoxFrame), ViewExpander);
-		gtk_container_add(GTK_CONTAINER(ToolBoxFrame), ToolExpander);
-		gtk_container_add(GTK_CONTAINER(MillingBoxFrame), MillingExpander);
-		gtk_container_add(GTK_CONTAINER(TabsBoxFrame), TabsExpander);
-		gtk_container_add(GTK_CONTAINER(RotaryBoxFrame), RotaryExpander);
-		gtk_container_add(GTK_CONTAINER(TangencialBoxFrame), TangencialExpander);
-		gtk_container_add(GTK_CONTAINER(MachineBoxFrame), MachineExpander);
-		gtk_container_add(GTK_CONTAINER(MaterialBoxFrame), MaterialExpander);
-		gtk_container_add(GTK_CONTAINER(ObjectsBoxFrame), ObjectsExpander);
-		gtk_container_add(GTK_CONTAINER(MiscBoxFrame), MiscExpander);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), ViewBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), ToolBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), MillingBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), TabsBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), RotaryBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), TangencialBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), MachineBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), MaterialBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), ObjectsBoxFrame, 0, 1, 0);
-		gtk_box_pack_start(GTK_BOX(ExpanderBox), MiscBoxFrame, 0, 1, 0);
 		NbBox = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(NbBox), ExpanderBox);
-		gtk_container_add(GTK_CONTAINER(ViewExpander), ViewBox);
-		gtk_container_add(GTK_CONTAINER(ToolExpander), ToolBox);
-		gtk_container_add(GTK_CONTAINER(MillingExpander), MillingBox);
-		gtk_container_add(GTK_CONTAINER(TabsExpander), HoldingBox);
-		gtk_container_add(GTK_CONTAINER(RotaryExpander), RotaryBox);
-		gtk_container_add(GTK_CONTAINER(TangencialExpander), TangencialBox);
-		gtk_container_add(GTK_CONTAINER(MachineExpander), MachineBox);
-		gtk_container_add(GTK_CONTAINER(MaterialExpander), MaterialBox);
-		gtk_container_add(GTK_CONTAINER(ObjectsExpander), ObjectsBox);
-		gtk_container_add(GTK_CONTAINER(MiscExpander), MiscBox);
+		GtkWidget *GroupBoxFrame[G_LAST];
+		for (n = 0; n < G_LAST; n++) {
+			GroupExpander[n] = gtk_expander_new(_(GROUPS[n].name));
+			gtk_expander_set_expanded(GTK_EXPANDER(GroupExpander[n]), ExpanderStat[n]);
+			GroupBoxFrame[n] = gtk_frame_new("");
+			gtk_container_add(GTK_CONTAINER(GroupBoxFrame[n]), GroupExpander[n]);
+			gtk_box_pack_start(GTK_BOX(ExpanderBox), GroupBoxFrame[n], 0, 1, 0);
+			gtk_container_add(GTK_CONTAINER(GroupExpander[n]), GroupBox[n]);
+		}
 	}
 	gtk_widget_set_size_request(NbBox, 300, -1);
 
-	int n = 0;
 	for (n = 0; n < P_LAST; n++) {
 		GtkWidget *Label;
 		GtkTooltips *tooltips = gtk_tooltips_new();
@@ -1941,61 +1853,20 @@ void create_gui () {
 			continue;
 		}
 		gtk_tooltips_set_tip(tooltips, Box, _(PARAMETER[n].help), NULL);
-		if (strcmp(PARAMETER[n].group, "View") == 0) {
-			gtk_box_pack_start(GTK_BOX(ViewBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 0;
-			PARAMETER[n].l2 = ViewNum;
-			ViewNum++;
-		} else if (strcmp(PARAMETER[n].group, "Tool") == 0) {
-			gtk_box_pack_start(GTK_BOX(ToolBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 1;
-			PARAMETER[n].l2 = ToolNum;
-			ToolNum++;
-		} else if (strcmp(PARAMETER[n].group, "Milling") == 0) {
-			gtk_box_pack_start(GTK_BOX(MillingBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 2;
-			PARAMETER[n].l2 = MillingNum;
-			MillingNum++;
-		} else if (strcmp(PARAMETER[n].group, "Holding-Tabs") == 0) {
-			gtk_box_pack_start(GTK_BOX(HoldingBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 3;
-			PARAMETER[n].l2 = HoldingNum;
-			HoldingNum++;
-		} else if (strcmp(PARAMETER[n].group, "Rotary") == 0) {
-			gtk_box_pack_start(GTK_BOX(RotaryBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 3;
-			PARAMETER[n].l2 = RotaryNum;
-			RotaryNum++;
-		} else if (strcmp(PARAMETER[n].group, "Misc") == 0) {
-			gtk_box_pack_start(GTK_BOX(MiscBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 3;
-			PARAMETER[n].l2 = MiscNum;
-			MiscNum++;
-		} else if (strcmp(PARAMETER[n].group, "Tangencial") == 0) {
-			gtk_box_pack_start(GTK_BOX(TangencialBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 3;
-			PARAMETER[n].l2 = TangencialNum;
-			TangencialNum++;
-		} else if (strcmp(PARAMETER[n].group, "Machine") == 0) {
-			gtk_box_pack_start(GTK_BOX(MachineBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 4;
-			PARAMETER[n].l2 = MachineNum;
-			MachineNum++;
-		} else if (strcmp(PARAMETER[n].group, "Material") == 0) {
-			gtk_box_pack_start(GTK_BOX(MaterialBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 5;
-			PARAMETER[n].l2 = MaterialNum;
-			MaterialNum++;
-		} else if (strcmp(PARAMETER[n].group, "Objects") == 0) {
-			gtk_box_pack_start(GTK_BOX(ObjectsBox), Box, 0, 0, 0);
-			PARAMETER[n].l1 = 6;
-			PARAMETER[n].l2 = ObjectsNum;
-			ObjectsNum++;
+
+		int gn = 0;
+		for (gn = 0; gn < G_LAST; gn++) {
+			if (strcmp(PARAMETER[n].group, GROUPS[gn].name) == 0) {
+				gtk_box_pack_start(GTK_BOX(GroupBox[gn]), Box, 0, 0, 0);
+				PARAMETER[n].l1 = 0;
+				PARAMETER[n].l2 = GroupNum[gn];
+				GroupNum[gn]++;
+			}
 		}
 	}
 
 	OutputInfoLabel = gtk_label_new("-- OutputInfo --");
-	gtk_box_pack_start(GTK_BOX(MachineBox), OutputInfoLabel, 0, 0, 0);
+	gtk_box_pack_start(GTK_BOX(GroupBox[G_MACHINE]), OutputInfoLabel, 0, 0, 0);
 
 //	LayerLoadList();
 	loading = 0;

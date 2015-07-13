@@ -1,5 +1,10 @@
 
-typedef struct{
+typedef struct {
+	char name[256];
+	char help[512];
+} PARA_GROUP;
+
+typedef struct {
 	char name[256];
 	char group[256];
 	char arg[128];
@@ -28,6 +33,20 @@ enum {
 	T_STRING,
 	T_SELECT,
 	T_FILE
+};
+
+enum {
+	G_VIEW,
+	G_TOOL,
+	G_MILLING,
+	G_TABS,
+	G_ROTARY,
+	G_TANGENCIAL,
+	G_MACHINE,
+	G_MATERIAL,
+	G_OBJECTS,
+	G_MISC,
+	G_LAST
 };
 
 enum {
@@ -125,6 +144,7 @@ enum {
 };
 
 extern PARA PARAMETER[];
+extern PARA_GROUP GROUPS[];
 
 void SetupShow (void);
 void SetupShowGcode (FILE *out);

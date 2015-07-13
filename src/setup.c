@@ -30,18 +30,22 @@
 #define N_(String) gettext_noop(String)
 
 extern GtkWidget *hbox;
-extern GtkWidget *ViewExpander;
-extern GtkWidget *ToolExpander;
-extern GtkWidget *MillingExpander;
-extern GtkWidget *TabsExpander;
-extern GtkWidget *RotaryExpander;
-extern GtkWidget *TangencialExpander;
-extern GtkWidget *MachineExpander;
-extern GtkWidget *MaterialExpander;
-extern GtkWidget *ObjectsExpander;
-extern GtkWidget *MiscExpander;
+extern GtkWidget *GroupExpander[G_LAST];
 extern int PannedStat;
 extern int ExpanderStat[20];
+
+PARA_GROUP GROUPS[] = {
+	{"View", ""},
+	{"Tool", ""},
+	{"Milling", ""},
+	{"Holding-Tabs", ""},
+	{"Rotary", ""},
+	{"Tangencial", ""},
+	{"Machine", ""},
+	{"Material", ""},
+	{"Objects", ""},
+	{"Misc", ""},
+};
 
 PARA PARAMETER[] = {
 	{"Zoom",	"View",		"-zo",	T_FLOAT,	0,	1.0,	0.0,	"",	0.1,	0.1,	20.0,		"x", 1, 0, "view-zoom", 0, 0, 0},
@@ -254,6 +258,12 @@ void SetupSave (void) {
 	}
 	if (PARAMETER[P_O_PARAVIEW].vint == 0) {
 		fprintf(cfg_fp, "GUI|PANED|Position=%i\n", gtk_paned_get_position(GTK_PANED(hbox)));
+
+		int gn = 0;
+		for (gn = 0; gn < G_LAST; gn++) {
+			fprintf(cfg_fp, "GUI|EXPANDER|%s=%i\n", GROUPS[gn].name, gtk_expander_get_expanded(GTK_EXPANDER(GroupExpander[gn])));
+		}
+/*
 		fprintf(cfg_fp, "GUI|EXPANDER|View=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(ViewExpander)));
 		fprintf(cfg_fp, "GUI|EXPANDER|Tool=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(ToolExpander)));
 		fprintf(cfg_fp, "GUI|EXPANDER|Milling=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MillingExpander)));
@@ -264,6 +274,7 @@ void SetupSave (void) {
 		fprintf(cfg_fp, "GUI|EXPANDER|Material=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MaterialExpander)));
 		fprintf(cfg_fp, "GUI|EXPANDER|Objects=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(ObjectsExpander)));
 		fprintf(cfg_fp, "GUI|EXPANDER|Misc=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MiscExpander)));
+*/
 	}
 	fclose(cfg_fp);
 }
@@ -324,26 +335,11 @@ void SetupLoad (void) {
 			if (strncmp(line2, "GUI|PANED|Position", 18) == 0) {
 				PannedStat = atoi(strstr(line2, "=") + 1);
 			} else if (strncmp(line2, "GUI|EXPANDER|", 13) == 0) {
-				if (strncmp(line2 + 13, "View", 4) == 0) {
-					ExpanderStat[0] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Tool", 4) == 0) {
-					ExpanderStat[1] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Milling", 7) == 0) {
-					ExpanderStat[2] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Tabs", 4) == 0) {
-					ExpanderStat[3] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Rotary", 6) == 0) {
-					ExpanderStat[4] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Tangencial", 10) == 0) {
-					ExpanderStat[5] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Machine", 7) == 0) {
-					ExpanderStat[6] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Material", 8) == 0) {
-					ExpanderStat[7] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Objects", 7) == 0) {
-					ExpanderStat[8] = atoi(strstr(line2, "=") + 1);
-				} else if (strncmp(line2 + 13, "Misc", 4) == 0) {
-					ExpanderStat[9] = atoi(strstr(line2, "=") + 1);
+				int gn = 0;
+				for (gn = 0; gn < G_LAST; gn++) {
+					if (strncmp(line2 + 13, GROUPS[gn].name, strlen(GROUPS[gn].name)) == 0) {
+						ExpanderStat[gn] = atoi(strstr(line2, "=") + 1);
+					}
 				}
 			} else {
 				for (n = 0; n < P_LAST; n++) {
