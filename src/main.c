@@ -155,7 +155,7 @@ GtkWidget *hbox;
 GtkWidget *GroupExpander[G_LAST];
 
 int PannedStat;
-int ExpanderStat[20];
+int ExpanderStat[G_LAST];
 
 int width = 800;
 int height = 600;

@@ -32,7 +32,7 @@
 extern GtkWidget *hbox;
 extern GtkWidget *GroupExpander[G_LAST];
 extern int PannedStat;
-extern int ExpanderStat[20];
+extern int ExpanderStat[G_LAST];
 
 PARA_GROUP GROUPS[] = {
 	{"View", ""},
