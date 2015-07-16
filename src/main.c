@@ -1727,23 +1727,27 @@ void create_gui () {
 	GtkToolItem *ToolItemSep1 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep1, -1); 
 
+	char *iconpath = NULL;
 	GtkToolItem *TB_Rotate;
-	GtkIconInfo *icon_Rotate = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-rotate-right", 24, 0);
-	TB_Rotate = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_Rotate)), "Rotate");
+	iconpath = path_real("../share/cammill/icons/object-rotate-right.png");
+	TB_Rotate = gtk_tool_button_new(gtk_image_new_from_file(iconpath), "Rotate");
+	free(iconpath);
 	gtk_tool_item_set_tooltip_text(TB_Rotate, "Rotate 90°");
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_Rotate, -1);
 	g_signal_connect(G_OBJECT(TB_Rotate), "clicked", GTK_SIGNAL_FUNC(handler_rotate_drawing), NULL);
 
 	GtkToolItem *TB_FlipX;
-	GtkIconInfo *icon_FlipX = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-flip-horizontal", 24, 0);
-	TB_FlipX = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_FlipX)), "FlipX");
+	iconpath = path_real("../share/cammill/icons/object-flip-horizontal.png");
+	TB_FlipX = gtk_tool_button_new(gtk_image_new_from_file(iconpath), "FlipX");
+	free(iconpath);
 	gtk_tool_item_set_tooltip_text(TB_FlipX, "Flip X");
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipX, -1);
 	g_signal_connect(G_OBJECT(TB_FlipX), "clicked", GTK_SIGNAL_FUNC(handler_flip_x_drawing), NULL);
 
 	GtkToolItem *TB_FlipY;
-	GtkIconInfo *icon_FlipY = gtk_icon_theme_lookup_icon(gtk_icon_theme_get_default(), "object-flip-vertical", 24, 0);
-	TB_FlipY = gtk_tool_button_new(gtk_image_new_from_file(gtk_icon_info_get_filename(icon_FlipY)), "FlipY");
+	iconpath = path_real("../share/cammill/icons/object-flip-vertical.png");
+	TB_FlipY = gtk_tool_button_new(gtk_image_new_from_file(iconpath), "FlipY");
+	free(iconpath);
 	gtk_tool_item_set_tooltip_text(TB_FlipY, "Flip Y");
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipY, -1);
 	g_signal_connect(G_OBJECT(TB_FlipY), "clicked", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);

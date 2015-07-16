@@ -1,4 +1,3 @@
-#include "os-hacks.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +11,11 @@
 #include <mach-o/dyld.h>
 #endif
 
+#ifdef __linux__
+#include <linux/limits.h> // for PATH_MAX
+#else
+#include <limits.h>
+#endif
 
 #ifdef __MINGW32__
 #include <windows.h>
@@ -19,6 +23,8 @@
 #else
 #include <pwd.h>
 #endif
+
+#include "os-hacks.h"
 
 int get_home_dir(char* buffer) {
 #ifndef __MINGW32__
@@ -123,3 +129,14 @@ ssize_t getdelim(char **linep, size_t *n, int delim, FILE *fp){
 ssize_t getline(char **linep, size_t *n, FILE *fp) {
         return getdelim(linep, n, '\n', fp);
 }
+
+char *path_real (char *file) {
+	char *realpath = malloc(PATH_MAX + strlen(file) + 2);
+	if (program_path[0] == 0) {
+		snprintf(realpath, PATH_MAX, "%s", file);
+	} else {
+		snprintf(realpath, PATH_MAX, "%s%s%s", program_path, DIR_SEP, file);
+	}
+	return realpath;
+}
+
