@@ -2238,7 +2238,9 @@ int main (int argc, char *argv[]) {
 		load_files();
 	} else {
 		gtk_init(&argc, &argv);
-		gtk_gl_init(&argc, &argv);
+		if (gtk_gl_init_check(&argc, &argv) == FALSE) {
+			fprintf(stderr, "init OpenGL failed\n");
+		}
 		create_gui();
 		load_files();
 		gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
