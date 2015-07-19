@@ -22,10 +22,10 @@ LIBS             ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -
 INSTALL_PATH     ?= /usr
 
 docker-build:
-	cd docker ; docker build -t cammill .
+	docker build -t cammill .
 
 docker-run:
-	cd docker ; docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
+	docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
 
 gprof:
 	gcc -pg -o ${BINARY} ${OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
