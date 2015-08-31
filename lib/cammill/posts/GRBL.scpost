@@ -1,5 +1,5 @@
 post.ForceExtension("ngc")
-nformta = "0.0###"
+nformat = "0.0###"
 
 function OnAbout(event)
 	ctrl = event:GetTextCtrl()
