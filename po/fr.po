@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: cammill\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-06-29 17:06+0200\n"
-"PO-Revision-Date: 2015-05-31 18:10+0100\n"
+"PO-Revision-Date: 2015-09-23 18:32+0100\n"
 "Last-Translator: Alexandre GALODE <deusyss@yahoo.fr>\n"
 "Language-Team: Alexandre GALODE <deusyss@yahoo.fr>\n"
 "Language: Francais\n"
@@ -22,8 +22,12 @@ msgstr ""
 
 #: src/main.c:551
 #, c-format
-msgid "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"
+msgid ""
+"Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>"
+"%0.1fmin"
 msgstr ""
+"Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>"
+"%0.1fmin"
 
 #: src/main.c:851
 msgid "Load Drawing"
@@ -35,7 +39,7 @@ msgstr "Dessins DXF"
 
 #: src/main.c:868
 msgid "3D-Objects"
-msgstr ""
+msgstr "Objets 3D"
 
 #: src/main.c:992 src/main.c:1528
 msgid "Save Output As.."
@@ -55,23 +59,23 @@ msgstr "A propos de..."
 
 #: src/main.c:1451
 msgid "_File"
-msgstr ""
+msgstr "Fichier (_F)"
 
 #: src/main.c:1458
 msgid "_Load DXF"
-msgstr ""
+msgstr "Charger DXF (_L)"
 
 #: src/main.c:1464
 msgid "_Reload DXF"
-msgstr ""
+msgstr "Recharger DXF (_R)"
 
 #: src/main.c:1470
 msgid "_Save Output As.."
-msgstr ""
+msgstr "Sauvegarder la sortie sous (_S)"
 
 #: src/main.c:1476
 msgid "_Save Output"
-msgstr ""
+msgstr "Sauvegarder la sortie (_S)"
 
 #: src/main.c:1486 src/main.c:1546
 msgid "Load Preset"
@@ -87,7 +91,7 @@ msgstr "Sauvegarder la configuration"
 
 #: src/main.c:1505
 msgid "_Help"
-msgstr ""
+msgstr "Aide (_H)"
 
 #: src/main.c:1518
 msgid "Load DXF"
@@ -309,7 +313,9 @@ msgid "Flutes"
 msgstr "Tranchants"
 
 msgid "flutes of the tool, to calculate max toolspeed and feedrate"
-msgstr "Nombres de tranchants de la fraise, pour calculer les vitesses maximales de rotation et d'avance"
+msgstr ""
+"Nombres de tranchants de la fraise, pour calculer les vitesses maximales de "
+"rotation et d'avance"
 
 msgid "Table"
 msgstr "Table d'outils"
@@ -447,7 +453,8 @@ msgid "gcode-output filename"
 msgstr "Nom du fichier GCODE de sortie"
 
 msgid "material selection to calculate feedrate and spindlespeed"
-msgstr "Selection du materiau, sert Ã  calculer les vitesses d'avance et de rotation"
+msgstr ""
+"Selection du materiau, sert Ã  calculer les vitesses d'avance et de rotation"
 
 msgid "Cutting Speed"
 msgstr "Vitesse de coupe"
@@ -467,8 +474,12 @@ msgstr "Texture"
 msgid "Post-Command"
 msgstr "Post commande"
 
-msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
-msgstr "Post-commande pour lancer un script apres avoir sauvegarder le GCODE (Peut être utilise pour televerser le code a la CNC)"
+msgid ""
+"postcommand to trigger an script after saving the gcode (you can use this to "
+"copy the gcode to your cnc-machine)"
+msgstr ""
+"Post-commande pour lancer un script apres avoir sauvegarder le GCODE (Peut "
+"être utilise pour televerser le code a la CNC)"
 
 msgid "object selection"
 msgstr "Choix d'un objet"
@@ -497,7 +508,9 @@ msgstr "Utilisation d'une table rainuree"
 msgid "Order"
 msgstr "Priorite"
 
-msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgid ""
+"milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -"
+"> 5 = mill last)"
 msgstr "Priorite d'usinage"
 
 msgid "Activate"
