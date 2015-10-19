@@ -135,6 +135,7 @@ PARA PARAMETER[] = {
 	{"LoadPath","Misc",	"-milp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0},
 	{"SavePath","Misc",	"-misp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0},
 	{"PresetPath","Misc",	"-mipp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0},
+	{"Delete Double Lines","Misc",	"-deld",		T_BOOL	,	1,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "delete double lines on different layers", 0, 0, 0},
 #ifdef USE_VNC
 	{"VNC-Server",	"Misc",		"-vs",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "VNC-Server address", 0, 0, 0},
 	{"VNC-Port",	"Misc",		"-vp",	T_INT,		5900,	0.0,	0.0,	"",	0.0,	1.0,	35000.0,	"", 0, 0, "VNC-Server port", 0, 0, 0},

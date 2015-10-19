@@ -75,6 +75,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 		return;
 	}
 	if (line_n < MAX_LINES) {
+		// add layer name if not exist
 		int num = 0;
 		for (num = 0; num < line_last; num++) {
 			if (strcmp(LayerNames[num], layer) == 0) {
@@ -84,6 +85,29 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 				break;
 			}
 		}
+		// check if line allready exist
+		for (num = 0; num < line_last; num++) {
+			if (myLINES[num].cx == cx && myLINES[num].cy == cy && myLINES[num].opt == opt) {
+				if (myLINES[num].x1 == x1 && myLINES[num].y1 == y1 && myLINES[num].x2 == x2 && myLINES[num].y2 == y2) {
+					printf("## DOUBLE_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
+					if (PARAMETER[P_M_DELETE_DOUBLE].vint == 1 || strcmp(myLINES[num].layer, layer) == 0) {
+						fprintf(stderr, "## DROPED\n");
+						return;
+					} else {
+						fprintf(stderr, "## OTHER LAYER, WARNING ONLY\n");
+					}
+				} else if (myLINES[num].x1 == x2 && myLINES[num].y1 == y2 && myLINES[num].x2 == x1 && myLINES[num].y2 == y1) {
+					printf("## DOUBLE_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
+					if (PARAMETER[P_M_DELETE_DOUBLE].vint == 1 || strcmp(myLINES[num].layer, layer) == 0) {
+						fprintf(stderr, "## DROPED\n");
+						return;
+					} else {
+						fprintf(stderr, "## OTHER LAYER, WARNING ONLY\n");
+					}
+				}
+			}
+		}
+
 		if (myLINES == NULL) {
 			myLINES = (_LINE *)malloc(sizeof(_LINE) * 5);
 			if (myLINES == NULL) {
@@ -99,8 +123,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 			} else {
 				myLINES = myLINES_new;
 			}
-		
-		}
+				}
 		if (strcmp(layer, "holding-tabs") == 0) {
 			myLINES[line_n].istab = 1;
 			myLINES[line_n].used = 0;
