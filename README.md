@@ -18,6 +18,7 @@ Some key features include:
 * Setup-Presets
 * Lua scriptable Post-Processor compatible with [SheetCam](http://www.sheetcam.com/)
 * OpenGL GUI and batch-mode
+* Multilingual (en, de, fr, ...)
 * Its Free!
 
 Missing features: see [#6](https://github.com/cammill/cammill/issues/6). Please help [translate](https://crowdin.com/project/cammill) to your language.
