@@ -22,10 +22,10 @@ install:
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc-mpc; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-mingw-w64; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gcc; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtk2; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.shared-gtk2; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-lua; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtkglext; fi
-- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-gtksourceview; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.shared-gtkglext; fi
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.shared-gtksourceview; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo apt-get -qq --force-yes -y install mxe-i686-w64-mingw32.static-freeglut; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then sudo su - -c "( cd /usr/share/nsis ; wget -O UltraModernUI_1.00_2010-11-11.zip http://freefr.dl.sourceforge.net/project/ultramodernui/UltraModernUI/UltraModernUI%201.00b2-dev/UltraModernUI_1.00_2010-11-11.zip ; unzip -x UltraModernUI_1.00_2010-11-11.zip )"; fi
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/usr/local/lib:/opt/X11/lib/pkgconfig;
