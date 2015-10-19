@@ -24,9 +24,14 @@ COMP             ?= gcc
 INSTALL_PATH     ?= /usr
 RPMBASEDIR       ?= ~/rpmbuild
 
+docker-build:
+	docker build -t cammill docker/${TARGET}
+
+docker-run:
+	docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
 
 depends:
-	yum install gtkglext-devel lua-devel freeglut-devel make gcc gtk2-devel rpm-build git
+	yum install gtkglext-devel lua-devel freeglut-devel make gcc gtk2-devel rpm-build
 	rpm --import http://winswitch.org/gpg.asc
 	cd /etc/yum.repos.d/
 	curl -O https://winswitch.org/downloads/CentOS/winswitch.repo

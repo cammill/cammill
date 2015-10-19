@@ -24,6 +24,11 @@ LIBS             ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lXext -lxcb -lXau -lg
 INSTALL_PATH     ?= /usr
 RPMBASEDIR       ?= ~/rpmbuild
 
+docker-build:
+	docker build -t cammill docker/${TARGET}
+
+docker-run:
+	docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
 
 depends:
 	yum install gtkglext-devel gtksourceview2-devel lua-devel freeglut-devel make clang gcc gtk+-devel rpm-build git

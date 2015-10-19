@@ -23,6 +23,11 @@ PKGS             ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 INSTALL_PATH     ?= /usr
 VERSION          ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test-*|t|g" | cut -d"-" -f1 | sed "s|[a-zA-Z].*||g")
 
+docker-build:
+	docker build -t cammill docker/${TARGET}
+
+docker-run:
+	docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
 
 depends:
 	pacman -Syy

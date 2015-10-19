@@ -253,3 +253,5 @@ pull:
 	test -e ${PROGRAM}.github.io && (cd ${PROGRAM}.github.io/ ; git pull --rebase) || true
 	test -e ${PROGRAM}.wiki/ && (cd ${PROGRAM}.wiki/ ; git pull --rebase) || true
 
+docker: docker-build docker-run
+

@@ -1,10 +1,11 @@
 FROM ubuntu:14.04
 
-RUN apt-get update && apt-get install -y clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev help2man lintian git
+RUN apt-get update && apt-get install -y make git lsb-release
 
 RUN cd /usr/src/ && \
     git clone https://github.com/cammill/cammill.git && \
     cd cammill && \
+    make depends && \
     make clean all && \
     make install
 

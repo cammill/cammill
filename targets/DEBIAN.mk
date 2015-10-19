@@ -22,7 +22,7 @@ LIBS             ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -
 INSTALL_PATH     ?= /usr
 
 docker-build:
-	docker build -t cammill .
+	docker build -t cammill docker/${TARGET}
 
 docker-run:
 	docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
@@ -33,7 +33,7 @@ gprof:
 	@echo "gprof ${BINARY} gmon.out"
 
 depends:
-	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev lintian
+	apt-get install clang libgtkglext1-dev libgtksourceview2.0-dev liblua5.1-0-dev freeglut3-dev libglu1-mesa-dev libgtk2.0-dev libgvnc-1.0-dev libg3d-dev help2man lintian
 
 changelog_debian:
 	@echo "generate debian changelog"

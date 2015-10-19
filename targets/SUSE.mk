@@ -23,6 +23,11 @@ LIBS             ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lxcb 
 INSTALL_PATH     ?= /usr
 RPMBASEDIR       ?= /usr/src/packages
 
+docker-build:
+	docker build -t cammill docker/${TARGET}
+
+docker-run:
+	docker run -ti --rm -e DISPLAY=$$DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v /dev/dri:/dev/dri -v /dev/video0:/dev/video0 -v $$HOME/.Xauthority:/home/cammill/.Xauthority --net=host cammill
 
 depends:
 	zypper install libgtk-2_0-0 libgtkglext-x11-1_0-0 libgtksourceview-2_0-0 git freeglut-devel lua51-devel make clang gtk2-devel gtkglext-devel gtksourceview2-devel gcc rpm-build
