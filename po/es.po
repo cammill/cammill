@@ -1,0 +1,531 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2015-11-03 17:03-0500\n"
+"Last-Translator: koppi <jakob.flierl@gmail.com>\n"
+"Language-Team: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: es-ES\n"
+"X-Crowdin-File: cammill.po\n"
+"Language: es_ES\n"
+
+msgid "View"
+msgstr "Ver"
+
+msgid "Tool"
+msgstr "Herramienta"
+
+msgid "Milling"
+msgstr "Fresado"
+
+msgid "Tabs"
+msgstr "Pestañas"
+
+msgid "Rotary"
+msgstr "Girar"
+
+msgid "Tangencial"
+msgstr "Tangencial"
+
+msgid "Machine"
+msgstr "Máquina"
+
+msgid "Material"
+msgstr "Material"
+
+msgid "Objects"
+msgstr "Objetos"
+
+msgid "Misc"
+msgstr "Otros"
+
+msgid "Zoom"
+msgstr "Zoom"
+
+msgid "view-zoom"
+msgstr "vista zoom"
+
+msgid "Helplines"
+msgstr "Líneas de ayuda"
+
+msgid "show helplines"
+msgstr "Mostrar líneas de ayuda"
+
+msgid "ShowGrid"
+msgstr "Mostrar Grilla"
+
+msgid "show grid"
+msgstr "Mostrar grilla"
+
+msgid "ShowTool"
+msgstr "Mostrar Herramienta"
+
+msgid "show tool-diameter"
+msgstr "Mostrar diámetro de herramienta"
+
+msgid "Textures"
+msgstr "Texturas"
+
+msgid "show textures"
+msgstr "Mostrar Texturas"
+
+msgid "Rotate-X"
+msgstr "Girar-X"
+
+msgid "View-Rotate X"
+msgstr "Girar vista X"
+
+msgid "Rotate-Y"
+msgstr "Girar-Y"
+
+msgid "View-Rotate Y"
+msgstr "Girar vista Y"
+
+msgid "Rotate-Z"
+msgstr "Girar-Z"
+
+msgid "View-Rotate Z"
+msgstr "Girar vista Z"
+
+msgid "Translate-X"
+msgstr "Mover-X"
+
+msgid "View-Translate X"
+msgstr "Mover vista X"
+
+msgid "Translate-Y"
+msgstr "Mover-Y"
+
+msgid "View-Translate Y"
+msgstr "Mover vista Y"
+
+msgid "Grid-Size"
+msgstr "Tamaño de grilla"
+
+msgid "size of the grid"
+msgstr "Tamaño de grilla"
+
+msgid "Arrow-Scale"
+msgstr "Escala de flecha"
+
+msgid "size of arrows"
+msgstr "tamaño de las flechas"
+
+msgid "DXF-File"
+msgstr "Fichero DXF"
+
+msgid "dxf-filename"
+msgstr "nombre de archivo DXF"
+
+msgid "Select"
+msgstr "Seleccionar"
+
+msgid "selected tool from tooltable"
+msgstr "Herramienta seleccionada"
+
+msgid "Number"
+msgstr "Numero"
+
+msgid "tool-number"
+msgstr "número de herramienta"
+
+msgid "Diameter"
+msgstr "Diámetro"
+
+msgid "tool-diameter"
+msgstr "diámetro de la herramienta"
+
+msgid "CalcSpeed"
+msgstr "Velocidad de cálculo"
+
+msgid "calculated spindle-speed"
+msgstr "velocidad de husillo calculada"
+
+msgid "Speed"
+msgstr "Velocidad"
+
+msgid "real spindle-speed"
+msgstr "velocidad real del husillo"
+
+msgid "Flutes"
+msgstr "Flutes"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "Flutes de la herramienta, para calcular el maximo de velocidad y avance"
+
+msgid "Table"
+msgstr "Tabla"
+
+msgid "the tooltable filename"
+msgstr "nombre de archivo de tabla de herramientas"
+
+msgid "MaxFeedRate"
+msgstr "Velocidad de avance máxima"
+
+msgid "calculated maximum feedrate"
+msgstr "velocidad de avance máxima calculada"
+
+msgid "FeedRate"
+msgstr "Velocidad de avance"
+
+msgid "real feedrate"
+msgstr "velocidad de avance real"
+
+msgid "PlungeRate"
+msgstr "Velocidad de entrada vertical"
+
+msgid "plunge feedrate"
+msgstr "velocidad de corte vertical"
+
+msgid "Depth"
+msgstr "Profundidad"
+
+msgid "end depth"
+msgstr "profundidad final"
+
+msgid "Z-Step"
+msgstr "Z-Paso"
+
+msgid "depth per step"
+msgstr "profundidad por paso"
+
+msgid "Save-Move"
+msgstr "Guardar-Mover"
+
+msgid "save move z-position"
+msgstr "guardar movimiento Z-posición"
+
+msgid "use this object"
+msgstr "use este objeto"
+
+msgid "override global parameters for this object"
+msgstr "reemplazar los parámetros globales de este objeto"
+
+msgid "Overcut"
+msgstr "Corte final"
+
+msgid "overcutting edges"
+msgstr "finalizando corte de bordes"
+
+msgid "Lasermode"
+msgstr "Modo laser"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "modo laser, profundidad= 0.0, encender/apagar por objeto"
+
+msgid "Climb"
+msgstr "Subir"
+
+msgid "Climb Milling"
+msgstr "Subir mecanizado"
+
+msgid "reverse milling direction / climb milling"
+msgstr "invertir dirección de fresado / subir fresado"
+
+msgid "NoOffsets"
+msgstr "Sin compensación"
+
+msgid "without tool-offsets"
+msgstr "sin compensaciones de herramienta"
+
+msgid "Mill Text"
+msgstr "Texto mecanizado"
+
+msgid "mill mtext from dxf-files"
+msgstr "texto mecanizado desde archivo dxf"
+
+msgid "NC-Debug"
+msgstr "NC-Debug"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "objetos de salida sin compensación / para depuración"
+
+msgid "Use Taps"
+msgstr "Use Taps"
+
+msgid "using holding-tabs"
+msgstr "usando pestañas sostenidas"
+
+msgid "Show Grid"
+msgstr "Mostrar cuadrícula"
+
+msgid "show tab-grid"
+msgstr "mostrar cuadrícula de la pestaña"
+
+msgid "depth of the holding-tabs"
+msgstr "profundidad de la pestaña sostenida"
+
+msgid "Lenght"
+msgstr "Longitud"
+
+msgid "lenght of the holding-tabs"
+msgstr "longitud de las holding-tabs"
+
+msgid "Triangle-Type"
+msgstr "Tipo de triángulo"
+
+msgid "type of the holding-tabs"
+msgstr "tipo de pestaña sostenida"
+
+msgid "X-Grid"
+msgstr "X-Cuadrícula"
+
+msgid "X-grid of the holding-tabs"
+msgstr "X-cuadrícula de la pestaña sostenida"
+
+msgid "Y-Grid"
+msgstr "Y-Cuadrícula"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Y-cuadrícula de la pestaña sostenida"
+
+msgid "Fastmove-Speed"
+msgstr "Alta velocidad"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "alta velocidad de la máquina, para calcular el tiempo de mecanizado"
+
+msgid "Post"
+msgstr "Post"
+
+msgid "post-processor selection"
+msgstr "selección del postprocesador"
+
+msgid "Output-File"
+msgstr "Archivo de salida"
+
+msgid "gcode-output filename"
+msgstr "nombre de archivo de salida - gcode"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "selección de materiales para calcular la velocidad de avance y rpm del husillo"
+
+msgid "Cutting Speed"
+msgstr "Velocidad de corte"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "Avance/diente@<4mm"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "Avance/diente@<8mm"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "Avance/diente @ < 12mm"
+
+msgid "Texture"
+msgstr "Textura"
+
+msgid "Post-Command"
+msgstr "Post-comando"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "postcommand para activar una secuencia de comandos después de guardar el gcode (usted puede utilizar para copiar la gcode a su máquina cnc)"
+
+msgid "object selection"
+msgstr "selección de objetos"
+
+msgid "Use"
+msgstr "Uso"
+
+msgid "Overwrite"
+msgstr "Sobrescribir"
+
+msgid "Offset"
+msgstr "Desfase"
+
+msgid "Pocket"
+msgstr "Pequeño"
+
+msgid "Pocket cutting"
+msgstr "Pequeño corte"
+
+msgid "Laser"
+msgstr "Láser"
+
+msgid "Laser cutting"
+msgstr "Corte por láser"
+
+msgid "Holding-Tab's"
+msgstr "Pestañas sostenidas"
+
+msgid "use holding tabs"
+msgstr "usar pestañas sostenidas"
+
+msgid "Order"
+msgstr "Ordenar"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "orden de fresado (Auto= primero internos y luego externos, -1 -> -5 = fresado primero, 1 -> 5 = fresado al final)"
+
+msgid "Activate"
+msgstr "Activar"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "modo de rotación a proyecto 2D sobre ejes"
+
+msgid "Axis"
+msgstr "Eje"
+
+msgid "axis that used as rotating axis"
+msgstr "eje que utiliza como eje de rotación"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "diámetro del material para el modo de rotación"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "filo tangencial de corte, profundidad=0.0"
+
+msgid "axis that used as tangencial axis"
+msgstr "eje que será utilizado como eje tangencial"
+
+msgid "MaxAngle"
+msgstr "Angulo máximo"
+
+msgid "maximum angle before push up the knife"
+msgstr "ángulo máximo antes de comenzar el mecanizado"
+
+msgid "Tolerance"
+msgstr "Tolerancia"
+
+msgid "Tollerance between points to close objects"
+msgstr "Tolerancia entre puntos para cerrar objetos"
+
+msgid "Parameter"
+msgstr "Parámetro"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Fichas o expansor para parámetro"
+
+msgid "VNC-Server"
+msgstr "Servidor VNC"
+
+msgid "VNC-Server address"
+msgstr "Dirección del servidor VNC"
+
+msgid "VNC-Port"
+msgstr "Puerto del VNC"
+
+msgid "VNC-Server port"
+msgstr "Puerto del servidor VNC"
+
+msgid "On/Off"
+msgstr "On/Off"
+
+msgid "3D-View"
+msgstr "Vista 3D"
+
+msgid "Output"
+msgstr "Salida"
+
+msgid "PostProcessor"
+msgstr "Postprocesador"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Documentación"
+
+msgid "-5 First"
+msgstr "-5 Primero"
+
+msgid "0 Auto"
+msgstr "0 Automático"
+
+msgid "5 Last"
+msgstr "5 Ultima"
+
+msgid "None"
+msgstr "Ninguno"
+
+msgid "Inside"
+msgstr "Interior"
+
+msgid "Outside"
+msgstr "Exterior"
+
+msgid "Expander"
+msgstr "Expansor"
+
+msgid "Notebook-Tabs"
+msgstr "Notebook-Fichas"
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "About"
+msgstr "Acerca de"
+
+msgid "File"
+msgstr "Archivo"
+
+msgid "Load DXF"
+msgstr "Cargar DXF"
+
+msgid "Reload DXF"
+msgstr "Recargar DXF"
+
+msgid "Load Preset"
+msgstr "Cargar preestablecido"
+
+msgid "Save Preset"
+msgstr "Guardar Preselección"
+
+msgid "Save Output"
+msgstr "Guardar salida"
+
+msgid "Save Output As.."
+msgstr "Guardar como..."
+
+msgid "Load Tooltable"
+msgstr "Cargar tabla de herramientas"
+
+msgid "Save Setup"
+msgstr "Guardar configuración"
+
+msgid "Quit"
+msgstr "Salir"
+
+msgid "Preset"
+msgstr "Predefinido"
+
+msgid "Tooltable"
+msgstr "Tabla de herramientas"
+
+msgid "Load Drawing"
+msgstr "Cargar dibujos"
+
+msgid "DXF-Drawings"
+msgstr "DXF-Dibujos"
+
+msgid "DWG-Drawings"
+msgstr "DWG-Dibujos"
+
+msgid "SVG-Drawings"
+msgstr "SVG-Dibujos"
+
+msgid "On Open"
+msgstr "Abierto"
+
+msgid "holding-tabs on open contours"
+msgstr "pestañas sostenidas sobre contornos abiertos"
+
+msgid "On Inside"
+msgstr "Por dentro"
+
+msgid "holding-tabs on inside-contours"
+msgstr "pestañas sostenidas sobre contornos interiores"
+
+msgid "On Outside"
+msgstr "Por fuera"
+
+msgid "holding-tabs on outside-contours"
+msgstr "pestañas sostenidas sobre contornos externos"
+
