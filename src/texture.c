@@ -21,10 +21,10 @@ typedef struct Image Image;
 
 int ImageLoad(char *filename, Image *image) {
 	FILE *file;
-	unsigned long size; // size of the image in bytes.
-	unsigned long i; // standard counter.
-	unsigned short int plane; // number of planes in image
-	unsigned short int bpp; // number of bits per pixel
+	int size; // size of the image in bytes.
+	int i; // standard counter.
+	int plane; // number of planes in image
+	int bpp; // number of bits per pixel
 	char temp; // temporary color storage for
 	if ((file = fopen(filename, "rb")) == NULL) {
 		printf("File Not Found : %s\n",filename);
@@ -63,7 +63,7 @@ int ImageLoad(char *filename, Image *image) {
 		return 0;
 	}
 	fseek(file, 24, SEEK_CUR);
-	image->data = (char *) malloc(size);
+	image->data = (char *)malloc(size);
 	if (image->data == NULL) {
 		printf("Error allocating memory for color-corrected image data");
 		fclose(file);

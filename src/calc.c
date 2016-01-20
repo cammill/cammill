@@ -2817,8 +2817,9 @@ void MaterialLoadList (const char* path) {
 				Material[MaterialMax].fz[0] = atof(csv_getfield(line, 2, val_str));
 				Material[MaterialMax].fz[1] = atof(csv_getfield(line, 3, val_str));
 				Material[MaterialMax].fz[2] = atof(csv_getfield(line, 4, val_str));
-				Material[MaterialMax].texture = malloc(strlen(csv_getfield(line, 5, val_str)) + 1);
-				strcpy(Material[MaterialMax].texture, csv_getfield(line, 5, val_str));
+				Material[MaterialMax].texture = malloc(strlen(csv_getfield(line, 5, val_str)) + 20);
+//				strcpy(Material[MaterialMax].texture, csv_getfield(line, 5, val_str));
+				sprintf(Material[MaterialMax].texture, "../share/cammill/%s", csv_getfield(line, 5, val_str));
 				MaterialMax++;
 			}
 		}
@@ -2833,7 +2834,7 @@ void MaterialLoadList (const char* path) {
 		Material[MaterialMax].fz[1] = 0.05;
 		Material[MaterialMax].fz[2] = 0.10;
 		Material[MaterialMax].texture = malloc(129);
-		strcpy(Material[MaterialMax].texture, "textures/metal.bmp");
+		strcpy(Material[MaterialMax].texture, "../share/cammill/textures/metal.bmp");
 		MaterialMax++;
 	}
 	if (PARAMETER[P_MAT_SELECT].vint >= MaterialMax) {
