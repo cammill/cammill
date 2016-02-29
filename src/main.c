@@ -124,6 +124,9 @@ char output_info[1024];
 char output_error[1024];
 int loading = 0;
 
+double zero_x = 0.0;
+double zero_y = 0.0;
+
 int last_mouse_x = 0;
 int last_mouse_y = 0;
 int last_mouse_button = -1;
@@ -350,6 +353,15 @@ void draw_helplines (void) {
 		return;
 	}
 
+	/* Zero-Point */
+	glLineWidth(5);
+	glColor4f(0.0, 0.0, 1.0, 1.0);
+	glBegin(GL_LINES);
+	glVertex3f(zero_x + PARAMETER[P_M_ZERO_X].vdouble, zero_y + PARAMETER[P_M_ZERO_Y].vdouble, -100.0);
+	glVertex3f(zero_x + PARAMETER[P_M_ZERO_X].vdouble, zero_y + PARAMETER[P_M_ZERO_Y].vdouble, 100.0);
+	glEnd();
+	glLineWidth(1);
+
 	/* Scale-Arrow's */
 	float lenY = size_y;
 	float lenX = size_x;
@@ -504,6 +516,23 @@ void mainloop (void) {
 	}
 
 	if (update_post == 1) {
+
+		// Zero-Point
+		if (PARAMETER[P_M_ZERO].vint == 1) {
+			// Original
+			zero_x = -min_x;
+			zero_y = -min_y;
+		} else if (PARAMETER[P_M_ZERO].vint == 0) {
+			// Bottom-Left
+			zero_x = 0.0;
+			zero_y = 0.0;
+		} else {
+			// Center
+			zero_x = (max_x - min_x) / 2.0;
+			zero_y = (max_y - min_y) / 2.0;
+		}
+
+
 		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			glDeleteLists(1, 1);
 			glNewList(1, GL_COMPILE);

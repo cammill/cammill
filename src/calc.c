@@ -94,6 +94,9 @@ extern double mill_distance_z;
 extern double move_distance_xy;
 extern double move_distance_z;
 
+extern double zero_x;
+extern double zero_y;
+
 int MaterialMax = 0;
 _MATERIAL Material[100];
 
@@ -670,6 +673,7 @@ void point_rotate (float y, float depth, float *ny, float *nz) {
 }
 
 double _X (double x) {
+	x -= zero_x + PARAMETER[P_M_ZERO_X].vdouble;
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1 && PARAMETER[P_H_ROTARYAXIS].vint == 1) {
 		return x / (PARAMETER[P_MAT_DIAMETER].vdouble * PI) * 360;
 	}
@@ -677,6 +681,7 @@ double _X (double x) {
 }
 
 double _Y (double y) {
+	y -= zero_y + PARAMETER[P_M_ZERO_Y].vdouble;
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1 && PARAMETER[P_H_ROTARYAXIS].vint == 0) {
 		return y / (PARAMETER[P_MAT_DIAMETER].vdouble * PI) * 360;
 	}
@@ -2896,42 +2901,19 @@ void DrawCheckSize (void) {
 
 void DrawSetZero (void) {
 	int num = 0;
-	/* set bottom-left to 0,0 */
-	// Original-Center
-	if (PARAMETER[P_M_ZERO].vint == 1) {
-		return;
-	} else if (PARAMETER[P_M_ZERO].vint == 0) {
-		// Bottom-Left
 #pragma omp parallel
 {
-		for (num = 0; num < line_last; num++) {
-			if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
-				myLINES[num].x1 -= min_x;
-				myLINES[num].y1 -= min_y;
-				myLINES[num].x2 -= min_x;
-				myLINES[num].y2 -= min_y;
-				myLINES[num].cx -= min_x;
-				myLINES[num].cy -= min_y;
-			}
+	for (num = 0; num < line_last; num++) {
+		if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
+			myLINES[num].x1 -= min_x;
+			myLINES[num].y1 -= min_y;
+			myLINES[num].x2 -= min_x;
+			myLINES[num].y2 -= min_y;
+			myLINES[num].cx -= min_x;
+			myLINES[num].cy -= min_y;
 		}
-}
-	} else {
-		// Center
-#pragma omp parallel
-{
-		for (num = 0; num < line_last; num++) {
-			if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
-				myLINES[num].x1 -= min_x + (max_x - min_x) / 2.0;
-				myLINES[num].y1 -= min_y + (max_y - min_y) / 2.0;
-				myLINES[num].x2 -= min_x + (max_x - min_x) / 2.0;
-				myLINES[num].y2 -= min_y + (max_y - min_y) / 2.0;
-				myLINES[num].cx -= min_x + (max_x - min_x) / 2.0;
-				myLINES[num].cy -= min_y + (max_y - min_y) / 2.0;
-			}
-		}
-}
-//max_x
 	}
+}
 }
 
 #define DEFFLEQEPSILON 0.001
