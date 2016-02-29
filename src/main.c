@@ -1905,6 +1905,10 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_O_UNIT], NULL, -1, 0, NULL, 1, "inch", -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_UNIT], NULL, -1, 0, NULL, 1, "mm", -1);
 
+	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "bottom-left", -1);
+	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "original", -1);
+	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "center", -1);
+
 	g_signal_connect(G_OBJECT(ParamButton[P_MFILE]), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_TOOL_TABLE]), "clicked", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
 	g_signal_connect(G_OBJECT(ParamButton[P_V_DXF]), "clicked", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);

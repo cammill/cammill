@@ -2897,19 +2897,41 @@ void DrawCheckSize (void) {
 void DrawSetZero (void) {
 	int num = 0;
 	/* set bottom-left to 0,0 */
+	// Original-Center
+	if (PARAMETER[P_M_ZERO].vint == 1) {
+		return;
+	} else if (PARAMETER[P_M_ZERO].vint == 0) {
+		// Bottom-Left
 #pragma omp parallel
 {
-	for (num = 0; num < line_last; num++) {
-		if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
-			myLINES[num].x1 -= min_x;
-			myLINES[num].y1 -= min_y;
-			myLINES[num].x2 -= min_x;
-			myLINES[num].y2 -= min_y;
-			myLINES[num].cx -= min_x;
-			myLINES[num].cy -= min_y;
+		for (num = 0; num < line_last; num++) {
+			if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
+				myLINES[num].x1 -= min_x;
+				myLINES[num].y1 -= min_y;
+				myLINES[num].x2 -= min_x;
+				myLINES[num].y2 -= min_y;
+				myLINES[num].cx -= min_x;
+				myLINES[num].cy -= min_y;
+			}
 		}
-	}
 }
+	} else {
+		// Center
+#pragma omp parallel
+{
+		for (num = 0; num < line_last; num++) {
+			if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
+				myLINES[num].x1 -= min_x + (max_x - min_x) / 2.0;
+				myLINES[num].y1 -= min_y + (max_y - min_y) / 2.0;
+				myLINES[num].x2 -= min_x + (max_x - min_x) / 2.0;
+				myLINES[num].y2 -= min_y + (max_y - min_y) / 2.0;
+				myLINES[num].cx -= min_x + (max_x - min_x) / 2.0;
+				myLINES[num].cy -= min_y + (max_y - min_y) / 2.0;
+			}
+		}
+}
+//max_x
+	}
 }
 
 #define DEFFLEQEPSILON 0.001
