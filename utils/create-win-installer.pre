@@ -10,7 +10,7 @@
 
   XPstyle on
  
-  RequestExecutionLevel user
+  RequestExecutionLevel admin
 
   CRCCheck On
 
