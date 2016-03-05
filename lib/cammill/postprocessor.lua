@@ -75,6 +75,11 @@ post.Number = function (val, nformat)
 	append_output(out)
 end
 
+post.ModalNumberInit = function (str, val, nformat)
+	mstr = trim(str)
+	ModalTable[mstr] = val
+end
+
 post.ModalNumber = function (str, val, nformat)
 	mstr = trim(str)
 	if (ModalTable[mstr] == val) then

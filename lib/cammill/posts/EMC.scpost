@@ -10,6 +10,9 @@ function OnInit()
 	axisX = "X"
 	axisY = "Y"
 	axisZ = "Z"
+	post.ModalNumberInit(" "..axisX, currentX)
+	post.ModalNumberInit(" "..axisY, currentY)
+	post.ModalNumberInit(" "..axisZ, currentZ)
 	if unit == "inch" then
 		post.Text("G20 (Imperial/inch)\n")
 	else

@@ -354,8 +354,7 @@ void object2poly (int object_num, double depth, double depth2, int invert) {
 	gluDeleteTess(tobj);
 }
 
-
-void DrawLine (float x1, float y1, float x2, float y2, float z, float w) {
+void DrawLine (float x1, float y1, float z1, float x2, float y2, float z2, float w) {
 	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
 		return;
 	}
@@ -363,10 +362,10 @@ void DrawLine (float x1, float y1, float x2, float y2, float z, float w) {
 	float t2sina1 = w / 2 * sin(angle);
 	float t2cosa1 = w / 2 * cos(angle);
 	glBegin(GL_QUADS);
-	glVertex3f(x1 + t2sina1, y1 - t2cosa1, z);
-	glVertex3f(x2 + t2sina1, y2 - t2cosa1, z);
-	glVertex3f(x2 - t2sina1, y2 + t2cosa1, z);
-	glVertex3f(x1 - t2sina1, y1 + t2cosa1, z);
+	glVertex3f(x1 + t2sina1, y1 - t2cosa1, z1);
+	glVertex3f(x2 + t2sina1, y2 - t2cosa1, z2);
+	glVertex3f(x2 - t2sina1, y2 + t2cosa1, z2);
+	glVertex3f(x1 - t2sina1, y1 + t2cosa1, z1);
 	glEnd();
 }
 
@@ -378,6 +377,9 @@ void DrawArrow (float x1, float y1, float x2, float y2, float z, float w) {
 	float dy = y2 - y1;
 	float len = sqrt(dx * dx + dy * dy);
 	float asize = 2.0;
+	if (len < asize) {
+		asize = 0.5;
+	}
 	if (len < asize) {
 		return;
 	}
@@ -486,7 +488,7 @@ void draw_line2 (float x1, float y1, float z1, float x2, float y2, float z2, flo
 		draw_line_wrap_conn(x2, y2, 0.0, z1);
 	} else {
 		if (PARAMETER[P_V_HELPLINES].vint == 1) {
-			DrawLine(x1, y1, x2, y2, z1, width);
+			DrawLine(x1, y1, z1, x2, y2, z1, width);
 			GLUquadricObj *quadric=gluNewQuadric();
 			gluQuadricNormals(quadric, GLU_SMOOTH);
 			gluQuadricOrientation(quadric,GLU_OUTSIDE);
@@ -520,16 +522,16 @@ void draw_line (float x1, float y1, float z1, float x2, float y2, float z2, floa
 	} else {
 		if (PARAMETER[P_V_HELPDIA].vint == 1) {
 			glColor4f(1.0, 1.0, 0.0, 1.0);
-			DrawLine(x1, y1, x2, y2, z1, width);
+			DrawLine(x1, y1, z2, x2, y2, z2, width);
 			GLUquadricObj *quadric=gluNewQuadric();
 			gluQuadricNormals(quadric, GLU_SMOOTH);
 			gluQuadricOrientation(quadric,GLU_OUTSIDE);
 			glPushMatrix();
-			glTranslatef(x1, y1, z1);
+			glTranslatef(x1, y1, z2);
 			gluDisk(quadric, 0.0, width / 2.0, 18, 1);
 			glPopMatrix();
 			glPushMatrix();
-			glTranslatef(x2, y2, z1);
+			glTranslatef(x2, y2, z2);
 			gluDisk(quadric, 0.0, width / 2.0, 18, 1);
 			glPopMatrix();
 			gluDeleteQuadric(quadric);
@@ -539,7 +541,7 @@ void draw_line (float x1, float y1, float z1, float x2, float y2, float z2, floa
 		glVertex3f(x1, y1, z1 + 0.02);
 		glVertex3f(x2, y2, z2 + 0.02);
 		glEnd();
-		DrawArrow(x1, y1, x2, y2, z1 + 0.02, width);
+		DrawArrow(x1, y1, x2, y2, z1 + ((z2 - z1) / 2) + 0.02, width);
 	}
 }
 
@@ -951,7 +953,6 @@ void mill_begin (const char* path) {
 	postcam_var_push_int("lastinst", 0);
 	postcam_var_push_int("velocityMode", PARAMETER[P_M_VELOCITYMODE].vint);
 	postcam_var_push_double("blendingTolerance", PARAMETER[P_M_BLENDINGTOLERANCE].vdouble);
-//	SetupShowGcode(fd_out);
 	postcam_call_function("OnInit");
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
 		if (PARAMETER[P_H_ROTARYAXIS].vint == 1) {
@@ -983,6 +984,13 @@ void mill_z (int gcmd, double z) {
 		move_distance_z += set_positive(z - mill_last_z);
 		postcam_call_function("OnRapid");
 	} else {
+		if (mill_last_z > PARAMETER[P_M_FAST_Z].vdouble) {
+			postcam_var_push_double("currentZ", _Z(mill_last_z));
+			postcam_var_push_double("endZ", _Z(PARAMETER[P_M_FAST_Z].vdouble));
+			postcam_call_function("OnRapid");
+			postcam_var_push_double("currentZ", _Z(PARAMETER[P_M_FAST_Z].vdouble));
+			postcam_var_push_double("endZ", _Z(z));
+		}
 		mill_distance_z += set_positive(z - mill_last_z);
 		postcam_call_function("OnMove");
 	}
@@ -1013,6 +1021,7 @@ void mill_objects (void) {
 			myOBJECTS[object_num].overcut = PARAMETER[P_M_OVERCUT].vint;
 			myOBJECTS[object_num].laser = PARAMETER[P_M_LASERMODE].vint;
 			myOBJECTS[object_num].climb = PARAMETER[P_M_CLIMB].vint;
+			myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
 			if (PARAMETER[P_M_LASERMODE].vint == 1) {
 				myOBJECTS[object_num].laser = 1;
 			}
@@ -1021,6 +1030,11 @@ void mill_objects (void) {
 			}
 			if (strncmp(myOBJECTS[object_num].layer, "laser", 5) == 0) {
 				myOBJECTS[object_num].laser = 1;
+			}
+			if (strstr(myOBJECTS[object_num].layer, "do_helix") > 0) {
+				myOBJECTS[object_num].helix = 1;
+			} else {
+				myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
 			}
 			if (PARAMETER[P_M_NOOFFSET].vint == 1) {
 				myOBJECTS[object_num].offset = OFFSET_NONE;
@@ -1322,8 +1336,9 @@ void mill_objects (void) {
 }
 
 void mill_end (void) {
-		postcam_call_function("OnSpindleOff");
-		postcam_call_function("OnFinish");
+	postcam_call_function("OnSpindleOff");
+	postcam_call_function("OnFinish");
+	SetupShowGcode(fd_out);
 }
 
 void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, char *comment) {
@@ -1754,13 +1769,71 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 	mill_last_y = y;
 }
 
-void mill_drill (double x, double y, double depth, int feed, int object_num, char *comment) {
+void mill_drill (double x, double y, double depth, double last_depth, int feed, int object_num, char *comment) {
 	if (comment[0] != 0) {
 		postcam_comment(comment);
+	}
+	if ((PARAMETER[P_CUT_SAVE].vdouble - last_depth) > PARAMETER[P_M_FAST_Z].vdouble) {
+		mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
 	}
 	mill_z(1, depth);
 	draw_line(x, y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
 	mill_z(0, 0.0);
+}
+
+void mill_circle_helix (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment) {
+	if (comment[0] != 0) {
+		postcam_comment(comment);
+	}
+	if (mill_last_z > 0.0) {
+		mill_z(1, 0.0);
+	}
+	double zstep = mill_last_z - depth;
+	postcam_var_push_int("feedRate", feed);
+	postcam_var_push_double("currentX", _X(mill_last_x));
+	postcam_var_push_double("currentY", _Y(mill_last_y));
+	postcam_var_push_double("currentZ", _Z(mill_last_z));
+	postcam_var_push_double("endX", _X(x + r));
+	postcam_var_push_double("endY", _Y(y));
+	postcam_var_push_double("endZ", _Z(mill_last_z - (zstep / 2.0)));
+	postcam_var_push_double("arcRadius", r);
+	postcam_var_push_double("arcCentreX", _X(x));
+	postcam_var_push_double("arcCentreY", _Y(y));
+	if (gcmd == 2) {
+		postcam_var_push_double("arcAngle", 180.0);
+	} else {
+		postcam_var_push_double("arcAngle", -180.0);
+	}
+	postcam_call_function("OnArc");
+	postcam_var_push_double("currentX", _X(x + r));
+	postcam_var_push_double("endX", _X(x - r));
+	postcam_var_push_double("endZ", _Z(depth));
+	postcam_call_function("OnArc");
+	float an = 0.0;
+	float last_x = x + r;
+	float last_y = y;
+	float last_z = mill_last_z;
+	float draw_z = mill_last_z;
+	float steps = 20.0;
+	for (an = 0.0; an <= 360.0; an += (360.0 / steps)) {
+		float angle1 = toRad(an);
+		if (gcmd == 2) {
+			angle1 = -toRad(an);
+		}
+		float x1 = r * cos(angle1);
+		float y1 = r * sin(angle1);
+		if (inside == 1) {
+			draw_line(last_x, last_y, (float)last_z, (float)x + x1, (float)y + y1, (float)draw_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+		} else {
+			draw_line(last_x, last_y, (float)last_z, (float)x + x1, (float)y + y1, (float)draw_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+		}
+		last_x = (float)x + x1;
+		last_y = (float)y + y1;
+		last_z = draw_z;
+		draw_z -= zstep / steps;
+	}
+	mill_last_z = depth;
+	mill_distance_xy += set_positive(r * 2 * PI);
 }
 
 void mill_circle (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment) {
@@ -1790,7 +1863,8 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 	float an = 0.0;
 	float last_x = x + r;
 	float last_y = y;
-	for (an = 0.0; an <= 360.0; an += 18.0) {
+	float steps = 20.0;
+	for (an = 0.0; an <= 360.0; an += (360.0 / steps)) {
 		float angle1 = toRad(an);
 		float x1 = r * cos(angle1);
 		float y1 = r * sin(angle1);
@@ -2016,7 +2090,7 @@ void object_draw (FILE *fd_out, int object_num) {
 	}
 }
 
-void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int offset) {
+void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double total_depth, double last_depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int offset) {
 	int error = 0;
 	int lnum1 = 0;
 	int lnum2 = 0;
@@ -2056,20 +2130,33 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 				mill_move_in(myLINES[lnum].cx - r, myLINES[lnum].cy, depth, lasermode, object_num);
 				mill_start = 1;
 			}
-			if (myOBJECTS[object_num].climb == 0) {
-				mill_circle(2, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+			if (myOBJECTS[object_num].climb == 1) {
+				if (myOBJECTS[object_num].helix == 1) {
+					mill_circle_helix(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+					if (depth == total_depth) {
+						mill_circle(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+					}
+				} else {
+					mill_circle(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+				}
 			} else {
-				mill_circle(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+				if (myOBJECTS[object_num].helix == 1) {
+					mill_circle_helix(2, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+					if (depth == total_depth) {
+						mill_circle(2, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+					}
+				} else {
+					mill_circle(2, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
+				}
 			}
 			*next_x = myLINES[lnum].cx - r;
 			*next_y = myLINES[lnum].cy;
 		} else {
-
 			if (mill_start == 0) {
 				mill_move_in(myLINES[lnum].cx, myLINES[lnum].cy, depth, lasermode, object_num);
 				mill_start = 1;
 			}
-			mill_drill(myLINES[lnum].cx, myLINES[lnum].cy, depth, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+			mill_drill(myLINES[lnum].cx, myLINES[lnum].cy, depth, last_depth, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 			*next_x = myLINES[lnum].cx;
 			*next_y = myLINES[lnum].cy;
 		}
@@ -2365,11 +2452,9 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	if (myOBJECTS[object_num].use == 0) {
 		return;
 	}
-
 	if (myOBJECTS[object_num].pocket == 1) {
 		mill_pocket(object_num, next_x, next_y);
 	}
-
 	postcam_comment("--------------------------------------------------");
 	snprintf(cline, sizeof(cline), "Object: #%i", object_num);
 	postcam_var_push_string("partName", cline);
@@ -2401,8 +2486,9 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 
 	// offset for each depth-step
 	double new_depth = 0.0;
+	double last_depth = PARAMETER[P_CUT_SAVE].vdouble;
 	if (lasermode == 1 || tangencialmode == 1) {
-		object_draw_offset_depth(fd_out, object_num, 0.0, next_x, next_y, tool_offset, overcut, lasermode, offset);
+		object_draw_offset_depth(fd_out, object_num, 0.0, 0.0, 0.0, next_x, next_y, tool_offset, overcut, lasermode, offset);
 	} else {
 		for (depth = PARAMETER[P_M_Z_STEP].vdouble; depth > mill_depth_real + PARAMETER[P_M_Z_STEP].vdouble; depth += PARAMETER[P_M_Z_STEP].vdouble) {
 			if (depth < mill_depth_real) {
@@ -2410,7 +2496,8 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 			} else {
 				new_depth = depth;
 			}
-			object_draw_offset_depth(fd_out, object_num, new_depth, next_x, next_y, tool_offset, overcut, lasermode, offset);
+			object_draw_offset_depth(fd_out, object_num, new_depth, mill_depth_real, last_depth, next_x, next_y, tool_offset, overcut, lasermode, offset);
+			last_depth = new_depth;
 		}
 	}
 	mill_move_out(lasermode, object_num);
@@ -2587,6 +2674,7 @@ void init_objects (void) {
 		myOBJECTS[object_num].offset = 0;
 		myOBJECTS[object_num].overcut = 0;
 		myOBJECTS[object_num].pocket = 0;
+		myOBJECTS[object_num].helix = 0;
 		myOBJECTS[object_num].laser = 0;
 		myOBJECTS[object_num].order = 5;
 		myOBJECTS[object_num].tabs = 1;

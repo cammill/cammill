@@ -18,7 +18,7 @@ extern _MATERIAL Material[100];
 
 
 void object2poly (int object_num, double depth, double depth2, int invert);
-void DrawLine (float x1, float y1, float x2, float y2, float z, float w);
+void DrawLine (float x1, float y1, float z1, float x2, float y2, float z2, float w);
 void DrawArrow (float x1, float y1, float x2, float y2, float z, float w);
 void draw_line_wrap_conn (float x1, float y1, float depth1, float depth2);
 void draw_line_wrap (float x1, float y1, float x2, float y2, float depth);
@@ -55,12 +55,13 @@ void mill_end (void);
 void mill_objects (void);
 void mill_z (int gcmd, double z);
 void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, char *comment);
-void mill_drill (double x, double y, double depth, int feed, int object_num, char *comment);
+void mill_drill (double x, double y, double depth, double last_depth, int feed, int object_num, char *comment);
 void mill_circle (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment);
+void mill_circle_helix (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment);
 void mill_move_in (double x, double y, double depth, int lasermode, int object_num);
 void mill_move_out (int lasermode, int object_num);
 void object_draw (FILE *fd_out, int object_num);
-void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int offset);
+void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double total_depth, double last_depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int offset);
 void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *next_y);
 int find_next_line (int object_num, int first, int num, int dir, int depth);
 int line_open_check (int num);

@@ -61,6 +61,7 @@ typedef struct{
 	int force;
 	int overcut;
 	int pocket;
+	int helix;
 	int laser;
 	int tabs;
 	int order;
