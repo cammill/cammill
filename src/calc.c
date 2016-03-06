@@ -937,6 +937,12 @@ void mill_begin (const char* path) {
 	postcam_var_push_string("fileName", PARAMETER[P_V_DXF].vstr);
 	postcam_var_push_string("postName", postcam_plugins[PARAMETER[P_H_POST].vint]);
 	postcam_var_push_string("date", date_get_string(date_str, 200));
+#ifdef VERSION
+	postcam_var_push_string("version", VERSION);
+#endif
+#ifdef VRELEASE
+	postcam_var_push_string("release", VRELEASE);
+#endif
 	postcam_var_push_string("unit", PARAMETER[P_O_UNIT].vstr);
 	postcam_var_push_double("metric", 1.0);
 	postcam_var_push_int("feedRate", PARAMETER[P_M_PLUNGE_SPEED].vint);

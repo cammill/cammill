@@ -9,6 +9,7 @@ end
 function OnInit()
     post.Text("(--------------------------------------------------)\n")
     post.Text("( CAMmill EMC/LinuxCNC Postprocessor )\n")
+    post.Text("( Version/Release: ",version," - ",release," )\n")
     post.Text("( Date/Time: ",date," )\n")
     post.Text("(--------------------------------------------------)\n")
    	axisX = "X"
