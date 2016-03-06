@@ -9,6 +9,7 @@ extern char program_path[PATH_MAX];
 int get_home_dir(char* buffer);
 size_t get_executable_path (char *argv, char *buffer, size_t len);
 char *path_real (char *file);
+char *date_get_string (char* outstr, int len);
 
 #ifdef __MINGW32__
 ssize_t getline(char **linep, size_t *n, FILE *fp);

@@ -6,6 +6,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <libgen.h>
+#include <time.h>
 
 #ifdef __APPLE__
 #include <mach-o/dyld.h>
@@ -140,3 +141,17 @@ char *path_real (char *file) {
 	return realpath;
 }
 
+char *date_get_string (char* outstr, int len) {
+	struct tm *tmp_tm;
+	time_t t;
+	t = time(NULL);
+	tmp_tm = localtime(&t);
+	if (tmp_tm == NULL) {
+		perror("localtime");
+	} else {
+		if (strftime(outstr, len, "%Y-%m-%d %H:%M:%S %Z", tmp_tm) == 0) {
+			strcpy(outstr, "------");
+		}
+	}
+	return outstr;
+}
