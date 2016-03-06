@@ -596,10 +596,13 @@ void mainloop (void) {
 			exit(0);
 		}
 		fprintf(fd_out, "%s", output_buffer);
-		fclose(fd_out);
-		if (PARAMETER[P_POST_CMD].vstr[0] != 0) {
+		if (strcmp(PARAMETER[P_MFILE].vstr, "-") != 0) {
+			fclose(fd_out);
+		}
+		if (PARAMETER[P_POST_CMD].vstr[0] != 0 && PARAMETER[P_MFILE].vstr[0] != 0 && strcmp(PARAMETER[P_MFILE].vstr, "-") != 0) {
 			char cmd_str[PATH_MAX];
 			snprintf(cmd_str, PATH_MAX, "%s %s", PARAMETER[P_POST_CMD].vstr, PARAMETER[P_MFILE].vstr);
+			printf("execute command: %s\n", cmd_str);
 			int ret;
 			if ((ret = system(cmd_str))) {
 				if (WIFEXITED(ret)) {
