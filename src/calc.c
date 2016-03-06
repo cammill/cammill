@@ -550,14 +550,13 @@ void draw_line3 (float x1, float y1, float z1, float x2, float y2, float z2) {
 		return;
 	}
 	if (PARAMETER[P_M_ROTARYMODE].vint == 1) {
-		glColor4f(1.0, 0.0, 1.0, 1.0);
 		draw_line_wrap(x1, y1, x2, y2, z1);
 	} else {
-		glColor4f(1.0, 0.0, 1.0, 1.0);
 		glBegin(GL_LINES);
 		glVertex3f(x1, y1, z1 + 0.02);
 		glVertex3f(x2, y2, z2 + 0.02);
 		glEnd();
+		DrawArrow(x1, y1, x2, y2, z1 + ((z2 - z1) / 2) + 0.02, 1.0);
 	}
 }
 
@@ -1817,7 +1816,6 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 	} else {
 		mill_distance_xy += set_positive(get_len(mill_last_x, mill_last_y, x, y));
 	}
-
 	mill_start_all = 1;
 	mill_last_x = x;
 	mill_last_y = y;
