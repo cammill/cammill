@@ -38,13 +38,14 @@ PARA_GROUP GROUPS[] = {
 	{"View", ""},
 	{"Tool", ""},
 	{"Milling", ""},
+	{"Pockets", ""},
 	{"Holding-Tabs", ""},
 	{"Objects", ""},
 	{"Text", ""},
 	{"Rotary", ""},
 	{"Tangencial", ""},
 	{"Machine", ""},
-	{"Material", ""},
+	{"Calculation", ""},
 	{"Misc", ""},
 };
 
@@ -66,14 +67,10 @@ PARA PARAMETER[] = {
 	{"Select",	"Tool",		"-tp",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	100.0,		"#", 0, 0, "selected tool from tooltable", 0, 0, 0},
 	{"Number",	"Tool",		"-tn",	T_INT,		1,	0.0,	0.0,	"",	1.0,	1.0,	18.0,		"#", 1, 1, "tool-number", 0, 0, 0},
 	{"Diameter",	"Tool",		"-td",	T_DOUBLE,	0,	3.0,	3.0,	"",	0.01,	0.01,	18.0,		"mm", 1, 1, "tool-diameter", 0, 0, 0},
-	{"CalcSpeed",	"Tool",		"",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 0, "calculated spindle-speed", 1, 0, 0},
 	{"Speed",	"Tool",		"-ts",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0},
-	{"Delay",	"Tool",		"-td",	T_FLOAT,		1,	1.0,	1.0,	"",	1.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
+	{"Coolant",	"Tool", 	"-mc",	T_SELECT	,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 0, "Coolant (Off/Mist/Flood)", 0, 0, 0},
 	{"Kepp spinning",	"Tool",		"-tk",	T_BOOL,		1,	1.0,	1.0,	"",	1.0,	1.0,	1.0,	"", 1, 1, "keep tool spinning", 0, 0, 0},
-	{"Flutes",	"Tool",		"-tw",	T_INT,		2,	0.0,	0.0,	"",	1.0,	1.0,	10.0,		"#", 1, 0, "flutes of the tool, to calculate max toolspeed and feedrate", 0, 0, 0},
-	{"Table",	"Tool",		"-tt",	T_FILE	,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "the tooltable filename", 0, 0, 0},
 	// Milling
-	{"MaxFeedRate",	"Milling",	"-fm",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 0, "calculated maximum feedrate", 1, 0, 0},
 	{"FeedRate",	"Milling",	"-fr",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 1, "real feedrate", 0, 0, 0},
 	{"PlungeRate",	"Milling",	"-pr",	T_INT	,	100,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 1, "plunge feedrate", 0, 0, 0},
 	{"Depth",	"Milling",	"-md",	T_DOUBLE,	0,	-4.0,	-4.0,	"",	-150.0,	0.01,	-0.1,		"mm", 1, 1, "end depth", 0, 0, 0},
@@ -83,16 +80,14 @@ PARA PARAMETER[] = {
 	{"Lasermode",	"Milling",	"-lm",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "lasermode, depth=0.0, turn on/off per object", 0, 0, 0},
 	{"Climb",	"Milling",	"-mr",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "reverse milling direction / climb milling", 0, 0, 0},
 	{"NoOffsets",	"Milling",	"-no",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "without tool-offsets", 0, 0, 0},
-	{"Pocket",	"Milling",	"-mp",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "mill pockets inside", 0, 0, 0},
-	{"Pocket-Stepover","Milling",	"-ps",	T_INT	,	50,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"%", 1, 1, "pocket-stepover in percent / relative to the Tool-Diameter", 0, 0, 0},
 	{"Helix",	"Milling",	"-mh",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "circles as helix", 0, 0, 0},
 	{"Velocity-Mode","Milling",	"-vm",	T_BOOL,		0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Velocity-Mode G61/G64 P...", 0, 0, 0},
 	{"Blending Tolerance","Milling","-bt",	T_DOUBLE,	0,	0.0,	0.05,	"",	0.0,	0.01,	10.0,		"mm", 1, 1, "Blending Tolerance G64 P?", 0, 0, 0},
-	{"Coolant",	"Milling", 	"-mc",	T_SELECT	,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 0, "Coolant (Off/Mist/Flood)", 0, 0, 0},
 	{"DXF-File",	"Milling",	"-d",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "dxf-filename", 0, 0, 0},
 	{"Output-File",	"Milling",	"-o",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "gcode-output filename", 0, 0, 0},
-	{"Post-Command","Milling",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0},
-	{"NC-Debug",	"Milling", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects whithout offsets / for debuging", 0, 0, 0},
+	// Pockets
+	{"Pocket",	"Pockets",	"-mp",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "mill pockets inside", 0, 0, 0},
+	{"Pocket-Stepover","Pockets",	"-ps",	T_INT	,	50,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"%", 1, 1, "pocket-stepover in percent / relative to the Tool-Diameter", 0, 0, 0},
 	// Holding-Tabs
 	{"Activate",	"Holding-Tabs",	"-hu",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "using holding-tabs", 0, 0, 0},
 	{"Show Grid",	"Holding-Tabs",	"-tg",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "show tab-grid", 0, 0, 0},
@@ -117,14 +112,19 @@ PARA PARAMETER[] = {
 	{"Tool-Speed",	"Text",		"-tots",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0},
 	// Machine
 	{"Fastmove-Speed","Machine",	 "-fs",	T_INT,		1000,	0.0,	0.0,	"",	0.0,	1.0,	10000.0,	"mm/min", 1, 0, "fast-move speed of the machine, to calculate the milling-time", 0, 0, 0},
+	{"Spindle-Delay",	"Machine",		"-td",	T_FLOAT,		1,	1.0,	1.0,	"",	1.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
+	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm", 1, 1, "Fast-Z", 0, 0, 0},
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0},
-	// Material
-	{"Select",	"Material",	"-ms",	T_SELECT,	1,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "material selection to calculate feedrate and spindlespeed", 0, 0, 0},
-	{"Cutting Speed","Material",	"-cs",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"m/min", 1, 1, "Cutting Speed", 1, 0, 0},
-	{"Feed/Tooth@<4mm","Material","-f4",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<4mm", 1, 0, 0},
-	{"Feed/Tooth@<8mm","Material","-f8",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<8mm", 1, 0, 0},
-	{"Feed/Tooth@<12mm","Material","-f12",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<12mm", 1, 0, 0},
-	{"Texture",	"Material",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 1, 1, "Bitmap file to load for texture rendering", 1, 0, 0},
+	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0},
+	// Calculation
+	{"Tool-Flutes",	"Calculation",		"-tw",	T_INT,		2,	0.0,	0.0,	"",	1.0,	1.0,	10.0,		"#", 1, 0, "flutes of the tool, to calculate max toolspeed and feedrate", 0, 0, 0},
+	{"Select",	"Calculation",	"-ms",	T_SELECT,	1,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "material selection to calculate feedrate and spindlespeed", 0, 0, 0},
+	{"Cutting Speed","Calculation",	"-cs",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"m/min", 1, 1, "Cutting Speed", 1, 0, 0},
+	{"Feed/Tooth@<4mm","Calculation","-f4",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<4mm", 1, 0, 0},
+	{"Feed/Tooth@<8mm","Calculation","-f8",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<8mm", 1, 0, 0},
+	{"Feed/Tooth@<12mm","Calculation","-f12",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<12mm", 1, 0, 0},
+	{"CalcSpeed",	"Calculation",		"",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 0, "calculated spindle-speed", 1, 0, 0},
+	{"MaxFeedRate",	"Calculation",	"-fm",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 0, "calculated maximum feedrate", 1, 0, 0},
 	// Objects
 	{"Select",	"Objects",	"-objs",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"#", 0, 1, "object selection", 0, 0, 0},
 	{"Use",		"Objects",	"-obju",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "use this object", 0, 0, 0},
@@ -158,6 +158,7 @@ PARA PARAMETER[] = {
 	// Misc
 	{"Unit",	"Misc",		"-munit",	T_SELECT,	1,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"", 1, 1, "Unit mm/inch", 0, 0, 0},
 	{"Tolerance",	"Misc",		"-mto",	T_DOUBLE,	0,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"mm", 1, 1, "Tollerance between points to close objects", 0, 0, 0},
+	{"Tool-Table",	"Misc",		"-tt",	T_FILE	,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "the tooltable filename", 0, 0, 0},
 	{"Parameter",	"Misc",		"-te",	T_SELECT,	0,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 1, 1, "Tabs or Expander for Parameter", 0, 0, 0},
 	{"Setup-Autosave","Misc",	"-sa",	T_BOOL,		1,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 1, 1, "Save setup at exit", 0, 0, 0},
 	{"Batchmode",	"Misc",		"-bm",	T_BOOL,		0,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 0, 1, "Batchmode", 1, 0, 0},
@@ -168,7 +169,8 @@ PARA PARAMETER[] = {
 	{"Zero", "Misc", "-zero",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Zero", 0, 0, 0},
 	{"Zero-Offset-X", "Misc", "-zerox",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm", 1, 1, "Zero-Offset-X", 0, 0, 0},
 	{"Zero-Offset-Y", "Misc", "-zeroy",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm", 1, 1, "Zero-Offset-Y", 0, 0, 0},
-	{"Fast-Z", "Misc", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm", 1, 1, "Fast-Z", 0, 0, 0},
+	{"Texture",	"Misc",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 1, 1, "Bitmap file to load for texture rendering", 1, 0, 0},
+	{"NC-Debug",	"Misc", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects whithout offsets / for debuging", 0, 0, 0},
 #ifdef USE_VNC
 	{"VNC-Server",	"Misc",		"-vs",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "VNC-Server address", 0, 0, 0},
 	{"VNC-Port",	"Misc",		"-vp",	T_INT,		5900,	0.0,	0.0,	"",	0.0,	1.0,	35000.0,	"", 0, 0, "VNC-Server port", 0, 0, 0},
@@ -297,18 +299,6 @@ void SetupSave (void) {
 		for (gn = 0; gn < G_LAST; gn++) {
 			fprintf(cfg_fp, "GUI|EXPANDER|%s=%i\n", GROUPS[gn].name, gtk_expander_get_expanded(GTK_EXPANDER(GroupExpander[gn])));
 		}
-/*
-		fprintf(cfg_fp, "GUI|EXPANDER|View=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(ViewExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Tool=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(ToolExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Milling=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MillingExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Tabs=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(TabsExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Rotary=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(RotaryExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Tangencial=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(TangencialExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Machine=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MachineExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Material=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MaterialExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Objects=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(ObjectsExpander)));
-		fprintf(cfg_fp, "GUI|EXPANDER|Misc=%i\n", gtk_expander_get_expanded(GTK_EXPANDER(MiscExpander)));
-*/
 	}
 	fclose(cfg_fp);
 }
