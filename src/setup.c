@@ -110,9 +110,13 @@ PARA PARAMETER[] = {
 	{"Tool-Number",	"Text",		"-totn",	T_INT,		1,	0.0,	0.0,	"",	1.0,	1.0,	18.0,		"#", 1, 1, "tool-number", 0, 0, 0},
 	{"Tool-Diameter",	"Text",	"-totd",	T_DOUBLE,	0,	3.0,	3.0,	"",	0.01,	0.01,	18.0,		"mm", 1, 1, "tool-diameter", 0, 0, 0},
 	{"Tool-Speed",	"Text",		"-tots",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0},
+
 	{"Fastmove-Speed","Machine",	 "-fs",	T_INT,		1000,	0.0,	0.0,	"",	0.0,	1.0,	10000.0,	"mm/min", 1, 0, "fast-move speed of the machine, to calculate the milling-time", 0, 0, 0},
+
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0},
+
 	{"Select",	"Material",	"-ms",	T_SELECT,	1,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "material selection to calculate feedrate and spindlespeed", 0, 0, 0},
+
 	{"Cutting Speed","Material",	"-cs",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"m/min", 1, 1, "Cutting Speed", 1, 0, 0},
 	{"Feed/Tooth@<4mm","Material","-f4",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<4mm", 1, 0, 0},
 	{"Feed/Tooth@<8mm","Material","-f8",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<8mm", 1, 0, 0},
