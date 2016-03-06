@@ -1878,6 +1878,7 @@ void create_gui () {
 	GtkWidget *GroupBox[G_LAST];
 	for (n = 0; n < G_LAST; n++) {
 		GroupBox[n] = gtk_vbox_new(0, 0);
+		GroupNum[n] = 0;
 	}
 
 	if (PARAMETER[P_O_PARAVIEW].vint == 1) {

@@ -341,7 +341,7 @@ void SetupLoad (void) {
 	char line2[2048];
 	FILE *cfg_fp;
 	int n = 0;
-	for (n = 0; n < 20; n++) {
+	for (n = 0; n < G_LAST; n++) {
 		ExpanderStat[n] = 0;
 	}
 	char homedir[PATH_MAX];
