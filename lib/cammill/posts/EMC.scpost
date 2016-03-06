@@ -94,6 +94,22 @@ function OnComment()
 end
 
 function OnToolChange()
-	post.ModalNumber("M6 T", tool, "0")
+	post.ModalNumber("M06 T", tool, "0")
 	post.Eol()
 end
+
+function OnFloodOn()
+	post.Text("M08 (",commentText,")")
+	post.Eol()
+end
+
+function OnMistOn()
+	post.Text("M07 (",commentText,")")
+	post.Eol()
+end
+
+function OnCoolantOff()
+	post.Text("M09 (",commentText,")")
+	post.Eol()
+end
+

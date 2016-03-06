@@ -980,10 +980,7 @@ void mill_z (int gcmd, double z) {
 	postcam_var_push_double("endX", _X(mill_last_x));
 	postcam_var_push_double("endY", _Y(mill_last_y));
 	postcam_var_push_double("endZ", _Z(z));
-	if (gcmd == 0) {
-		move_distance_z += set_positive(z - mill_last_z);
-		postcam_call_function("OnRapid");
-	} else {
+	if (gcmd != 0) {
 		if (mill_last_z > PARAMETER[P_M_FAST_Z].vdouble) {
 			postcam_var_push_double("currentZ", _Z(mill_last_z));
 			postcam_var_push_double("endZ", _Z(PARAMETER[P_M_FAST_Z].vdouble));
@@ -991,6 +988,25 @@ void mill_z (int gcmd, double z) {
 			postcam_var_push_double("currentZ", _Z(PARAMETER[P_M_FAST_Z].vdouble));
 			postcam_var_push_double("endZ", _Z(z));
 		}
+	}
+	if (mill_last_z <= 0.0 && z > 0.0) {
+		if (PARAMETER[P_M_COOLANT].vint != 0) {
+			postcam_var_push_string("commentText", "Coolant off");
+			postcam_call_function("OnCoolantOff");
+		}
+	} else if (mill_last_z > 0.0 && z <= 0.0) {
+		if (PARAMETER[P_M_COOLANT].vint == 1) {
+			postcam_var_push_string("commentText", "Mist-Coolant on");
+			postcam_call_function("OnMistOn");
+		} else if (PARAMETER[P_M_COOLANT].vint == 2) {
+			postcam_var_push_string("commentText", "Flood-Coolant on");
+			postcam_call_function("OnFloodOn");
+		}
+	}
+	if (gcmd == 0) {
+		move_distance_z += set_positive(z - mill_last_z);
+		postcam_call_function("OnRapid");
+	} else {
 		mill_distance_z += set_positive(z - mill_last_z);
 		postcam_call_function("OnMove");
 	}

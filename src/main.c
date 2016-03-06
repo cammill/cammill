@@ -1943,6 +1943,10 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_O_OFFSET], NULL, -1, 0, NULL, 1, _("Inside"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_OFFSET], NULL, -1, 0, NULL, 1, _("Outside"), -1);
 
+	gtk_list_store_insert_with_values(ListStore[P_M_COOLANT], NULL, -1, 0, NULL, 1, _("Off"), -1);
+	gtk_list_store_insert_with_values(ListStore[P_M_COOLANT], NULL, -1, 0, NULL, 1, _("Mist"), -1);
+	gtk_list_store_insert_with_values(ListStore[P_M_COOLANT], NULL, -1, 0, NULL, 1, _("Flood"), -1);
+
 	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, _("-5 First"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "-4", -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "-3", -1);

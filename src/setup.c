@@ -84,7 +84,7 @@ PARA PARAMETER[] = {
 	{"Velocity-Mode","Milling",	"-vm",	T_BOOL,		0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Velocity-Mode G61/G64 P...", 0, 0, 0},
 	{"Blending Tolerance","Milling","-bt",	T_DOUBLE,	0,	0.0,	0.05,	"",	0.0,	0.01,	10.0,		"mm", 1, 1, "Blending Tolerance G64 P?", 0, 0, 0},
 	{"Mill Text",	"Milling",	"-mt",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "mill mtext from dxf-files", 0, 0, 0},
-//	{"Text-Font",	"Milling",	"-mf",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "font for mtext", 0, 0, 0},
+	{"Coolant",	"Milling", 	"-mc",	T_SELECT	,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 0, "Coolant (Off/Mist/Flood)", 0, 0, 0},
 	{"NC-Debug",	"Milling", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects whithout offsets / for debuging", 0, 0, 0},
 	{"Activate",	"Holding-Tabs",	"-hu",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "using holding-tabs", 0, 0, 0},
 	{"Show Grid",	"Holding-Tabs",	"-tg",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "show tab-grid", 0, 0, 0},
