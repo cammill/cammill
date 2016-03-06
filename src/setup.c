@@ -39,12 +39,12 @@ PARA_GROUP GROUPS[] = {
 	{"Tool", ""},
 	{"Milling", ""},
 	{"Holding-Tabs", ""},
+	{"Objects", ""},
 	{"Text", ""},
 	{"Rotary", ""},
 	{"Tangencial", ""},
 	{"Machine", ""},
 	{"Material", ""},
-	{"Objects", ""},
 	{"Misc", ""},
 };
 
