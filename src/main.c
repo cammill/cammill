@@ -903,6 +903,25 @@ void handler_flip_y_drawing (GtkWidget *widget, gpointer data) {
 	loading = 0;
 }
 
+#ifdef __linux__
+void handler_preview (GtkWidget *widget, gpointer data) {
+	char tmp_file[PATH_MAX];
+	char cmd_str[PATH_MAX + 20];
+	strcpy(tmp_file, "/tmp/ngc-preview.tmp");
+	fd_out = fopen(tmp_file, "w");
+	if (fd_out == NULL) {
+		fprintf(stderr, "Can not open file: %s\n", tmp_file);
+	} else {
+		fprintf(fd_out, "%s", output_buffer);
+		fclose(fd_out);
+		snprintf(cmd_str, PATH_MAX, "/usr/bin/camotics \"%s\" &", tmp_file);
+		if (system(cmd_str) != 0) {
+			fprintf(stderr, "Can not open camotics: %s\n", tmp_file);
+		}
+	}
+}
+#endif
+
 void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf..."), "reloading dxf...");
 		loading = 1;
@@ -1782,6 +1801,20 @@ void create_gui () {
 	gtk_tool_item_set_tooltip_text(TB_FlipY, "Flip Y");
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipY, -1);
 	g_signal_connect(G_OBJECT(TB_FlipY), "clicked", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);
+
+#ifdef __linux__
+	if (access("/usr/bin/camotics", F_OK) != -1) {
+		GtkToolItem *ToolItemSepPV = gtk_separator_tool_item_new();
+		gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSepPV, -1); 
+		GtkToolItem *TB_Preview;
+		iconpath = path_real("../share/cammill/icons/preview.png");
+		TB_Preview = gtk_tool_button_new(gtk_image_new_from_file(iconpath), "Preview with Camotics");
+		free(iconpath);
+		gtk_tool_item_set_tooltip_text(TB_Preview, "Preview");
+		gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_Preview, -1);
+		g_signal_connect(G_OBJECT(TB_Preview), "clicked", GTK_SIGNAL_FUNC(handler_preview), NULL);
+	}
+#endif
 
 	GtkToolItem *ToolItemSep2 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep2, -1); 
