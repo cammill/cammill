@@ -1911,7 +1911,13 @@ void create_gui () {
 		GtkWidget *Label;
 		GtkTooltips *tooltips = gtk_tooltips_new();
 		GtkWidget *Box = gtk_hbox_new(0, 0);
-		Label = gtk_label_new(_(PARAMETER[n].name));
+		char label_str[1024];
+		if (PARAMETER[n].unit[0] != 0) {
+			sprintf(label_str, "%s (%s)", _(PARAMETER[n].name), PARAMETER[n].unit);
+		} else {
+			sprintf(label_str, "%s", _(PARAMETER[n].name));
+		}
+		Label = gtk_label_new(label_str);
 		if (PARAMETER[n].type == T_FLOAT) {
 			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
 			gtk_container_add(GTK_CONTAINER(Align), Label);
