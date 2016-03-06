@@ -72,17 +72,22 @@ end
 function OnSpindleCW()
 	post.Text("M03")
 	post.ModalNumber(" S", spindleSpeed, "0")
+	post.ModalNumber(" P", spindleDelay, "0")
+	post.Text(" (",commentText,")")
 	post.Eol()
 end
 
 function OnSpindleCCW()
 	post.Text("M04")
 	post.ModalNumber(" S", spindleSpeed, "0")
+	post.ModalNumber(" P", spindleDelay, "0")
+	post.Text(" (",commentText,")")
 	post.Eol()
 end
 
 function OnSpindleOff()
 	post.Text("M05")
+	post.Text(" (",commentText,")")
 	post.Eol()
 end
 

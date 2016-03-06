@@ -917,9 +917,9 @@ void mill_begin (const char* path) {
 	mill_distance_z = 0.0;
 	move_distance_xy = 0.0;
 	move_distance_z = 0.0;
-	mill_last_x = 0.0;
-	mill_last_y = 0.0;
-	mill_last_z = PARAMETER[P_CUT_SAVE].vdouble;
+	mill_last_x = 1.1111;
+	mill_last_y = 1.1111;
+	mill_last_z = 1.1111;
 	if (output_buffer != NULL) {
 		free(output_buffer);
 		output_buffer = NULL;
@@ -942,12 +942,13 @@ void mill_begin (const char* path) {
 	postcam_var_push_double("metric", 1.0);
 	postcam_var_push_int("feedRate", PARAMETER[P_M_PLUNGE_SPEED].vint);
 	postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
-	postcam_var_push_double("currentX", _X(0.0));
-	postcam_var_push_double("currentY", _Y(0.0));
-	postcam_var_push_double("currentZ", _Z(0.0));
-	postcam_var_push_double("endX", _X(0.0));
-	postcam_var_push_double("endY", _Y(0.0));
-	postcam_var_push_double("endZ", _Z(0.0));
+	postcam_var_push_int("spindleDelay", PARAMETER[P_TOOL_DELAY].vint);
+	postcam_var_push_double("currentX", _X(1.1111));
+	postcam_var_push_double("currentY", _Y(1.1111));
+	postcam_var_push_double("currentZ", _Z(1.1111));
+	postcam_var_push_double("endX", _X(1.1111));
+	postcam_var_push_double("endY", _Y(1.1111));
+	postcam_var_push_double("endZ", _Z(1.1111));
 	postcam_var_push_double("toolOffset", 0.0);
 	postcam_var_push_int("tool", -1);
 	postcam_var_push_int("lastinst", 0);
@@ -970,6 +971,34 @@ void mill_begin (const char* path) {
 		postcam_var_push_string("axisY", "Y");
 	}
 	postcam_var_push_string("axisZ", "Z");
+	if (PARAMETER[P_M_LASERMODE].vint == 1) {
+		postcam_var_push_string("commentText", "Laser off");
+		postcam_call_function("OnSpindleOff");
+		postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
+		char tmp_str[1024];
+		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+		postcam_var_push_string("toolName", tmp_str);
+		postcam_call_function("OnToolChange");
+		tool_last = PARAMETER[P_TOOL_NUM].vint;
+		postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
+		postcam_var_push_int("spindleDelay", PARAMETER[P_TOOL_DELAY].vint);
+	} else {
+		postcam_var_push_string("commentText", "Spindle off");
+		postcam_call_function("OnSpindleOff");
+		postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
+		char tmp_str[1024];
+		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+		postcam_var_push_string("toolName", tmp_str);
+		postcam_var_push_double("endZ", _Z(mill_last_z));
+		postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
+		postcam_var_push_int("spindleDelay", PARAMETER[P_TOOL_DELAY].vint);
+		postcam_call_function("OnToolChange");
+		tool_last = PARAMETER[P_TOOL_NUM].vint;
+		if (PARAMETER[P_TOOL_KEEPSPIN].vint == 1) {
+			postcam_var_push_string("commentText", "Spindle on / CW");
+			postcam_call_function("OnSpindleCW");
+		}
+	}
 }
 
 void mill_z (int gcmd, double z) {
@@ -1352,6 +1381,15 @@ void mill_objects (void) {
 }
 
 void mill_end (void) {
+	if (PARAMETER[P_M_COOLANT].vint != 0) {
+		postcam_var_push_string("commentText", "Coolant off");
+		postcam_call_function("OnCoolantOff");
+	}
+	if (PARAMETER[P_M_LASERMODE].vint == 1) {
+		postcam_var_push_string("commentText", "Laser off");
+	} else {
+		postcam_var_push_string("commentText", "Spindle off");
+	}
 	postcam_call_function("OnSpindleOff");
 	postcam_call_function("OnFinish");
 	SetupShowGcode(fd_out);
@@ -1906,21 +1944,25 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 void mill_move_in (double x, double y, double depth, int lasermode, int object_num) {
 	// move to
 	if (lasermode == 1) {
-		if (tool_last != 5) {
+		if (tool_last != PARAMETER[P_TOOL_NUM].vint) {
+			postcam_var_push_string("commentText", "Laser off");
 			postcam_call_function("OnSpindleOff");
 			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
 			char tmp_str[1024];
 			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
 			postcam_var_push_string("toolName", tmp_str);
 			postcam_call_function("OnToolChange");
+			tool_last = PARAMETER[P_TOOL_NUM].vint;
 			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
+			postcam_var_push_int("spindleDelay", PARAMETER[P_TOOL_DELAY].vint);
 		}
-		tool_last = PARAMETER[P_TOOL_NUM].vint;
-		mill_xy(0, x, y, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 		mill_z(0, 0.0);
+		mill_xy(0, x, y, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+		postcam_var_push_string("commentText", "Laser on");
 		postcam_call_function("OnSpindleCW");
 	} else {
 		if (tool_last != PARAMETER[P_TOOL_NUM].vint) {
+			postcam_var_push_string("commentText", "Spindle off");
 			postcam_call_function("OnSpindleOff");
 			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
 			char tmp_str[1024];
@@ -1928,21 +1970,34 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 			postcam_var_push_string("toolName", tmp_str);
 			postcam_var_push_double("endZ", _Z(mill_last_z));
 			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
+			postcam_var_push_int("spindleDelay", PARAMETER[P_TOOL_DELAY].vint);
 			postcam_call_function("OnToolChange");
-			postcam_call_function("OnSpindleCW");
+			tool_last = PARAMETER[P_TOOL_NUM].vint;
+			if (PARAMETER[P_TOOL_KEEPSPIN].vint == 1) {
+				postcam_var_push_string("commentText", "Spindle on / CW");
+				postcam_call_function("OnSpindleCW");
+			}
 		}
-		tool_last = PARAMETER[P_TOOL_NUM].vint;
 		mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
 		mill_xy(0, x, y, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+		if (PARAMETER[P_TOOL_KEEPSPIN].vint == 0) {
+			postcam_var_push_string("commentText", "Spindle on / CW");
+			postcam_call_function("OnSpindleCW");
+		}
 	}
 }
 
 void mill_move_out (int lasermode, int object_num) {
 	// move out
 	if (lasermode == 1) {
+		postcam_var_push_string("commentText", "Laser off");
 		postcam_call_function("OnSpindleOff");
 	} else {
 		mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
+		if (PARAMETER[P_TOOL_KEEPSPIN].vint == 0) {
+			postcam_var_push_string("commentText", "Spindle off");
+			postcam_call_function("OnSpindleOff");
+		}
 	}
 }
 
@@ -2039,18 +2094,20 @@ void object_draw (FILE *fd_out, int object_num) {
 				if (num == 0) {
 					if (lasermode == 1) {
 						if (tool_last != 5) {
+							postcam_var_push_string("commentText", "Spindle off");
 							postcam_call_function("OnSpindleOff");
-							postcam_var_push_int("tool", 5);
+							postcam_var_push_int("tool", PARAMETER[P_TOOL_NUM].vint);
 							char tmp_str[1024];
 							snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
 							postcam_var_push_string("toolName", tmp_str);
 							postcam_call_function("OnToolChange");
 						}
-						tool_last = 5;
+						tool_last = PARAMETER[P_TOOL_NUM].vint;
 					}
 					mill_xy(0, myLINES[lnum].x1, myLINES[lnum].y1, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 					if (lasermode == 1) {
 						mill_z(0, 0.0);
+						postcam_var_push_string("commentText", "Laser on");
 						postcam_call_function("OnSpindleCW");
 					}
 				}
