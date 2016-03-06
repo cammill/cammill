@@ -1243,7 +1243,7 @@ void handler_about (GtkWidget *widget, gpointer data) {
 	gtk_window_set_title(GTK_WINDOW(dialog), _("About"));
 	gtk_dialog_add_button(GTK_DIALOG(dialog), GTK_STOCK_QUIT, 1);
 	char tmp_str[2048];
-	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s\n\nCopyright © 2006–2015 %s\n%s\n\n%s",about1, VERSION, author1, author2, website);
+	snprintf(tmp_str, sizeof(tmp_str), "%s Version %s/Release %s\n\nCopyright © 2006–2016 %s\n%s\n\n%s",about1, VERSION, VRELEASE, author1, author2, website);
 	GtkWidget *label = gtk_label_new(tmp_str);
         gtk_label_set_use_markup (GTK_LABEL(label), TRUE);
         gtk_label_set_markup(GTK_LABEL(label), tmp_str);
