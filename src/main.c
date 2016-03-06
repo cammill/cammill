@@ -931,15 +931,13 @@ void handler_preview (GtkWidget *widget, gpointer data) {
 void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf..."), "reloading dxf...");
 		loading = 1;
-#ifdef USE_G3D
 		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_G3D
 		} else {
 			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-		}
-#else
-		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
+		}
 		if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 			strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
 			dirname(PARAMETER[P_M_LOADPATH].vstr);
@@ -964,6 +962,11 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_set_name(ffilter, _("DXF-Drawings"));
 	gtk_file_filter_add_pattern(ffilter, "*.dxf");
 	gtk_file_filter_add_pattern(ffilter, "*.DXF");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
+
+	gtk_file_filter_set_name(ffilter, _("gCode-Files"));
+	gtk_file_filter_add_pattern(ffilter, "*.ngc");
+	gtk_file_filter_add_pattern(ffilter, "*.NGC");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 
 #ifdef USE_G3D
@@ -998,15 +1001,18 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 		strncpy(PARAMETER[P_V_DXF].vstr, filename, sizeof(PARAMETER[P_V_DXF].vstr));
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading dxf..."), "reading dxf...");
 		loading = 1;
-#ifdef USE_G3D
-		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+		if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
+			SetupLoadFromGcode(filename);
+			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+				dxf_read(PARAMETER[P_V_DXF].vstr);
+			}
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_G3D
 		} else {
 			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-		}
-#else
-		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
+		}
 		if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 			strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
 			dirname(PARAMETER[P_M_LOADPATH].vstr);
@@ -1516,15 +1522,18 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		}
 		if (loading == 0) {
 			loading = 1;
-#ifdef USE_G3D
-			if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+			if (strstr(PARAMETER[P_V_DXF].vstr, ".ngc") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".NGC") > 0) {
+				SetupLoadFromGcode(PARAMETER[P_V_DXF].vstr);
+				if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+					dxf_read(PARAMETER[P_V_DXF].vstr);
+				}
+			} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 				dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_G3D
 			} else {
 				slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-			}
-#else
-			dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
+			}
 			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 				strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
 				dirname(PARAMETER[P_M_LOADPATH].vstr);
@@ -2339,15 +2348,18 @@ void load_files () {
 	/* import DXF */
 	loading = 1;
 	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
-#ifdef USE_G3D
-		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+		if (strstr(PARAMETER[P_V_DXF].vstr, ".ngc") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".NGC") > 0) {
+			SetupLoadFromGcode(PARAMETER[P_V_DXF].vstr);
+			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+				dxf_read(PARAMETER[P_V_DXF].vstr);
+			}
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_G3D
 		} else {
 			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-		}
-#else
-		dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
+		}
 	}
 	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 		strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
