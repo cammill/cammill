@@ -70,6 +70,9 @@
 #include <postprocessor.h>
 #include <calc.h>
 #include <pocket.h>
+#ifdef __linux__
+#include <time.h>
+#endif
 
 #include "os-hacks.h"
 
@@ -936,9 +939,24 @@ void mill_begin (const char* path) {
 	}
 	postcam_var_push_string("fileName", PARAMETER[P_V_DXF].vstr);
 	postcam_var_push_string("postName", postcam_plugins[PARAMETER[P_H_POST].vint]);
-
-	postcam_var_push_string("date", __DATE__);
-
+#ifdef __linux__
+	char outstr[200];
+	time_t t;
+	struct tm *tmp;
+	t = time(NULL);
+	tmp = localtime(&t);
+	if (tmp == NULL) {
+		perror("localtime");
+		exit(EXIT_FAILURE);
+	}
+	if (strftime(outstr, sizeof(outstr), "%Y-%m-%d %H:%M:%S %Z", tmp) == 0) {
+		postcam_var_push_string("date", "------");
+	} else {
+		postcam_var_push_string("date", outstr);
+	}
+#else
+	postcam_var_push_string("date", "------");
+#endif
 	postcam_var_push_string("unit", PARAMETER[P_O_UNIT].vstr);
 	postcam_var_push_double("metric", 1.0);
 	postcam_var_push_int("feedRate", PARAMETER[P_M_PLUNGE_SPEED].vint);
@@ -1378,7 +1396,9 @@ void mill_end (void) {
 	}
 	postcam_call_function("OnSpindleOff");
 	postcam_call_function("OnFinish");
-	SetupShowGcode(fd_out);
+	if (PARAMETER[P_M_APPEND_CONFIG].vint == 1) {
+		SetupShowGcode(fd_out);
+	}
 }
 
 void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, char *comment) {

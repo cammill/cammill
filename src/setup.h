@@ -171,6 +171,7 @@ enum {
 	P_M_ZERO,
 	P_M_ZERO_X,
 	P_M_ZERO_Y,
+	P_M_APPEND_CONFIG,
 	P_MAT_TEXTURE,
 	P_M_NCDEBUG,
 #ifdef USE_VNC

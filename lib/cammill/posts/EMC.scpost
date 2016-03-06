@@ -7,7 +7,11 @@ function OnAbout(event)
 end
 
 function OnInit()
-	axisX = "X"
+    post.Text("(--------------------------------------------------)\n")
+    post.Text("( CAMmill EMC/LinuxCNC Postprocessor )\n")
+    post.Text("( Date/Time: ",date," )\n")
+    post.Text("(--------------------------------------------------)\n")
+   	axisX = "X"
 	axisY = "Y"
 	axisZ = "Z"
 	post.ModalNumberInit(" "..axisX, currentX)
