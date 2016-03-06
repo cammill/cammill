@@ -690,18 +690,39 @@ void output_text_gl_ (char *text, float x, float y, float z, float s) {
 	}
 }
 
-void output_text_dxf (char *text, char *layer, float x, float y, float z, float s, float w_scale, float h_scale, int fixed) {
-	char *fontfile = path_real("../share/cammill/fonts/rowmans.jhf");
+int output_text_dxf (char *text, char *layer, float x, float y, float z, float s, float w_scale, float h_scale, int fixed, char *font) {
+	char fontname[PATH_MAX];
+    if (font[0] == 0) {
+		return -1;
+	}
+	sprintf(fontname, "../share/cammill/fonts/%s.jhf", font);
+	char *fontfile = path_real(fontname);
     struct hershey_font *hf = hershey_jhf_font_load(fontfile);
+    if ( !hf ) {
+		fprintf(stderr, "load font failed\n");
+		return -1;
+    }
 	const char *p;
 	float fix_width = 16.0;
-    if ( !hf ) {
-		return;
-    }
 	y -= s * h_scale;
 	s /= 21.0;
 	float sw = s * w_scale;
 	float sh = s * h_scale;
+	if (fixed == 0) {
+		float total_w_fixed = 0.0;
+		float total_w = 0.0;
+		for (p = text; *p; p++) {
+			int c = *p;
+			struct hershey_glyph *hg = hershey_font_glyph(hf, c);
+			if (hg->width == 0) {
+				continue;
+			}
+			total_w += hg->width * sw;
+			total_w_fixed += hg->width * (s * w_scale * (fix_width / hg->width));
+		}
+		w_scale *= total_w_fixed / total_w;
+		sw = s * w_scale;
+	}
 	for (p = text; *p; p++) {
 		int c = *p;
 		struct hershey_glyph *hg = hershey_font_glyph(hf, c);
@@ -727,6 +748,7 @@ void output_text_dxf (char *text, char *layer, float x, float y, float z, float 
 		x += hg->width * sw;
 	}
 	hershey_font_free(hf);
+	return 0;
 }
 
 

@@ -122,7 +122,7 @@ char *output_buffer = NULL;
 char output_extension[128];
 char output_info[1024];
 char output_error[1024];
-int loading = 0;
+volatile int loading = 0;
 
 double zero_x = 0.0;
 double zero_y = 0.0;
@@ -1473,25 +1473,53 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	} else {
 		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
 	}
-	if (n == P_M_TEXT_SCALE_WIDTH || n == P_M_TEXT_SCALE_HEIGHT || n == P_M_TEXT_FIXED_WIDTH) {
+	if (n == P_M_TEXT_SCALE_WIDTH || n == P_M_TEXT_SCALE_HEIGHT || n == P_M_TEXT_FIXED_WIDTH || n == P_M_TEXT_FONT) {
 //		printf("UPDATED(%i): %s\n", n, PARAMETER[n].name);
-		loading = 1;
+		if (n == P_M_TEXT_FONT) {
+			DIR *dir;
+			struct dirent *ent;
+			int fn = 0;
+			char dir_fonts[PATH_MAX];
+			if (program_path[0] == 0) {
+				snprintf(dir_fonts, PATH_MAX, "%s", "../share/cammill/fonts");
+			} else {
+				snprintf(dir_fonts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "../share/cammill/fonts");
+			}
+			if ((dir = opendir(dir_fonts)) != NULL) {
+				while ((ent = readdir(dir)) != NULL) {
+					if (ent->d_name[0] != '.') {
+						char *pname = suffix_remove(ent->d_name);
+						if (fn == PARAMETER[P_M_TEXT_FONT].vint) {
+//							printf("FONT %i: %i %s\n", fn, PARAMETER[P_M_TEXT_FONT].vint, pname);
+							strcpy(PARAMETER[P_M_TEXT_FONT].vstr, pname);
+							free(pname);
+							break;
+						}
+						fn++;
+						free(pname);
+					}
+				}
+				closedir (dir);
+			}
+		}
+		if (loading == 0) {
+			loading = 1;
 #ifdef USE_G3D
-		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
-			dxf_read(PARAMETER[P_V_DXF].vstr);
-		} else {
-			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-		}
+			if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+				dxf_read(PARAMETER[P_V_DXF].vstr);
+			} else {
+				slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
+			}
 #else
-		dxf_read(PARAMETER[P_V_DXF].vstr);
+			dxf_read(PARAMETER[P_V_DXF].vstr);
 #endif
-		if (PARAMETER[P_V_DXF].vstr[0] != 0) {
-			strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
-			dirname(PARAMETER[P_M_LOADPATH].vstr);
+			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+				strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
+				dirname(PARAMETER[P_M_LOADPATH].vstr);
+			}
+			init_objects();
+			loading = 0;
 		}
-		init_objects();
-		loading = 0;
-
 	}
 }
 
@@ -2258,22 +2286,26 @@ void load_files () {
 		PARAMETER[P_H_POST].vint = -1;
 	}
 
-/*
-	if ((dir = opendir("fonts/")) != NULL) {
+	char dir_fonts[PATH_MAX];
+	if (program_path[0] == 0) {
+		snprintf(dir_fonts, PATH_MAX, "%s", "../share/cammill/fonts");
+	} else {
+		snprintf(dir_fonts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "../share/cammill/fonts");
+	}
+	if ((dir = opendir(dir_fonts)) != NULL) {
 		while ((ent = readdir(dir)) != NULL) {
 			if (ent->d_name[0] != '.') {
 				char *pname = suffix_remove(ent->d_name);
 				if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-					gtk_list_store_insert_with_values(ListStore[P_M_FONT], NULL, -1, 0, NULL, 1, pname, -1);
+					gtk_list_store_insert_with_values(ListStore[P_M_TEXT_FONT], NULL, -1, 0, NULL, 1, pname, -1);
 				}
 				free(pname);
 			}
 		}
 		closedir (dir);
 	} else {
-		fprintf(stderr, "fonts directory not found: fonts/\n");
+		fprintf(stderr, "postprocessor directory not found: %s\n", dir_fonts);
 	}
-*/
 
 	MaterialLoadList(program_path);
 	ToolLoadTable();

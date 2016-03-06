@@ -429,8 +429,9 @@ void dxf_read (char *file) {
 						double p_x1 = atof(dxf_options[OPTION_MTEXT_X]);
 						double p_y1 = atof(dxf_options[OPTION_MTEXT_Y]);
 						double p_s = atof(dxf_options[OPTION_MTEXT_SIZE]);
-						output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[8], p_x1, p_y1, 0.0, p_s, PARAMETER[P_M_TEXT_SCALE_WIDTH].vdouble, PARAMETER[P_M_TEXT_SCALE_HEIGHT].vdouble, PARAMETER[P_M_TEXT_FIXED_WIDTH].vint);
-						mtext_n++;
+						if (output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[8], p_x1, p_y1, 0.0, p_s, PARAMETER[P_M_TEXT_SCALE_WIDTH].vdouble, PARAMETER[P_M_TEXT_SCALE_HEIGHT].vdouble, PARAMETER[P_M_TEXT_FIXED_WIDTH].vint, PARAMETER[P_M_TEXT_FONT].vstr) == 0) {
+							mtext_n++;
+						}
 					} else if (strcmp(last_0, "$MEASUREMENT") == 0) {
 						int mesurement = atoi(dxf_options[OPTION_MEASUREMENT]);
 						if (mesurement == 1) {
