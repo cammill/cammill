@@ -67,7 +67,7 @@ PARA PARAMETER[] = {
 	{"Diameter",	"Tool",		"-td",	T_DOUBLE,	0,	3.0,	3.0,	"",	0.01,	0.01,	18.0,		"mm", 1, 1, "tool-diameter", 0, 0, 0},
 	{"CalcSpeed",	"Tool",		"",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 0, "calculated spindle-speed", 1, 0, 0},
 	{"Speed",	"Tool",		"-ts",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0},
-	{"Delay",	"Tool",		"-td",	T_INT,		1,	1.0,	1.0,	"",	1.0,	1.0,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
+	{"Delay",	"Tool",		"-td",	T_FLOAT,		1,	1.0,	1.0,	"",	1.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
 	{"Kepp spinning",	"Tool",		"-tk",	T_BOOL,		1,	1.0,	1.0,	"",	1.0,	1.0,	1.0,	"", 1, 1, "keep tool spinning", 0, 0, 0},
 	{"Flutes",	"Tool",		"-tw",	T_INT,		2,	0.0,	0.0,	"",	1.0,	1.0,	10.0,		"#", 1, 0, "flutes of the tool, to calculate max toolspeed and feedrate", 0, 0, 0},
 	{"Table",	"Tool",		"-tt",	T_FILE	,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "the tooltable filename", 0, 0, 0},
