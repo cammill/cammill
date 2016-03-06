@@ -154,10 +154,8 @@ hershey_jhf_load_glyph( struct hershey_glyph *hg, char *jhf_line )
 	    hplast = hp;
 	}
     }
-
     return 1;
 }
-
 
 //
 // Load a Hershey font .jhf file into a new struct hershey_font.
@@ -166,40 +164,34 @@ struct hershey_font *
 hershey_jhf_font_load( const char *jhffile )
 {
     struct hershey_font *hf;
-
     FILE *fp = fopen(jhffile, "r");
-    if (!fp)
-	return 0;
-
+    if (!fp) {
+		fprintf(stderr, "file not found '%s'\n", jhffile);
+		return 0;
+	}
     hf = calloc(1, sizeof(struct hershey_font));
     assert(hf);
-
 #define BUFSIZE 4096
-
     char linebuf[BUFSIZE];
     int linecount = 0;
     int glyph_index = 32;
-
     while ( fgets(linebuf, BUFSIZE, fp) ) {
-	int r;
-	struct hershey_glyph *hg;
-	hg = &(hf->glyphs[glyph_index++]);
-	r = hershey_jhf_load_glyph(hg, linebuf);
-	linecount++;
-	if ( ! r ) {
-	    perror(jhffile);
-	    fprintf(stderr, "%s: ... at line number %d\n", jhffile, linecount);
-	    hershey_font_free(hf);
-	    hf = 0;
-	    break;
-	}
+		int r;
+		struct hershey_glyph *hg;
+		hg = &(hf->glyphs[glyph_index++]);
+		r = hershey_jhf_load_glyph(hg, linebuf);
+		linecount++;
+		if ( ! r ) {
+			perror(jhffile);
+			fprintf(stderr, "%s: ... at line number %d\n", jhffile, linecount);
+			hershey_font_free(hf);
+			hf = 0;
+			break;
+		}
     }
-
     fclose(fp);
-
     return hf;
 }
-
 
 //
 // Load Hershey fontname (e.g. "rowmans") into a new struct hershey_font.
@@ -221,7 +213,6 @@ hershey_font_load( const char *fontname )
     return hf;
 }
 
-
 //
 // Return a pointer to the struct hershey_glyph for ASCII character c.
 //
@@ -230,7 +221,6 @@ hershey_font_glyph( struct hershey_font *hf, unsigned char c )
 {
     return &hf->glyphs[c];
 }
-
 
 //
 // Free a hershey_font allocated by hershey_font_load or hershey_jhf_font_load.

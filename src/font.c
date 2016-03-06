@@ -9,6 +9,20 @@
 #include <stdlib.h>
 #include <dxf.h>
 #include <hersheyfont.h>
+#ifdef __linux__
+#include <linux/limits.h> // for PATH_MAX
+#elif _WIN32
+#include <windows.h>
+#else
+#include <limits.h>
+#endif
+#include <setup.h>
+#include <font.h>
+#ifdef __APPLE__
+#include <malloc/malloc.h>
+#endif
+#include "os-hacks.h" // for getline()
+
 
 /*
 	Font-Data from: http://paulbourke.net/dataformats/hershey/
@@ -587,7 +601,6 @@ int simplex[95][112] = {
    -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
 };
 
-
 float output_char_gl (char c, float x, float y, float z, float s) {
 	int n = c - 32;
 	if (c >= 32 && c <= 126) {
@@ -635,46 +648,35 @@ void output_text_gl_center (char *text, float x, float y, float z, float s) {
 	glLineWidth(1);
 }
 
-
-
 void output_text_gl (char *text, float x, float y, float z, float s) {
-    struct hershey_font *hf = hershey_jhf_font_load("rowmans.jhf");
+	char *fontfile = path_real("../share/cammill/fonts/rowmans.jhf");
+    struct hershey_font *hf = hershey_jhf_font_load(fontfile);
     if ( !hf ) {
-	return;
+		return;
     }
-
     int x_render_pos = 0;
-
     const char *p;
     for (p = text; *p; p++) {
-
-	int c = *p;
-
-	struct hershey_glyph *hg = hershey_font_glyph(hf, c);
-	if ( hg->width == 0 )
-	    continue;
-
-	printf("# %c\n", c);
-
-	struct hershey_path *hp;
-	for ( hp=hg->paths; hp; hp=hp->next ) {
-	    printf("\t");
-	    int i;
-	    for ( i=0; i<hp->nverts; i++ ) {
-		short x = hp->verts[i].x + x_render_pos;
-		short y = hp->verts[i].y;
-		printf(" {%d,%d}", x, y);
-	    }
-	    printf("\n");
-	}
-
-	x_render_pos += hg->width;
+		int c = *p;
+		struct hershey_glyph *hg = hershey_font_glyph(hf, c);
+		if ( hg->width == 0 ) {
+			continue;
+		}
+		printf("# %c\n", c);
+		struct hershey_path *hp;
+		for ( hp=hg->paths; hp; hp=hp->next ) {
+			printf("\t");
+			int i;
+			for ( i=0; i<hp->nverts; i++ ) {
+				short x = hp->verts[i].x + x_render_pos;
+				short y = hp->verts[i].y;
+				printf(" {%d,%d}", x, y);
+			}
+			printf("\n");
+		}
+		x_render_pos += hg->width;
     }
-
     hershey_font_free(hf);
-
-
-
 }
 
 void output_text_gl_ (char *text, float x, float y, float z, float s) {
@@ -688,20 +690,26 @@ void output_text_gl_ (char *text, float x, float y, float z, float s) {
 	}
 }
 
-void output_text_dxf (char *text, char *layer, float x, float y, float z, float s) {
-	float fix_width = 13.0;
-	y -= s;
-	s /= 21.0;
-	struct hershey_font *hf = hershey_jhf_font_load("fonts/rowmans.jhf");
-	if (!hf) {
-		return;
-	}
+void output_text_dxf (char *text, char *layer, float x, float y, float z, float s, float w_scale, float h_scale, int fixed) {
+	char *fontfile = path_real("../share/cammill/fonts/rowmans.jhf");
+    struct hershey_font *hf = hershey_jhf_font_load(fontfile);
 	const char *p;
+	float fix_width = 16.0;
+    if ( !hf ) {
+		return;
+    }
+	y -= s * h_scale;
+	s /= 21.0;
+	float sw = s * w_scale;
+	float sh = s * h_scale;
 	for (p = text; *p; p++) {
 		int c = *p;
 		struct hershey_glyph *hg = hershey_font_glyph(hf, c);
 		if (hg->width == 0) {
 			continue;
+		}
+		if (fixed == 1) {
+			sw = s * w_scale * (fix_width / hg->width);
 		}
 		struct hershey_path *hp;
 		for ( hp=hg->paths; hp; hp=hp->next ) {
@@ -711,12 +719,12 @@ void output_text_dxf (char *text, char *layer, float x, float y, float z, float 
 			last_x = hp->verts[0].x;
 			last_y = hp->verts[0].y;
 			for (i = 1; i < hp->nverts; i++) {
-				add_line(TYPE_MTEXT, layer, x + (float)last_x * s, y + (float)last_y * s, x + (float)hp->verts[i].x * s, y + (float)hp->verts[i].y * s, 0, 0.0, 0.0);
+				add_line(TYPE_MTEXT, layer, x + (float)last_x * sw, y + (float)last_y * sh, x + (float)hp->verts[i].x * sw, y + (float)hp->verts[i].y * sh, 0, 0.0, 0.0);
 				last_x = hp->verts[i].x;
 				last_y = hp->verts[i].y;
 			}
 		}
-		x += fix_width * s;
+		x += hg->width * sw;
 	}
 	hershey_font_free(hf);
 }

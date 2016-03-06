@@ -1066,6 +1066,12 @@ void mill_objects (void) {
 			myOBJECTS[object_num].laser = PARAMETER[P_M_LASERMODE].vint;
 			myOBJECTS[object_num].climb = PARAMETER[P_M_CLIMB].vint;
 			myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
+
+
+			if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+				myOBJECTS[object_num].depth = PARAMETER[P_M_TEXT_MILL_DEPTH].vdouble;
+			}
+
 			if (PARAMETER[P_M_LASERMODE].vint == 1) {
 				myOBJECTS[object_num].laser = 1;
 			}

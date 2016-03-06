@@ -1407,7 +1407,6 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	if (loading == 1) {
 		return;
 	}
-//	printf("UPDATED(%i): %s\n", n, PARAMETER[n].name);
 	if (PARAMETER[n].type == T_FLOAT) {
 		PARAMETER[n].vfloat = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(widget));
 	} else if (PARAMETER[n].type == T_DOUBLE) {
@@ -1473,6 +1472,26 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
 	} else {
 		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+	}
+	if (n == P_M_TEXT_SCALE_WIDTH || n == P_M_TEXT_SCALE_HEIGHT || n == P_M_TEXT_FIXED_WIDTH) {
+//		printf("UPDATED(%i): %s\n", n, PARAMETER[n].name);
+		loading = 1;
+#ifdef USE_G3D
+		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
+			dxf_read(PARAMETER[P_V_DXF].vstr);
+		} else {
+			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
+		}
+#else
+		dxf_read(PARAMETER[P_V_DXF].vstr);
+#endif
+		if (PARAMETER[P_V_DXF].vstr[0] != 0) {
+			strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
+			dirname(PARAMETER[P_M_LOADPATH].vstr);
+		}
+		init_objects();
+		loading = 0;
+
 	}
 }
 
