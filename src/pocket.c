@@ -118,7 +118,7 @@ void mill_pocketline (int object_num, double depth, double last_depth, double *n
 				mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
 				mill_xy(0, myPOCKETLINES[shortest_line].x1, myPOCKETLINES[shortest_line].y1, depth, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 				if ((PARAMETER[P_CUT_SAVE].vdouble - last_depth) > PARAMETER[P_M_FAST_Z].vdouble) {
-					mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
+					mill_z(0, last_depth + PARAMETER[P_M_FAST_Z].vdouble);
 				}
 				mill_z(1, depth);
 			} else {
@@ -134,7 +134,7 @@ void mill_pocketline (int object_num, double depth, double last_depth, double *n
 				mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
 				mill_xy(0, myPOCKETLINES[shortest_line].x2, myPOCKETLINES[shortest_line].y2, depth, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 				if ((PARAMETER[P_CUT_SAVE].vdouble - last_depth) > PARAMETER[P_M_FAST_Z].vdouble) {
-					mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
+					mill_z(0, last_depth + PARAMETER[P_M_FAST_Z].vdouble);
 				}
 				mill_z(1, depth);
 			} else {
