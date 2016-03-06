@@ -940,7 +940,6 @@ void mill_begin (const char* path) {
 	postcam_var_push_string("unit", PARAMETER[P_O_UNIT].vstr);
 	postcam_var_push_double("metric", 1.0);
 	postcam_var_push_int("feedRate", PARAMETER[P_M_PLUNGE_SPEED].vint);
-	postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
 	postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
 	postcam_var_push_double("currentX", _X(1.1111));
 	postcam_var_push_double("currentY", _Y(1.1111));
@@ -970,34 +969,6 @@ void mill_begin (const char* path) {
 		postcam_var_push_string("axisY", "Y");
 	}
 	postcam_var_push_string("axisZ", "Z");
-	if (PARAMETER[P_M_LASERMODE].vint == 1) {
-		postcam_var_push_string("commentText", "Laser off");
-		postcam_call_function("OnSpindleOff");
-		postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
-		char tmp_str[1024];
-		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
-		postcam_var_push_string("toolName", tmp_str);
-		postcam_call_function("OnToolChange");
-		tool_last = PARAMETER[P_TOOL_NUM].vint;
-		postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
-		postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
-	} else {
-		postcam_var_push_string("commentText", "Spindle off");
-		postcam_call_function("OnSpindleOff");
-		postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
-		char tmp_str[1024];
-		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
-		postcam_var_push_string("toolName", tmp_str);
-		postcam_var_push_double("endZ", _Z(mill_last_z));
-		postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
-		postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
-		postcam_call_function("OnToolChange");
-		tool_last = PARAMETER[P_TOOL_NUM].vint;
-		if (PARAMETER[P_TOOL_KEEPSPIN].vint == 1) {
-			postcam_var_push_string("commentText", "Spindle on / CW");
-			postcam_call_function("OnSpindleCW");
-		}
-	}
 }
 
 void mill_z (int gcmd, double z) {
@@ -1057,6 +1028,11 @@ void mill_z (int gcmd, double z) {
 void mill_objects (void) {
 	int object_num = 0;
 	// update Object-Data
+	if (PARAMETER[P_M_TEXT_OVERWRITE].vint == 0) {
+		PARAMETER[P_M_TEXT_TOOL_NUM].vint = PARAMETER[P_TOOL_NUM].vint;
+		PARAMETER[P_M_TEXT_TOOL_DIAMETER].vdouble = PARAMETER[P_TOOL_DIAMETER].vdouble;
+		PARAMETER[P_M_TEXT_TOOL_SPEED].vint = PARAMETER[P_TOOL_SPEED].vint;
+	}
 	for (object_num = 0; object_num < object_last; object_num++) {
 		if (myOBJECTS[object_num].force == 0) {
 			myOBJECTS[object_num].order = 5;
@@ -1066,8 +1042,14 @@ void mill_objects (void) {
 			myOBJECTS[object_num].laser = PARAMETER[P_M_LASERMODE].vint;
 			myOBJECTS[object_num].climb = PARAMETER[P_M_CLIMB].vint;
 			myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
+			myOBJECTS[object_num].tool_num = PARAMETER[P_TOOL_NUM].vint;
+			myOBJECTS[object_num].tool_dia = PARAMETER[P_TOOL_DIAMETER].vdouble;
+			myOBJECTS[object_num].tool_speed = PARAMETER[P_TOOL_SPEED].vint;
 			if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
 				myOBJECTS[object_num].depth = PARAMETER[P_M_TEXT_MILL_DEPTH].vdouble;
+				myOBJECTS[object_num].tool_num = PARAMETER[P_M_TEXT_TOOL_NUM].vint;
+				myOBJECTS[object_num].tool_dia = PARAMETER[P_M_TEXT_TOOL_DIAMETER].vdouble;
+				myOBJECTS[object_num].tool_speed = PARAMETER[P_M_TEXT_TOOL_SPEED].vint;
 			}
 			if (PARAMETER[P_M_LASERMODE].vint == 1) {
 				myOBJECTS[object_num].laser = 1;
@@ -1402,7 +1384,6 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 		postcam_comment(comment);
 	}
 	if (gcmd != 0) {
-//		int hflag = 0;
 		postcam_var_push_int("feedRate", feed);
 		postcam_var_push_double("currentZ", _Z(mill_last_z));
 		postcam_var_push_double("currentX", _X(mill_last_x));
@@ -1442,14 +1423,13 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								double alpha1 = vector_angle(mill_last_x, mill_last_y, i_x, i_y);
 								double i_x2 = i_x;
 								double i_y2 = i_y;
-								add_angle_offset(&i_x2, &i_y2, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha1 + 180);
+								add_angle_offset(&i_x2, &i_y2, (PARAMETER[P_T_LEN].vdouble + myOBJECTS[object_num].tool_dia) / 2.0, alpha1 + 180);
 								double alpha2 = vector_angle(x, y, i_x, i_y);
 								double i_x3 = i_x;
 								double i_y3 = i_y;
-								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha2 + 180);
-								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
-								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, PARAMETER[P_TOOL_DIAMETER].vdouble);
-//								hflag = 1;
+								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + myOBJECTS[object_num].tool_dia) / 2.0, alpha2 + 180);
+								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
+								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, myOBJECTS[object_num].tool_dia);
 								postcam_var_push_double("endX", _X(i_x2));
 								postcam_var_push_double("endY", _Y(i_y2));
 								postcam_call_function("OnMove");
@@ -1523,7 +1503,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								double alpha1 = vector_angle(mill_last_x, mill_last_y, i_x, i_y);
 								double i_x2 = i_x;
 								double i_y2 = i_y;
-								add_angle_offset(&i_x2, &i_y2, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha1 + 180);
+								add_angle_offset(&i_x2, &i_y2, (PARAMETER[P_T_LEN].vdouble + myOBJECTS[object_num].tool_dia) / 2.0, alpha1 + 180);
 								double dist = set_positive(get_len(mill_last_x, mill_last_y, i_x, i_y));
 								double dist2 = set_positive(get_len(x, y, i_x, i_y));
 								if (dist < PARAMETER[P_T_LEN].vdouble || dist2 < PARAMETER[P_T_LEN].vdouble) {
@@ -1533,10 +1513,9 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								double alpha2 = vector_angle(x, y, i_x, i_y);
 								double i_x3 = i_x;
 								double i_y3 = i_y;
-								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha2 + 180);
-								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
-								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, PARAMETER[P_TOOL_DIAMETER].vdouble);
-//								hflag = 1;
+								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + myOBJECTS[object_num].tool_dia) / 2.0, alpha2 + 180);
+								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
+								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, myOBJECTS[object_num].tool_dia);
 								postcam_var_push_double("endX", _X(i_x2));
 								postcam_var_push_double("endY", _Y(i_y2));
 								postcam_call_function("OnMove");
@@ -1547,22 +1526,22 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 										if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
 											glColor4f(1.0, 1.0, 0.0, 0.5);
 											glBegin(GL_QUADS);
-											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 - myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 - myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
 											glEnd();
 											glBegin(GL_QUADS);
-											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 - myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
 											glEnd();
 											glBegin(GL_QUADS);
-											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
 											glEnd();
 										}
 									}
@@ -1582,16 +1561,16 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 										if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
 											glColor4f(1.0, 1.0, 0.0, 0.5);
 											glBegin(GL_QUADS);
-											glVertex3f(i_x2, i_y2 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x, i_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x, i_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2, i_y2 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 - myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x, i_y - myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x, i_y + myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2, i_y2 + myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
 											glEnd();
 											glBegin(GL_QUADS);
-											glVertex3f(i_x, i_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x3, i_y3 + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x, i_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x, i_y - myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 - myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3, i_y3 + myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x, i_y + myOBJECTS[object_num].tool_dia, PARAMETER[P_T_DEPTH].vdouble);
 											glEnd();
 										}
 									}
@@ -1648,7 +1627,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								double alpha1 = vector_angle(mill_last_x, mill_last_y, i_x, i_y);
 								double i_x2 = i_x;
 								double i_y2 = i_y;
-								add_angle_offset(&i_x2, &i_y2, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha1 + 180);
+								add_angle_offset(&i_x2, &i_y2, (PARAMETER[P_T_LEN].vdouble + myOBJECTS[object_num].tool_dia) / 2.0, alpha1 + 180);
 								double dist = set_positive(get_len(mill_last_x, mill_last_y, i_x, i_y));
 								double dist2 = set_positive(get_len(x, y, i_x, i_y));
 								if (dist < PARAMETER[P_T_LEN].vdouble || dist2 < PARAMETER[P_T_LEN].vdouble) {
@@ -1658,10 +1637,9 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 								double alpha2 = vector_angle(x, y, i_x, i_y);
 								double i_x3 = i_x;
 								double i_y3 = i_y;
-								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + PARAMETER[P_TOOL_DIAMETER].vdouble) / 2.0, alpha2 + 180);
-								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
-								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, PARAMETER[P_TOOL_DIAMETER].vdouble);
-//								hflag = 1;
+								add_angle_offset(&i_x3, &i_y3, (PARAMETER[P_T_LEN].vdouble + myOBJECTS[object_num].tool_dia) / 2.0, alpha2 + 180);
+								draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)i_x2, (float)i_y2, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
+								draw_line((float)i_x2, (float)i_y2, (float)PARAMETER[P_T_DEPTH].vdouble, (float)i_x3, (float)i_y3, PARAMETER[P_T_DEPTH].vdouble, myOBJECTS[object_num].tool_dia);
 								postcam_var_push_double("endX", _X(i_x2));
 								postcam_var_push_double("endY", _Y(i_y2));
 								postcam_call_function("OnMove");
@@ -1672,22 +1650,22 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 										if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 											glColor4f(1.0, 1.0, 0.0, 0.5);
 											glBegin(GL_QUADS);
-											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2 - myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2 - myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_M_DEPTH].vdouble);
 											glEnd();
 											glBegin(GL_QUADS);
-											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 - myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 + myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_T_DEPTH].vdouble);
 											glEnd();
 											glBegin(GL_QUADS);
-											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3 + myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3 + myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_T_DEPTH].vdouble);
 											glEnd();
 										}
 									}
@@ -1707,16 +1685,16 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 										if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 											glColor4f(1.0, 1.0, 0.0, 0.5);
 											glBegin(GL_QUADS);
-											glVertex3f(i_x2 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x2 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x2 - myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x - myOBJECTS[object_num].tool_dia, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x + myOBJECTS[object_num].tool_dia, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x2 + myOBJECTS[object_num].tool_dia, i_y2, PARAMETER[P_M_DEPTH].vdouble);
 											glEnd();
 											glBegin(GL_QUADS);
-											glVertex3f(i_x - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
-											glVertex3f(i_x3 - PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x3 + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y3, PARAMETER[P_M_DEPTH].vdouble);
-											glVertex3f(i_x + PARAMETER[P_TOOL_DIAMETER].vdouble, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x - myOBJECTS[object_num].tool_dia, i_y, PARAMETER[P_T_DEPTH].vdouble);
+											glVertex3f(i_x3 - myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x3 + myOBJECTS[object_num].tool_dia, i_y3, PARAMETER[P_M_DEPTH].vdouble);
+											glVertex3f(i_x + myOBJECTS[object_num].tool_dia, i_y, PARAMETER[P_T_DEPTH].vdouble);
 											glEnd();
 										}
 									}
@@ -1744,7 +1722,7 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 				}
 			}
 		}
-		draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+		draw_line((float)mill_last_x, (float)mill_last_y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 		if (gcmd == 1) {
 			postcam_var_push_double("endX", _X(x));
 			postcam_var_push_double("endY", _Y(y));
@@ -1832,7 +1810,7 @@ void mill_drill (double x, double y, double depth, double last_depth, int feed, 
 		mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
 	}
 	mill_z(1, depth);
-	draw_line(x, y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+	draw_line(x, y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 	mill_z(0, 0.0);
 }
 
@@ -1878,9 +1856,9 @@ void mill_circle_helix (int gcmd, double x, double y, double r, double depth, in
 		float x1 = r * cos(angle1);
 		float y1 = r * sin(angle1);
 		if (inside == 1) {
-			draw_line(last_x, last_y, (float)last_z, (float)x + x1, (float)y + y1, (float)draw_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+			draw_line(last_x, last_y, (float)last_z, (float)x + x1, (float)y + y1, (float)draw_z, myOBJECTS[object_num].tool_dia);
 		} else {
-			draw_line(last_x, last_y, (float)last_z, (float)x + x1, (float)y + y1, (float)draw_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+			draw_line(last_x, last_y, (float)last_z, (float)x + x1, (float)y + y1, (float)draw_z, myOBJECTS[object_num].tool_dia);
 		}
 		last_x = (float)x + x1;
 		last_y = (float)y + y1;
@@ -1925,15 +1903,15 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 		float y1 = r * sin(angle1);
 		if (inside == 1) {
 			if (gcmd == 3) {
-				draw_line(last_x, last_y, (float)mill_last_z, (float)x + x1, (float)y + y1, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+				draw_line(last_x, last_y, (float)mill_last_z, (float)x + x1, (float)y + y1, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 			} else {
-				draw_line((float)x + x1, (float)y + y1, (float)mill_last_z, last_x, last_y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+				draw_line((float)x + x1, (float)y + y1, (float)mill_last_z, last_x, last_y, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 			}
 		} else {
 			if (gcmd == 2) {
-				draw_line(last_x, last_y, (float)mill_last_z, (float)x + x1, (float)y + y1, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+				draw_line(last_x, last_y, (float)mill_last_z, (float)x + x1, (float)y + y1, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 			} else {
-				draw_line((float)x + x1, (float)y + y1, (float)mill_last_z, last_x, last_y, (float)mill_last_z, PARAMETER[P_TOOL_DIAMETER].vdouble);
+				draw_line((float)x + x1, (float)y + y1, (float)mill_last_z, last_x, last_y, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 			}
 		}
 		last_x = (float)x + x1;
@@ -1943,18 +1921,46 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 }
 
 void mill_move_in (double x, double y, double depth, int lasermode, int object_num) {
+	if (PARAMETER[P_M_LASERMODE].vint == 1) {
+		postcam_var_push_string("commentText", "Laser off");
+		postcam_call_function("OnSpindleOff");
+		postcam_var_push_double("tool", myOBJECTS[object_num].tool_num);
+		char tmp_str[1024];
+		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
+		postcam_var_push_string("toolName", tmp_str);
+		postcam_call_function("OnToolChange");
+		tool_last = myOBJECTS[object_num].tool_num;
+		postcam_var_push_int("spindleSpeed", myOBJECTS[object_num].tool_speed);
+		postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
+	} else {
+		postcam_var_push_string("commentText", "Spindle off");
+		postcam_call_function("OnSpindleOff");
+		postcam_var_push_double("tool", myOBJECTS[object_num].tool_num);
+		char tmp_str[1024];
+		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
+		postcam_var_push_string("toolName", tmp_str);
+		postcam_var_push_double("endZ", _Z(mill_last_z));
+		postcam_var_push_int("spindleSpeed", myOBJECTS[object_num].tool_speed);
+		postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
+		postcam_call_function("OnToolChange");
+		tool_last = myOBJECTS[object_num].tool_num;
+		if (PARAMETER[P_TOOL_KEEPSPIN].vint == 1) {
+			postcam_var_push_string("commentText", "Spindle on / CW");
+			postcam_call_function("OnSpindleCW");
+		}
+	}
 	// move to
 	if (lasermode == 1) {
-		if (tool_last != PARAMETER[P_TOOL_NUM].vint) {
+		if (tool_last != myOBJECTS[object_num].tool_num) {
 			postcam_var_push_string("commentText", "Laser off");
 			postcam_call_function("OnSpindleOff");
-			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
+			postcam_var_push_double("tool", myOBJECTS[object_num].tool_num);
 			char tmp_str[1024];
-			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
 			postcam_var_push_string("toolName", tmp_str);
 			postcam_call_function("OnToolChange");
-			tool_last = PARAMETER[P_TOOL_NUM].vint;
-			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
+			tool_last = myOBJECTS[object_num].tool_num;
+			postcam_var_push_int("spindleSpeed", myOBJECTS[object_num].tool_speed);
 			postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
 		}
 		mill_z(0, 0.0);
@@ -1962,18 +1968,18 @@ void mill_move_in (double x, double y, double depth, int lasermode, int object_n
 		postcam_var_push_string("commentText", "Laser on");
 		postcam_call_function("OnSpindleCW");
 	} else {
-		if (tool_last != PARAMETER[P_TOOL_NUM].vint) {
+		if (tool_last != myOBJECTS[object_num].tool_num) {
 			postcam_var_push_string("commentText", "Spindle off");
 			postcam_call_function("OnSpindleOff");
-			postcam_var_push_double("tool", PARAMETER[P_TOOL_NUM].vint);
+			postcam_var_push_double("tool", myOBJECTS[object_num].tool_num);
 			char tmp_str[1024];
-			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+			snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
 			postcam_var_push_string("toolName", tmp_str);
 			postcam_var_push_double("endZ", _Z(mill_last_z));
-			postcam_var_push_int("spindleSpeed", PARAMETER[P_TOOL_SPEED].vint);
+			postcam_var_push_int("spindleSpeed", myOBJECTS[object_num].tool_speed);
 			postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
 			postcam_call_function("OnToolChange");
-			tool_last = PARAMETER[P_TOOL_NUM].vint;
+			tool_last = myOBJECTS[object_num].tool_num;
 			if (PARAMETER[P_TOOL_KEEPSPIN].vint == 1) {
 				postcam_var_push_string("commentText", "Spindle on / CW");
 				postcam_call_function("OnSpindleCW");
@@ -2016,10 +2022,10 @@ void object_draw (FILE *fd_out, int object_num) {
 		if (PARAMETER[P_O_SELECT].vint == object_num) {
 			glColor4f(1.0, 0.0, 0.0, 0.3);
 			glBegin(GL_QUADS);
-			glVertex3f(myOBJECTS[object_num].min_x - PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].min_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-			glVertex3f(myOBJECTS[object_num].max_x + PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].min_y - PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-			glVertex3f(myOBJECTS[object_num].max_x + PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].max_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
-			glVertex3f(myOBJECTS[object_num].min_x - PARAMETER[P_TOOL_DIAMETER].vdouble, myOBJECTS[object_num].max_y + PARAMETER[P_TOOL_DIAMETER].vdouble, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].min_x - myOBJECTS[object_num].tool_dia, myOBJECTS[object_num].min_y - myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].max_x + myOBJECTS[object_num].tool_dia, myOBJECTS[object_num].min_y - myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].max_x + myOBJECTS[object_num].tool_dia, myOBJECTS[object_num].max_y + myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
+			glVertex3f(myOBJECTS[object_num].min_x - myOBJECTS[object_num].tool_dia, myOBJECTS[object_num].max_y + myOBJECTS[object_num].tool_dia, PARAMETER[P_M_DEPTH].vdouble);
 			glEnd();
 		}
 	}
@@ -2086,7 +2092,7 @@ void object_draw (FILE *fd_out, int object_num) {
 			}
 			draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
 			if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || PARAMETER[P_M_TEXT].vint == 1)) {
-				draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (PARAMETER[P_TOOL_DIAMETER].vdouble));
+				draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (myOBJECTS[object_num].tool_dia));
 			}
 			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 					glLineWidth(1);
@@ -2097,13 +2103,13 @@ void object_draw (FILE *fd_out, int object_num) {
 						if (tool_last != 5) {
 							postcam_var_push_string("commentText", "Spindle off");
 							postcam_call_function("OnSpindleOff");
-							postcam_var_push_int("tool", PARAMETER[P_TOOL_NUM].vint);
+							postcam_var_push_int("tool", myOBJECTS[object_num].tool_num);
 							char tmp_str[1024];
-							snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", PARAMETER[P_TOOL_NUM].vint);
+							snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
 							postcam_var_push_string("toolName", tmp_str);
 							postcam_call_function("OnToolChange");
 						}
-						tool_last = PARAMETER[P_TOOL_NUM].vint;
+						tool_last = myOBJECTS[object_num].tool_num;
 					}
 					mill_xy(0, myLINES[lnum].x1, myLINES[lnum].y1, 0.0, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 					if (lasermode == 1) {
@@ -2194,7 +2200,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 		if (r < 0.0) {
 			r *= -1;
 		}
-		if (r > PARAMETER[P_TOOL_DIAMETER].vdouble / 2.0) {
+		if (r > myOBJECTS[object_num].tool_dia / 2.0) {
 			if (offset == 1) {
 				r -= tool_offset;
 			} else if (offset == 2) {
@@ -2503,6 +2509,9 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	int tangencialmode = 0;
 	int offset = 0;
 	double mill_depth_real = 0.0;
+	if (PARAMETER[P_M_TEXT].vint == 0 && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+		return;
+	}
 	if (PARAMETER[P_M_LASERMODE].vint == 1) {
 		lasermode = 1;
 		PARAMETER[P_M_KNIFEMODE].vint = 0;
@@ -2510,11 +2519,9 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	if (PARAMETER[P_M_KNIFEMODE].vint == 1) {
 		tangencialmode = 1;
 	}
-
 	if (strncmp(myOBJECTS[object_num].layer, "knife", 5) == 0) {
 		tangencialmode = 1;
 	}
-
 	offset = myOBJECTS[object_num].offset;
 	mill_depth_real = myOBJECTS[object_num].depth;
 	overcut = myOBJECTS[object_num].overcut;
@@ -2522,7 +2529,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 		glLoadName(object_num);
 	}
-	tool_offset = PARAMETER[P_TOOL_DIAMETER].vdouble / 2.0;
+	tool_offset = myOBJECTS[object_num].tool_dia / 2.0;
 	if (myOBJECTS[object_num].use == 0) {
 		return;
 	}
@@ -2552,6 +2559,12 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	} else {
 		snprintf(cline, sizeof(cline), "Offset: Outside");
 	}
+	postcam_comment(cline);
+	snprintf(cline, sizeof(cline), "Tool-Num: %i", myOBJECTS[object_num].tool_num);
+	postcam_comment(cline);
+	snprintf(cline, sizeof(cline), "Tool-Diameter: %0.2f", myOBJECTS[object_num].tool_dia);
+	postcam_comment(cline);
+	snprintf(cline, sizeof(cline), "Tool-Speed: %i", myOBJECTS[object_num].tool_speed);
 	postcam_comment(cline);
 	postcam_comment("--------------------------------------------------");
 	postcam_call_function("OnNewPart");

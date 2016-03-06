@@ -65,6 +65,9 @@ typedef struct{
 	int laser;
 	int tabs;
 	int order;
+	int tool_num;
+	int tool_speed;
+	double tool_dia;
 	double depth;
 	double min_x;
 	double min_y;

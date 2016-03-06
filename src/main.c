@@ -1435,6 +1435,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		PARAMETER[P_O_DEPTH].vdouble = myOBJECTS[object_num].depth;
 		PARAMETER[P_O_ORDER].vint = myOBJECTS[object_num].order;
 		PARAMETER[P_O_TABS].vint = myOBJECTS[object_num].tabs;
+		PARAMETER[P_O_TOOL_NUM].vint = myOBJECTS[object_num].tool_num;
+		PARAMETER[P_O_TOOL_DIAMETER].vdouble = myOBJECTS[object_num].tool_dia;
+		PARAMETER[P_O_TOOL_SPEED].vint = myOBJECTS[object_num].tool_speed;
 	} else if (n > P_O_SELECT && PARAMETER[P_O_SELECT].vint != -1) {
 		int object_num = PARAMETER[P_O_SELECT].vint;
 		myOBJECTS[object_num].use = PARAMETER[P_O_USE].vint;
@@ -1448,6 +1451,9 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		myOBJECTS[object_num].depth = PARAMETER[P_O_DEPTH].vdouble;
 		myOBJECTS[object_num].order = PARAMETER[P_O_ORDER].vint;
 		myOBJECTS[object_num].tabs = PARAMETER[P_O_TABS].vint;
+		myOBJECTS[object_num].tool_num = PARAMETER[P_O_TOOL_NUM].vint;
+		myOBJECTS[object_num].tool_dia = PARAMETER[P_O_TOOL_DIAMETER].vdouble;
+		myOBJECTS[object_num].tool_speed = PARAMETER[P_O_TOOL_SPEED].vint;
 	}
 	if (n == P_MAT_SELECT) {
 		int mat_num = PARAMETER[P_MAT_SELECT].vint;
