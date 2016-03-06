@@ -624,6 +624,7 @@ float output_charlen_gl (char c, float s) {
 void output_text_gl_center (char *text, float x, float y, float z, float s) {
 	char *p;
 	float len = 0.0;
+	glLineWidth(3);
 	for (p = text; *p; p++) {
 		len += output_charlen_gl(*p, s);
 	}
@@ -631,6 +632,7 @@ void output_text_gl_center (char *text, float x, float y, float z, float s) {
 	for (p = text; *p; p++) {
 		x += output_char_gl(*p, x, y, z, s);
 	}
+	glLineWidth(1);
 }
 
 
