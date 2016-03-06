@@ -103,7 +103,7 @@ function OnNewOperation()
 end
 
 function OnComment()
-	post.Text(" (",commentText,")\n")
+	post.Text("(",commentText,")\n")
 end
 
 function OnToolChange()

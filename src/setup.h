@@ -192,5 +192,5 @@ void SetupLoad (void);
 int SetupArgCheck (char *arg, char *arg2);
 void SetupSavePreset (char *cfgfile);
 void SetupLoadPreset (char *cfgfile);
-
+void SetupLoadFromGcode (char *cfgfile);
 

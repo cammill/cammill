@@ -112,7 +112,7 @@ PARA PARAMETER[] = {
 	{"Tool-Speed",	"Text",		"-tots",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0},
 	// Machine
 	{"Fastmove-Speed","Machine",	 "-fs",	T_INT,		1000,	0.0,	0.0,	"",	0.0,	1.0,	10000.0,	"mm/min", 1, 0, "fast-move speed of the machine, to calculate the milling-time", 0, 0, 0},
-	{"Spindle-Delay",	"Machine",		"-td",	T_FLOAT,		1,	1.0,	1.0,	"",	1.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
+	{"Spindle-Delay",	"Machine",		"-tud",	T_FLOAT,		1,	1.0,	1.0,	"",	1.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
 	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm", 1, 1, "Fast-Z", 0, 0, 0},
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0},
@@ -240,22 +240,26 @@ void SetupShowHelp (void) {
 	fprintf(stdout, "cammill [OPTIONS] FILE\n");
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		snprintf(name_str, sizeof(name_str), "%s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+		if (PARAMETER[n].unit[0] != 0) {
+			snprintf(name_str, sizeof(name_str), "%6s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+		} else {
+			snprintf(name_str, sizeof(name_str), "         %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+		}
 		if (PARAMETER[n].readonly == 1) {
 		} else if (PARAMETER[n].type == T_FLOAT) {
-			fprintf(stdout, "%5s FLOAT    %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s FLOAT    %s\n", PARAMETER[n].arg, name_str);
 		} else if (PARAMETER[n].type == T_DOUBLE) {
-			fprintf(stdout, "%5s DOUBLE   %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s DOUBLE   %s\n", PARAMETER[n].arg, name_str);
 		} else if (PARAMETER[n].type == T_INT) {
-			fprintf(stdout, "%5s INT      %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
 		} else if (PARAMETER[n].type == T_SELECT) {
-			fprintf(stdout, "%5s INT      %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
 		} else if (PARAMETER[n].type == T_BOOL) {
-			fprintf(stdout, "%5s 0/1      %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s 0/1      %s\n", PARAMETER[n].arg, name_str);
 		} else if (PARAMETER[n].type == T_STRING) {
-			fprintf(stdout, "%5s STRING   %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s STRING   %s\n", PARAMETER[n].arg, name_str);
 		} else if (PARAMETER[n].type == T_FILE) {
-			fprintf(stdout, "%5s FILE     %s\n", PARAMETER[n].arg, name_str);
+			fprintf(stdout, "%6s FILE     %s\n", PARAMETER[n].arg, name_str);
 		}
 	}
 	fprintf(stdout, "\n");
@@ -411,6 +415,50 @@ void SetupLoadPreset (char *cfgfile) {
 			for (n = 0; n < P_LAST; n++) {
 				char name_str[1024];
 				snprintf(name_str, sizeof(name_str), "%s|%s=", PARAMETER[n].group, PARAMETER[n].name);
+				if (strncmp(line2, name_str, strlen(name_str)) == 0) {
+					if (PARAMETER[n].type == T_FLOAT) {
+						PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
+					} else if (PARAMETER[n].type == T_DOUBLE) {
+						PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
+					} else if (PARAMETER[n].type == T_INT) {
+						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+					} else if (PARAMETER[n].type == T_SELECT) {
+						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+					} else if (PARAMETER[n].type == T_BOOL) {
+						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+					} else if (PARAMETER[n].type == T_STRING) {
+						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+					} else if (PARAMETER[n].type == T_FILE) {
+						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+					}
+				}
+			}
+		}
+		fclose(cfg_fp);
+	}
+}
+
+void SetupLoadFromGcode (char *cfgfile) {
+	char line2[2048];
+	FILE *cfg_fp;
+	int n = 0;
+	setlocale(LC_NUMERIC, "C");
+	cfg_fp = fopen(cfgfile, "r");
+	if (cfg_fp == NULL) {
+		fprintf(stderr, "Can not read Setup: %s\n", cfgfile);
+	} else {
+		char *line = NULL;
+		size_t len = 0;
+		ssize_t read;
+		while ((read = getline(&line, &len, cfg_fp)) != -1) {
+			trimline(line2, 1024, line);
+			if (line2[0] != '(') {
+				continue;
+			}
+			line2[strlen(line2) - 1] = 0;
+			for (n = 0; n < P_LAST; n++) {
+				char name_str[1024];
+				snprintf(name_str, sizeof(name_str), "(cfg:%s-%s: ", PARAMETER[n].group, PARAMETER[n].name);
 				if (strncmp(line2, name_str, strlen(name_str)) == 0) {
 					if (PARAMETER[n].type == T_FLOAT) {
 						PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
