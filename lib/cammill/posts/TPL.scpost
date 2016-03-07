@@ -1,0 +1,138 @@
+post.ForceExtension("tbl")
+
+function OnAbout(event)
+	ctrl = event:GetTextCtrl()
+	ctrl:AppendText("TPL post processor\n")
+	ctrl:AppendText("(Camotics)\n")
+end
+
+function OnInit()
+    post.Text("// --------------------------------------------------\n")
+    post.Text("// CAMmill TPL Postprocessor\n")
+    post.Text("// Version/Release: ",version," - ",release,"\n")
+    post.Text("// Date/Time: ",date,"\n")
+    post.Text("// TPL-Info: http://tplang.org/\n")
+    post.Text("// --------------------------------------------------\n")
+	if unit == "inch" then
+		post.Text("units(IMPERIAL)\n")
+	else
+		post.Text("units(METRIC)\n")
+	end
+	post.Text("feed(", feedRate, ");")
+	post.Eol()
+	CurrentFeedRate = feedRate
+end
+
+function OnFinish()
+    post.Text("// end\n")
+end
+
+function OnRapid()
+	flag = 0
+	post.ModalText("rapid({")
+	if(endX ~= currentX) then
+		post.Text("x: ",endX)
+		flag = 1
+	end
+	if(endY ~= currentY) then
+		if(flag == 1) then
+			post.Text(", ")
+		end
+		post.Text("y: ",endY)
+		flag = 1
+	end
+	if(endZ ~= currentZ) then
+		if(flag == 1) then
+			post.Text(", ")
+		end
+		post.Text("z: ",endZ)
+		flag = 1
+	end
+	post.Text("});")
+	post.Eol()
+end
+
+function OnMove()
+	if (CurrentFeedRate ~= feedRate) then
+		post.Text("feed(", feedRate, ");")
+		post.Eol()
+		CurrentFeedRate = feedRate
+	end
+	flag = 0
+	post.ModalText("cut({")
+	if(endX ~= currentX) then
+		post.Text("x: ",endX)
+		flag = 1
+	end
+	if(endY ~= currentY) then
+		if(flag == 1) then
+			post.Text(", ")
+		end
+		post.Text("y: ",endY)
+		flag = 1
+	end
+	if(endZ ~= currentZ) then
+		if(flag == 1) then
+			post.Text(", ")
+		end
+		post.Text("z: ",endZ)
+		flag = 1
+	end
+	post.Text("});")
+	post.Eol()
+end
+
+function OnArc()
+	if (CurrentFeedRate ~= feedRate) then
+		post.Text("feed(", feedRate, ");")
+		post.Eol()
+		CurrentFeedRate = feedRate
+	end
+	post.Text("arc({x: ",(arcCentreX - currentX),", y: ",(arcCentreY - currentY),", z: ",(endZ - currentZ),", angle: ",arcAngle,"});")
+	post.Eol()
+end
+
+function OnSpindleCW()
+	post.Text("speed(",spindleSpeed,");")
+	post.Eol()
+	if (spindleDelay ~= 0) then
+		post.Text("dwell(",spindleDelay,");")
+		post.Eol()
+	end
+end
+
+function OnSpindleCCW()
+	post.Text("speed(",-spindleSpeed,");")
+	post.Eol()
+	if (spindleDelay ~= 0) then
+		post.Text("dwell(",spindleDelay,");")
+		post.Eol()
+	end
+end
+
+function OnSpindleOff()
+	post.Text("speed(0);")
+	post.Eol()
+end
+
+function OnNewOperation()
+end
+
+function OnComment()
+	post.Text("// ",commentText,"\n")
+end
+
+function OnToolChange()
+	post.Text("tool(", tool, ");")
+	post.Eol()
+end
+
+function OnFloodOn()
+end
+
+function OnMistOn()
+end
+
+function OnCoolantOff()
+end
+

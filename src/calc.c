@@ -947,12 +947,12 @@ void mill_begin (const char* path) {
 	postcam_var_push_double("metric", 1.0);
 	postcam_var_push_int("feedRate", PARAMETER[P_M_PLUNGE_SPEED].vint);
 	postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
-	postcam_var_push_double("currentX", _X(1.1111));
-	postcam_var_push_double("currentY", _Y(1.1111));
-	postcam_var_push_double("currentZ", _Z(1.1111));
-	postcam_var_push_double("endX", _X(1.1111));
-	postcam_var_push_double("endY", _Y(1.1111));
-	postcam_var_push_double("endZ", _Z(1.1111));
+	postcam_var_push_double("currentX", _X(mill_last_x));
+	postcam_var_push_double("currentY", _Y(mill_last_y));
+	postcam_var_push_double("currentZ", _Z(mill_last_z));
+	postcam_var_push_double("endX", _X(mill_last_x));
+	postcam_var_push_double("endY", _Y(mill_last_y));
+	postcam_var_push_double("endZ", _Z(mill_last_z));
 	postcam_var_push_double("toolOffset", 0.0);
 	postcam_var_push_int("tool", -1);
 	postcam_var_push_int("lastinst", 0);
@@ -1841,9 +1841,9 @@ void mill_circle_helix (int gcmd, double x, double y, double r, double depth, in
 	postcam_var_push_double("arcCentreX", _X(x));
 	postcam_var_push_double("arcCentreY", _Y(y));
 	if (gcmd == 2) {
-		postcam_var_push_double("arcAngle", 180.0);
+		postcam_var_push_double("arcAngle", toRad(180.0));
 	} else {
-		postcam_var_push_double("arcAngle", -180.0);
+		postcam_var_push_double("arcAngle", toRad(-180.0));
 	}
 	postcam_call_function("OnArc");
 	postcam_var_push_double("currentX", _X(x + r));
@@ -1893,9 +1893,9 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 	postcam_var_push_double("arcCentreX", _X(x));
 	postcam_var_push_double("arcCentreY", _Y(y));
 	if (gcmd == 2) {
-		postcam_var_push_double("arcAngle", 360.0);
+		postcam_var_push_double("arcAngle", toRad(180.0));
 	} else {
-		postcam_var_push_double("arcAngle", -360.0);
+		postcam_var_push_double("arcAngle", toRad(-180.0));
 	}
 	postcam_call_function("OnArc");
 	postcam_var_push_double("currentX", _X(x + r));
