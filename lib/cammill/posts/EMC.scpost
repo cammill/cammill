@@ -92,7 +92,7 @@ function OnSpindleCCW()
 	post.ModalNumber(" S", spindleSpeed, "0")
 	if (spindleDelay ~= 0) then
 		post.Text("G04")
-		post.ModalNumber(" P", spindleDelay, "0")
+		post.Text(" P", spindleDelay)
 		post.Text(" (pause in sec)")
 		post.Eol()
 	end
