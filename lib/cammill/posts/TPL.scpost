@@ -1,4 +1,4 @@
-post.ForceExtension("tbl")
+post.ForceExtension("tpl")
 
 function OnAbout(event)
 	ctrl = event:GetTextCtrl()

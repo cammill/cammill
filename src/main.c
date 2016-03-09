@@ -912,17 +912,42 @@ void handler_flip_y_drawing (GtkWidget *widget, gpointer data) {
 #ifdef __linux__
 void handler_preview (GtkWidget *widget, gpointer data) {
 	char tmp_file[PATH_MAX];
+	char cnc_file[PATH_MAX];
 	char cmd_str[PATH_MAX + 20];
-	strcpy(tmp_file, "/tmp/ngc-preview.tmp");
-	fd_out = fopen(tmp_file, "w");
+	sprintf(cnc_file, "/tmp/ngc-preview.%s", output_extension);
+	fd_out = fopen(cnc_file, "w");
 	if (fd_out == NULL) {
-		fprintf(stderr, "Can not open file: %s\n", tmp_file);
+		fprintf(stderr, "Can not open file: %s\n", cnc_file);
 	} else {
 		fprintf(fd_out, "%s", output_buffer);
 		fclose(fd_out);
-		snprintf(cmd_str, PATH_MAX, "/usr/bin/camotics \"%s\" &", tmp_file);
-		if (system(cmd_str) != 0) {
-			fprintf(stderr, "Can not open camotics: %s\n", tmp_file);
+		strcpy(tmp_file, "/tmp/ngc-preview.xml");
+		fd_out = fopen(tmp_file, "w");
+		if (fd_out == NULL) {
+			fprintf(stderr, "Can not open file: %s\n", tmp_file);
+		} else {
+			fprintf(fd_out, "<camotics>\n");
+			fprintf(fd_out, "  <nc-files>%s</nc-files>\n", cnc_file);
+			fprintf(fd_out, "  <resolution v='0.235543'/>\n");
+			fprintf(fd_out, "  <resolution-mode v='HIGH'/>\n");
+			fprintf(fd_out, "  <automatic-workpiece v='false'/>\n");
+			fprintf(fd_out, "  <workpiece-max v='(%f,%f,%f)'/>\n", (float)max_x - min_x + PARAMETER[P_TOOL_DIAMETER].vdouble, (float)max_y - min_y + PARAMETER[P_TOOL_DIAMETER].vdouble, (float)0.0);
+			fprintf(fd_out, "  <workpiece-min v='(%f,%f,%f)'/>\n", (float)0.0 - PARAMETER[P_TOOL_DIAMETER].vdouble, (float)0.0 - PARAMETER[P_TOOL_DIAMETER].vdouble, (float)PARAMETER[P_M_DEPTH].vdouble);
+			fprintf(fd_out, "  <tool_table>\n");
+			fprintf(fd_out, "    <tool length='%f' number='%i' radius='%f' shape='CYLINDRICAL' units='MM'/>\n", (float)-PARAMETER[P_M_DEPTH].vdouble + 1.0, PARAMETER[P_TOOL_NUM].vint, PARAMETER[P_TOOL_DIAMETER].vdouble / 2.0);
+			int object_num = 0;
+			for (object_num = 0; object_num < object_last; object_num++) {
+				if (myOBJECTS[object_num].force == 1) {
+					fprintf(fd_out, "    <tool length='%f' number='%i' radius='%f' shape='CYLINDRICAL' units='MM'/>\n", (float)-PARAMETER[P_M_DEPTH].vdouble + 1.0, myOBJECTS[object_num].tool_num, myOBJECTS[object_num].tool_dia / 2.0);
+				}
+			}
+			fprintf(fd_out, "  </tool_table>\n");
+			fprintf(fd_out, "</camotics>\n");
+			fclose(fd_out);
+			snprintf(cmd_str, PATH_MAX, "/usr/bin/camotics \"%s\" &", tmp_file);
+			if (system(cmd_str) != 0) {
+				fprintf(stderr, "Can not open camotics: %s\n", tmp_file);
+			}
 		}
 	}
 }

@@ -1846,7 +1846,9 @@ void mill_circle_helix (int gcmd, double x, double y, double r, double depth, in
 		postcam_var_push_double("arcAngle", toRad(-180.0));
 	}
 	postcam_call_function("OnArc");
+
 	postcam_var_push_double("currentX", _X(x + r));
+	postcam_var_push_double("currentZ", _Z(mill_last_z - (zstep / 2.0)));
 	postcam_var_push_double("endX", _X(x - r));
 	postcam_var_push_double("endZ", _Z(depth));
 	postcam_call_function("OnArc");
