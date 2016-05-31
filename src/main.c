@@ -94,8 +94,8 @@ char program_path[PATH_MAX];
 
 char *about1 = "CAMmill 2D";
 char *author1 = "Oliver Dippel <a href='mailto:oliver@multixmedia.org'>oliver@multixmedia.org</a>\nOS X port by McUles <a href='mailto:mcules@fpv-club.de'>mcules@fpv-club.de</a>";
-char *author2 = "improvements by Jakob Flierl <a href='https://github.com/koppi'>@koppi</a> and Carlo <a href='https://github.com/onekk'>@onekk</a>";
-char *website = "Website: <a href='https://github.com/cammill'>https://github.com/cammill</a>\nIRC: <a href='http://webchat.freenode.net/?nick=webchat_user&amp;channels=%23cammill&amp;prompt=1&amp;uio=MTE9MjM20f'>#cammill</a> (FreeNode) ";
+char *author2 = "improvements by <a href='https://github.com/koppi'>@koppi</a> and <a href='https://github.com/onekk'>@onekk</a>";
+char *website = "Website: <a href='https://github.com/cammill'>https://github.com/cammill</a>\nChat: <a href='https://gitter.im/cammill/cammill'>https://gitter.im/cammill/cammill</a>";
 
 int select_object_flag = 0;
 int select_object_x = 0;
