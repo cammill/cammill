@@ -1,5 +1,7 @@
 # CAMmill [![travis](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill) [![coverity](https://img.shields.io/coverity/scan/5573.svg)](https://scan.coverity.com/projects/5573)
 
+[![Join the chat at https://gitter.im/cammill/cammill](https://badges.gitter.im/cammill/cammill.svg)](https://gitter.im/cammill/cammill?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and gcode for CNC machines.
 
 ![license](https://img.shields.io/github/license/cammill/cammill.svg)
@@ -29,6 +31,6 @@ see [Wiki](https://github.com/cammill/cammill/wiki)
 
 ### Support
 
-Join us on IRC ([#cammill](http://webchat.freenode.net?nick=webchat_user&channels=%23cammill&prompt=1&uio=MTE9MjM20f) on Freenode), check out our [FAQ](https://github.com/cammill/cammill/wiki/Frequently%20Asked%20Questions), We're here to help!
+[![Join the chat at https://gitter.im/cammill/cammill](https://badges.gitter.im/cammill/cammill.svg)](https://gitter.im/cammill/cammill?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge), check out or edit the [FAQ](https://github.com/cammill/cammill/wiki/Frequently%20Asked%20Questions), We're here to help!
 
 Facebook [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
