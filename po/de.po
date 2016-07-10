@@ -355,7 +355,7 @@ msgstr "Z-Schritt pro Durchgang"
 msgid "Safe-Move"
 msgstr "Sichere-Z-Position"
 
-msgid "save move z-position"
+msgid "safe move z-position"
 msgstr "Sichere-Bewegungen"
 
 msgid "use this object"

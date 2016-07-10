@@ -199,7 +199,7 @@ msgstr "βάθος ανά βήμα"
 msgid "Safe-Move"
 msgstr "Αποθήκευση μετακίνησης"
 
-msgid "save move z-position"
+msgid "safe move z-position"
 msgstr "αποθήκευση μετακίνησης θέσης z"
 
 msgid "use this object"

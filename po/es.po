@@ -199,7 +199,7 @@ msgstr "profundidad por paso"
 msgid "Safe-Move"
 msgstr "Guardar-Mover"
 
-msgid "save move z-position"
+msgid "safe move z-position"
 msgstr "guardar movimiento Z-posición"
 
 msgid "use this object"

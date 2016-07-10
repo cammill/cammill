@@ -199,7 +199,7 @@ msgstr "độ sâu một bước"
 msgid "Safe-Move"
 msgstr "Lưu, di chuyển"
 
-msgid "save move z-position"
+msgid "safe move z-position"
 msgstr "lưu di chuyển vị trí trục z"
 
 msgid "use this object"

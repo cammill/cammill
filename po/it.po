@@ -346,7 +346,7 @@ msgstr "avanz. per Z-Step"
 msgid "Safe-Move"
 msgstr "Salva/muovi Pos-Z"
 
-msgid "save move z-position"
+msgid "safe move z-position"
 msgstr "salva/muovi posizione Z"
 
 msgid "use this object"

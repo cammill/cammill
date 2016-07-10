@@ -199,8 +199,8 @@ msgstr "глубина за шаг"
 msgid "Safe-Move"
 msgstr "Safe-Move"
 
-msgid "save move z-position"
-msgstr "save move z-position"
+msgid "safe move z-position"
+msgstr "safe move z-position"
 
 msgid "use this object"
 msgstr "использовать этот объект"
