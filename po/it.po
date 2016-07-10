@@ -343,7 +343,7 @@ msgstr "Z-Step"
 msgid "depth per step"
 msgstr "avanz. per Z-Step"
 
-msgid "Save-Move"
+msgid "Safe-Move"
 msgstr "Salva/muovi Pos-Z"
 
 msgid "save move z-position"

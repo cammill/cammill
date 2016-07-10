@@ -196,7 +196,7 @@ msgstr "Βήμα Ζ"
 msgid "depth per step"
 msgstr "βάθος ανά βήμα"
 
-msgid "Save-Move"
+msgid "Safe-Move"
 msgstr "Αποθήκευση μετακίνησης"
 
 msgid "save move z-position"

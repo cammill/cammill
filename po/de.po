@@ -352,7 +352,7 @@ msgstr "Z-Schritt"
 msgid "depth per step"
 msgstr "Z-Schritt pro Durchgang"
 
-msgid "Save-Move"
+msgid "Safe-Move"
 msgstr "Sichere-Z-Position"
 
 msgid "save move z-position"

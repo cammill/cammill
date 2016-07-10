@@ -196,7 +196,7 @@ msgstr "Bước Z"
 msgid "depth per step"
 msgstr "độ sâu một bước"
 
-msgid "Save-Move"
+msgid "Safe-Move"
 msgstr "Lưu, di chuyển"
 
 msgid "save move z-position"

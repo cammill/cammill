@@ -353,7 +353,7 @@ msgstr "Profondeur de passe"
 msgid "depth per step"
 msgstr "Pas en descente"
 
-msgid "Save-Move"
+msgid "Safe-Move"
 msgstr "Hauteur de securite"
 
 msgid "save move z-position"

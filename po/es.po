@@ -196,7 +196,7 @@ msgstr "Z-Paso"
 msgid "depth per step"
 msgstr "profundidad por paso"
 
-msgid "Save-Move"
+msgid "Safe-Move"
 msgstr "Guardar-Mover"
 
 msgid "save move z-position"

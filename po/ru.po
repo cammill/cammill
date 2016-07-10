@@ -196,8 +196,8 @@ msgstr "Z-шаг"
 msgid "depth per step"
 msgstr "глубина за шаг"
 
-msgid "Save-Move"
-msgstr "Save-Move"
+msgid "Safe-Move"
+msgstr "Safe-Move"
 
 msgid "save move z-position"
 msgstr "save move z-position"
