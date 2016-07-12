@@ -1043,6 +1043,9 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 			dirname(PARAMETER[P_M_LOADPATH].vstr);
 		}
 		init_objects();
+		if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
+			SetupLoadFromGcodeObjects(PARAMETER[P_V_DXF].vstr);
+		}
 		loading = 0;
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading dxf...done"), "reading dxf...done");
 		g_free(filename);
@@ -1502,7 +1505,7 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	}
 	if (n == P_O_TOLERANCE) {
 		loading = 1;
-		init_objects();
+//		init_objects();
 		loading = 0;
 	}
 	if (n != P_O_PARAVIEW && strncmp(PARAMETER[n].name, "Translate", 9) != 0 && strncmp(PARAMETER[n].name, "Rotate", 6) != 0 && strncmp(PARAMETER[n].name, "Zoom", 4) != 0) {
@@ -1545,9 +1548,15 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 				closedir (dir);
 			}
 		}
+/*
 		if (loading == 0) {
 			loading = 1;
-			if (strstr(PARAMETER[P_V_DXF].vstr, ".ngc") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".NGC") > 0) {
+			char filename[PATH_MAX];
+			strcpy(filename, PARAMETER[P_V_DXF].vstr);
+
+printf("## %s ##\n", filename);
+
+			if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
 				SetupLoadFromGcode(PARAMETER[P_V_DXF].vstr);
 				if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 					dxf_read(PARAMETER[P_V_DXF].vstr);
@@ -1564,8 +1573,12 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 				dirname(PARAMETER[P_M_LOADPATH].vstr);
 			}
 			init_objects();
+			if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
+				SetupLoadFromGcodeObjects(filename);
+			}
 			loading = 0;
 		}
+*/
 	}
 }
 
@@ -2372,6 +2385,8 @@ void load_files () {
 
 	/* import DXF */
 	loading = 1;
+	char filename[PATH_MAX];
+	strcpy(filename, PARAMETER[P_V_DXF].vstr);
 	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 		if (strstr(PARAMETER[P_V_DXF].vstr, ".ngc") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".NGC") > 0) {
 			SetupLoadFromGcode(PARAMETER[P_V_DXF].vstr);
@@ -2391,6 +2406,9 @@ void load_files () {
 		dirname(PARAMETER[P_M_LOADPATH].vstr);
 	}
 	init_objects();
+	if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
+		SetupLoadFromGcodeObjects(filename);
+	}
 	loading = 0;
 }
 
