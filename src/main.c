@@ -832,6 +832,9 @@ void handler_tool_mm2inch (GtkWidget *widget, gpointer data) {
 			myLINES[num].y2 /= 25.4;
 			myLINES[num].cx /= 25.4;
 			myLINES[num].cy /= 25.4;
+			if (myLINES[num].type == TYPE_ARC || myLINES[num].type == TYPE_CIRCLE) {
+				myLINES[num].opt /= 25.4;
+			}
 		}
 	}
 	if (PARAMETER[P_O_UNIT].vint == 1) {
@@ -852,6 +855,9 @@ void handler_tool_inch2mm (GtkWidget *widget, gpointer data) {
 			myLINES[num].y2 *= 25.4;
 			myLINES[num].cx *= 25.4;
 			myLINES[num].cy *= 25.4;
+			if (myLINES[num].type == TYPE_ARC || myLINES[num].type == TYPE_CIRCLE) {
+				myLINES[num].opt *= 25.4;
+			}
 		}
 	}
 	if (PARAMETER[P_O_UNIT].vint == 0) {
