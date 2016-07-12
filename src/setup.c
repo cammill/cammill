@@ -13,7 +13,6 @@
 #include <limits.h>
 #endif
 
-
 #include "os-hacks.h"
 #ifndef __MINGW32__
 #include <pwd.h>
@@ -33,6 +32,7 @@ extern GtkWidget *hbox;
 extern GtkWidget *GroupExpander[G_LAST];
 extern int PannedStat;
 extern int ExpanderStat[G_LAST];
+extern int object_last;
 
 PARA_GROUP GROUPS[] = {
 	{"View", ""},
@@ -184,21 +184,23 @@ void SetupShow (void) {
 	fprintf(stdout, "\n");
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		snprintf(name_str, sizeof(name_str), "%s-%s", PARAMETER[n].group, PARAMETER[n].name);
-		if (PARAMETER[n].type == T_FLOAT) {
-			fprintf(stdout, "%22s: %f\n", name_str, PARAMETER[n].vfloat);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			fprintf(stdout, "%22s: %f\n", name_str, PARAMETER[n].vdouble);
-		} else if (PARAMETER[n].type == T_INT) {
-			fprintf(stdout, "%22s: %i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			fprintf(stdout, "%22s: %i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			fprintf(stdout, "%22s: %i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_STRING) {
-			fprintf(stdout, "%22s: %s\n", name_str, PARAMETER[n].vstr);
-		} else if (PARAMETER[n].type == T_FILE) {
-			fprintf(stdout, "%22s: %s\n", name_str, PARAMETER[n].vstr);
+		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+			snprintf(name_str, sizeof(name_str), "%s-%s", PARAMETER[n].group, PARAMETER[n].name);
+			if (PARAMETER[n].type == T_FLOAT) {
+				fprintf(stdout, "%22s: %f\n", name_str, PARAMETER[n].vfloat);
+			} else if (PARAMETER[n].type == T_DOUBLE) {
+				fprintf(stdout, "%22s: %f\n", name_str, PARAMETER[n].vdouble);
+			} else if (PARAMETER[n].type == T_INT) {
+				fprintf(stdout, "%22s: %i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_SELECT) {
+				fprintf(stdout, "%22s: %i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_BOOL) {
+				fprintf(stdout, "%22s: %i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_STRING) {
+				fprintf(stdout, "%22s: %s\n", name_str, PARAMETER[n].vstr);
+			} else if (PARAMETER[n].type == T_FILE) {
+				fprintf(stdout, "%22s: %s\n", name_str, PARAMETER[n].vstr);
+			}
 		}
 	}
 	fprintf(stdout, "\n");
@@ -206,29 +208,57 @@ void SetupShow (void) {
 
 void SetupShowGcode (FILE *out) {
 	char tmp_str[1024];
+	char name_str[1024];
 	int n = 0;
 	postcam_comment("--------------------------------------------------");
 	postcam_comment("CAMmill-Configuration");
 	for (n = 0; n < P_LAST; n++) {
-		char name_str[1024];
-		snprintf(name_str, sizeof(name_str), "cfg:%s-%s", PARAMETER[n].group, PARAMETER[n].name);
-		if (PARAMETER[n].type == T_FLOAT) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %f", name_str, PARAMETER[n].vfloat);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %f", name_str, PARAMETER[n].vdouble);
-		} else if (PARAMETER[n].type == T_INT) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %i", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %i", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %i", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_STRING) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %s", name_str, PARAMETER[n].vstr);
-		} else if (PARAMETER[n].type == T_FILE) {
-			snprintf(tmp_str, sizeof(tmp_str), "%s: %s", name_str, PARAMETER[n].vstr);
-		} else {
-			continue;
+		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+			snprintf(name_str, sizeof(name_str), "cfg:%s-%s", PARAMETER[n].group, PARAMETER[n].name);
+			if (PARAMETER[n].type == T_FLOAT) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %f", name_str, PARAMETER[n].vfloat);
+			} else if (PARAMETER[n].type == T_DOUBLE) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %f", name_str, PARAMETER[n].vdouble);
+			} else if (PARAMETER[n].type == T_INT) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %i", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_SELECT) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %i", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_BOOL) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %i", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_STRING) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %s", name_str, PARAMETER[n].vstr);
+			} else if (PARAMETER[n].type == T_FILE) {
+				snprintf(tmp_str, sizeof(tmp_str), "%s: %s", name_str, PARAMETER[n].vstr);
+			} else {
+				continue;
+			}
+			postcam_comment(tmp_str);
 		}
+	}
+	for (n = 0; n < object_last - 2; n++) {
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-use: %i", n, myOBJECTS[n].use);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-closed: %i", n, myOBJECTS[n].closed);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-climb: %i", n, myOBJECTS[n].climb);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-force: %i", n, myOBJECTS[n].force);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-offset: %i", n, myOBJECTS[n].offset);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-overcut: %i", n, myOBJECTS[n].overcut);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-pocket: %i", n, myOBJECTS[n].pocket);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-helix: %i", n, myOBJECTS[n].helix);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-laser: %i", n, myOBJECTS[n].laser);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-order: %i", n, myOBJECTS[n].order);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-tabs: %i", n, myOBJECTS[n].tabs);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-depth: %f", n, myOBJECTS[n].depth);
 		postcam_comment(tmp_str);
 	}
 	postcam_comment("--------------------------------------------------");
@@ -240,26 +270,28 @@ void SetupShowHelp (void) {
 	fprintf(stdout, "cammill [OPTIONS] FILE\n");
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		if (PARAMETER[n].unit[0] != 0) {
-			snprintf(name_str, sizeof(name_str), "%6s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
-		} else {
-			snprintf(name_str, sizeof(name_str), "         %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
-		}
-		if (PARAMETER[n].readonly == 1) {
-		} else if (PARAMETER[n].type == T_FLOAT) {
-			fprintf(stdout, "%6s FLOAT    %s\n", PARAMETER[n].arg, name_str);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			fprintf(stdout, "%6s DOUBLE   %s\n", PARAMETER[n].arg, name_str);
-		} else if (PARAMETER[n].type == T_INT) {
-			fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			fprintf(stdout, "%6s 0/1      %s\n", PARAMETER[n].arg, name_str);
-		} else if (PARAMETER[n].type == T_STRING) {
-			fprintf(stdout, "%6s STRING   %s\n", PARAMETER[n].arg, name_str);
-		} else if (PARAMETER[n].type == T_FILE) {
-			fprintf(stdout, "%6s FILE     %s\n", PARAMETER[n].arg, name_str);
+		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+			if (PARAMETER[n].unit[0] != 0) {
+				snprintf(name_str, sizeof(name_str), "%6s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+			} else {
+				snprintf(name_str, sizeof(name_str), "         %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+			}
+			if (PARAMETER[n].readonly == 1) {
+			} else if (PARAMETER[n].type == T_FLOAT) {
+				fprintf(stdout, "%6s FLOAT    %s\n", PARAMETER[n].arg, name_str);
+			} else if (PARAMETER[n].type == T_DOUBLE) {
+				fprintf(stdout, "%6s DOUBLE   %s\n", PARAMETER[n].arg, name_str);
+			} else if (PARAMETER[n].type == T_INT) {
+				fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
+			} else if (PARAMETER[n].type == T_SELECT) {
+				fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
+			} else if (PARAMETER[n].type == T_BOOL) {
+				fprintf(stdout, "%6s 0/1      %s\n", PARAMETER[n].arg, name_str);
+			} else if (PARAMETER[n].type == T_STRING) {
+				fprintf(stdout, "%6s STRING   %s\n", PARAMETER[n].arg, name_str);
+			} else if (PARAMETER[n].type == T_FILE) {
+				fprintf(stdout, "%6s FILE     %s\n", PARAMETER[n].arg, name_str);
+			}
 		}
 	}
 	fprintf(stdout, "\n");
@@ -280,26 +312,27 @@ void SetupSave (void) {
 	}
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		snprintf(name_str, sizeof(name_str), "%s|%s", PARAMETER[n].group, PARAMETER[n].name);
-		if (PARAMETER[n].type == T_FLOAT) {
-			fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vfloat);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vdouble);
-		} else if (PARAMETER[n].type == T_INT) {
-			fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_STRING) {
-			fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
-		} else if (PARAMETER[n].type == T_FILE) {
-			fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
+		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+			snprintf(name_str, sizeof(name_str), "%s|%s", PARAMETER[n].group, PARAMETER[n].name);
+			if (PARAMETER[n].type == T_FLOAT) {
+				fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vfloat);
+			} else if (PARAMETER[n].type == T_DOUBLE) {
+				fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vdouble);
+			} else if (PARAMETER[n].type == T_INT) {
+				fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_SELECT) {
+				fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_BOOL) {
+				fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_STRING) {
+				fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
+			} else if (PARAMETER[n].type == T_FILE) {
+				fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
+			}
 		}
 	}
 	if (PARAMETER[P_O_PARAVIEW].vint == 0) {
 		fprintf(cfg_fp, "GUI|PANED|Position=%i\n", gtk_paned_get_position(GTK_PANED(hbox)));
-
 		int gn = 0;
 		for (gn = 0; gn < G_LAST; gn++) {
 			fprintf(cfg_fp, "GUI|EXPANDER|%s=%i\n", GROUPS[gn].name, gtk_expander_get_expanded(GTK_EXPANDER(GroupExpander[gn])));
@@ -319,22 +352,24 @@ void SetupSavePreset (char *cfgfile) {
 	}
 	for (n = 0; n < P_LAST; n++) {
 		char name_str[1024];
-		snprintf(name_str, sizeof(name_str), "%s|%s", PARAMETER[n].group, PARAMETER[n].name);
-		if (PARAMETER[n].inpreset == 0) {
-		} else if (PARAMETER[n].type == T_FLOAT) {
-			fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vfloat);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vdouble);
-		} else if (PARAMETER[n].type == T_INT) {
-			fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_STRING) {
-			fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
-		} else if (PARAMETER[n].type == T_FILE) {
-			fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
+		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+			snprintf(name_str, sizeof(name_str), "%s|%s", PARAMETER[n].group, PARAMETER[n].name);
+			if (PARAMETER[n].inpreset == 0) {
+			} else if (PARAMETER[n].type == T_FLOAT) {
+				fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vfloat);
+			} else if (PARAMETER[n].type == T_DOUBLE) {
+				fprintf(cfg_fp, "%s=%f\n", name_str, PARAMETER[n].vdouble);
+			} else if (PARAMETER[n].type == T_INT) {
+				fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_SELECT) {
+				fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_BOOL) {
+				fprintf(cfg_fp, "%s=%i\n", name_str, PARAMETER[n].vint);
+			} else if (PARAMETER[n].type == T_STRING) {
+				fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
+			} else if (PARAMETER[n].type == T_FILE) {
+				fprintf(cfg_fp, "%s=%s\n", name_str, PARAMETER[n].vstr);
+			}
 		}
 	}
 	fclose(cfg_fp);
@@ -373,22 +408,24 @@ void SetupLoad (void) {
 			} else {
 				for (n = 0; n < P_LAST; n++) {
 					char name_str[1024];
-					snprintf(name_str, sizeof(name_str), "%s|%s=", PARAMETER[n].group, PARAMETER[n].name);
-					if (strncmp(line2, name_str, strlen(name_str)) == 0) {
-						if (PARAMETER[n].type == T_FLOAT) {
-							PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
-						} else if (PARAMETER[n].type == T_DOUBLE) {
-							PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
-						} else if (PARAMETER[n].type == T_INT) {
-							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-						} else if (PARAMETER[n].type == T_SELECT) {
-							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-						} else if (PARAMETER[n].type == T_BOOL) {
-							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-						} else if (PARAMETER[n].type == T_STRING) {
-							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
-						} else if (PARAMETER[n].type == T_FILE) {
-							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+					if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+						snprintf(name_str, sizeof(name_str), "%s|%s=", PARAMETER[n].group, PARAMETER[n].name);
+						if (strncmp(line2, name_str, strlen(name_str)) == 0) {
+							if (PARAMETER[n].type == T_FLOAT) {
+								PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_DOUBLE) {
+								PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_INT) {
+								PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_SELECT) {
+								PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_BOOL) {
+								PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_STRING) {
+								strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+							} else if (PARAMETER[n].type == T_FILE) {
+								strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+							}
 						}
 					}
 				}
@@ -414,22 +451,24 @@ void SetupLoadPreset (char *cfgfile) {
 			trimline(line2, 1024, line);
 			for (n = 0; n < P_LAST; n++) {
 				char name_str[1024];
-				snprintf(name_str, sizeof(name_str), "%s|%s=", PARAMETER[n].group, PARAMETER[n].name);
-				if (strncmp(line2, name_str, strlen(name_str)) == 0) {
-					if (PARAMETER[n].type == T_FLOAT) {
-						PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_DOUBLE) {
-						PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_INT) {
-						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_SELECT) {
-						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_BOOL) {
-						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_STRING) {
-						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
-					} else if (PARAMETER[n].type == T_FILE) {
-						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+				if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+					snprintf(name_str, sizeof(name_str), "%s|%s=", PARAMETER[n].group, PARAMETER[n].name);
+					if (strncmp(line2, name_str, strlen(name_str)) == 0) {
+						if (PARAMETER[n].type == T_FLOAT) {
+							PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
+						} else if (PARAMETER[n].type == T_DOUBLE) {
+							PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
+						} else if (PARAMETER[n].type == T_INT) {
+							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+						} else if (PARAMETER[n].type == T_SELECT) {
+							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+						} else if (PARAMETER[n].type == T_BOOL) {
+							PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+						} else if (PARAMETER[n].type == T_STRING) {
+							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+						} else if (PARAMETER[n].type == T_FILE) {
+							strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+						}
 					}
 				}
 			}
@@ -456,25 +495,83 @@ void SetupLoadFromGcode (char *cfgfile) {
 				continue;
 			}
 			line2[strlen(line2) - 1] = 0;
-			for (n = 0; n < P_LAST; n++) {
-				char name_str[1024];
-				snprintf(name_str, sizeof(name_str), "(cfg:%s-%s: ", PARAMETER[n].group, PARAMETER[n].name);
-				if (strncmp(line2, name_str, strlen(name_str)) == 0) {
-					if (PARAMETER[n].type == T_FLOAT) {
-						PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_DOUBLE) {
-						PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_INT) {
-						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_SELECT) {
-						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_BOOL) {
-						PARAMETER[n].vint = atoi(line2 + strlen(name_str));
-					} else if (PARAMETER[n].type == T_STRING) {
-						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
-					} else if (PARAMETER[n].type == T_FILE) {
-						strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+			if (strncmp(line2, "(cfg:object-", 12) == 0) {
+			} else {
+				for (n = 0; n < P_LAST; n++) {
+					char name_str[1024];
+					if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+						snprintf(name_str, sizeof(name_str), "(cfg:%s-%s: ", PARAMETER[n].group, PARAMETER[n].name);
+						if (strncmp(line2, name_str, strlen(name_str)) == 0) {
+							if (PARAMETER[n].type == T_FLOAT) {
+								PARAMETER[n].vfloat = atof(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_DOUBLE) {
+								PARAMETER[n].vdouble = atof(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_INT) {
+								PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_SELECT) {
+								PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_BOOL) {
+								PARAMETER[n].vint = atoi(line2 + strlen(name_str));
+							} else if (PARAMETER[n].type == T_STRING) {
+								strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+							} else if (PARAMETER[n].type == T_FILE) {
+								strncpy(PARAMETER[n].vstr, line2 + strlen(name_str), sizeof(PARAMETER[n].vstr));
+							}
+						}
 					}
+				}
+			}
+		}
+		fclose(cfg_fp);
+	}
+}
+
+void SetupLoadFromGcodeObjects (char *cfgfile) {
+	char line2[2048];
+	FILE *cfg_fp;
+	int n = 0;
+	setlocale(LC_NUMERIC, "C");
+	cfg_fp = fopen(cfgfile, "r");
+	if (cfg_fp == NULL) {
+		fprintf(stderr, "Can not read Setup: %s\n", cfgfile);
+	} else {
+		char *line = NULL;
+		size_t len = 0;
+		ssize_t read;
+		while ((read = getline(&line, &len, cfg_fp)) != -1) {
+			trimline(line2, 1024, line);
+			if (line2[0] != '(') {
+				continue;
+			}
+			line2[strlen(line2) - 1] = 0;
+
+			if (strncmp(line2, "(cfg:object-", 12) == 0) {
+				n = atoi(line2 + 12);
+				char *p = strstr(line2 + 12, ":");
+				if (strstr(line2, "-use:") > 0) {
+					myOBJECTS[n].use = atoi(p + 2);
+				} else if (strstr(line2, "-closed:") > 0) {
+					myOBJECTS[n].closed = atoi(p + 2);
+				} else if (strstr(line2, "-climb:") > 0) {
+					myOBJECTS[n].climb = atoi(p + 2);
+				} else if (strstr(line2, "-force:") > 0) {
+					myOBJECTS[n].force = atoi(p + 2);
+				} else if (strstr(line2, "-offset:") > 0) {
+					myOBJECTS[n].offset = atoi(p + 2);
+				} else if (strstr(line2, "-overcut:") > 0) {
+					myOBJECTS[n].overcut = atoi(p + 2);
+				} else if (strstr(line2, "-pocket:") > 0) {
+					myOBJECTS[n].pocket = atoi(p + 2);
+				} else if (strstr(line2, "-helix:") > 0) {
+					myOBJECTS[n].helix = atoi(p + 2);
+				} else if (strstr(line2, "-laser:") > 0) {
+					myOBJECTS[n].laser = atoi(p + 2);
+				} else if (strstr(line2, "-order:") > 0) {
+					myOBJECTS[n].order = atoi(p + 2);
+				} else if (strstr(line2, "-tabs:") > 0) {
+					myOBJECTS[n].tabs = atoi(p + 2);
+				} else if (strstr(line2, "-depth:") > 0) {
+					myOBJECTS[n].depth = atof(p + 2);
 				}
 			}
 		}
@@ -485,23 +582,25 @@ void SetupLoadFromGcode (char *cfgfile) {
 int SetupArgCheck (char *arg, char *arg2) {
 	int n = 0;
 	for (n = 0; n < P_LAST; n++) {
-		if (strcmp(arg, PARAMETER[n].arg) == 0) {
-			if (PARAMETER[n].type == T_FLOAT) {
-				PARAMETER[n].vfloat = atof(arg2);
-			} else if (PARAMETER[n].type == T_DOUBLE) {
-				PARAMETER[n].vdouble = atof(arg2);
-			} else if (PARAMETER[n].type == T_INT) {
-				PARAMETER[n].vint = atoi(arg2);
-			} else if (PARAMETER[n].type == T_SELECT) {
-				PARAMETER[n].vint = atoi(arg2);
-			} else if (PARAMETER[n].type == T_BOOL) {
-				PARAMETER[n].vint = atoi(arg2);
-			} else if (PARAMETER[n].type == T_STRING) {
-				strncpy(PARAMETER[n].vstr, arg2, sizeof(PARAMETER[n].vstr));
-			} else if (PARAMETER[n].type == T_FILE) {
-				strncpy(PARAMETER[n].vstr, arg2, sizeof(PARAMETER[n].vstr));
+		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
+			if (strcmp(arg, PARAMETER[n].arg) == 0) {
+				if (PARAMETER[n].type == T_FLOAT) {
+					PARAMETER[n].vfloat = atof(arg2);
+				} else if (PARAMETER[n].type == T_DOUBLE) {
+					PARAMETER[n].vdouble = atof(arg2);
+				} else if (PARAMETER[n].type == T_INT) {
+					PARAMETER[n].vint = atoi(arg2);
+				} else if (PARAMETER[n].type == T_SELECT) {
+					PARAMETER[n].vint = atoi(arg2);
+				} else if (PARAMETER[n].type == T_BOOL) {
+					PARAMETER[n].vint = atoi(arg2);
+				} else if (PARAMETER[n].type == T_STRING) {
+					strncpy(PARAMETER[n].vstr, arg2, sizeof(PARAMETER[n].vstr));
+				} else if (PARAMETER[n].type == T_FILE) {
+					strncpy(PARAMETER[n].vstr, arg2, sizeof(PARAMETER[n].vstr));
+				}
+				return 1;
 			}
-			return 1;
 		}
 	}
 	return 0;
