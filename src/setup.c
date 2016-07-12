@@ -105,7 +105,7 @@ PARA PARAMETER[] = {
 	{"Fixed-W",	"Text",	"-tfw",	T_BOOL	,	1,	1.0,	1.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Text fixed with", 0, 0, 0},
 	{"Scale-W",	"Text",	"-tsw",	T_DOUBLE	,	1,	1.0,	1.0,	"",	0.1,	0.1,	100.0,		"", 1, 1, "Text scale with", 0, 0, 0},
 	{"Scale-H",	"Text",	"-tsh",	T_DOUBLE	,	1,	1.0,	1.0,	"",	0.1,	0.1,	100.0,		"", 1, 1, "Text scale height", 0, 0, 0},
-	{"Font",	"Text",	"-tfont",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"#", 0, 1, "font", 0, 0, 0},
+	{"Font",	"Text",	"-tfont",	T_SELECT,	0,	0.0,	0.0,	"timesib",	1.0,	1.0,	10000.0,	"#", 0, 1, "font", 0, 0, 0},
 	{"Overwrite",	"Text",	"-tobjf",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "override global parameters for this object", 0, 0, 0},
 	{"Tool-Number",	"Text",		"-totn",	T_INT,		1,	0.0,	0.0,	"",	1.0,	1.0,	18.0,		"#", 1, 1, "tool-number", 0, 0, 0},
 	{"Tool-Diameter",	"Text",	"-totd",	T_DOUBLE,	0,	3.0,	3.0,	"",	0.01,	0.01,	18.0,		"mm", 1, 1, "tool-diameter", 0, 0, 0},
