@@ -2214,6 +2214,7 @@ void create_gui () {
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(VncWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
 		gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), VncWindow, VncLabel);
 		snprintf(port, sizeof(port), "%i", PARAMETER[P_O_VNCPORT].vint);
+		vnc_display_set_scaling(VNC_DISPLAY(VncView), TRUE);
 		vnc_display_open_host(VNC_DISPLAY(VncView), PARAMETER[P_O_VNCSERVER].vstr, port);
 	}
 #endif
