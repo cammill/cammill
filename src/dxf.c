@@ -56,6 +56,7 @@ char block_name[1024];
 
 char LayerNames[MAX_OBJECTS][256];
 
+double vector_angle (double x1, double y1, double x2, double y2);
 double get_len (double x1, double y1, double x2, double y2);
 
 int mtext_n = 0;
@@ -465,11 +466,68 @@ void dxf_read (char *file) {
 								double chord = sqrt(pow(fabs(pl_last_x - p_x1), 2.0) + pow(fabs(pl_last_y - p_y1), 2.0));
 								double s = chord / 2.0 * p_r1;
 								double radius = (pow(chord / 2.0, 2.0) + pow(s, 2.0)) / (2.0 * s);
-								double len = get_len(pl_last_x, pl_last_y, p_x1, p_y1);
-								if (radius * 2 < len) {
-									radius *= 2.0;
+
+								// calc center-point
+								double d = sqrt((pl_last_x - p_x1)*(pl_last_x - p_x1) + (pl_last_y - p_y1)*(pl_last_y - p_y1));
+								double a = (radius * radius - radius * radius + d * d) / (2 * d);
+								double h = sqrt(radius * radius - a * a);
+								double tx = (p_x1 - pl_last_x) * (a / d) + pl_last_x;
+								double ty = (p_y1 - pl_last_y) * (a / d) + pl_last_y;
+								double cx = tx + h * (p_y1 - pl_last_y) / d;
+								double cy = ty - h * (p_x1 - pl_last_x) / d;
+								double x4 = tx - h * (p_y1 - pl_last_y) / d;
+								double y4 = ty + h * (p_x1 - pl_last_x) / d;
+
+//								add_line(TYPE_LINE, dxf_options[8], cx, cy, cx, cy, 0.0, 0.0, 0.0);
+
+								if (p_r1 > 0.0) {
+									cx = x4;
+									cy = y4;
 								}
-								add_line(TYPE_ARC, dxf_options[8], pl_last_x, pl_last_y, p_x1, p_y1, radius, 0.0, 0.0);
+
+//								add_line(TYPE_LINE, dxf_options[8], x4, y4, x4, y4, 0.0, 0.0, 0.0);
+//								add_line(TYPE_ARC, dxf_options[8], pl_last_x, pl_last_y, p_x1, p_y1, radius, 0.0, 0.0);
+
+								// calc start/end angle
+								double a1 = vector_angle(cx, cy, pl_last_x, pl_last_y);
+								double a2 = vector_angle(cx, cy, p_x1, p_y1);
+
+								//printf("## %f %f \n", a1 , a1);
+
+								// split arcs
+								double p_x1 = cx;
+								double p_y1 = cy;
+								double p_y2 = fabs(radius);
+								double p_a1 = a2;
+								double p_a2 = a1;
+								if (p_r1 > 0.0) {
+									p_a1 = a1;
+									p_a2 = a2;
+								}
+								if (p_a1 > p_a2) {
+									p_a2 += 360.0;
+								}
+								double r = p_y2;
+								double angle2 = toRad(p_a1);
+								double x2 = r * cos(angle2);
+								double y2 = r * sin(angle2);
+								double last_x = (p_x1 + x2);
+								double last_y = (p_y1 + y2);
+								double an = 0;
+								double p_rast = (p_a2 - p_a1) / 18.0;
+								for (an = p_a1 + p_rast; an <= p_a2 - (p_rast / 2.0); an += p_rast) {
+									double angle1 = toRad(an);
+									double x1 = r * cos(angle1);
+									double y1 = r * sin(angle1);
+									add_line(TYPE_ARC, dxf_options[8], last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
+									last_x = p_x1 + x1;
+									last_y = p_y1 + y1;
+								}
+								double angle3 = toRad(p_a2);
+								double x3 = r * cos(angle3);
+								double y3 = r * sin(angle3);
+								add_line(TYPE_ARC, dxf_options[8], last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
+
 							}
 						} else {
 							pl_first_x = p_x1;
