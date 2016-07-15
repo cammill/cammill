@@ -49,6 +49,10 @@
 
 #include "os-hacks.h" // for getline()
 
+#ifdef __gnu_linux__
+#define PYTHON_SPLINE 1
+#endif
+
 int block = 0;
 double block_x = 0.0;
 double block_y = 0.0;
@@ -242,7 +246,8 @@ void dxf_read (char *file) {
 	double pl_first_y = 0.0;
 	double pl_last_x = 0.0;
 	double pl_last_y = 0.0;
-
+	char spline_points[100000];
+	spline_points[0] = 0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		trimline(line2, 1024, line);
 		int dxfoption = atoi(line2);
@@ -341,15 +346,44 @@ void dxf_read (char *file) {
 						pl_closed = atoi(dxf_options[70]);
 						double p_x1 = atof(dxf_options[OPTION_LINE_X1]);
 						double p_y1 = atof(dxf_options[OPTION_LINE_Y1]);
+#ifndef PYTHON_SPLINE
 						double p_r1 = atof(dxf_options[42]);
+#endif
 						pl_last_x = p_x1;
 						pl_last_y = p_y1;
 						if (pl_closed == 1) {
+#ifndef PYTHON_SPLINE
 							add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, pl_first_x, pl_first_y, p_r1, 0.0, 0.0);
+#endif
 						}
+#ifdef PYTHON_SPLINE
+						double p_x2 = 0.0;
+						double p_y2 = 0.0;
+						strcat(spline_points, "]\n");
+						FILE* fd = NULL;
+						fd = fopen("/tmp/spline.points","w");
+						fprintf(fd, "%s", spline_points);
+						fclose(fd);
+						spline_points[0] = 0;
+						FILE *in;
+						char filename[PATH_MAX];
+						if (program_path[0] == 0) {
+							snprintf(filename, PATH_MAX, "python %s", "../lib/cammill/spline.py");
+						} else {
+							snprintf(filename, PATH_MAX, "python %s%s%s", program_path, DIR_SEP, "../lib/cammill/spline.py");
+						}
+						if ((in = popen(filename, "r"))){
+							char buff[512];
+							while(fgets(buff, sizeof(buff), in)!=NULL){
+								sscanf(buff, "%lf %lf %lf %lf", &p_x1, &p_y1, &p_x2, &p_y2);
+								add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], p_x1, p_y1, p_x2, p_y2, 0.0, 0.0, 0.0);
+							}
+							pclose(in);
+						}
+						system("rm -f /tmp/spline.points");
+#endif
 						spl_flag = 0;
 						pl_closed = 0;
-
 					} else if (strcmp(last_0, "ARC") == 0 || strcmp(last_0, "CIRCLE") == 0) {
 						double p_x1 = atof(dxf_options[OPTION_ARC_X]);
 						double p_y1 = atof(dxf_options[OPTION_ARC_Y]);
@@ -464,8 +498,20 @@ void dxf_read (char *file) {
 					} else if (dxfoption == 20) {
 						double p_x1 = atof(dxf_options[OPTION_SPLINE_CX]);
 						double p_y1 = atof(dxf_options[OPTION_SPLINE_CY]);
+#ifdef PYTHON_SPLINE
+						if (pl_last_x != p_x1 && pl_last_y != p_y1) {
+							if (spline_points[0] == 0) {
+								strcat(spline_points, "spline_points = [\n");
+							}
+							char tmp_str[128];
+							sprintf(tmp_str, " (%f, %f),\n", p_x1, p_y1);
+							strcat(spline_points, tmp_str);
+						}
+#endif
 						if (spl_flag > 0) {
+#ifndef PYTHON_SPLINE
 							add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, p_x1, p_y1, 0.0, 0.0, 0.0);
+#endif
 						} else {
 							pl_first_x = p_x1;
 							pl_first_y = p_y1;

@@ -173,7 +173,6 @@ GtkWidget *window;
 GtkWidget *dialog;
 
 
-
 void postcam_load_source (char *plugin) {
 	char tmp_str[PATH_MAX];
 	if (program_path[0] == 0) {

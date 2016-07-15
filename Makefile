@@ -69,6 +69,7 @@ install: ${BINARY} lang
 	@install -m 0755 ${BINARY} ${INSTALL_PATH}/${BINARY}
 	@install -m 0644 lib/cammill/posts/*.scpost ${INSTALL_PATH}/lib/cammill/posts/
 	@install -m 0644 lib/cammill/*.lua ${INSTALL_PATH}/lib/cammill/
+	@install -m 0644 lib/cammill/*.py ${INSTALL_PATH}/lib/cammill/
 	@install -m 0644 share/cammill/*.tbl ${INSTALL_PATH}/share/cammill/
 	@install -m 0644 share/cammill/icons/*.png ${INSTALL_PATH}/share/cammill/icons/
 	@install -m 0644 share/cammill/icons/*.icns ${INSTALL_PATH}/share/cammill/icons/
@@ -100,6 +101,7 @@ pinstall: ${BINARY} lang
 	@install -m 0755 ${BINARY} ${PKG_INSTALL_PATH}/${INSTALL_PATH}/${BINARY}
 	@install -m 0644 lib/${PROGRAM}/posts/*.scpost ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/${PROGRAM}/posts/
 	@install -m 0644 lib/${PROGRAM}/*.lua ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/${PROGRAM}/
+	@install -m 0644 lib/${PROGRAM}/*.py ${PKG_INSTALL_PATH}/${INSTALL_PATH}/lib/${PROGRAM}/
 	@install -m 0644 share/${PROGRAM}/*.tbl ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/
 	@install -m 0644 share/${PROGRAM}/icons/*.png ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/icons/
 	@install -m 0644 share/${PROGRAM}/icons/*.icns ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/icons/
