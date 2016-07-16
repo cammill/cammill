@@ -15,6 +15,29 @@
 #define OPTION_ARC_BEGIN	50
 #define OPTION_ARC_END		51
 
+#define OPTION_SPLINE_FLAG	70 // 1 = Closed spline, 2 = Periodic spline, 4 = Rational spline, 8 = Planar, 16 = Linear (planar bit is also set)
+#define OPTION_SPLINE_DEG	71 // Degree of the spline curve
+#define OPTION_SPLINE_NK	72 // Number of knots
+#define OPTION_SPLINE_CP	73 // Number of control points
+#define OPTION_SPLINE_FP	74 // Number of fit points (if any)
+#define OPTION_SPLINE_KT	42 // Knot tolerance (default = 0.0000001)
+#define OPTION_SPLINE_CT	43 // Control-point tolerance (default = 0.0000001)
+#define OPTION_SPLINE_FT	44 // Fit tolerance (default = 0.0000000001)
+#define OPTION_SPLINE_SX	12 // Start tangent-may be omitted (in WCS) DXF: X value
+#define OPTION_SPLINE_SY	22 // Y value
+#define OPTION_SPLINE_SZ	32 // Z value
+#define OPTION_SPLINE_EX	13 // End tangent-may be omitted (in WCS) DXF: X value
+#define OPTION_SPLINE_EY	23 // Y value
+#define OPTION_SPLINE_EZ	33 // Z value
+#define OPTION_SPLINE_KV	40 // Knot value (one entry per knot)
+#define OPTION_SPLINE_W		41 // Weight (if not 1); with multiple group pairs, are present if all are not 1
+#define OPTION_SPLINE_CX	10 // Control points (in WCS), one entry per control point DXF: X value; APP: 3D point
+#define OPTION_SPLINE_CY	20 // Y
+#define OPTION_SPLINE_CZ	30 // Z
+#define OPTION_SPLINE_FX	11 // Fit points (in WCS), one entry per fit point DXF: X value; APP: 3D point
+#define OPTION_SPLINE_FY	21 // Y
+#define OPTION_SPLINE_FZ	31 // Z
+
 #define OPTION_MTEXT_X		10
 #define OPTION_MTEXT_Y		20
 #define OPTION_MTEXT_SIZE	40

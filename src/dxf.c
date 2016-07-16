@@ -49,6 +49,10 @@
 
 #include "os-hacks.h" // for getline()
 
+#ifdef __gnu_linux__
+#define PYTHON_SPLINE 1
+#endif
+
 int block = 0;
 double block_x = 0.0;
 double block_y = 0.0;
@@ -71,6 +75,17 @@ int line_last = 0;
 
 void add_line (int type, char *layer, double x1, double y1, double x2, double y2, double opt, double cx, double cy) {
 //	printf("## ADD_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
+
+	x1 *= PARAMETER[P_O_SCALE].vdouble;
+	y1 *= PARAMETER[P_O_SCALE].vdouble;
+	x2 *= PARAMETER[P_O_SCALE].vdouble;
+	y2 *= PARAMETER[P_O_SCALE].vdouble;
+	if (type == TYPE_ARC || type == TYPE_CIRCLE) {
+		opt *= PARAMETER[P_O_SCALE].vdouble;
+	}
+	cx *= PARAMETER[P_O_SCALE].vdouble;
+	cy *= PARAMETER[P_O_SCALE].vdouble;
+
 	if (x1 > 10000.0 || y1 > 10000.0 || x2 > 10000.0 || y2 > 10000.0) {
 		fprintf(stderr, "dxf: ###### LINE TOO BIG; %f %f -> %f %f ######\n", x1, y1, x2, y2);
 		return;
@@ -88,7 +103,7 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 		}
 		// check if line allready exist
 		for (num = 0; num < line_last; num++) {
-			if (myLINES[num].cx == cx && myLINES[num].cy == cy && myLINES[num].opt == opt) {
+			if (myLINES[num].blockdata != 1 && myLINES[num].cx == cx && myLINES[num].cy == cy && myLINES[num].opt == opt) {
 				if (myLINES[num].x1 == x1 && myLINES[num].y1 == y1 && myLINES[num].x2 == x2 && myLINES[num].y2 == y2) {
 					printf("## DOUBLE_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
 					if (PARAMETER[P_M_DELETE_DOUBLE].vint == 1 || strcmp(myLINES[num].layer, layer) == 0) {
@@ -193,6 +208,62 @@ void clear_dxfoptions (void) {
 	}
 }
 
+void add_buldge (char *layer, double pl_last_x, double pl_last_y, double p_x1, double p_y1, double p_r1) {
+	double chord = sqrt(pow(fabs(pl_last_x - p_x1), 2.0) + pow(fabs(pl_last_y - p_y1), 2.0));
+	double s = chord / 2.0 * p_r1;
+	double radius = (pow(chord / 2.0, 2.0) + pow(s, 2.0)) / (2.0 * s);
+	// calc center-point
+	double d = sqrt((pl_last_x - p_x1)*(pl_last_x - p_x1) + (pl_last_y - p_y1)*(pl_last_y - p_y1));
+	double a = (radius * radius - radius * radius + d * d) / (2 * d);
+	double h = sqrt(radius * radius - a * a);
+	double tx = (p_x1 - pl_last_x) * (a / d) + pl_last_x;
+	double ty = (p_y1 - pl_last_y) * (a / d) + pl_last_y;
+	double cx = tx + h * (p_y1 - pl_last_y) / d;
+	double cy = ty - h * (p_x1 - pl_last_x) / d;
+	double x4 = tx - h * (p_y1 - pl_last_y) / d;
+	double y4 = ty + h * (p_x1 - pl_last_x) / d;
+	if (p_r1 > 0.0) {
+		cx = x4;
+		cy = y4;
+	}
+	// calc start/end angle
+	double a1 = vector_angle(cx, cy, pl_last_x, pl_last_y);
+	double a2 = vector_angle(cx, cy, p_x1, p_y1);
+	// split arcs
+	p_x1 = cx;
+	p_y1 = cy;
+	double p_y2 = fabs(radius);
+	double p_a1 = a2;
+	double p_a2 = a1;
+	if (p_r1 > 0.0) {
+		p_a1 = a1;
+		p_a2 = a2;
+	}
+	if (p_a1 > p_a2) {
+		p_a2 += 360.0;
+	}
+	double r = p_y2;
+	double angle2 = toRad(p_a1);
+	double x2 = r * cos(angle2);
+	double y2 = r * sin(angle2);
+	double last_x = (p_x1 + x2);
+	double last_y = (p_y1 + y2);
+	double an = 0;
+	double p_rast = (p_a2 - p_a1) / 18.0;
+	for (an = p_a1 + p_rast; an <= p_a2 - (p_rast / 2.0); an += p_rast) {
+		double angle1 = toRad(an);
+		double x1 = r * cos(angle1);
+		double y1 = r * sin(angle1);
+		add_line(TYPE_ARC, layer, last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
+		last_x = p_x1 + x1;
+		last_y = p_y1 + y1;
+	}
+	double angle3 = toRad(p_a2);
+	double x3 = r * cos(angle3);
+	double y3 = r * sin(angle3);
+	add_line(TYPE_ARC, layer, last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
+}
+
 void dxf_read (char *file) {
 	FILE *fp;
 	char *line = NULL;
@@ -235,13 +306,15 @@ void dxf_read (char *file) {
 	strcpy(last_0, "");
 
 	int lwpl_flag = 0;
+	int spl_flag = 0;
 	int pl_flag = 0;
 	int pl_closed = 0;
 	double pl_first_x = 0.0;
 	double pl_first_y = 0.0;
 	double pl_last_x = 0.0;
 	double pl_last_y = 0.0;
-
+	char spline_points[100000];
+	spline_points[0] = 0;
 	while ((read = getline(&line, &len, fp)) != -1) {
 		trimline(line2, 1024, line);
 		int dxfoption = atoi(line2);
@@ -273,7 +346,7 @@ void dxf_read (char *file) {
 						strncpy(block_name, dxf_options[2], sizeof(block_name));
 						int num = 0;
 						int last = line_last;
-						for (num = 0; num < last - 1; num++) {
+						for (num = 0; num < last; num++) {
 							if (myLINES[num].blockdata == 1 && myLINES[num].block[0] != 0 && strcmp(myLINES[num].block, block_name) == 0) {
 								add_line(myLINES[num].type, dxf_options[OPTION_LAYERNAME], myLINES[num].x1 * scale_x + block_x, myLINES[num].y1 * scale_y + block_y, myLINES[num].x2 * scale_x + block_x, myLINES[num].y2 * scale_y + block_y, myLINES[num].opt, myLINES[num].cx * scale_x + block_x, myLINES[num].cy * scale_y + block_y);
 							}
@@ -283,7 +356,7 @@ void dxf_read (char *file) {
 						double p_y1 = atof(dxf_options[OPTION_LINE_Y1]);
 						double p_x2 = atof(dxf_options[OPTION_LINE_X2]);
 						double p_y2 = atof(dxf_options[OPTION_LINE_Y2]);
-						add_line(TYPE_LINE, dxf_options[8], p_x1, p_y1, p_x2, p_y2, 0.0, 0.0, 0.0);
+						add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], p_x1, p_y1, p_x2, p_y2, 0.0, 0.0, 0.0);
 					} else if (strcmp(last_0, "VERTEX") == 0) {
 						double p_x1 = atof(dxf_options[OPTION_LINE_X1]);
 						double p_y1 = atof(dxf_options[OPTION_LINE_Y1]);
@@ -300,9 +373,9 @@ void dxf_read (char *file) {
 								if (radius * 2 < len) {
 									radius *= 2.0;
 								}
-								add_line(TYPE_ARC, dxf_options[8], pl_last_x, pl_last_y, p_x1, p_y1, radius, 0.0, 0.0);
+								add_line(TYPE_ARC, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, p_x1, p_y1, radius, 0.0, 0.0);
 							} else {
-								add_line(TYPE_LINE, dxf_options[8], pl_last_x, pl_last_y, p_x1, p_y1, 0.0, 0.0, 0.0);
+								add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, p_x1, p_y1, 0.0, 0.0, 0.0);
 							}
 						}
 						pl_last_x = p_x1;
@@ -310,7 +383,7 @@ void dxf_read (char *file) {
 						pl_flag = 1;
 					} else if (strcmp(last_0, "SEQEND") == 0) {
 						if (pl_closed == 1) {
-							add_line(TYPE_LINE, dxf_options[8], pl_last_x, pl_last_y, pl_first_x, pl_first_y, 0.0, 0.0, 0.0);
+							add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, pl_first_x, pl_first_y, 0.0, 0.0, 0.0);
 						}
 						pl_flag = 0;
 						pl_closed = 0;
@@ -324,27 +397,64 @@ void dxf_read (char *file) {
 						double p_r1 = atof(dxf_options[42]);
 						pl_last_x = p_x1;
 						pl_last_y = p_y1;
-						dxf_options[42][0] = 0;
 						if (pl_closed == 1) {
-							add_line(TYPE_LINE, dxf_options[8], pl_last_x, pl_last_y, pl_first_x, pl_first_y, p_r1, 0.0, 0.0);
+							if (dxf_options[42][0] == 0) {
+								add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, pl_first_x, pl_first_y, 0.0, 0.0, 0.0);
+							} else {
+								add_buldge(dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, pl_first_x, pl_first_y, p_r1);
+							}
 						}
+						dxf_options[42][0] = 0;
 						lwpl_flag = 0;
 						pl_closed = 0;
-
 					} else if (strcmp(last_0, "POINT") == 0) {
 						double p_x1 = atof(dxf_options[OPTION_POINT_X]);
 						double p_y1 = atof(dxf_options[OPTION_POINT_Y]);
 						double p_x2 = atof(dxf_options[OPTION_POINT_X]);
 						double p_y2 = atof(dxf_options[OPTION_POINT_Y]);
-						add_line(TYPE_POINT, dxf_options[8], p_x1, p_y1, p_x2, p_y2, 0.0, 0.0, 0.0);
+						add_line(TYPE_POINT, dxf_options[OPTION_LAYERNAME], p_x1, p_y1, p_x2, p_y2, 0.0, 0.0, 0.0);
 					} else if (strcmp(last_0, "SPLINE") == 0) {
-/*					} else if (strcmp(last_0, "CIRCLE") == 0) {
-						double cx = atof(dxf_options[OPTION_ARC_X]);
-						double cy = atof(dxf_options[OPTION_ARC_Y]);
-						double r = atof(dxf_options[OPTION_ARC_RADIUS]);
-						add_line(TYPE_CIRCLE, dxf_options[8], cx - r, cy, cx + r, cy, r, cx, cy);
-						add_line(TYPE_CIRCLE, dxf_options[8], cx + r, cy, cx - r, cy, r, cx, cy);
-*/
+						pl_closed = atoi(dxf_options[70]);
+						double p_x1 = atof(dxf_options[OPTION_LINE_X1]);
+						double p_y1 = atof(dxf_options[OPTION_LINE_Y1]);
+#ifndef PYTHON_SPLINE
+						double p_r1 = atof(dxf_options[42]);
+#endif
+						pl_last_x = p_x1;
+						pl_last_y = p_y1;
+						if (pl_closed == 1) {
+#ifndef PYTHON_SPLINE
+							add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, pl_first_x, pl_first_y, p_r1, 0.0, 0.0);
+#endif
+						}
+#ifdef PYTHON_SPLINE
+						double p_x2 = 0.0;
+						double p_y2 = 0.0;
+						strcat(spline_points, "]\n");
+						FILE* fd = NULL;
+						fd = fopen("/tmp/spline.points","w");
+						fprintf(fd, "%s", spline_points);
+						fclose(fd);
+						spline_points[0] = 0;
+						FILE *in;
+						char filename[PATH_MAX];
+						if (program_path[0] == 0) {
+							snprintf(filename, PATH_MAX, "python %s", "../lib/cammill/spline.py");
+						} else {
+							snprintf(filename, PATH_MAX, "python %s%s%s", program_path, DIR_SEP, "../lib/cammill/spline.py");
+						}
+						if ((in = popen(filename, "r"))){
+							char buff[512];
+							while(fgets(buff, sizeof(buff), in)!=NULL){
+								sscanf(buff, "%lf %lf %lf %lf", &p_x1, &p_y1, &p_x2, &p_y2);
+								add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], p_x1, p_y1, p_x2, p_y2, 0.0, 0.0, 0.0);
+							}
+							pclose(in);
+						}
+						system("rm -f /tmp/spline.points");
+#endif
+						spl_flag = 0;
+						pl_closed = 0;
 					} else if (strcmp(last_0, "ARC") == 0 || strcmp(last_0, "CIRCLE") == 0) {
 						double p_x1 = atof(dxf_options[OPTION_ARC_X]);
 						double p_y1 = atof(dxf_options[OPTION_ARC_Y]);
@@ -371,9 +481,9 @@ void dxf_read (char *file) {
 							double x1 = r * cos(angle1);
 							double y1 = r * sin(angle1);
 							if (strcmp(last_0, "CIRCLE") == 0) {
-								add_line(TYPE_CIRCLE, dxf_options[8], last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
+								add_line(TYPE_CIRCLE, dxf_options[OPTION_LAYERNAME], last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
 							} else {
-								add_line(TYPE_ARC, dxf_options[8], last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
+								add_line(TYPE_ARC, dxf_options[OPTION_LAYERNAME], last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
 							}
 							last_x = p_x1 + x1;
 							last_y = p_y1 + y1;
@@ -382,9 +492,9 @@ void dxf_read (char *file) {
 						double x3 = r * cos(angle3);
 						double y3 = r * sin(angle3);
 						if (strcmp(last_0, "CIRCLE") == 0) {
-							add_line(TYPE_CIRCLE, dxf_options[8], last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
+							add_line(TYPE_CIRCLE, dxf_options[OPTION_LAYERNAME], last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
 						} else {
-							add_line(TYPE_ARC, dxf_options[8], last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
+							add_line(TYPE_ARC, dxf_options[OPTION_LAYERNAME], last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
 						}
 					} else if (strcmp(last_0, "ELLIPSE") == 0) {
 						double p_x1 = atof(dxf_options[10]);
@@ -421,16 +531,16 @@ void dxf_read (char *file) {
 							double angle1 = toRad(an);
 							double x1 = r * cos(angle1);
 							double y1 = r * ratio * sin(angle1);
-							add_line(TYPE_ELLIPSE, dxf_options[8], last_x, last_y, p_x1 + x1, p_y1 + y1, 0.0, 0.0, 0.0);
+							add_line(TYPE_ELLIPSE, dxf_options[OPTION_LAYERNAME], last_x, last_y, p_x1 + x1, p_y1 + y1, 0.0, 0.0, 0.0);
 							last_x = p_x1 + x1;
 							last_y = p_y1 + y1;
 						}
-						add_line(TYPE_ELLIPSE, dxf_options[8], last_x, last_y, first_x, first_y, 0.0, 0.0, 0.0);
+						add_line(TYPE_ELLIPSE, dxf_options[OPTION_LAYERNAME], last_x, last_y, first_x, first_y, 0.0, 0.0, 0.0);
 					} else if (strcmp(last_0, "MTEXT") == 0) {
 						double p_x1 = atof(dxf_options[OPTION_MTEXT_X]);
 						double p_y1 = atof(dxf_options[OPTION_MTEXT_Y]);
 						double p_s = atof(dxf_options[OPTION_MTEXT_SIZE]);
-						if (output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[8], p_x1, p_y1, 0.0, p_s, PARAMETER[P_M_TEXT_SCALE_WIDTH].vdouble, PARAMETER[P_M_TEXT_SCALE_HEIGHT].vdouble, PARAMETER[P_M_TEXT_FIXED_WIDTH].vint, PARAMETER[P_M_TEXT_FONT].vstr) == 0) {
+						if (output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[OPTION_LAYERNAME], p_x1, p_y1, 0.0, p_s, PARAMETER[P_M_TEXT_SCALE_WIDTH].vdouble, PARAMETER[P_M_TEXT_SCALE_HEIGHT].vdouble, PARAMETER[P_M_TEXT_FIXED_WIDTH].vint, PARAMETER[P_M_TEXT_FONT].vstr) == 0) {
 							mtext_n++;
 						}
 					} else if (strcmp(last_0, "$MEASUREMENT") == 0) {
@@ -445,6 +555,7 @@ void dxf_read (char *file) {
 					} else {
 						pl_flag = 0;
 						lwpl_flag = 0;
+						spl_flag = 0;
 					}
 					clear_dxfoptions();
 				}
@@ -457,7 +568,34 @@ void dxf_read (char *file) {
 //			printf("## %i: %s\n", dxfoption, line2);
 			if (dxfoption < 256) {
 				strncpy(dxf_options[dxfoption], line2, sizeof(dxf_options[dxfoption]));
-				if (strcmp(last_0, "LWPOLYLINE") == 0) {
+				if (strcmp(last_0, "SPLINE") == 0) {
+					if (dxfoption == 10) {
+					} else if (dxfoption == 20) {
+						double p_x1 = atof(dxf_options[OPTION_SPLINE_CX]);
+						double p_y1 = atof(dxf_options[OPTION_SPLINE_CY]);
+#ifdef PYTHON_SPLINE
+						if (pl_last_x != p_x1 && pl_last_y != p_y1) {
+							if (spline_points[0] == 0) {
+								strcat(spline_points, "spline_points = [\n");
+							}
+							char tmp_str[128];
+							sprintf(tmp_str, " (%f, %f),\n", p_x1, p_y1);
+							strcat(spline_points, tmp_str);
+						}
+#endif
+						if (spl_flag > 0) {
+#ifndef PYTHON_SPLINE
+							add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, p_x1, p_y1, 0.0, 0.0, 0.0);
+#endif
+						} else {
+							pl_first_x = p_x1;
+							pl_first_y = p_y1;
+						}
+						pl_last_x = p_x1;
+						pl_last_y = p_y1;
+						spl_flag++;
+					}
+				} else if (strcmp(last_0, "LWPOLYLINE") == 0) {
 					if (dxfoption == 10) {
 					} else if (dxfoption == 20) {
 						double p_x1 = atof(dxf_options[OPTION_LINE_X1]);
@@ -465,73 +603,9 @@ void dxf_read (char *file) {
 						double p_r1 = atof(dxf_options[42]);
 						if (lwpl_flag > 0) {
 							if (dxf_options[42][0] == 0) {
-								add_line(TYPE_LINE, dxf_options[8], pl_last_x, pl_last_y, p_x1, p_y1, 0.0, 0.0, 0.0);
+								add_line(TYPE_LINE, dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, p_x1, p_y1, 0.0, 0.0, 0.0);
 							} else {
-								double chord = sqrt(pow(fabs(pl_last_x - p_x1), 2.0) + pow(fabs(pl_last_y - p_y1), 2.0));
-								double s = chord / 2.0 * p_r1;
-								double radius = (pow(chord / 2.0, 2.0) + pow(s, 2.0)) / (2.0 * s);
-
-								// calc center-point
-								double d = sqrt((pl_last_x - p_x1)*(pl_last_x - p_x1) + (pl_last_y - p_y1)*(pl_last_y - p_y1));
-								double a = (radius * radius - radius * radius + d * d) / (2 * d);
-								double h = sqrt(radius * radius - a * a);
-								double tx = (p_x1 - pl_last_x) * (a / d) + pl_last_x;
-								double ty = (p_y1 - pl_last_y) * (a / d) + pl_last_y;
-								double cx = tx + h * (p_y1 - pl_last_y) / d;
-								double cy = ty - h * (p_x1 - pl_last_x) / d;
-								double x4 = tx - h * (p_y1 - pl_last_y) / d;
-								double y4 = ty + h * (p_x1 - pl_last_x) / d;
-
-//								add_line(TYPE_LINE, dxf_options[8], cx, cy, cx, cy, 0.0, 0.0, 0.0);
-
-								if (p_r1 > 0.0) {
-									cx = x4;
-									cy = y4;
-								}
-
-//								add_line(TYPE_LINE, dxf_options[8], x4, y4, x4, y4, 0.0, 0.0, 0.0);
-//								add_line(TYPE_ARC, dxf_options[8], pl_last_x, pl_last_y, p_x1, p_y1, radius, 0.0, 0.0);
-
-								// calc start/end angle
-								double a1 = vector_angle(cx, cy, pl_last_x, pl_last_y);
-								double a2 = vector_angle(cx, cy, p_x1, p_y1);
-
-								//printf("## %f %f \n", a1 , a1);
-
-								// split arcs
-								double p_x1 = cx;
-								double p_y1 = cy;
-								double p_y2 = fabs(radius);
-								double p_a1 = a2;
-								double p_a2 = a1;
-								if (p_r1 > 0.0) {
-									p_a1 = a1;
-									p_a2 = a2;
-								}
-								if (p_a1 > p_a2) {
-									p_a2 += 360.0;
-								}
-								double r = p_y2;
-								double angle2 = toRad(p_a1);
-								double x2 = r * cos(angle2);
-								double y2 = r * sin(angle2);
-								double last_x = (p_x1 + x2);
-								double last_y = (p_y1 + y2);
-								double an = 0;
-								double p_rast = (p_a2 - p_a1) / 18.0;
-								for (an = p_a1 + p_rast; an <= p_a2 - (p_rast / 2.0); an += p_rast) {
-									double angle1 = toRad(an);
-									double x1 = r * cos(angle1);
-									double y1 = r * sin(angle1);
-									add_line(TYPE_ARC, dxf_options[8], last_x, last_y, p_x1 + x1, p_y1 + y1, r, p_x1, p_y1);
-									last_x = p_x1 + x1;
-									last_y = p_y1 + y1;
-								}
-								double angle3 = toRad(p_a2);
-								double x3 = r * cos(angle3);
-								double y3 = r * sin(angle3);
-								add_line(TYPE_ARC, dxf_options[8], last_x, last_y, p_x1 + x3, p_y1 + y3, r, p_x1, p_y1);
-
+								add_buldge(dxf_options[OPTION_LAYERNAME], pl_last_x, pl_last_y, p_x1, p_y1, p_r1);
 							}
 						} else {
 							pl_first_x = p_x1;
@@ -546,8 +620,6 @@ void dxf_read (char *file) {
 			}
 		}
 	}
-
-//exit(0);
 	fclose(fp);
 }
 
