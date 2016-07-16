@@ -157,6 +157,7 @@ PARA PARAMETER[] = {
 	{"Maximized","Window",	"-wmax",		T_BOOL	,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Maximized", 1, 0, 0},
 	// Misc
 	{"Unit",	"Misc",		"-munit",	T_SELECT,	1,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"", 1, 1, "Unit mm/inch", 0, 0, 0},
+	{"Scale",	"Misc",		"-scale",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0001,	0.01,	100.0,		"x", 1, 1, "Scale input file", 0, 0, 0},
 	{"Tolerance",	"Misc",		"-mto",	T_DOUBLE,	0,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"mm", 1, 1, "Tollerance between points to close objects", 0, 0, 0},
 	{"Tool-Table",	"Misc",		"-tt",	T_FILE	,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "the tooltable filename", 0, 0, 0},
 	{"Parameter",	"Misc",		"-te",	T_SELECT,	0,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 1, 1, "Tabs or Expander for Parameter", 0, 0, 0},

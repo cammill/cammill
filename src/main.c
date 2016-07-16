@@ -1510,7 +1510,13 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	}
 	if (n == P_O_TOLERANCE) {
 		loading = 1;
-//		init_objects();
+		init_objects();
+		loading = 0;
+	}
+	if (n == P_O_SCALE) {
+		loading = 1;
+		handler_reload_dxf(NULL, NULL);
+		init_objects();
 		loading = 0;
 	}
 	if (n != P_O_PARAVIEW && strncmp(PARAMETER[n].name, "Translate", 9) != 0 && strncmp(PARAMETER[n].name, "Rotate", 6) != 0 && strncmp(PARAMETER[n].name, "Zoom", 4) != 0) {
@@ -2430,6 +2436,8 @@ int main (int argc, char *argv[]) {
 	setlocale(LC_NUMERIC, "C");
 
 	SetupLoad();
+	// set allways to 1.0, preset only via command line arguments
+	PARAMETER[P_O_SCALE].vdouble = 1.0;
 	ArgsRead(argc, argv);
 //	SetupShow();
 

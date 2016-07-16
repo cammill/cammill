@@ -159,6 +159,7 @@ enum {
 	P_W_MAX,
 	// Misc
 	P_O_UNIT,
+	P_O_SCALE,
 	P_O_TOLERANCE,
 	P_TOOL_TABLE,
 	P_O_PARAVIEW,
