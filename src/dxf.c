@@ -450,6 +450,10 @@ void dxf_read (char *file) {
 				}
 				strncpy(last_0, line2, sizeof(last_0));
 			}
+			else if(dxfoption == 9 && strcmp(line2, "$MEASUREMENT") == 0)
+			{
+				strncpy(last_0, line2, sizeof(last_0));
+			}
 //			printf("## %i: %s\n", dxfoption, line2);
 			if (dxfoption < 256) {
 				strncpy(dxf_options[dxfoption], line2, sizeof(dxf_options[dxfoption]));
