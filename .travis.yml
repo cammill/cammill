@@ -69,4 +69,4 @@ addons:
       description: "2D CAM tool for Linux/BSD, Windows and Mac OS X"
       build_command_prepend: "make clean"
       build_command: "make"
-      branch_pattern: master
+      branch_pattern: coverity_scan
