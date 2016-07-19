@@ -994,6 +994,7 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_add_pattern(ffilter, "*.DXF");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 
+	ffilter = gtk_file_filter_new();
 	gtk_file_filter_set_name(ffilter, _("gCode-Files"));
 	gtk_file_filter_add_pattern(ffilter, "*.ngc");
 	gtk_file_filter_add_pattern(ffilter, "*.NGC");
