@@ -173,6 +173,7 @@ PARA PARAMETER[] = {
 	{"Append Config",	"Misc",  "-ac",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "Append Config to Output-File", 0, 0, 0},
 	{"Texture",	"Misc",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 1, 1, "Bitmap file to load for texture rendering", 1, 0, 0},
 	{"NC-Debug",	"Misc", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects whithout offsets / for debuging", 0, 0, 0},
+	{"DXF-Debug",	"Misc", 	"-dd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output some debug text while loading dxf", 0, 0, 0},
 #ifdef USE_VNC
 	{"VNC-Server",	"Misc",		"-vs",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "VNC-Server address", 0, 0, 0},
 	{"VNC-Port",	"Misc",		"-vp",	T_INT,		5900,	0.0,	0.0,	"",	0.0,	1.0,	35000.0,	"", 0, 0, "VNC-Server port", 0, 0, 0},

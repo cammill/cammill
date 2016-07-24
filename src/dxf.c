@@ -74,8 +74,9 @@ int line_n = 1;
 int line_last = 0;
 
 void add_line (int type, char *layer, double x1, double y1, double x2, double y2, double opt, double cx, double cy) {
-//	printf("## ADD_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
-
+	if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
+		printf("dxf:  ADD_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
+	}
 	x1 *= PARAMETER[P_O_SCALE].vdouble;
 	y1 *= PARAMETER[P_O_SCALE].vdouble;
 	x2 *= PARAMETER[P_O_SCALE].vdouble;
@@ -322,6 +323,9 @@ void dxf_read (char *file) {
 			trimline(line2, 1024, line);
 			if (dxfoption == 0) {
 				if (last_0[0] != 0) {
+					if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
+						printf("dxf: %s\n", last_0);
+					}
 					if (strcmp(last_0, "BLOCK") == 0) {
 						block = 1;
 						block_x = atof(dxf_options[OPTION_POINT_X]);
