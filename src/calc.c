@@ -1931,34 +1931,6 @@ void mill_circle (int gcmd, double x, double y, double r, double depth, int feed
 }
 
 void mill_move_in (double x, double y, double depth, int lasermode, int object_num) {
-	if (PARAMETER[P_M_LASERMODE].vint == 1) {
-		postcam_var_push_string("commentText", "Laser off");
-		postcam_call_function("OnSpindleOff");
-		postcam_var_push_double("tool", myOBJECTS[object_num].tool_num);
-		char tmp_str[1024];
-		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
-		postcam_var_push_string("toolName", tmp_str);
-		postcam_call_function("OnToolChange");
-		tool_last = myOBJECTS[object_num].tool_num;
-		postcam_var_push_int("spindleSpeed", myOBJECTS[object_num].tool_speed);
-		postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
-	} else {
-		postcam_var_push_string("commentText", "Spindle off");
-		postcam_call_function("OnSpindleOff");
-		postcam_var_push_double("tool", myOBJECTS[object_num].tool_num);
-		char tmp_str[1024];
-		snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].tool_num);
-		postcam_var_push_string("toolName", tmp_str);
-		postcam_var_push_double("endZ", _Z(mill_last_z));
-		postcam_var_push_int("spindleSpeed", myOBJECTS[object_num].tool_speed);
-		postcam_var_push_double("spindleDelay", PARAMETER[P_TOOL_DELAY].vfloat);
-		postcam_call_function("OnToolChange");
-		tool_last = myOBJECTS[object_num].tool_num;
-		if (PARAMETER[P_TOOL_KEEPSPIN].vint == 1) {
-			postcam_var_push_string("commentText", "Spindle on / CW");
-			postcam_call_function("OnSpindleCW");
-		}
-	}
 	// move to
 	if (lasermode == 1) {
 		if (tool_last != myOBJECTS[object_num].tool_num) {

@@ -112,7 +112,7 @@ PARA PARAMETER[] = {
 	{"Tool-Speed",	"Text",		"-tots",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0},
 	// Machine
 	{"Fastmove-Speed","Machine",	 "-fs",	T_INT,		1000,	0.0,	0.0,	"",	0.0,	1.0,	10000.0,	"mm/min", 1, 0, "fast-move speed of the machine, to calculate the milling-time", 0, 0, 0},
-	{"Spindle-Delay",	"Machine",		"-tud",	T_FLOAT,		1,	1.0,	1.0,	"",	1.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
+	{"Spindle-Delay",	"Machine",		"-tud",	T_FLOAT,		1,	1.0,	1.0,	"",	0.0,	1.0,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
 	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm", 1, 1, "Fast-Z", 0, 0, 0},
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0},
