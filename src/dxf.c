@@ -281,7 +281,13 @@ void dxf_read (char *file) {
 		myLINES = NULL;
 	}
 	// set default to mm
-	PARAMETER[P_O_UNIT].vint = 1;
+	if (PARAMETER[P_O_UNIT_LOAD].vint == 0) {
+		PARAMETER[P_O_UNIT].vint = 0;
+		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+	} else {
+		PARAMETER[P_O_UNIT].vint = 1;
+		strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+	}
 	strcpy(dxf_typename[TYPE_NONE], "None");
 	strcpy(dxf_typename[TYPE_LINE], "Line");
 	strcpy(dxf_typename[TYPE_ARC], "Arc");
@@ -549,12 +555,14 @@ void dxf_read (char *file) {
 						}
 					} else if (strcmp(last_0, "$MEASUREMENT") == 0) {
 						int mesurement = atoi(dxf_options[OPTION_MEASUREMENT]);
-						if (mesurement == 1) {
-							PARAMETER[P_O_UNIT].vint = 1;
-							strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
-						} else {
-							PARAMETER[P_O_UNIT].vint = 0;
-							strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+						if (PARAMETER[P_O_UNIT_LOAD].vint == 2) {
+							if (mesurement == 1) {
+								PARAMETER[P_O_UNIT].vint = 1;
+								strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
+							} else {
+								PARAMETER[P_O_UNIT].vint = 0;
+								strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
+							}
 						}
 					} else {
 						pl_flag = 0;

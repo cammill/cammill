@@ -78,6 +78,9 @@ void slice_3d (char *file, float z);
 #include <setup.h>
 #include <postprocessor.h>
 #include <calc.h>
+#ifdef USE_BMPMODE
+#include <bmp.h>
+#endif
 
 #include "os-hacks.h"
 
@@ -100,6 +103,8 @@ char *website = "Website: <a href='https://github.com/cammill'>https://github.co
 int select_object_flag = 0;
 int select_object_x = 0;
 int select_object_y = 0;
+
+int main_mode = 0;
 
 int winw = 1600;
 int winh = 1200;
@@ -155,7 +160,10 @@ GtkWidget *glCanvas;
 GtkWidget *gCodeView;
 GtkWidget *gCodeViewLua;
 GtkWidget *hbox;
+GtkWidget *GroupBox[G_LAST];
 GtkWidget *GroupExpander[G_LAST];
+GtkWidget *GroupLabel[G_LAST];
+GtkWidget *GroupBoxFrame[G_LAST];
 
 int PannedStat;
 int ExpanderStat[G_LAST];
@@ -489,8 +497,44 @@ void select_object (GLint hits, GLuint buffer[]) {
 	}
 }
 
-void mainloop (void) {
+void update_gui (void) {
 	char tmp_str[1024];
+	GtkTextIter startLua, endLua;
+	GtkTextBuffer *bufferLua;
+	bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
+	gtk_text_buffer_get_bounds(bufferLua, &startLua, &endLua);
+	gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_error);
+	update_post = 0;
+	GtkTextIter start, end;
+	GtkTextBuffer *buffer;
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeView));
+	gtk_text_buffer_get_bounds(buffer, &start, &end);
+	char *gcode_check = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
+	if (gcode_check != NULL) {
+		if (output_buffer != NULL) {
+			if (strcmp(gcode_check, output_buffer) != 0) {
+				gtk_text_buffer_set_text(buffer, output_buffer, -1);
+			}
+		} else {
+			gtk_text_buffer_set_text(buffer, "", -1);
+		}
+		free(gcode_check);
+	} else {
+		gtk_text_buffer_set_text(buffer, "", -1);
+	}
+	double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
+	milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
+	milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
+	snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"), mill_distance_xy, PARAMETER[P_O_UNIT].vstr, mill_distance_z, PARAMETER[P_O_UNIT].vstr, move_distance_xy, PARAMETER[P_O_UNIT].vstr, move_distance_z, PARAMETER[P_O_UNIT].vstr, milltime);
+	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
+	snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1f%s / Height=%0.1f%s", size_x, PARAMETER[P_O_UNIT].vstr, size_y, PARAMETER[P_O_UNIT].vstr);
+	gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
+	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+		glEndList();
+	}
+}
+
+void mainloop (void) {
 	size_x = (max_x - min_x);
 	size_y = (max_y - min_y);
 	float scale = (4.0 / size_x);
@@ -530,8 +574,11 @@ void mainloop (void) {
 			zero_x = (max_x - min_x) / 2.0;
 			zero_y = (max_y - min_y) / 2.0;
 		}
-
-
+#ifdef USE_BMPMODE
+		if (main_mode == 1) {
+			bitmap_pre();
+		}
+#endif
 		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			glDeleteLists(1, 1);
 			glNewList(1, GL_COMPILE);
@@ -543,43 +590,17 @@ void mainloop (void) {
 			}
 		}
 		mill_begin(program_path);
-		mill_objects();
+		if (main_mode == 1) {
+#ifdef USE_BMPMODE
+			bitmap2cnc();
+#endif
+		} else {
+			mill_objects();
+		}
 		mill_end();
 		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 			// update GUI
-			GtkTextIter startLua, endLua;
-			GtkTextBuffer *bufferLua;
-			bufferLua = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeViewLua));
-			gtk_text_buffer_get_bounds(bufferLua, &startLua, &endLua);
-			gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_error);
-			update_post = 0;
-			GtkTextIter start, end;
-			GtkTextBuffer *buffer;
-			buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(gCodeView));
-			gtk_text_buffer_get_bounds(buffer, &start, &end);
-			char *gcode_check = gtk_text_buffer_get_text(buffer, &start, &end, TRUE);
-			if (gcode_check != NULL) {
-				if (output_buffer != NULL) {
-					if (strcmp(gcode_check, output_buffer) != 0) {
-						gtk_text_buffer_set_text(buffer, output_buffer, -1);
-					}
-				} else {
-					gtk_text_buffer_set_text(buffer, "", -1);
-				}
-				free(gcode_check);
-			} else {
-				gtk_text_buffer_set_text(buffer, "", -1);
-			}
-			double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
-			milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
-			milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
-			snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"), mill_distance_xy, PARAMETER[P_O_UNIT].vstr, mill_distance_z, PARAMETER[P_O_UNIT].vstr, move_distance_xy, PARAMETER[P_O_UNIT].vstr, move_distance_z, PARAMETER[P_O_UNIT].vstr, milltime);
-			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
-			snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1f%s / Height=%0.1f%s", size_x, PARAMETER[P_O_UNIT].vstr, size_y, PARAMETER[P_O_UNIT].vstr);
-			gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
-			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-				glEndList();
-			}
+			update_gui();
 		}
 	}
 
@@ -961,8 +982,14 @@ void handler_preview (GtkWidget *widget, gpointer data) {
 void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf..."), "reloading dxf...");
 		loading = 1;
+		main_mode = 0;
 		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_BMPMODE
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".png") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PNG") > 0) {
+			main_mode = 1;
+			bitmap_load(PARAMETER[P_V_DXF].vstr);
+#endif
 #ifdef USE_G3D
 		} else {
 			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
@@ -1000,6 +1027,14 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_add_pattern(ffilter, "*.NGC");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 
+#ifdef USE_BMPMODE
+	ffilter = gtk_file_filter_new();
+	gtk_file_filter_set_name(ffilter, _("Bitmap-Files"));
+	gtk_file_filter_add_pattern(ffilter, "*.png");
+	gtk_file_filter_add_pattern(ffilter, "*.PNG");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
+#endif
+
 #ifdef USE_G3D
 	ffilter = gtk_file_filter_new();
 	gtk_file_filter_set_name(ffilter, _("3D-Objects"));
@@ -1032,6 +1067,7 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 		strncpy(PARAMETER[P_V_DXF].vstr, filename, sizeof(PARAMETER[P_V_DXF].vstr));
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reading dxf..."), "reading dxf...");
 		loading = 1;
+		main_mode = 0;
 		if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
 			SetupLoadFromGcode(filename);
 			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
@@ -1039,6 +1075,11 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 			}
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_BMPMODE
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".png") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PNG") > 0) {
+			main_mode = 1;
+			bitmap_load(PARAMETER[P_V_DXF].vstr);
+#endif
 #ifdef USE_G3D
 		} else {
 			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
@@ -1531,6 +1572,13 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 	} else {
 		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
 	}
+	if (PARAMETER[P_O_UNIT_LOAD].vint == 1) {
+		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "mm");
+	} else if (PARAMETER[P_O_UNIT_LOAD].vint == 2) {
+		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "auto");
+	} else {
+		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "inch");
+	}
 	if (n == P_M_TEXT_SCALE_WIDTH || n == P_M_TEXT_SCALE_HEIGHT || n == P_M_TEXT_FIXED_WIDTH || n == P_M_TEXT_FONT) {
 //		printf("UPDATED(%i): %s\n", n, PARAMETER[n].name);
 		if (n == P_M_TEXT_FONT) {
@@ -1606,6 +1654,46 @@ void ParameterUpdate (void) {
 	} else {
 		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
 	}
+	if (PARAMETER[P_O_UNIT_LOAD].vint == 1) {
+		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "mm");
+	} else if (PARAMETER[P_O_UNIT_LOAD].vint == 2) {
+		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "auto");
+	} else {
+		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "inch");
+	}
+
+#ifdef USE_BMPMODE
+	if (main_mode == 0) {
+		if (PARAMETER[P_O_PARAVIEW].vint == 1) {
+			gtk_widget_hide(GroupBox[G_BITMAP]);
+			gtk_widget_show(GroupBox[G_POCKETS]);
+			gtk_widget_show(GroupBox[G_TABS]);
+			gtk_widget_show(GroupBox[G_OBJECTS]);
+			gtk_widget_show(GroupBox[G_TEXT]);
+		} else {
+			gtk_widget_hide(GroupBoxFrame[G_BITMAP]);
+			gtk_widget_show(GroupBoxFrame[G_POCKETS]);
+			gtk_widget_show(GroupBoxFrame[G_TABS]);
+			gtk_widget_show(GroupBoxFrame[G_OBJECTS]);
+			gtk_widget_show(GroupBoxFrame[G_TEXT]);
+		}
+	} else {
+		if (PARAMETER[P_O_PARAVIEW].vint == 1) {
+			gtk_widget_show(GroupBox[G_BITMAP]);
+			gtk_widget_hide(GroupBox[G_POCKETS]);
+			gtk_widget_hide(GroupBox[G_TABS]);
+			gtk_widget_hide(GroupBox[G_OBJECTS]);
+			gtk_widget_hide(GroupBox[G_TEXT]);
+		} else {
+			gtk_widget_show(GroupBoxFrame[G_BITMAP]);
+			gtk_widget_hide(GroupBoxFrame[G_POCKETS]);
+			gtk_widget_hide(GroupBoxFrame[G_TABS]);
+			gtk_widget_hide(GroupBoxFrame[G_OBJECTS]);
+			gtk_widget_hide(GroupBoxFrame[G_TEXT]);
+		}
+	}
+#endif
+
 	for (n = 0; n < P_LAST; n++) {
 		if (PARAMETER[n].type == T_FLOAT) {
 			if (PARAMETER[n].vfloat != gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(ParamValue[n]))) {
@@ -1635,6 +1723,7 @@ void ParameterUpdate (void) {
 			continue;
 		}
 	}
+	// needed ???
 	for (n = 0; n < P_LAST; n++) {
 		snprintf(path, sizeof(path), "0:%i:%i", PARAMETER[n].l1, PARAMETER[n].l2);
 		if (PARAMETER[n].type == T_FLOAT) {
@@ -1840,8 +1929,6 @@ void create_gui () {
 	gtk_menu_append(GTK_MENU(ToolsMenuList), MenuItem);
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);
 
-
-
 	GtkWidget *HelpMenu = gtk_menu_item_new_with_mnemonic(_("_Help"));
 	GtkWidget *HelpMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(HelpMenu), HelpMenuList);
@@ -1940,7 +2027,6 @@ void create_gui () {
 	GtkWidget *NbBox;
 	int GroupNum[G_LAST];
 	int n = 0;
-	GtkWidget *GroupBox[G_LAST];
 	for (n = 0; n < G_LAST; n++) {
 		GroupBox[n] = gtk_vbox_new(0, 0);
 		GroupNum[n] = 0;
@@ -1952,7 +2038,6 @@ void create_gui () {
 		gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook), TRUE);
 		gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
 		gtk_table_attach_defaults(GTK_TABLE(NbBox), notebook, 0, 1, 0, 1);
-		GtkWidget *GroupLabel[G_LAST];
 		for (n = 0; n < G_LAST; n++) {
 			GroupLabel[n] = gtk_label_new(_(GROUPS[n].name));
 			gtk_notebook_append_page(GTK_NOTEBOOK(notebook), GroupBox[n], GroupLabel[n]);
@@ -1961,7 +2046,6 @@ void create_gui () {
 		GtkWidget *ExpanderBox = gtk_vbox_new(0, 0);
 		NbBox = gtk_scrolled_window_new(NULL, NULL);
 		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(NbBox), ExpanderBox);
-		GtkWidget *GroupBoxFrame[G_LAST];
 		for (n = 0; n < G_LAST; n++) {
 			GroupExpander[n] = gtk_expander_new(_(GROUPS[n].name));
 			gtk_expander_set_expanded(GTK_EXPANDER(GroupExpander[n]), ExpanderStat[n]);
@@ -2095,6 +2179,10 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Expander"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Notebook-Tabs"), -1);
 
+	gtk_list_store_insert_with_values(ListStore[P_O_UNIT_LOAD], NULL, -1, 0, NULL, 1, "inch", -1);
+	gtk_list_store_insert_with_values(ListStore[P_O_UNIT_LOAD], NULL, -1, 0, NULL, 1, "mm", -1);
+	gtk_list_store_insert_with_values(ListStore[P_O_UNIT_LOAD], NULL, -1, 0, NULL, 1, "auto", -1);
+
 	gtk_list_store_insert_with_values(ListStore[P_O_UNIT], NULL, -1, 0, NULL, 1, "inch", -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_UNIT], NULL, -1, 0, NULL, 1, "mm", -1);
 
@@ -2215,6 +2303,11 @@ void create_gui () {
 
 	gCodeViewLabelLua = gtk_label_new(_("PostProcessor"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), textWidgetLuaBox, gCodeViewLabelLua);
+
+#ifdef USE_BMPMODE
+	GtkWidget *imgCanvasLabel = gtk_label_new(_("Image-View"));
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), imgCanvas, imgCanvasLabel);
+#endif
 
 #ifdef USE_VNC
 	if (PARAMETER[P_O_VNCSERVER].vstr[0] != 0) {
@@ -2400,6 +2493,7 @@ void load_files () {
 	loading = 1;
 	char filename[PATH_MAX];
 	strcpy(filename, PARAMETER[P_V_DXF].vstr);
+	main_mode = 0;
 	if (PARAMETER[P_V_DXF].vstr[0] != 0) {
 		if (strstr(PARAMETER[P_V_DXF].vstr, ".ngc") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".NGC") > 0) {
 			SetupLoadFromGcode(PARAMETER[P_V_DXF].vstr);
@@ -2408,6 +2502,11 @@ void load_files () {
 			}
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+#ifdef USE_BMPMODE
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".png") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PNG") > 0) {
+			main_mode = 1;
+			bitmap_load(PARAMETER[P_V_DXF].vstr);
+#endif
 #ifdef USE_G3D
 		} else {
 			slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);

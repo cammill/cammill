@@ -55,6 +55,10 @@ PKGS   ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
 CFLAGS += "-DGDK_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED"
 CFLAGS += "-DGSEAL_ENABLE"
 
+# Bitmap-Support
+CFLAGS += "-DUSE_BMPMODE"
+OBJS += src/bmp.o
+
 # LIBG3D
 #PKGS += libg3d
 #CFLAGS += "-DUSE_G3D"

@@ -43,6 +43,9 @@ enum {
 	G_TABS,
 	G_OBJECTS,
 	G_TEXT,
+#ifdef USE_BMPMODE
+	G_BITMAP,
+#endif
 	G_ROTARY,
 	G_TANGENCIAL,
 	G_MACHINE,
@@ -157,7 +160,15 @@ enum {
 	P_W_POSW,
 	P_W_POSH,
 	P_W_MAX,
+#ifdef USE_BMPMODE
+	// Bitmap
+	P_B_SCALE,
+	P_B_R,
+	P_B_G,
+	P_B_B,
+#endif
 	// Misc
+	P_O_UNIT_LOAD,
 	P_O_UNIT,
 	P_O_SCALE,
 	P_O_TOLERANCE,
