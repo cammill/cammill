@@ -279,6 +279,7 @@ void mill_pocket (int object_num, double *next_x, double *next_y) {
 			double mill_depth_real = myOBJECTS[object_num].depth;
 			double depth = 0.0;
 			double new_depth = 0.0;
+			mill_move_in(first_x, first_y, 0.0, 0, object_num);
 			for (depth = PARAMETER[P_M_Z_STEP].vdouble; depth > mill_depth_real + PARAMETER[P_M_Z_STEP].vdouble; depth += PARAMETER[P_M_Z_STEP].vdouble) {
 				if (depth < mill_depth_real) {
 					new_depth = mill_depth_real;

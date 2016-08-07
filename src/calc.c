@@ -1735,6 +1735,10 @@ void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, 
 			postcam_var_push_double("endX", _X(x));
 			postcam_var_push_double("endY", _Y(y));
 			postcam_call_function("OnMove");
+		} else if ((gcmd == 2 || gcmd == 3) && r == 0.0) {
+			postcam_var_push_double("endX", _X(x));
+			postcam_var_push_double("endY", _Y(y));
+			postcam_call_function("OnMove");
 		} else if (gcmd == 2 || gcmd == 3) {
 			postcam_var_push_double("endX", _X(x));
 			postcam_var_push_double("endY", _Y(y));
@@ -1814,9 +1818,9 @@ void mill_drill (double x, double y, double depth, double last_depth, int feed, 
 	if (comment[0] != 0) {
 		postcam_comment(comment);
 	}
-	if ((PARAMETER[P_CUT_SAVE].vdouble - last_depth) > PARAMETER[P_M_FAST_Z].vdouble) {
-		mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
-	}
+//	if ((PARAMETER[P_CUT_SAVE].vdouble - last_depth) > PARAMETER[P_M_FAST_Z].vdouble) {
+//		mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
+//	}
 	mill_z(1, depth);
 	draw_line(x, y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
 	mill_z(0, 0.0);
@@ -2215,7 +2219,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 			*next_y = myLINES[lnum].cy;
 		} else {
 			if (mill_start == 0) {
-				mill_move_in(myLINES[lnum].cx, myLINES[lnum].cy, depth, lasermode, object_num);
+				mill_move_in(myLINES[lnum].cx, myLINES[lnum].cy, 0.0, lasermode, object_num);
 				mill_start = 1;
 			}
 			mill_drill(myLINES[lnum].cx, myLINES[lnum].cy, depth, last_depth, PARAMETER[P_M_FEEDRATE].vint, object_num, "");
