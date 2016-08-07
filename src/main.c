@@ -103,9 +103,7 @@ char *website = "Website: <a href='https://github.com/cammill'>https://github.co
 int select_object_flag = 0;
 int select_object_x = 0;
 int select_object_y = 0;
-
 int main_mode = 0;
-
 int winw = 1600;
 int winh = 1200;
 float size_x = 0.0;
@@ -128,6 +126,7 @@ char output_extension[128];
 char output_info[1024];
 char output_error[1024];
 volatile int loading = 0;
+float draw_scale = 1.0;
 
 double zero_x = 0.0;
 double zero_y = 0.0;
@@ -337,7 +336,7 @@ void draw_helplines (void) {
 		glPushMatrix();
 		glTranslatef(-lenX / 2.0, -arrow_d * 2.0 - 11.0, 0.0);
 		snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenX, PARAMETER[P_O_UNIT].vstr);
-		output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
+		output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.005 / draw_scale);
 		glPopMatrix();
 		glRotatef(-90.0, 0.0, 1.0, 0.0);
 		gluCylinder(quadratic, 0.0, (arrow_d * 3), arrow_l ,32, 1);
@@ -374,9 +373,9 @@ void draw_helplines (void) {
 	float lenY = size_y;
 	float lenX = size_x;
 	float lenZ = PARAMETER[P_M_DEPTH].vdouble * -1;
-	float offXYZ = 10.0;
-	float arrow_d = 1.0 * PARAMETER[P_V_HELP_ARROW].vfloat;
-	float arrow_l = 6.0 * PARAMETER[P_V_HELP_ARROW].vfloat;
+	float offXYZ = 10.0 * 0.01 / PARAMETER[P_V_HELP_ARROW].vfloat / draw_scale;
+	float arrow_d = 1.0 * 0.01 / PARAMETER[P_V_HELP_ARROW].vfloat / draw_scale;
+	float arrow_l = 6.0 * 0.01 / PARAMETER[P_V_HELP_ARROW].vfloat / draw_scale;
 	GLUquadricObj *quadratic = gluNewQuadric();
 
 	glColor4f(1.0, 0.0, 0.0, 1.0);
@@ -395,12 +394,12 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(0.0 - offXYZ, -0.0, 0.0);
 	glPushMatrix();
-	glTranslatef(arrow_d * 2.0 + 1.0, lenY / 2.0, 0.0);
+	glTranslatef(arrow_d * 2.0, lenY / 2.0, 0.0);
 	glRotatef(90.0, 0.0, 0.0, 1.0);
 	snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenY, PARAMETER[P_O_UNIT].vstr);
 	glPushMatrix();
-	glTranslatef(0.0, 4.0, 0.0);
-	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
+	glTranslatef(0.0, 0.1 / draw_scale, 0.0);
+	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.005 / draw_scale);
 	glPopMatrix();
 	glPopMatrix();
 	glRotatef(-90.0, 1.0, 0.0, 0.0);
@@ -427,11 +426,11 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(lenX, -offXYZ, 0.0);
 	glPushMatrix();
-	glTranslatef(-lenX / 2.0, -arrow_d * 2.0 - 1.0, 0.0);
+	glTranslatef(-lenX / 2.0, 0.0, 0.0);
 	snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenX, PARAMETER[P_O_UNIT].vstr);
 	glPushMatrix();
-	glTranslatef(0.0, -4.0, 0.0);
-	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
+	glTranslatef(0.0, -0.2 / draw_scale, 0.0);
+	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.005 / draw_scale);
 	glPopMatrix();
 	glPopMatrix();
 	glRotatef(-90.0, 0.0, 1.0, 0.0);
@@ -458,12 +457,12 @@ void draw_helplines (void) {
 	glPushMatrix();
 	glTranslatef(-offXYZ, -offXYZ, -lenZ);
 	glPushMatrix();
-	glTranslatef(arrow_d * 2.0 - 1.0, -arrow_d * 2.0 - 1.0, lenZ / 2.0);
+	glTranslatef(arrow_d * 2.0, -arrow_d * 2.0, lenZ / 2.0);
 	glRotatef(90.0, 0.0, 1.0, 0.0);
 	snprintf(tmp_str, sizeof(tmp_str), "%0.2f%s", lenZ, PARAMETER[P_O_UNIT].vstr);
 	glPushMatrix();
-	glTranslatef(0.0, -4.0, 0.0);
-	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.2);
+	glTranslatef(0.0, -0.2 / draw_scale, 0.0);
+	output_text_gl_center(tmp_str, 0.0, 0.0, 0.0, 0.005 / PARAMETER[P_V_ZOOM].vfloat / draw_scale);
 	glPopMatrix();
 	glPopMatrix();
 	glRotatef(-90.0, 0.0, 0.0, 1.0);
@@ -538,9 +537,9 @@ void update_gui (void) {
 void mainloop (void) {
 	size_x = (max_x - min_x);
 	size_y = (max_y - min_y);
-	float scale = (4.0 / size_x);
-	if (scale > (4.0 / size_y)) {
-		scale = (4.0 / size_y);
+	draw_scale = (4.0 / size_x);
+	if (draw_scale > (4.0 / size_y)) {
+		draw_scale = (4.0 / size_y);
 	}
 	// get diameter from tooltable by number
 	if (PARAMETER[P_TOOL_SELECT].vint > 0) {
@@ -596,7 +595,7 @@ void mainloop (void) {
 			draw_grid();
 			if (PARAMETER[P_V_HELPLINES].vint == 1) {
 				if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-					draw_helplines();
+					//draw_helplines();
 				}
 			}
 		}
@@ -693,7 +692,7 @@ void mainloop (void) {
 		glPushMatrix();
 
 		glScalef(PARAMETER[P_V_ZOOM].vfloat, PARAMETER[P_V_ZOOM].vfloat, PARAMETER[P_V_ZOOM].vfloat);
-		glScalef(scale, scale, scale);
+		glScalef(draw_scale, draw_scale, draw_scale);
 		glTranslatef(PARAMETER[P_V_TRANSX].vint, PARAMETER[P_V_TRANSY].vint, 0.0);
 		glRotatef(PARAMETER[P_V_ROTZ].vfloat, 0.0, 0.0, 1.0);
 		glRotatef(PARAMETER[P_V_ROTY].vfloat, 0.0, 1.0, 0.0);
@@ -706,6 +705,8 @@ void mainloop (void) {
 		if (select_object_flag == 0) {
 			glCallList(2);
 		}
+
+draw_helplines();
 		glPopMatrix();
 
 		if (select_object_flag == 1) {
@@ -1365,7 +1366,7 @@ void handler_draw (GtkWidget *w, GdkEventExpose* e, void *v) {
 void handler_scrollwheel(GtkWidget * w, GdkEvent* e, GtkWidget *l) {
 	if (e->scroll.direction == GDK_SCROLL_UP) {
 		PARAMETER[P_V_ZOOM].vfloat += 0.1;
-	} else if (e->scroll.direction == GDK_SCROLL_DOWN) {
+	} else if (e->scroll.direction == GDK_SCROLL_DOWN && PARAMETER[P_V_ZOOM].vfloat > 0.2) {
 		PARAMETER[P_V_ZOOM].vfloat -= 0.1;
 	}
 }
@@ -1378,7 +1379,7 @@ void handler_button_press (GtkWidget *w, GdkEventButton* e, void *v) {
 	int button = e->button;;
 	if (button == 4 && state == 0) {
 		PARAMETER[P_V_ZOOM].vfloat += 0.05;
-	} else if (button == 5 && state == 0) {
+	} else if (button == 5 && state == 0 && PARAMETER[P_V_ZOOM].vfloat > 0.15) {
 		PARAMETER[P_V_ZOOM].vfloat -= 0.05;
 	} else if (button == 1) {
 		if (state == 0) {

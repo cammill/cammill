@@ -75,6 +75,7 @@
 
 #define dot(ux,uy,uz,vx,vy,vz) (ux * vx + uy * vy + uz * vz)
 
+extern float draw_scale;
 extern float size_x;
 extern float size_y;
 extern double min_x;
@@ -2054,7 +2055,7 @@ void object_draw (FILE *fd_out, int object_num) {
 			}
 			snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
 			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-				output_text_gl_center(tmp_str, (float)x + (float)r, (float)y, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
+				output_text_gl_center(tmp_str, (float)x + (float)r, (float)y, PARAMETER[P_CUT_SAVE].vdouble, 0.003 / draw_scale);
 			}
 			if (PARAMETER[P_V_HELPLINES].vint == 1) {
 				if (myOBJECTS[object_num].closed == 1 && myOBJECTS[object_num].inside == 0) {
@@ -2139,7 +2140,7 @@ void object_draw (FILE *fd_out, int object_num) {
 						}
 						snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
 						if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-							output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.2);
+							output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.003 / draw_scale);
 						}
 					}
 				}
