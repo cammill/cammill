@@ -59,6 +59,7 @@
 #ifdef USE_G3D
 #include <g3d/g3d.h>
 #endif
+#include <locale.h>
 #include <dirent.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -2938,8 +2939,6 @@ void init_objects (void) {
 	update_post = 1;
 }
 
-
-
 char *csv_getfield (char *line, int num, char *val) {
 	char *p;
 	int n = 0;
@@ -2980,9 +2979,9 @@ void MaterialLoadList (const char* path) {
 					gtk_list_store_insert_with_values(ListStore[P_MAT_SELECT], NULL, -1, 0, NULL, 1, csv_getfield(line, 0, val_str), -1);
 				}
 				Material[MaterialMax].vc = atoi(csv_getfield(line, 1, val_str));
-				Material[MaterialMax].fz[0] = atof(csv_getfield(line, 2, val_str));
-				Material[MaterialMax].fz[1] = atof(csv_getfield(line, 3, val_str));
-				Material[MaterialMax].fz[2] = atof(csv_getfield(line, 4, val_str));
+				Material[MaterialMax].fz[FZ_FEEDFLUTE4] = atof(csv_getfield(line, 2, val_str));
+				Material[MaterialMax].fz[FZ_FEEDFLUTE8] = atof(csv_getfield(line, 3, val_str));
+				Material[MaterialMax].fz[FZ_FEEDFLUTE12] = atof(csv_getfield(line, 4, val_str));
 				Material[MaterialMax].texture = malloc(strlen(csv_getfield(line, 5, val_str)) + 20);
 //				strcpy(Material[MaterialMax].texture, csv_getfield(line, 5, val_str));
 				sprintf(Material[MaterialMax].texture, "../share/cammill/%s", csv_getfield(line, 5, val_str));

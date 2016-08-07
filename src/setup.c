@@ -116,6 +116,7 @@ PARA PARAMETER[] = {
 	// Machine
 	{"Fastmove-Speed","Machine",	 "-fs",	T_INT,		1000,	0.0,	0.0,	"",	0.0,	1.0,	10000.0,	"mm/min", 1, 0, "fast-move speed of the machine, to calculate the milling-time", 0, 0, 0},
 	{"Spindle-Delay",	"Machine",		"-tud",	T_FLOAT,		1,	1.0,	1.0,	"",	0.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0},
+	{"Max Toolspeed",	"Machine",	"-mss",	T_INT,		24000,	0.0,	0.0,	"",	100.0,	100.0,	100000.0,	"rpm", 1, 1, "maximum spindle-speed", 0, 0, 0},
 	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm/inch", 1, 1, "Fast-Z", 0, 0, 0},
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0},
@@ -127,7 +128,8 @@ PARA PARAMETER[] = {
 	{"Feed/Tooth@<8mm","Calculation","-f8",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<8mm", 1, 0, 0},
 	{"Feed/Tooth@<12mm","Calculation","-f12",T_DOUBLE,	0,	0.0,	00.4,	"",	0.01,	0.01,	10.0,		"", 1, 1, "Feed/Tooth@<12mm", 1, 0, 0},
 	{"CalcSpeed",	"Calculation",		"",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 0, "calculated spindle-speed", 1, 0, 0},
-	{"MaxFeedRate",	"Calculation",	"-fm",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 0, "calculated maximum feedrate", 1, 0, 0},
+	{"CalcFeedRate",	"Calculation",	"-fm",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 0, "calculated maximum feedrate", 1, 0, 0},
+	{"Use calculated rates",	"Calculation",	"-uc",	T_BOOL,		0,	1.0,	1.0,	"",	1.0,	1.0,	1.0,	"", 1, 1, "use calculated rates", 0, 0, 0},
 	// Objects
 	{"Select",	"Objects",	"-objs",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"#", 0, 1, "object selection", 0, 0, 0},
 	{"Use",		"Objects",	"-obju",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "use this object", 0, 0, 0},

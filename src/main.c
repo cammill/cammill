@@ -541,25 +541,35 @@ void mainloop (void) {
 	if (scale > (4.0 / size_y)) {
 		scale = (4.0 / size_y);
 	}
-
 	// get diameter from tooltable by number
 	if (PARAMETER[P_TOOL_SELECT].vint > 0) {
 		PARAMETER[P_TOOL_NUM].vint = PARAMETER[P_TOOL_SELECT].vint;
 		PARAMETER[P_TOOL_DIAMETER].vdouble = tooltbl_diameters[PARAMETER[P_TOOL_NUM].vint];
 	}
-
 	// http://www.precifast.de/schnittgeschwindigkeit-beim-fraesen-berechnen/
-	PARAMETER[P_TOOL_SPEED_MAX].vint = (int)(((float)Material[PARAMETER[P_MAT_SELECT].vint].vc * 1000.0) / (PI * (PARAMETER[P_TOOL_DIAMETER].vdouble)));
-	if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 4.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE4] * (float)PARAMETER[P_TOOL_W].vint);
-	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 8.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE8] * (float)PARAMETER[P_TOOL_W].vint);
-	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) < 12.0) {
-		PARAMETER[P_M_FEEDRATE_MAX].vint = (int)((float)PARAMETER[P_TOOL_SPEED].vint * Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE12] * (float)PARAMETER[P_TOOL_W].vint);
+	// n  = vc / (d x pi)
+	int n = 0;      // Fräserdrehzahl in U/min
+	n = (int)(((float)Material[PARAMETER[P_MAT_SELECT].vint].vc * 1000.0) / (PI * (PARAMETER[P_TOOL_DIAMETER].vdouble)));
+	if (n > PARAMETER[P_TOOL_SPEED_MAX].vint) {
+		n = PARAMETER[P_TOOL_SPEED_MAX].vint;
 	}
-
+	PARAMETER[P_TOOL_SPEED_CALC].vint = n;
+	float fz = 0.0; // Zahnvorschub in mm/Zahn (Wieviel ein zahn an material pro umdrehung abhebt)
+	if ((PARAMETER[P_TOOL_DIAMETER].vdouble) <= 4.0) {
+		fz = Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE4];
+	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) <= 8.0) {
+		fz = Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE8];
+	} else if ((PARAMETER[P_TOOL_DIAMETER].vdouble) <= 12.0) {
+		fz = Material[PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE12];
+	}
+	// vf = n * z * fz
+	PARAMETER[P_M_FEEDRATE_CALC].vint = (int)((float)n * (float)PARAMETER[P_TOOL_W].vint * fz);
+	// update rates
+	if (PARAMETER[P_M_USE_CALC].vint == 1) {
+		PARAMETER[P_TOOL_SPEED].vint = PARAMETER[P_TOOL_SPEED_CALC].vint;
+		PARAMETER[P_M_FEEDRATE].vint = PARAMETER[P_M_FEEDRATE_CALC].vint;
+	}
 	if (update_post == 1) {
-
 		// Zero-Point
 		if (PARAMETER[P_M_ZERO].vint == 1) {
 			// Original
@@ -2532,9 +2542,8 @@ int main (int argc, char *argv[]) {
 //	bindtextdomain("cammill", "intl");
 	textdomain("cammill");
 
-	// force dots in printf
-	setlocale(LC_NUMERIC, "C");
-
+	// force dots in printf/atof
+	setlocale(LC_NUMERIC, "POSIX");
 	SetupLoad();
 	// set allways to 1.0, preset only via command line arguments
 	PARAMETER[P_O_SCALE].vdouble = 1.0;
@@ -2552,6 +2561,8 @@ int main (int argc, char *argv[]) {
 		if (gtk_gl_init_check(&argc, &argv) == FALSE) {
 			fprintf(stderr, "init OpenGL failed\n");
 		}
+		// force dots in printf/atof after gtk_init :(
+		setlocale(LC_NUMERIC, "POSIX");
 		create_gui();
 		load_files();
 		gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);

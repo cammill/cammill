@@ -1,4 +1,4 @@
-#Material ; VC ; FZ<=4mm ; FZ<=8mm ; FZ<=12mm ; texture-file
+#Material ; VC(m/min) ; FZ<=4mm(mm/Schneide) ; FZ<=8mm ; FZ<=12mm ; texture-file
 Aluminium(Langsp.);200;0.04;0.05;0.10;textures/metal.bmp;
 Aluminium(Kurzsp.);150;0.04;0.05;0.10;textures/metal.bmp;
 NE-Metalle;150;0.04;0.05;0.10;textures/metal.bmp;
