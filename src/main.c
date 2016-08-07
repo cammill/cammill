@@ -146,6 +146,7 @@ GtkWidget *VncView;
 #ifdef USE_WEBKIT
 GtkWidget *WebKit;
 #endif
+GtkWidget *notebook2;
 GtkWidget *gCodeViewLabel;
 GtkWidget *gCodeViewLabelLua;
 GtkWidget *OutputInfoLabel;
@@ -1438,7 +1439,9 @@ void handler_motion (GtkWidget *w, GdkEventMotion* e, void *v) {
 		PARAMETER[P_V_ROTX].vfloat = (float)(mouseY - last_mouse_y) / 5.0;
 	} else if (last_mouse_button == 3) {
 		PARAMETER[P_V_ROTZ].vfloat = (float)(mouseX - last_mouse_x) / 5.0;
-		PARAMETER[P_V_ZOOM].vfloat = (float)(mouseY - last_mouse_y) / 100;
+		if ((float)(mouseY - last_mouse_y) / 100 > 0.0) {
+			PARAMETER[P_V_ZOOM].vfloat = (float)(mouseY - last_mouse_y) / 100;
+		}
 	} else {
 		last_mouse_x = mouseX;
 		last_mouse_y = mouseY;
@@ -2300,7 +2303,7 @@ void create_gui () {
 	gtk_source_buffer_set_language(GTK_SOURCE_BUFFER(bufferLua), langLua);
 
 	GtkWidget *NbBox2 = gtk_table_new(2, 2, FALSE);
-	GtkWidget *notebook2 = gtk_notebook_new();
+	notebook2 = gtk_notebook_new();
 	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook2), GTK_POS_TOP);
 	gtk_table_attach_defaults(GTK_TABLE(NbBox2), notebook2, 0, 1, 0, 1);
 
@@ -2313,11 +2316,6 @@ void create_gui () {
 
 	gCodeViewLabelLua = gtk_label_new(_("PostProcessor"));
 	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), textWidgetLuaBox, gCodeViewLabelLua);
-
-#ifdef USE_BMPMODE
-	GtkWidget *imgCanvasLabel = gtk_label_new(_("Image-View"));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), imgCanvas, imgCanvasLabel);
-#endif
 
 #ifdef USE_VNC
 	if (PARAMETER[P_O_VNCSERVER].vstr[0] != 0) {

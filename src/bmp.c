@@ -87,7 +87,7 @@ void slice_3d (char *file, float z);
 #define gettext_noop(String) String
 #define N_(String) gettext_noop(String)
 
-GtkWidget *imgCanvas;
+GtkWidget *imgCanvas = NULL;
 extern float size_x;
 extern float size_y;
 extern double min_x;
@@ -95,6 +95,8 @@ extern double min_y;
 extern double max_x;
 extern double max_y;
 extern void update_gui (void);
+extern GtkWidget *notebook2;
+extern GtkWidget *imgCanvasLabel;
 
 static int moves[10000][5];
 static int bmp_width = 0;
@@ -104,13 +106,12 @@ static int ml = 0;
 void get_pixel (GdkPixbuf *pixbuf, int x, int y, guchar *red, guchar *green, guchar *blue, guchar *alpha) {
 	int width, height, rowstride, n_channels;
 	guchar *pixels, *p;
-	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
-	g_assert (gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB);
-	g_assert (gdk_pixbuf_get_bits_per_sample (pixbuf) == 8);
-	g_assert (gdk_pixbuf_get_has_alpha (pixbuf));
-	g_assert (n_channels == 4);
-	width = gdk_pixbuf_get_width (pixbuf);
-	height = gdk_pixbuf_get_height (pixbuf);
+	n_channels = gdk_pixbuf_get_n_channels(pixbuf);
+	g_assert (gdk_pixbuf_get_colorspace(pixbuf) == GDK_COLORSPACE_RGB);
+	g_assert (gdk_pixbuf_get_bits_per_sample(pixbuf) == 8);
+	g_assert (n_channels >= 3);
+	width = gdk_pixbuf_get_width(pixbuf);
+	height = gdk_pixbuf_get_height(pixbuf);
 	g_assert (x >= 0 && x < width);
 	g_assert (y >= 0 && y < height);
 	rowstride = gdk_pixbuf_get_rowstride (pixbuf);
@@ -119,17 +120,20 @@ void get_pixel (GdkPixbuf *pixbuf, int x, int y, guchar *red, guchar *green, guc
 	*red = p[0];
 	*green = p[1];
 	*blue = p[2];
-	*alpha = p[3];
+	if (gdk_pixbuf_get_has_alpha(pixbuf)) {
+		*alpha = p[3];
+	} else {
+		*alpha = 255;
+	}
 }
 
 void put_pixel (GdkPixbuf *pixbuf, int x, int y, guchar red, guchar green, guchar blue, guchar alpha) {
 	int width, height, rowstride, n_channels;
 	guchar *pixels, *p;
-	n_channels = gdk_pixbuf_get_n_channels (pixbuf);
-	g_assert (gdk_pixbuf_get_colorspace (pixbuf) == GDK_COLORSPACE_RGB);
-	g_assert (gdk_pixbuf_get_bits_per_sample (pixbuf) == 8);
-	g_assert (gdk_pixbuf_get_has_alpha (pixbuf));
-	g_assert (n_channels == 4);
+	n_channels = gdk_pixbuf_get_n_channels(pixbuf);
+	g_assert (gdk_pixbuf_get_colorspace(pixbuf) == GDK_COLORSPACE_RGB);
+	g_assert (gdk_pixbuf_get_bits_per_sample(pixbuf) == 8);
+	g_assert (n_channels >= 3);
 	width = gdk_pixbuf_get_width (pixbuf);
 	height = gdk_pixbuf_get_height (pixbuf);
 	g_assert (x >= 0 && x < width);
@@ -140,7 +144,9 @@ void put_pixel (GdkPixbuf *pixbuf, int x, int y, guchar red, guchar green, gucha
 	p[0] = red;
 	p[1] = green;
 	p[2] = blue;
-	p[3] = alpha;
+	if (gdk_pixbuf_get_has_alpha(pixbuf)) {
+		p[3] = alpha;
+	}
 }
 
 int get_dist (int x1, int y1, int x2, int y2) {
@@ -151,10 +157,18 @@ int get_dist (int x1, int y1, int x2, int y2) {
 }
 
 void bitmap_load (char *filename) {
+	if (imgCanvas != NULL) {
+//		gtk_notebook_detach_tab(GTK_NOTEBOOK(notebook2), imgCanvas);
+		gtk_notebook_remove_page(GTK_NOTEBOOK(notebook2), gtk_notebook_page_num(GTK_NOTEBOOK(notebook2), imgCanvas));
+	}
+	GtkWidget *imgCanvasLabel = gtk_label_new(_("Image-View"));
 	imgCanvas = gtk_image_new_from_file (filename);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), imgCanvas, imgCanvasLabel);
+	gtk_widget_show_all(imgCanvas);
+	gtk_widget_show_all(imgCanvasLabel);
 }
 
-void bitmap_pre (void) {
+int bitmap_pre (void) {
 	int x = 0;
 	int y = 0;
 	int x_last = 0;
@@ -171,6 +185,18 @@ void bitmap_pre (void) {
 	float scale = PARAMETER[P_B_SCALE].vdouble;
 	int mn = 0;
 	GdkPixbuf *surface_pixbuf = gtk_image_get_pixbuf((GtkImage*)imgCanvas);
+	if (gdk_pixbuf_get_n_channels(surface_pixbuf) < 3) {
+		fprintf(stderr, "BITMAP: N-Channels < 3 (%i)", gdk_pixbuf_get_n_channels(surface_pixbuf));
+		return -1;
+	}
+	if (gdk_pixbuf_get_colorspace(surface_pixbuf) != GDK_COLORSPACE_RGB) {
+		fprintf(stderr, "BITMAP: Colorspace != GDK_COLORSPACE_RGB (%i)", gdk_pixbuf_get_colorspace(surface_pixbuf));
+		return -1;
+	}
+	if (gdk_pixbuf_get_bits_per_sample(surface_pixbuf) != 8) {
+		fprintf(stderr, "BITMAP: Bits per sample != 8 (%i)", gdk_pixbuf_get_bits_per_sample(surface_pixbuf));
+		return -1;
+	}
 	bmp_width = gdk_pixbuf_get_width(surface_pixbuf);
 	bmp_height = gdk_pixbuf_get_height(surface_pixbuf);
 	min_x = 99999.0;
@@ -187,7 +213,7 @@ void bitmap_pre (void) {
 	for (y = 0; y < bmp_height; y += ystep) {
 		for (x = 0; x < bmp_width; x += xstep) {
 			get_pixel(surface_pixbuf, x, y, &red, &green, &blue, &alpha);
-			if (alpha > 0 && red >= PARAMETER[P_B_R].vint && green >= PARAMETER[P_B_G].vint && blue >= PARAMETER[P_B_B].vint) {
+			if (alpha > 0 && red <= PARAMETER[P_B_R].vint && green <= PARAMETER[P_B_G].vint && blue <= PARAMETER[P_B_B].vint) {
 				if (lon == 0) {
 					lon = 1;
 					x_first = x;
@@ -279,6 +305,7 @@ void bitmap_pre (void) {
 	}
 	size_x = (float)max_x * scale;
 	size_y = (float)max_y * scale;
+	return 0;
 }
 
 void bitmap2cnc (void) {
