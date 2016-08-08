@@ -53,6 +53,154 @@
 #define PYTHON_SPLINE 1
 #endif
 
+
+typedef struct {
+	int num;
+	char help[512];
+} DXF_HELP;
+
+DXF_HELP DH[] = {
+	{-4, "APP: conditional operator (used only with ssget)"},
+	{-3, "APP: extended data (XDATA) sentinel (fixed)"},
+	{-2, "APP: entity name reference (fixed)"},
+	{-1, "APP: entity name. The name changes each time a drawing is opened. It is never saved (fixed)"},
+	{0, "Text string indicating the entity type (fixed)"},
+	{1, "Primary text value for an entity"},
+	{2, "Name (attribute tag, block name, and so on)"},
+	{3, "Other text or name values"},
+	{4, "Other text or name values"},
+	{5, "Entity handle; text string of up to 16 hexadecimal digits (fixed)"},
+	{6, "Linetype name (fixed)"},
+	{7, "Text style name (fixed)"},
+	{8, "Layer name (fixed)"},
+	{9, "DXF: variable name identifier (used only in HEADER section of the DXF file)"},
+	{10, "Primary point; this is the start point of a line or text entity, center of a circle, and so on DXF: X value of the primary point (followed by Y and Z value codes 20 and 30) APP: 3D point (list of three reals)"},
+	{11, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{12, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{13, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{14, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{15, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{16, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{17, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{18, "Other points DXF: X value of other points (followed by Y value codes 21-28 and Z value codes 31-38) APP: 3D point (list of three reals)"},
+	{20, "DXF: Y and Z values of the primary point "},
+	{21, "DXF: Y and Z values of other points "},
+	{22, "DXF: Y and Z values of other points "},
+	{23, "DXF: Y and Z values of other points "},
+	{24, "DXF: Y and Z values of other points "},
+	{25, "DXF: Y and Z values of other points "},
+	{26, "DXF: Y and Z values of other points "},
+	{27, "DXF: Y and Z values of other points "},
+	{28, "DXF: Y and Z values of other points "},
+	{30, "DXF: Y and Z values of the primary point "},
+	{31, "DXF: Y and Z values of other points "},
+	{32, "DXF: Y and Z values of other points "},
+	{33, "DXF: Y and Z values of other points "},
+	{34, "DXF: Y and Z values of other points "},
+	{35, "DXF: Y and Z values of other points "},
+	{36, "DXF: Y and Z values of other points "},
+	{37, "DXF: Y and Z values of other points "},
+	{38, "DXF: entity's elevation if nonzero"},
+	{39, "Entity's thickness if nonzero (fixed)"},
+	{40, "Floating-point values (text height, scale factors, and so on)"},
+	{41, "Floating-point values (text height, scale factors, and so on)"},
+	{42, "Floating-point values (text height, scale factors, and so on)"},
+	{43, "Floating-point values (text height, scale factors, and so on)"},
+	{44, "Floating-point values (text height, scale factors, and so on)"},
+	{45, "Floating-point values (text height, scale factors, and so on)"},
+	{46, "Floating-point values (text height, scale factors, and so on)"},
+	{47, "Floating-point values (text height, scale factors, and so on)"},
+	{48, "Linetype scale; floating-point scalar value; default value is defined for all entity types"},
+	{49, "Repeated floating-point value. Multiple 49 groups may appear in one entity for variable-length tables (such as the dash lengths in the LTYPE table). A 7x group always appears before the first 49 group to specify the table length"},
+	{50, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{51, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{52, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{53, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{54, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{55, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{56, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{57, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{58, "Angles (output in degrees to DXF files and radians through AutoLISP and ObjectARX applications)"},
+	{60, "Entity visibility; integer value; absence or 0 indicates visibility; 1 indicates invisibility"},
+	{62, "Color number (fixed)"},
+	{66, "'Entities follow' flag (fixed)"},
+	{67, "Space-that is, model or paper space (fixed)"},
+	{68, "APP: identifies whether viewport is on but fully off screen; is not active or is off"},
+	{69, "APP: viewport identification number"},
+	{70, "Integer values, such as repeat counts, flag bits, or modes"},
+	{71, "Integer values, such as repeat counts, flag bits, or modes"},
+	{72, "Integer values, such as repeat counts, flag bits, or modes"},
+	{73, "Integer values, such as repeat counts, flag bits, or modes"},
+	{74, "Integer values, such as repeat counts, flag bits, or modes"},
+	{75, "Integer values, such as repeat counts, flag bits, or modes"},
+	{76, "Integer values, such as repeat counts, flag bits, or modes"},
+	{77, "Integer values, such as repeat counts, flag bits, or modes"},
+	{78, "Integer values, such as repeat counts, flag bits, or modes"},
+	{90, "32-bit integer values"},
+	{91, "32-bit integer values"},
+	{92, "32-bit integer values"},
+	{93, "32-bit integer values"},
+	{94, "32-bit integer values"},
+	{95, "32-bit integer values"},
+	{96, "32-bit integer values"},
+	{97, "32-bit integer values"},
+	{98, "32-bit integer values"},
+	{99, "32-bit integer values"},
+	{100, "Subclass data marker (with derived class name as a string). Required for all objects and entity classes that are derived from another concrete class. The subclass data marker segregates data defined by different classes in the inheritance chain for the same object. This is in addition to the requirement for DXF names for each distinct concrete class derived from ObjectARX (see <a href='subclass_markers_dxf_ab.htm#XREF_11832_DXF_AB'>'Subclass Markers'</a>)"},
+	{102, "Control string, followed by '{&lt;arbitrary name&gt;' or '}'. Similar to the xdata 1002 group code, except that when the string begins with '{', it can be followed by an arbitrary string whose interpretation is up to the application. The only other control string allowed is '}' as a group terminator. AutoCAD does not interpret these strings except during drawing audit operations. They are for application use"},
+	{105, "Object handle for DIMVAR symbol table entry"},
+	{210, "Extrusion direction (fixed) DXF: X value of extrusion direction APP: 3D extrusion direction vector"},
+	{220, "DXF: Y and Z values of the extrusion direction"},
+	{230, "DXF: Y and Z values of the extrusion direction"},
+	{280, "8-bit integer values"},
+	{281, "8-bit integer values"},
+	{282, "8-bit integer values"},
+	{283, "8-bit integer values"},
+	{284, "8-bit integer values"},
+	{285, "8-bit integer values"},
+	{286, "8-bit integer values"},
+	{287, "8-bit integer values"},
+	{288, "8-bit integer values"},
+	{289, "8-bit integer values"},
+	{290, "-299 Boolean flag value"},
+	{300, "-309 Arbitrary text strings"},
+	{310, "-319 Arbitrary binary chunks with same representation and limits as 1004 group codes: hexadecimal strings of up to 254 characters represent data chunks of up to 127 bytes"},
+	{320, "-329 Arbitrary object handles; handle values that are taken 'as is.' They are not translated during INSERT and XREF operations"},
+	{330, "-339 Soft-pointer handle; arbitrary soft pointers to other objects within same DXF file or drawing. Translated during INSERT and XREF operations"},
+	{340, "-349 Hard-pointer handle; arbitrary hard pointers to other objects within same DXF file or drawing. Translated during INSERT and XREF operations"},
+	{350, "-359 Soft-owner handle; arbitrary soft ownership links to other objects within same DXF file or drawing. Translated during INSERT and XREF operations"},
+	{360, "-369 Hard-owner handle; arbitrary hard ownership links to other objects within same DXF file or drawing. Translated during INSERT and XREF operations"},
+	{370, "-379 Lineweight enum value (AcDb::LineWeight). Stored and moved around as a short. Custom non-entity objects may use the full range, but entity classes only use 371-379 DXF group codes in their representation, because AutoCAD and AutoLISP both always assume a 370 group code is the entity's lineweight. This allows 370 to behave like other 'common' entity fields."},
+	{380, "-389 PlotStyleName type enum (AcDb::PlotStyleNameType). Stored and moved around as a short. Custom non-entity objects may use the full range, but entity classes only use 381-389 DXF group codes in their representation, for the same reason as the Lineweight range above."},
+	{390, "-399 String representing handle value of the PlotStyleName object, basically a hard pointer, but has a different range to make backward compatibility easier to deal with. Stored and moved around as an Object ID (a handle in DXF files) and a special type in AutoLISP. Custom non-entity objects may use the full range, but entity classes only use 391-399 DXF group codes in their representation, for the same reason as the Lineweight range above."},
+	{400, "-409 16-bit Integers "},
+	{410, "-419 String "},
+	{999, "DXF: The 999 group code indicates that the line following it is a comment string. SAVEAS does not include such groups in a DXF output file, but OPEN honors them and ignores the comments. You can use the 999 group to include comments in a DXF file that you've edited"},
+	{1000, "ASCII string (up to 255 bytes long) in extended data"},
+	{1001, "Registered application name (ASCII string up to 31 bytes long) for extended data"},
+	{1002, "Extended data control string ('{' or '}')"},
+	{1003 , "Extended data layer name"},
+	{1004, "Chunk of bytes (up to 127 bytes long) in extended data"},
+	{1005, "Entity handle in extended data; text string of up to 16 hexadecimal digits "},
+	{1010, "A point in extended data  DXF: X value (followed by 1020 and 1030 groups) APP: 3D point"},
+	{1020, "DXF: Y and Z values of a point"},
+	{1030, "DXF: Y and Z values of a point"},
+	{1011, "A 3D world space position in extended data  DXF: X value (followed by 1021 and 1031 groups) APP: 3D point"},
+	{1021, "DXF: Y and Z values of a world space position"},
+	{1031, "DXF: Y and Z values of a world space position"},
+	{1012, "A 3D world space displacement in extended data DXF: X value (followed by 1022 and 1032 groups) APP: 3D vector"},
+	{1022, "DXF: Y and Z values of a world space displacement"},
+	{1032, "DXF: Y and Z values of a world space displacement"},
+	{1013, "A 3D world space direction in extended data.  DXF: X value (followed by 1022 and 1032 groups) APP: 3D vector"},
+	{1023, "DXF: Y and Z values of a world space direction"},
+	{1033, "DXF: Y and Z values of a world space direction"},
+	{1040, "Extended data floating-point value"},
+	{1041, "Extended data distance value"},
+	{1042, "Extended data scale factor"},
+	{1070, "Extended data 16-bit signed integer"},
+	{1071, "Extended data 32-bit signed long"},
+};
+
 int block = 0;
 double block_x = 0.0;
 double block_y = 0.0;
@@ -75,7 +223,7 @@ int line_last = 0;
 
 void add_line (int type, char *layer, double x1, double y1, double x2, double y2, double opt, double cx, double cy) {
 	if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
-		printf("dxf:  ADD_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
+		printf("dxf: ADD_LINE (%i %i): %f,%f -> %f,%f (%s / %f)\n", line_n, line_last, x1, y1, x2, y2, layer, opt);
 	}
 	x1 *= PARAMETER[P_O_SCALE].vdouble;
 	y1 *= PARAMETER[P_O_SCALE].vdouble;
@@ -325,13 +473,25 @@ void dxf_read (char *file) {
 	while ((read = getline(&line, &len, fp)) != -1) {
 		trimline(line2, 1024, line);
 		int dxfoption = atoi(line2);
+		if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
+			int n = 0;
+			for (n = 0; n < 134; n++) {
+				if (DH[n].num == dxfoption) {
+					printf("dxf: # %s \t(%s)\n", line2, DH[n].help);
+					break;
+				}
+			}
+			if (n == 134) {
+				printf("dxf: # %s\n", line2);
+			}
+		}
 		if ((read = getline(&line, &len, fp)) != -1) {
 			trimline(line2, 1024, line);
+			if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
+				printf("dxf: ## %s\n", line2);
+			}
 			if (dxfoption == 0) {
 				if (last_0[0] != 0) {
-					if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
-						printf("dxf: %s\n", last_0);
-					}
 					if (strcmp(last_0, "BLOCK") == 0) {
 						block = 1;
 						block_x = atof(dxf_options[OPTION_POINT_X]);
@@ -572,10 +732,14 @@ void dxf_read (char *file) {
 					clear_dxfoptions();
 				}
 				strncpy(last_0, line2, sizeof(last_0));
-			}
-			else if(dxfoption == 9 && strcmp(line2, "$MEASUREMENT") == 0)
-			{
+				if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
+					printf("dxf: CMD: %s\n", last_0);
+				}
+			} else if(dxfoption == 9 && strcmp(line2, "$MEASUREMENT") == 0) {
 				strncpy(last_0, line2, sizeof(last_0));
+				if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
+					printf("dxf: CMD: %s\n", last_0);
+				}
 			}
 //			printf("## %i: %s\n", dxfoption, line2);
 			if (dxfoption < 256) {
