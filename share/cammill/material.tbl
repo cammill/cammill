@@ -5,6 +5,7 @@ NE-Metalle;150;0.04;0.05;0.10;textures/metal.bmp;
 VA-Stahl;100;0.05;0.06;0.07;textures/metal.bmp;
 Thermoplaste;100;0.0;0.0;0.0;textures/plast.bmp;
 Duroplaste;125;0.04;0.08;0.10;textures/plast.bmp;
+Plexiglass;250;0.1;0.2;0.3;textures/plast.bmp;
 GFK;125;0.04;0.08;0.10;textures/gfk.bmp;
 CFK;125;0.04;0.08;0.10;textures/cfk.bmp;
 Holz;2000;0.04;0.08;0.10;textures/wood.bmp;

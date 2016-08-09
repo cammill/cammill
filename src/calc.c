@@ -1820,12 +1820,13 @@ void mill_drill (double x, double y, double depth, double last_depth, int feed, 
 	if (comment[0] != 0) {
 		postcam_comment(comment);
 	}
-//	if ((PARAMETER[P_CUT_SAVE].vdouble - last_depth) > PARAMETER[P_M_FAST_Z].vdouble) {
-//		mill_z(0, last_depth - PARAMETER[P_M_FAST_Z].vdouble);
-//	}
+	postcam_comment("drill cycle");
+	if (last_depth + PARAMETER[P_M_FAST_Z].vdouble < PARAMETER[P_CUT_SAVE].vdouble) {
+		mill_z(0, last_depth + PARAMETER[P_M_FAST_Z].vdouble);
+	}
 	mill_z(1, depth);
 	draw_line(x, y, (float)mill_last_z, (float)x, (float)y, (float)mill_last_z, myOBJECTS[object_num].tool_dia);
-	mill_z(0, 0.0);
+	mill_z(0, 0.5);
 }
 
 void mill_circle_helix (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment) {
@@ -2350,7 +2351,10 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 					}
 					double px = 0.0;
 					double py = 0.0;
+
+					// BUG: needs extra checks
 					intersect(check1_x, check1_y, check1b_x, check1b_y, check2_x, check2_y, check2b_x, check2b_y, &px, &py);
+
 					double enx = px;
 					double eny = py;
 					if (num == 0) {
@@ -2561,7 +2565,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 
 	// offset for each depth-step
 	double new_depth = 0.0;
-	double last_depth = PARAMETER[P_CUT_SAVE].vdouble;
+	double last_depth = 0.0;
 	if (lasermode == 1 || tangencialmode == 1) {
 		object_draw_offset_depth(fd_out, object_num, 0.0, 0.0, 0.0, next_x, next_y, tool_offset, overcut, lasermode, offset);
 	} else {
@@ -2808,25 +2812,6 @@ void init_objects (void) {
 	/* check if object inside or outside */
 	for (num5b = 0; num5b < object_last; num5b++) {
 		int flag = 0;
-/*
-		int lnum = myOBJECTS[num5b].line[0];
-		if (myLINES[lnum].used == 1) {
-			int pipret = 0;
-			double testx = myLINES[lnum].x1;
-			double testy = myLINES[lnum].y1;
-			pipret = point_in_object(-1, num5b, testx, testy);
-			if (pipret != 0) {
-				flag = 1;
-			}
-			pipret = 0;
-			testx = myLINES[lnum].x2;
-			testy = myLINES[lnum].y2;
-			pipret = point_in_object(-1, num5b, testx, testy);
-			if (pipret != 0) {
-				flag = 1;
-			}
-		}
-*/
 		int num4b = 0;
 		for (num4b = 0; num4b < line_last; num4b++) {
 			if (myOBJECTS[num5b].line[num4b] != 0) {
@@ -2849,7 +2834,6 @@ void init_objects (void) {
 				}
 			}
 		}
-
 		if (flag > 0) {
 			myOBJECTS[num5b].inside = 1;
 		} else if (myOBJECTS[num5b].line[0] != 0) {
