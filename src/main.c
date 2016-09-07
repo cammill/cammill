@@ -1532,6 +1532,8 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		PARAMETER[P_O_OVERCUT].vint = myOBJECTS[object_num].overcut;
 		PARAMETER[P_O_POCKET].vint = myOBJECTS[object_num].pocket;
 		PARAMETER[P_O_HELIX].vint = myOBJECTS[object_num].helix;
+		PARAMETER[P_O_ROUGHFINE].vint = myOBJECTS[object_num].roughfine;
+		PARAMETER[P_O_ROUGHOFF].vdouble = myOBJECTS[object_num].roughoff;
 		PARAMETER[P_O_LASER].vint = myOBJECTS[object_num].laser;
 		PARAMETER[P_O_DEPTH].vdouble = myOBJECTS[object_num].depth;
 		PARAMETER[P_O_ORDER].vint = myOBJECTS[object_num].order;
@@ -1548,6 +1550,8 @@ void ParameterChanged (GtkWidget *widget, gpointer data) {
 		myOBJECTS[object_num].overcut = PARAMETER[P_O_OVERCUT].vint;
 		myOBJECTS[object_num].pocket = PARAMETER[P_O_POCKET].vint;
 		myOBJECTS[object_num].helix = PARAMETER[P_O_HELIX].vint;
+		myOBJECTS[object_num].roughfine = PARAMETER[P_O_ROUGHFINE].vint;
+		myOBJECTS[object_num].roughoff = PARAMETER[P_O_ROUGHOFF].vdouble;
 		myOBJECTS[object_num].laser = PARAMETER[P_O_LASER].vint;
 		myOBJECTS[object_num].depth = PARAMETER[P_O_DEPTH].vdouble;
 		myOBJECTS[object_num].order = PARAMETER[P_O_ORDER].vint;

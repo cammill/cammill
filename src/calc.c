@@ -1050,6 +1050,8 @@ void mill_objects (void) {
 			myOBJECTS[object_num].laser = PARAMETER[P_M_LASERMODE].vint;
 			myOBJECTS[object_num].climb = PARAMETER[P_M_CLIMB].vint;
 			myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
+			myOBJECTS[object_num].roughfine = PARAMETER[P_M_ROUGHFINE].vint;
+			myOBJECTS[object_num].roughoff = PARAMETER[P_M_ROUGHOFF].vdouble;
 			myOBJECTS[object_num].tool_num = PARAMETER[P_TOOL_NUM].vint;
 			myOBJECTS[object_num].tool_dia = PARAMETER[P_TOOL_DIAMETER].vdouble;
 			myOBJECTS[object_num].tool_speed = PARAMETER[P_TOOL_SPEED].vint;
@@ -1072,6 +1074,11 @@ void mill_objects (void) {
 				myOBJECTS[object_num].helix = 1;
 			} else {
 				myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
+			}
+			if (strstr(myOBJECTS[object_num].layer, "do_roughfine") > 0) {
+				myOBJECTS[object_num].roughfine = 1;
+			} else {
+				myOBJECTS[object_num].roughfine = PARAMETER[P_M_ROUGHFINE].vint;
 			}
 			if (PARAMETER[P_M_NOOFFSET].vint == 1) {
 				myOBJECTS[object_num].offset = OFFSET_NONE;
@@ -2159,7 +2166,7 @@ void object_draw (FILE *fd_out, int object_num) {
 	}
 }
 
-void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double total_depth, double last_depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int offset) {
+void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double total_depth, double last_depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int helixmode, int offset) {
 	int error = 0;
 	int lnum1 = 0;
 	int lnum2 = 0;
@@ -2200,7 +2207,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 				mill_start = 1;
 			}
 			if (myOBJECTS[object_num].climb == 1) {
-				if (myOBJECTS[object_num].helix == 1) {
+				if (helixmode == 1) {
 					mill_circle_helix(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
 					if (depth == total_depth) {
 						mill_circle(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
@@ -2209,7 +2216,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 					mill_circle(3, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
 				}
 			} else {
-				if (myOBJECTS[object_num].helix == 1) {
+				if (helixmode == 1) {
 					mill_circle_helix(2, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
 					if (depth == total_depth) {
 						mill_circle(2, myLINES[lnum].cx, myLINES[lnum].cy, r, depth, PARAMETER[P_M_FEEDRATE].vint, myOBJECTS[object_num].inside, object_num, "");
@@ -2567,7 +2574,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	double new_depth = 0.0;
 	double last_depth = 0.0;
 	if (lasermode == 1 || tangencialmode == 1) {
-		object_draw_offset_depth(fd_out, object_num, 0.0, 0.0, 0.0, next_x, next_y, tool_offset, overcut, lasermode, offset);
+		object_draw_offset_depth(fd_out, object_num, 0.0, 0.0, 0.0, next_x, next_y, tool_offset, overcut, lasermode, myOBJECTS[object_num].helix, offset);
 	} else {
 		for (depth = PARAMETER[P_M_Z_STEP].vdouble; depth > mill_depth_real + PARAMETER[P_M_Z_STEP].vdouble; depth += PARAMETER[P_M_Z_STEP].vdouble) {
 			if (depth < mill_depth_real) {
@@ -2575,8 +2582,17 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 			} else {
 				new_depth = depth;
 			}
-			object_draw_offset_depth(fd_out, object_num, new_depth, mill_depth_real, last_depth, next_x, next_y, tool_offset, overcut, lasermode, offset);
+			if (myOBJECTS[object_num].roughfine == 1) {
+				object_draw_offset_depth(fd_out, object_num, new_depth, mill_depth_real, last_depth, next_x, next_y, tool_offset + myOBJECTS[object_num].roughoff, overcut, lasermode, myOBJECTS[object_num].helix, offset);
+			} else {
+				object_draw_offset_depth(fd_out, object_num, new_depth, mill_depth_real, last_depth, next_x, next_y, tool_offset, overcut, lasermode, myOBJECTS[object_num].helix, offset);
+			}
 			last_depth = new_depth;
+		}
+		if (myOBJECTS[object_num].roughfine == 1) {
+			mill_move_out(lasermode, object_num);
+			mill_start = 0;
+			object_draw_offset_depth(fd_out, object_num, mill_depth_real, mill_depth_real, mill_depth_real, next_x, next_y, tool_offset, overcut, lasermode, 0, offset);
 		}
 	}
 	mill_move_out(lasermode, object_num);
@@ -2754,6 +2770,8 @@ void init_objects (void) {
 		myOBJECTS[object_num].overcut = 0;
 		myOBJECTS[object_num].pocket = 0;
 		myOBJECTS[object_num].helix = 0;
+		myOBJECTS[object_num].roughfine = 0;
+		myOBJECTS[object_num].roughoff = 0.0;
 		myOBJECTS[object_num].laser = 0;
 		myOBJECTS[object_num].order = 5;
 		myOBJECTS[object_num].tabs = 1;

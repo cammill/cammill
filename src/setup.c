@@ -84,7 +84,9 @@ PARA PARAMETER[] = {
 	{"Climb",	"Milling",	"-mr",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "reverse milling direction / climb milling", 0, 0, 0},
 	{"NoOffsets",	"Milling",	"-no",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "without tool-offsets", 0, 0, 0},
 	{"Helix",	"Milling",	"-mh",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "circles as helix", 0, 0, 0},
-	{"Velocity-Mode","Milling",	"-vm",	T_BOOL,		0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Velocity-Mode G61/G64 P...", 0, 0, 0},
+	{"Rough/Fine",	"Milling",	"-mrf",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Rough / fine milling in 2 steps", 0, 0, 0},
+	{"Rough-Offset", "Milling", 	"-mro",	T_DOUBLE ,	0,	0.05,	0.0,	"",	0.0,	0.01,	10.0,		"", 1, 0, "Rough-Offset", 0, 0, 0},
+	{"Velocity-Mode","Milling",	"-vm",	T_BOOL,		1,	1.0, 1.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Velocity-Mode G61/G64 P...", 0, 0, 0},
 	{"Blending Tolerance","Milling","-bt",	T_DOUBLE,	0,	0.0,	0.05,	"",	0.0,	0.01,	10.0,		"mm/inch", 1, 1, "Blending Tolerance G64 P?", 0, 0, 0},
 	{"DXF-File",	"Milling",	"-d",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "dxf-filename", 0, 0, 0},
 	{"Output-File",	"Milling",	"-o",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "gcode-output filename", 0, 0, 0},
@@ -139,6 +141,8 @@ PARA PARAMETER[] = {
 	{"Overcut",	"Objects",	"-objv",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "admit an internal cutting error due to the tool diameter", 0, 0, 0},
 	{"Pocket",	"Objects",	"-objp",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Pocket cutting", 0, 0, 0},
 	{"Helix",	"Objects",	"-objh",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Circles as Helix", 0, 0, 0},
+	{"Rough/Fine",	"Objects",	"-orf",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Rough / fine milling in 2 steps", 0, 0, 0},
+	{"Rough-Offset", "Objects", 	"-oro",	T_DOUBLE ,	1,	0.05,	0.0,	"",	0.0,	0.01,	10.0,		"", 1, 0, "Rough-Offset", 0, 0, 0},
 	{"Laser",	"Objects",	"-objl",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "Laser cutting", 0, 0, 0},
 	{"Depth",	"Objects",	"-objd",	T_DOUBLE,	0,	-4.0,	-4.0,	"",	-150.0,	0.01,	-0.1,		"mm/inch", 1, 1, "end depth", 0, 0, 0},
 	{"Holding-Tab's","Objects",	"-objt",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "use holding tabs", 0, 0, 0},
@@ -266,6 +270,10 @@ void SetupShowGcode (FILE *out) {
 		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-pocket: %i", n, myOBJECTS[n].pocket);
 		postcam_comment(tmp_str);
 		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-helix: %i", n, myOBJECTS[n].helix);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-roughfine: %i", n, myOBJECTS[n].roughfine);
+		postcam_comment(tmp_str);
+		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-roughoff: %f", n, myOBJECTS[n].roughoff);
 		postcam_comment(tmp_str);
 		snprintf(tmp_str, sizeof(tmp_str), "cfg:object-%i-laser: %i", n, myOBJECTS[n].laser);
 		postcam_comment(tmp_str);
@@ -579,6 +587,10 @@ void SetupLoadFromGcodeObjects (char *cfgfile) {
 					myOBJECTS[n].pocket = atoi(p + 2);
 				} else if (strstr(line2, "-helix:") > 0) {
 					myOBJECTS[n].helix = atoi(p + 2);
+				} else if (strstr(line2, "-roughfine:") > 0) {
+					myOBJECTS[n].roughfine = atoi(p + 2);
+				} else if (strstr(line2, "-roughoff:") > 0) {
+					myOBJECTS[n].roughoff = atof(p + 2);
 				} else if (strstr(line2, "-laser:") > 0) {
 					myOBJECTS[n].laser = atoi(p + 2);
 				} else if (strstr(line2, "-order:") > 0) {

@@ -61,7 +61,7 @@ void mill_circle_helix (int gcmd, double x, double y, double r, double depth, in
 void mill_move_in (double x, double y, double depth, int lasermode, int object_num);
 void mill_move_out (int lasermode, int object_num);
 void object_draw (FILE *fd_out, int object_num);
-void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double total_depth, double last_depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int offset);
+void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, double total_depth, double last_depth, double *next_x, double *next_y, double tool_offset, int overcut, int lasermode, int helixmode, int offset);
 void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *next_y);
 int find_next_line (int object_num, int first, int num, int dir, int depth);
 int line_open_check (int num);

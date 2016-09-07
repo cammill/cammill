@@ -90,6 +90,8 @@ typedef struct{
 	int order;
 	int tool_num;
 	int tool_speed;
+	int roughfine;
+	double roughoff;
 	double tool_dia;
 	double depth;
 	double min_x;
