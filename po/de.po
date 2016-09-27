@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cammill\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-29 17:06+0200\n"
+"POT-Creation-Date: 2016-09-27 16:46+0200\n"
 "PO-Revision-Date: 2014-09-16 12:38+0100\n"
 "Last-Translator: Oliver Dippel <o.dippel@gmx.de>\n"
 "Language-Team: German <o.dippel@gmx.de>\n"
@@ -16,182 +16,261 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.c:551
-#, c-format
-msgid "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"
-msgstr "Weg: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Zeit>%0.1fmin"
+#: src/bmp.c:165
+msgid "Image-View"
+msgstr ""
 
-#: src/main.c:851
+#: src/main.c:900
+#, c-format
+msgid "Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"
+msgstr ""
+
+#: src/main.c:1455
 msgid "Load Drawing"
 msgstr "Zeichnung laden"
 
-#: src/main.c:861
+#: src/main.c:1465
 msgid "DXF-Drawings"
 msgstr "DXF-Zeichnungen"
 
-#: src/main.c:868
+#: src/main.c:1471
+msgid "HPGL-Files"
+msgstr ""
+
+#: src/main.c:1477
+msgid "gCode-Files"
+msgstr ""
+
+#: src/main.c:1484
+msgid "Bitmap-Files"
+msgstr ""
+
+#: src/main.c:1492
 msgid "3D-Objects"
 msgstr "3D-Objekte"
 
-#: src/main.c:992 src/main.c:1528
+#: src/main.c:1655 src/main.c:2712
 msgid "Save Output As.."
 msgstr "Ausgaben speichern unter.."
 
-#: src/main.c:1058 src/main.c:1482
+#: src/main.c:1735 src/main.c:2643
 msgid "Load Tooltable"
 msgstr "Werkzeugtabelle laden"
 
-#: src/main.c:1068
+#: src/main.c:1745
 msgid "Tooltable"
 msgstr "Werkzeugtabelle"
 
-#: src/main.c:1105 src/main.c:1510
+#: src/main.c:1782 src/main.c:2694
 msgid "About"
 msgstr "Über CAMmill"
 
-#: src/main.c:1451
-msgid "_File"
-msgstr "Datei"
+#: src/main.c:2074 src/main.c:2114
+#, c-format
+msgid "On"
+msgstr ""
 
-#: src/main.c:1458
-msgid "_Load DXF"
-msgstr "DXF laden"
+#: src/main.c:2076 src/main.c:2116 src/main.c:2847
+#, c-format
+msgid "Off"
+msgstr ""
 
-#: src/main.c:1464
-msgid "_Reload DXF"
-msgstr "DXF neuladen"
+#: src/main.c:2293
+msgid "System"
+msgstr ""
 
-#: src/main.c:1470
-msgid "_Save Output As.."
-msgstr "Ausgabe _Speichern als"
-
-#: src/main.c:1476
-msgid "_Save Output"
-msgstr "Ausgabe _Speichern"
-
-#: src/main.c:1486 src/main.c:1546
-msgid "Load Preset"
-msgstr "Voreinstellungen laden"
-
-#: src/main.c:1490 src/main.c:1551
-msgid "Save Preset"
-msgstr "Voreinstellungen speichern"
-
-#: src/main.c:1494 src/main.c:1538
-msgid "Save Setup"
-msgstr "Einstellungen speichern"
-
-#: src/main.c:1505
-msgid "_Help"
-msgstr "Hilfe"
-
-#: src/main.c:1518
-msgid "Load DXF"
-msgstr "DXF-Datei laden"
-
-#: src/main.c:1523
-msgid "Reload DXF"
-msgstr "DXF-Datei auffrischen"
-
-#: src/main.c:1533
-msgid "Save Output"
-msgstr "Ausgaben speichern"
-
-#: src/main.c:1611 src/main.c:1633
+#: src/main.c:2297
 msgid "View"
 msgstr "Ansicht"
 
-#: src/main.c:1612 src/main.c:1634
-msgid "Tool"
-msgstr "Werkzeug"
-
-#: src/main.c:1613 src/main.c:1635
-msgid "Milling"
-msgstr "Fräsen"
-
-#: src/main.c:1614 src/main.c:1636
-msgid "Tabs"
-msgstr "Haltelaschen"
-
-#: src/main.c:1615 src/main.c:1637
-msgid "Rotary"
-msgstr "Rotation"
-
-#: src/main.c:1616 src/main.c:1638
-msgid "Tangencial"
-msgstr "Tangenzial"
-
-#: src/main.c:1617 src/main.c:1639
+#: src/main.c:2299
 msgid "Machine"
 msgstr "Maschine"
 
-#: src/main.c:1618 src/main.c:1640
-msgid "Material"
-msgstr "Material"
+#: src/main.c:2301
+msgid "Rotary"
+msgstr "Rotation"
 
-#: src/main.c:1619 src/main.c:1641
-msgid "Objects"
-msgstr "Objekte"
+#: src/main.c:2303
+msgid "Tangencial"
+msgstr "Tangenzial"
 
-#: src/main.c:1620 src/main.c:1642
+#: src/main.c:2305
+msgid "Bitmap"
+msgstr ""
+
+#: src/main.c:2307
 msgid "Misc"
 msgstr "Sonstiges"
 
-#: src/main.c:1741
-msgid "On/Off"
-msgstr "An/Aus"
+#: src/main.c:2310
+msgid "Settings (for all Objects)"
+msgstr ""
 
-#: src/main.c:1825
+#: src/main.c:2312
+msgid "Objects"
+msgstr "Objekte"
+
+#: src/main.c:2497
+msgid "Move down..."
+msgstr ""
+
+#: src/main.c:2501
+msgid "Clone this Object..."
+msgstr ""
+
+#: src/main.c:2561
+msgid "Option"
+msgstr ""
+
+#: src/main.c:2568
+msgid "Value"
+msgstr ""
+
+#: src/main.c:2612
+msgid "_File"
+msgstr "Datei"
+
+#: src/main.c:2619
+msgid "_Load DXF"
+msgstr "DXF laden"
+
+#: src/main.c:2625
+msgid "_Reload DXF"
+msgstr "DXF neuladen"
+
+#: src/main.c:2631
+msgid "_Save Output As.."
+msgstr "Ausgabe _Speichern als"
+
+#: src/main.c:2637
+msgid "_Save Output"
+msgstr "Ausgabe _Speichern"
+
+#: src/main.c:2647 src/main.c:2730
+msgid "Load Preset"
+msgstr "Voreinstellungen laden"
+
+#: src/main.c:2651 src/main.c:2735
+msgid "Save Preset"
+msgstr "Voreinstellungen speichern"
+
+#: src/main.c:2655 src/main.c:2722
+msgid "Save Setup"
+msgstr "Einstellungen speichern"
+
+#: src/main.c:2668
+msgid "_Tools"
+msgstr ""
+
+#: src/main.c:2673
+msgid "mm->inch"
+msgstr ""
+
+#: src/main.c:2676
+msgid "inch->mm"
+msgstr ""
+
+#: src/main.c:2679
+msgid "rotate"
+msgstr ""
+
+#: src/main.c:2682
+msgid "flip-x"
+msgstr ""
+
+#: src/main.c:2685
+msgid "flip-y"
+msgstr ""
+
+#: src/main.c:2689
+msgid "_Help"
+msgstr "Hilfe"
+
+#: src/main.c:2702
+msgid "Load DXF"
+msgstr "DXF-Datei laden"
+
+#: src/main.c:2707
+msgid "Reload DXF"
+msgstr "DXF-Datei auffrischen"
+
+#: src/main.c:2717
+msgid "Save Output"
+msgstr "Ausgaben speichern"
+
+#: src/main.c:2843
 msgid "None"
 msgstr "Keine Korrektur"
 
-#: src/main.c:1826
+#: src/main.c:2844
 msgid "Inside"
 msgstr "Innenseite"
 
-#: src/main.c:1827
+#: src/main.c:2845
 msgid "Outside"
 msgstr "Außenseite"
 
-#: src/main.c:1829
-msgid "-5 First"
-msgstr "-5 Am Anfang"
+#: src/main.c:2848
+msgid "Mist"
+msgstr ""
 
-#: src/main.c:1834
-msgid "0 Auto"
-msgstr "0 Automatisch"
+#: src/main.c:2849
+msgid "Flood"
+msgstr ""
 
-#: src/main.c:1839
-msgid "5 Last"
-msgstr "5 Am Ende"
-
-#: src/main.c:1849
-msgid "Expander"
-msgstr "Aufklapp-Menüs"
-
-#: src/main.c:1850
-msgid "Notebook-Tabs"
-msgstr "Register"
-
-#: src/main.c:1956
+#: src/main.c:2954
 msgid "3D-View"
 msgstr "3D-Ansicht"
 
-#: src/main.c:1959 src/main.c:2184
+#: src/main.c:2957 src/main.c:3224
 msgid "Output"
 msgstr "Ausgabe"
 
-#: src/main.c:1963
+#: src/main.c:2960
 msgid "PostProcessor"
 msgstr "Postprozessor"
 
-#: src/main.c:1969
+#: src/main.c:2972
 msgid "VNC"
 msgstr "VNC"
 
-#: src/main.c:1981
+#: src/main.c:2985
 msgid "Documentation"
 msgstr "Dokumentation"
+
+msgid "Distance: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Time>%0.1fmin"
+msgstr "Weg: Mill-XY=%0.2fmm/Z=%0.2fmm / Move-XY=%0.2fmm/Z=%0.2fmm / Zeit>%0.1fmin"
+
+msgid "Tool"
+msgstr "Werkzeug"
+
+msgid "Milling"
+msgstr "Fräsen"
+
+msgid "Tabs"
+msgstr "Haltelaschen"
+
+msgid "Material"
+msgstr "Material"
+
+msgid "On/Off"
+msgstr "An/Aus"
+
+msgid "-5 First"
+msgstr "-5 Am Anfang"
+
+msgid "0 Auto"
+msgstr "0 Automatisch"
+
+msgid "5 Last"
+msgstr "5 Am Ende"
+
+msgid "Expander"
+msgstr "Aufklapp-Menüs"
+
+msgid "Notebook-Tabs"
+msgstr "Register"
 
 msgid "Batchmode"
 msgstr "Batch-Modus"

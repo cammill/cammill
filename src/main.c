@@ -73,21 +73,43 @@ void slice_3d (char *file, float z);
 #include <unistd.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dxf.h>
 #include <font.h>
 #include <setup.h>
+#include <dxf.h>
+#include <hpgl.h>
 #include <postprocessor.h>
 #include <calc.h>
 #ifdef USE_BMPMODE
 #include <bmp.h>
 #endif
-
 #include "os-hacks.h"
-
 #include <libintl.h>
 #define _(String) gettext(String)
 #define gettext_noop(String) String
 #define N_(String) gettext_noop(String)
+
+
+enum {
+  COL_OPTION,
+  COL_VALUE,
+  COL_GROUP,
+  COL_NAME,
+  COL_OBJECT,
+  COL_OVERWRITE,
+  NUM_COLS,
+};
+
+enum {
+  TREE_VIEW,
+  TREE_MACHINE,
+  TREE_ROTARY,
+  TREE_TANGENCIAL,
+  TREE_BITMAP,
+  TREE_MISC,
+  TREE_GLOBALS,
+  TREE_OBJECTS,
+  NUM_TREE,
+};
 
 
 void texture_init (void);
@@ -95,75 +117,73 @@ void texture_init (void);
 // path to cammill executable
 char program_path[PATH_MAX];
 
-char *about1 = "CAMmill 2D";
-char *author1 = "Oliver Dippel <a href='mailto:oliver@multixmedia.org'>oliver@multixmedia.org</a>\nOS X port by McUles <a href='mailto:mcules@fpv-club.de'>mcules@fpv-club.de</a>";
-char *author2 = "improvements by <a href='https://github.com/koppi'>@koppi</a> and <a href='https://github.com/onekk'>@onekk</a>";
-char *website = "Website: <a href='https://github.com/cammill'>https://github.com/cammill</a>\nChat: <a href='https://gitter.im/cammill/cammill'>https://gitter.im/cammill/cammill</a>";
+static char *about1 = "CAMmill 2D";
+static char *author1 = "Oliver Dippel <a href='mailto:oliver@multixmedia.org'>oliver@multixmedia.org</a>\nOS X port by McUles <a href='mailto:mcules@fpv-club.de'>mcules@fpv-club.de</a>";
+static char *author2 = "improvements by <a href='https://github.com/koppi'>@koppi</a> and <a href='https://github.com/onekk'>@onekk</a>";
+static char *website = "Website: <a href='https://github.com/cammill'>https://github.com/cammill</a>\nChat: <a href='https://gitter.im/cammill/cammill'>https://gitter.im/cammill/cammill</a>";
 
-int select_object_flag = 0;
-int select_object_x = 0;
-int select_object_y = 0;
-int main_mode = 0;
+static int select_object_flag = 0;
+static int select_object_x = 0;
+static int select_object_y = 0;
+static int main_mode = 0;
+static double tooltbl_diameters[100];
+static int save_gcode = 0;
+static char tool_descr[100][1024];
+static int tools_max = 0;
+static volatile int loading = 0;
+
+int update_post = 1;
+float draw_scale = 1.0;
+FILE *fd_out = NULL;
 int winw = 1600;
 int winh = 1200;
+char output_error[1024];
+char output_info[1024];
+char output_extension[128];
+int postcam_plugin = -1;
+char postcam_plugins[100][1024];
+char *output_buffer = NULL;
+int object_last = 0;
+double zero_x = 0.0;
+double zero_y = 0.0;
 float size_x = 0.0;
 float size_y = 0.0;
 double min_x = 99999.0;
 double min_y = 99999.0;
 double max_x = 0.0;
 double max_y = 0.0;
-double tooltbl_diameters[100];
-FILE *fd_out = NULL;
-int object_last = 0;
-int save_gcode = 0;
-char tool_descr[100][1024];
-int tools_max = 0;
-char postcam_plugins[100][1024];
-int postcam_plugin = -1;
-int update_post = 1;
-char *output_buffer = NULL;
-char output_extension[128];
-char output_info[1024];
-char output_error[1024];
-volatile int loading = 0;
-float draw_scale = 1.0;
 
-double zero_x = 0.0;
-double zero_y = 0.0;
-
-int last_mouse_x = 0;
-int last_mouse_y = 0;
-int last_mouse_button = -1;
-int last_mouse_state = 0;
-
-void ParameterUpdate (void);
-void ParameterChanged (GtkWidget *widget, gpointer data);
+static int last_mouse_x = 0;
+static int last_mouse_y = 0;
+static int last_mouse_button = -1;
+static int last_mouse_state = 0;
+static void ParameterUpdate (void);
 
 #ifdef USE_VNC
-GtkWidget *VncView;
+static GtkWidget *VncView;
 #endif
 #ifdef USE_WEBKIT
-GtkWidget *WebKit;
+static GtkWidget *WebKit;
 #endif
-GtkWidget *notebook2;
+static GtkWidget *gCodeViewLabelLua;
+static GtkWidget *SizeInfoLabel;
+static GtkWidget *StatusBar;
+static GtkWidget *glCanvas;
+static GtkWidget *gCodeView;
+static GtkWidget *gCodeViewLua;
+static GtkWidget *MenuBar;
+static GtkWidget *ToolBar;
+static GtkAccelGroup *accel_group;
+
+GtkWidget *notebook;
 GtkWidget *gCodeViewLabel;
-GtkWidget *gCodeViewLabelLua;
-GtkWidget *OutputInfoLabel;
 GtkWidget *OutputErrorLabel;
-GtkWidget *SizeInfoLabel;
-GtkWidget *StatusBar;
 GtkTreeStore *treestore;
 GtkListStore *ListStore[P_LAST];
-GtkWidget *ParamValue[P_LAST];
-GtkWidget *ParamButton[P_LAST];
-GtkWidget *glCanvas;
-GtkWidget *gCodeView;
-GtkWidget *gCodeViewLua;
 GtkWidget *hbox;
-GtkWidget *GroupBox[G_LAST];
-GtkWidget *GroupExpander[G_LAST];
-GtkWidget *GroupLabel[G_LAST];
-GtkWidget *GroupBoxFrame[G_LAST];
+GtkTreeStore *treestore = NULL;
+GtkTreeIter toplevels[NUM_TREE];
+GtkWidget *TreeBox = NULL;
 
 int PannedStat;
 int ExpanderStat[G_LAST];
@@ -180,6 +200,328 @@ double move_distance_z = 0.0;
 GtkWidget *window;
 GtkWidget *dialog;
 
+#define PATH_OBJECTS '2'
+#define GUI_TYPE_CELL_RENDERER_PARAM             (GUI_CELL_RENDERER_PARAM_get_type())
+#define GUI_CELL_RENDERER_PARAM(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj),  GUI_TYPE_CELL_RENDERER_PARAM, GuiCellRendererParam))
+#define GUI_CELL_RENDERER_PARAM_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass),  GUI_TYPE_CELL_RENDERER_PARAM, GuiCellRendererParamClass))
+#define GUI_IS_CELL_RENDERER_PARAM(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GUI_TYPE_CELL_RENDERER_PARAM))
+#define GUI_IS_CELL_RENDERER_PARAM_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass),  GUI_TYPE_CELL_RENDERER_PARAM))
+#define GUI_CELL_RENDERER_PARAM_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj),  GUI_TYPE_CELL_RENDERER_PARAM, GuiCellRendererParamClass))
+#define GUI_CELL_RENDERER_PARAM_PATH     "gui-cell-renderer-param-path"
+#define GUI_CELL_RENDERER_PARAM_INFO     "gui-cell-renderer-param-info"
+
+struct _GCRParamInfo {
+	gulong focus_out_id;
+};
+
+struct _GuiCellRendererParam {
+	GtkCellRendererText parent;
+};
+
+struct _GuiCellRendererParamClass {
+	GtkCellRendererTextClass  parent_class;
+};
+
+typedef struct _GuiCellRendererParam GuiCellRendererParam;
+typedef struct _GuiCellRendererParamClass GuiCellRendererParamClass;
+typedef struct _GCRParamInfo GCRParamInfo;
+
+static GType GUI_CELL_RENDERER_PARAM_get_type (void);
+static GtkCellRenderer *gui_cell_renderer_param_new (void);
+static void gui_cell_renderer_param_init (GuiCellRendererParam *cellspin);
+static void gui_cell_renderer_param_class_init (GuiCellRendererParamClass *klass);
+static void gui_cell_renderer_param_finalize (GObject *gobject);
+static GtkCellEditable *gui_cell_renderer_param_start_editing (GtkCellRenderer *cell, GdkEvent *event, GtkWidget *widget, const gchar *path, GdkRectangle *background_area, GdkRectangle *cell_area, GtkCellRendererState flags);
+static gpointer parent_class;
+
+void update_tree_values (void);
+void fill_objtree (void);
+
+GType GUI_CELL_RENDERER_PARAM_get_type (void) {
+	static GType cell_spin_type = 0;
+	if (cell_spin_type) {
+		return cell_spin_type;
+	}
+	static const GTypeInfo cell_spin_info = {sizeof(GuiCellRendererParamClass), NULL, NULL, (GClassInitFunc)gui_cell_renderer_param_class_init, NULL, NULL, sizeof(GuiCellRendererParam), 0, (GInstanceInitFunc) gui_cell_renderer_param_init};
+	cell_spin_type = g_type_register_static (GTK_TYPE_CELL_RENDERER_TEXT, "GuiCellRendererParam", &cell_spin_info, 0);
+	return cell_spin_type;
+}
+
+static void gui_cell_renderer_param_init (GuiCellRendererParam *cellrendererspin) {
+	return;
+}
+
+static void gui_cell_renderer_param_class_init (GuiCellRendererParamClass *klass) {
+	GtkCellRendererClass *cell_class  = GTK_CELL_RENDERER_CLASS(klass);
+	GObjectClass         *object_class    = G_OBJECT_CLASS(klass);
+	parent_class           = g_type_class_peek_parent (klass);
+	object_class->finalize = gui_cell_renderer_param_finalize;
+	cell_class->start_editing = gui_cell_renderer_param_start_editing;
+}
+
+static void gui_cell_renderer_param_finalize (GObject *object) {
+	(* G_OBJECT_CLASS (parent_class)->finalize) (object);
+}
+
+GtkCellRenderer *gui_cell_renderer_param_new (void) {
+	GtkCellRenderer *cell;
+	GuiCellRendererParam *spincell;
+	cell = g_object_new(GUI_TYPE_CELL_RENDERER_PARAM, NULL);
+	spincell = GUI_CELL_RENDERER_PARAM(cell);
+	return cell;
+}
+
+char *gui_liststore_get_text (int n, int i) {
+	GtkTreeIter iter;
+	char value_str[1024];
+	char *value_ptr = "---";
+	if (ListStore[n] == NULL) {
+		return value_ptr;
+	}
+	if (i < 0) {
+		return "-1";
+	}
+	sprintf(value_str, "%i", i);
+	GtkTreePath *path = gtk_tree_path_new_from_string(value_str);
+	if (gtk_tree_model_get_iter(GTK_TREE_MODEL(ListStore[n]), &iter, path)) {
+		gtk_tree_path_free(path);
+		gtk_tree_model_get(GTK_TREE_MODEL(ListStore[n]), &iter, COL_VALUE, &value_ptr, -1);
+	}
+	return value_ptr;
+}
+
+void gui_cell_renderer_param_editing_done (GtkCellEditable *paramwidget, gpointer data) {
+	char value_str[1024];
+	const gchar *path;
+	GCRParamInfo *info = g_object_get_data(G_OBJECT(data), GUI_CELL_RENDERER_PARAM_INFO);
+	if (info->focus_out_id > 0) {
+		g_signal_handler_disconnect(paramwidget, info->focus_out_id);
+		info->focus_out_id = 0;
+	}
+	path = g_object_get_data(G_OBJECT(paramwidget), GUI_CELL_RENDERER_PARAM_PATH);
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	model = gtk_tree_view_get_model(GTK_TREE_VIEW(TreeBox));
+	if (gtk_tree_model_get_iter_from_string(model, &iter, path)) {
+		gchar *group = NULL;
+		gchar *name = NULL;
+		gchar *value = NULL;
+		gchar *object = NULL;
+		gtk_tree_model_get(model, &iter, COL_GROUP, &group, COL_NAME, &name, COL_VALUE, &value, COL_OBJECT, &object, -1);
+		if (object != NULL && group != NULL && name != NULL && value != NULL) {
+			if (strcmp(object, "-1") == 0) {
+				int n = 0;
+				for (n = 0; n < P_LAST; n++) {
+					if (strcmp(PARAMETER[n].group, group) == 0 && strcmp(PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+						if (PARAMETER[n].type == T_FLOAT) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							PARAMETER[n].vfloat = atof(value_str);
+						} else if (PARAMETER[n].type == T_DOUBLE) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							PARAMETER[n].vdouble = atof(value_str);
+						} else if (PARAMETER[n].type == T_INT) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							PARAMETER[n].vint = atoi(value_str);
+						} else if (PARAMETER[n].type == T_SELECT) {
+							PARAMETER[n].vint = gtk_combo_box_get_active(GTK_COMBO_BOX(paramwidget));
+							sprintf(value_str, "%s", gui_liststore_get_text(n, PARAMETER[n].vint));
+						} else if (PARAMETER[n].type == T_STRING) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							strcpy(PARAMETER[n].vstr, value_str);
+						} else if (PARAMETER[n].type == T_FILE) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							strcpy(PARAMETER[n].vstr, value_str);
+						}
+						update_tree_values();
+						update_post = 1;
+
+					}
+				}
+			} else {
+				int object_num = atoi(object);
+				int n = 0;
+				for (n = 0; n < P_LAST; n++) {
+					if (strcmp(myOBJECTS[object_num].PARAMETER[n].group, group) == 0 && strcmp(myOBJECTS[object_num].PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+
+						myOBJECTS[object_num].PARAMETER[n].overwrite = 1;
+
+						if (myOBJECTS[object_num].PARAMETER[n].type == T_FLOAT) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							myOBJECTS[object_num].PARAMETER[n].vfloat = atof(value_str);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_DOUBLE) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							myOBJECTS[object_num].PARAMETER[n].vdouble = atof(value_str);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_INT) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							myOBJECTS[object_num].PARAMETER[n].vint = atoi(value_str);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_SELECT) {
+							myOBJECTS[object_num].PARAMETER[n].vint = gtk_combo_box_get_active(GTK_COMBO_BOX(paramwidget));
+							sprintf(value_str, "%s", gui_liststore_get_text(n, myOBJECTS[object_num].PARAMETER[n].vint));
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_STRING) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							strcpy(myOBJECTS[object_num].PARAMETER[n].vstr, value_str);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_FILE) {
+							strcpy(value_str, gtk_entry_get_text(GTK_ENTRY(paramwidget)));
+							strcpy(myOBJECTS[object_num].PARAMETER[n].vstr, value_str);
+						}
+						update_tree_values();
+						update_post = 1;
+					}
+				}
+			}
+		}
+		if (group != NULL) {
+			g_free(group);
+		}
+		if (name != NULL) {
+			g_free(name);
+		}
+		if (value != NULL) {
+			g_free(value);
+		}
+		if (object != NULL) {
+			g_free(object);
+		}
+	}
+}
+
+static gboolean gui_cell_renderer_param_focus_out_event (GtkWidget *paramwidget, gpointer data) {
+	gui_cell_renderer_param_editing_done (GTK_CELL_EDITABLE (paramwidget), data);
+	return FALSE;
+}
+
+static gboolean onButtonPress (GtkWidget *paramwidget, GdkEventButton *bevent, gpointer data) {
+	if (bevent->button == 1 && (bevent->type == GDK_2BUTTON_PRESS || bevent->type == GDK_3BUTTON_PRESS)) {
+		g_print ("double or triple click caught and ignored.\n");
+		return TRUE;
+	}
+	return FALSE;
+}
+
+static GtkCellEditable *gui_cell_renderer_param_start_editing (GtkCellRenderer *cell, GdkEvent *event, GtkWidget *widget, const gchar *path, GdkRectangle *background_area, GdkRectangle *cell_area, GtkCellRendererState flags) {
+	GtkCellRendererText *celltext;
+	GtkAdjustment *adj;
+	GtkWidget *paramwidget = NULL;
+	GCRParamInfo *info;
+	celltext = GTK_CELL_RENDERER_TEXT(cell);
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	model = gtk_tree_view_get_model(GTK_TREE_VIEW(TreeBox));
+	if (gtk_tree_model_get_iter_from_string(model, &iter, path)) {
+		gchar *group = NULL;
+		gchar *name = NULL;
+		gchar *value = NULL;
+		gchar *object = NULL;
+		gtk_tree_model_get(model, &iter, COL_GROUP, &group, COL_NAME, &name, COL_VALUE, &value, COL_OBJECT, &object, -1);
+		if (object != NULL && group != NULL && name != NULL && value != NULL) {
+			if (strcmp(object, "-1") == 0) {
+//				printf("%s/%s = %s\n", group, name, value);
+				int n = 0;
+				for (n = 0; n < P_LAST; n++) {
+					if (strcmp(PARAMETER[n].group, group) == 0 && strcmp(PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+						if (PARAMETER[n].type == T_FLOAT) {
+							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
+							adj = GTK_ADJUSTMENT(gtk_adjustment_new(PARAMETER[n].vfloat, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0));
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+						} else if (PARAMETER[n].type == T_DOUBLE) {
+							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
+							adj = GTK_ADJUSTMENT(gtk_adjustment_new(PARAMETER[n].vdouble, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0));
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+						} else if (PARAMETER[n].type == T_INT) {
+							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
+							adj = GTK_ADJUSTMENT(gtk_adjustment_new(PARAMETER[n].vint, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0));
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+						} else if (PARAMETER[n].type == T_SELECT) {
+							paramwidget = g_object_new(GTK_TYPE_COMBO_BOX, "has_frame", FALSE, NULL);
+							gtk_combo_box_set_model(GTK_COMBO_BOX(paramwidget), GTK_TREE_MODEL(ListStore[n]));
+							GtkCellRenderer *column = gtk_cell_renderer_text_new();
+							gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(paramwidget), column, TRUE);
+							gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(paramwidget), column, "cell-background", 0, "text", 1, NULL);
+							gtk_combo_box_set_active(GTK_COMBO_BOX(paramwidget), PARAMETER[n].vint);
+						} else if (PARAMETER[n].type == T_STRING) {
+							paramwidget = g_object_new(GTK_TYPE_ENTRY, "has_frame", FALSE, NULL);
+							gtk_entry_set_text(GTK_ENTRY(paramwidget), PARAMETER[n].vstr);
+						} else if (PARAMETER[n].type == T_FILE) {
+							paramwidget = g_object_new(GTK_TYPE_ENTRY, "has_frame", FALSE, NULL);
+							gtk_entry_set_text(GTK_ENTRY(paramwidget), PARAMETER[n].vstr);
+						} else {
+							continue;
+						}
+						g_object_set_data_full(G_OBJECT(paramwidget), GUI_CELL_RENDERER_PARAM_PATH, g_strdup(path), g_free);
+						if (PARAMETER[n].type != T_SELECT) {
+							gtk_editable_select_region(GTK_EDITABLE(paramwidget), 0, -1);
+						}
+						gtk_widget_show(paramwidget);
+						g_signal_connect(paramwidget, "editing_done", G_CALLBACK(gui_cell_renderer_param_editing_done), celltext);
+						g_signal_connect(paramwidget, "button_press_event", G_CALLBACK(onButtonPress), NULL);
+						info = g_new0(GCRParamInfo, 1);
+						info->focus_out_id = g_signal_connect(paramwidget, "focus_out_event", G_CALLBACK(gui_cell_renderer_param_focus_out_event), celltext);
+						g_object_set_data_full(G_OBJECT(cell), GUI_CELL_RENDERER_PARAM_INFO, info, g_free);
+					}
+				}
+			} else {
+				int object_num = atoi(object);
+//				printf("%s/%s = %s\n", group, name, value);
+				int n = 0;
+				for (n = 0; n < P_LAST; n++) {
+					if (strcmp(myOBJECTS[object_num].PARAMETER[n].group, group) == 0 && strcmp(myOBJECTS[object_num].PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+						if (myOBJECTS[object_num].PARAMETER[n].type == T_FLOAT) {
+							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
+							adj = GTK_ADJUSTMENT(gtk_adjustment_new(myOBJECTS[object_num].PARAMETER[n].vfloat, myOBJECTS[object_num].PARAMETER[n].min, myOBJECTS[object_num].PARAMETER[n].max, myOBJECTS[object_num].PARAMETER[n].step, myOBJECTS[object_num].PARAMETER[n].step * 10.0, 0.0));
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_DOUBLE) {
+							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
+							adj = GTK_ADJUSTMENT(gtk_adjustment_new(myOBJECTS[object_num].PARAMETER[n].vdouble, myOBJECTS[object_num].PARAMETER[n].min, myOBJECTS[object_num].PARAMETER[n].max, myOBJECTS[object_num].PARAMETER[n].step, myOBJECTS[object_num].PARAMETER[n].step * 10.0, 0.0));
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_INT) {
+							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
+							adj = GTK_ADJUSTMENT(gtk_adjustment_new(myOBJECTS[object_num].PARAMETER[n].vint, myOBJECTS[object_num].PARAMETER[n].min, myOBJECTS[object_num].PARAMETER[n].max, myOBJECTS[object_num].PARAMETER[n].step, myOBJECTS[object_num].PARAMETER[n].step * 10.0, 0.0));
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_SELECT) {
+							paramwidget = g_object_new(GTK_TYPE_COMBO_BOX, "has_frame", FALSE, NULL);
+							gtk_combo_box_set_model(GTK_COMBO_BOX(paramwidget), GTK_TREE_MODEL(ListStore[n]));
+							GtkCellRenderer *column = gtk_cell_renderer_text_new();
+							gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(paramwidget), column, TRUE);
+							gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(paramwidget), column, "cell-background", 0, "text", 1, NULL);
+							gtk_combo_box_set_active(GTK_COMBO_BOX(paramwidget), myOBJECTS[object_num].PARAMETER[n].vint);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_STRING) {
+							paramwidget = g_object_new(GTK_TYPE_ENTRY, "has_frame", FALSE, NULL);
+							gtk_entry_set_text(GTK_ENTRY(paramwidget), myOBJECTS[object_num].PARAMETER[n].vstr);
+						} else if (myOBJECTS[object_num].PARAMETER[n].type == T_FILE) {
+							paramwidget = g_object_new(GTK_TYPE_ENTRY, "has_frame", FALSE, NULL);
+							gtk_entry_set_text(GTK_ENTRY(paramwidget), myOBJECTS[object_num].PARAMETER[n].vstr);
+						} else {
+							continue;
+						}
+						g_object_set_data_full(G_OBJECT(paramwidget), GUI_CELL_RENDERER_PARAM_PATH, g_strdup(path), g_free);
+						if (myOBJECTS[object_num].PARAMETER[n].type != T_SELECT) {
+							gtk_editable_select_region(GTK_EDITABLE(paramwidget), 0, -1);
+						}
+						gtk_widget_show(paramwidget);
+						g_signal_connect(paramwidget, "editing_done", G_CALLBACK(gui_cell_renderer_param_editing_done), celltext);
+						g_signal_connect(paramwidget, "button_press_event", G_CALLBACK(onButtonPress), NULL);
+						info = g_new0(GCRParamInfo, 1);
+						info->focus_out_id = g_signal_connect(paramwidget, "focus_out_event", G_CALLBACK(gui_cell_renderer_param_focus_out_event), celltext);
+						g_object_set_data_full(G_OBJECT(cell), GUI_CELL_RENDERER_PARAM_INFO, info, g_free);
+					}
+				}
+			}
+		}
+		if (group != NULL) {
+			g_free(group);
+		}
+		if (name != NULL) {
+			g_free(name);
+		}
+		if (value != NULL) {
+			g_free(value);
+		}
+		if (object != NULL) {
+			g_free(object);
+		}
+	}
+	return GTK_CELL_EDITABLE(paramwidget);
+}
 
 void postcam_load_source (char *plugin) {
 	char tmp_str[PATH_MAX];
@@ -474,6 +816,31 @@ void draw_helplines (void) {
 	glPopMatrix();
 }
 
+gboolean select_object_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data) {
+	gchar *object = NULL;
+	gtk_tree_model_get(model, iter, COL_OBJECT, &object, -1);
+	if (object != NULL) {
+		if (strcmp(object, "-1") != 0) {
+			int object_num = atoi(object);
+			if (object_num == object_selected) {
+				// expand /Objects first
+				char tree_path_str[10];
+				tree_path_str[0] = PATH_OBJECTS;
+				tree_path_str[1] = 0;
+				GtkTreePath *path2 = gtk_tree_path_new_from_string(tree_path_str);
+				gtk_tree_view_expand_row(GTK_TREE_VIEW(TreeBox), path2, FALSE);
+				// than the selected Object
+				GtkTreeSelection *selection;
+				selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(TreeBox));
+				gtk_tree_selection_select_path(selection, path);
+//				gtk_tree_view_expand_row(GTK_TREE_VIEW(TreeBox), path, FALSE);
+			}
+		}
+		g_free(object);
+	}
+    return FALSE;
+}
+
 void select_object (GLint hits, GLuint buffer[]) {
 	unsigned int i, j;
 	GLuint names, *ptr;
@@ -489,11 +856,16 @@ void select_object (GLint hits, GLuint buffer[]) {
 		ptr++;
 //		printf("   the name is ");
 		for (j = 0; j < names; j++) {  /* for each name */
-			PARAMETER[P_O_SELECT].vint = (int)*ptr;
+			object_selected = (int)*ptr;
+			update_post = 1;
 //			printf("%d ", *ptr);
 			ptr++;
 		}
 //		printf("\n");
+	}
+	if (update_post == 1) {
+//		printf("object_selected: %i\n", object_selected);
+		gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), select_object_foreach_func, NULL);
 	}
 }
 
@@ -534,6 +906,28 @@ void update_gui (void) {
 	}
 }
 
+
+int sortget_order_num = 0;
+
+
+gboolean sortget_object_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data) {
+	gchar *object = NULL;
+	gchar *group = NULL;
+	gtk_tree_model_get(model, iter, COL_OBJECT, &object, COL_GROUP, &group, -1);
+	if (object != NULL && group != NULL) {
+		if (strcmp(object, "-1") != 0 && group[0] == 0) {
+			int object_num = atoi(object);
+			myOBJECTS[object_num].order = sortget_order_num++;
+		}
+		g_free(object);
+		g_free(group);
+	}
+    return FALSE;
+}
+
+
+
+
 void mainloop (void) {
 	size_x = (max_x - min_x);
 	size_y = (max_y - min_y);
@@ -546,6 +940,9 @@ void mainloop (void) {
 		PARAMETER[P_TOOL_NUM].vint = PARAMETER[P_TOOL_SELECT].vint;
 		PARAMETER[P_TOOL_DIAMETER].vdouble = tooltbl_diameters[PARAMETER[P_TOOL_NUM].vint];
 	}
+
+
+
 	// http://www.precifast.de/schnittgeschwindigkeit-beim-fraesen-berechnen/
 	// n  = vc / (d x pi)
 	int n = 0;      // Fräserdrehzahl in U/min
@@ -569,6 +966,37 @@ void mainloop (void) {
 		PARAMETER[P_TOOL_SPEED].vint = PARAMETER[P_TOOL_SPEED_CALC].vint;
 		PARAMETER[P_M_FEEDRATE].vint = PARAMETER[P_M_FEEDRATE_CALC].vint;
 	}
+	int object_num = 0;
+	for (object_num = 0; object_num < object_last; object_num++) {
+		// http://www.precifast.de/schnittgeschwindigkeit-beim-fraesen-berechnen/
+		// n  = vc / (d x pi)
+		int n = 0;      // Fräserdrehzahl in U/min
+		n = (int)(((float)Material[myOBJECTS[object_num].PARAMETER[P_MAT_SELECT].vint].vc * 1000.0) / (PI * (myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble)));
+		if (n > myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED_MAX].vint) {
+			n = myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED_MAX].vint;
+		}
+		myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED_CALC].vint = n;
+		float fz = 0.0; // Zahnvorschub in mm/Zahn (Wieviel ein zahn an material pro umdrehung abhebt)
+		if ((myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble) <= 4.0) {
+			fz = Material[myOBJECTS[object_num].PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE4];
+		} else if ((myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble) <= 8.0) {
+			fz = Material[myOBJECTS[object_num].PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE8];
+		} else if ((myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble) <= 12.0) {
+			fz = Material[myOBJECTS[object_num].PARAMETER[P_MAT_SELECT].vint].fz[FZ_FEEDFLUTE12];
+		}
+		// vf = n * z * fz
+		myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE_CALC].vint = (int)((float)n * (float)myOBJECTS[object_num].PARAMETER[P_TOOL_W].vint * fz);
+		// update rates
+		if (myOBJECTS[object_num].PARAMETER[P_M_USE_CALC].vint == 1) {
+			myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED].vint = myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED_CALC].vint;
+			myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint = myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE_CALC].vint;
+			myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].overwrite = 1;
+			myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED].overwrite = 1;
+		}
+		myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE_CALC].overwrite = 1;
+		myOBJECTS[object_num].PARAMETER[P_TOOL_SPEED_CALC].overwrite = 1;
+	}
+
 	if (update_post == 1) {
 		// Zero-Point
 		if (PARAMETER[P_M_ZERO].vint == 1) {
@@ -605,6 +1033,10 @@ void mainloop (void) {
 			bitmap2cnc();
 #endif
 		} else {
+
+			sortget_order_num = 0;
+			gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), sortget_object_foreach_func, NULL);
+
 			mill_objects();
 		}
 		mill_end();
@@ -706,7 +1138,7 @@ void mainloop (void) {
 			glCallList(2);
 		}
 
-draw_helplines();
+		draw_helplines();
 		glPopMatrix();
 
 		if (select_object_flag == 1) {
@@ -873,6 +1305,7 @@ void handler_tool_mm2inch (GtkWidget *widget, gpointer data) {
 		PARAMETER[P_O_UNIT].vint = 0;
 	}
 	init_objects();
+	fill_objtree();
 	loading = 0;
 }
 
@@ -896,6 +1329,7 @@ void handler_tool_inch2mm (GtkWidget *widget, gpointer data) {
 		PARAMETER[P_O_UNIT].vint = 1;
 	}
 	init_objects();
+	fill_objtree();
 	loading = 0;
 }
 
@@ -916,6 +1350,7 @@ void handler_rotate_drawing (GtkWidget *widget, gpointer data) {
 		}
 	}
 	init_objects();
+	fill_objtree();
 	loading = 0;
 }
 
@@ -930,6 +1365,7 @@ void handler_flip_x_drawing (GtkWidget *widget, gpointer data) {
 		}
 	}
 	init_objects();
+	fill_objtree();
 	loading = 0;
 }
 
@@ -944,6 +1380,7 @@ void handler_flip_y_drawing (GtkWidget *widget, gpointer data) {
 		}
 	}
 	init_objects();
+	fill_objtree();
 	loading = 0;
 }
 
@@ -973,12 +1410,6 @@ void handler_preview (GtkWidget *widget, gpointer data) {
 			fprintf(fd_out, "  <workpiece-min v='(%f,%f,%f)'/>\n", (float)0.0 - PARAMETER[P_TOOL_DIAMETER].vdouble, (float)0.0 - PARAMETER[P_TOOL_DIAMETER].vdouble, (float)PARAMETER[P_M_DEPTH].vdouble);
 			fprintf(fd_out, "  <tool_table>\n");
 			fprintf(fd_out, "    <tool length='%f' number='%i' radius='%f' shape='CYLINDRICAL' units='MM'/>\n", (float)-PARAMETER[P_M_DEPTH].vdouble + 1.0, PARAMETER[P_TOOL_NUM].vint, PARAMETER[P_TOOL_DIAMETER].vdouble / 2.0);
-			int object_num = 0;
-			for (object_num = 0; object_num < object_last; object_num++) {
-				if (myOBJECTS[object_num].force == 1) {
-					fprintf(fd_out, "    <tool length='%f' number='%i' radius='%f' shape='CYLINDRICAL' units='MM'/>\n", (float)-PARAMETER[P_M_DEPTH].vdouble + 1.0, myOBJECTS[object_num].tool_num, myOBJECTS[object_num].tool_dia / 2.0);
-				}
-			}
 			fprintf(fd_out, "  </tool_table>\n");
 			fprintf(fd_out, "</camotics>\n");
 			fclose(fd_out);
@@ -997,6 +1428,8 @@ void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 		main_mode = 0;
 		if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".plt") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PLT") > 0) {
+			hpgl_read(PARAMETER[P_V_DXF].vstr);
 #ifdef USE_BMPMODE
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".png") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PNG") > 0) {
 			main_mode = 1;
@@ -1012,6 +1445,7 @@ void handler_reload_dxf (GtkWidget *widget, gpointer data) {
 			dirname(PARAMETER[P_M_LOADPATH].vstr);
 		}
 		init_objects();
+		fill_objtree();
 		loading = 0;
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "reloading dxf...done"), "reloading dxf...done");
 }
@@ -1031,6 +1465,12 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 	gtk_file_filter_set_name(ffilter, _("DXF-Drawings"));
 	gtk_file_filter_add_pattern(ffilter, "*.dxf");
 	gtk_file_filter_add_pattern(ffilter, "*.DXF");
+	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
+
+	ffilter = gtk_file_filter_new();
+	gtk_file_filter_set_name(ffilter, _("HPGL-Files"));
+	gtk_file_filter_add_pattern(ffilter, "*.plt");
+	gtk_file_filter_add_pattern(ffilter, "*.PLT");
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
 
 	ffilter = gtk_file_filter_new();
@@ -1087,6 +1527,8 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 			}
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".plt") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PLT") > 0) {
+			hpgl_read(PARAMETER[P_V_DXF].vstr);
 #ifdef USE_BMPMODE
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".png") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PNG") > 0) {
 			main_mode = 1;
@@ -1102,6 +1544,7 @@ void handler_load_dxf (GtkWidget *widget, gpointer data) {
 			dirname(PARAMETER[P_M_LOADPATH].vstr);
 		}
 		init_objects();
+		fill_objtree();
 		if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
 			SetupLoadFromGcodeObjects(PARAMETER[P_V_DXF].vstr);
 		}
@@ -1500,173 +1943,10 @@ GtkWidget *create_gl () {
 	return(area);
 }
 
-void ParameterChanged (GtkWidget *widget, gpointer data) {
-	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
-		return;
-	}
-	int n = GPOINTER_TO_INT(data);
-	if (loading == 1) {
-		return;
-	}
-	if (PARAMETER[n].type == T_FLOAT) {
-		PARAMETER[n].vfloat = gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(widget));
-	} else if (PARAMETER[n].type == T_DOUBLE) {
-		PARAMETER[n].vdouble = (double)gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(widget));
-	} else if (PARAMETER[n].type == T_INT) {
-		PARAMETER[n].vint = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(widget));
-	} else if (PARAMETER[n].type == T_SELECT) {
-		PARAMETER[n].vint = gtk_combo_box_get_active(GTK_COMBO_BOX(widget));
-	} else if (PARAMETER[n].type == T_BOOL) {
-		PARAMETER[n].vint = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
-	} else if (PARAMETER[n].type == T_STRING) {
-		strncpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)), sizeof(PARAMETER[n].vstr));
-	} else if (PARAMETER[n].type == T_FILE) {
-		strncpy(PARAMETER[n].vstr, (char *)gtk_entry_get_text(GTK_ENTRY(widget)), sizeof(PARAMETER[n].vstr));
-	}
-	if (n == P_O_SELECT && PARAMETER[P_O_SELECT].vint != -1) {
-		int object_num = PARAMETER[P_O_SELECT].vint;
-		PARAMETER[P_O_USE].vint = myOBJECTS[object_num].use;
-		PARAMETER[P_O_FORCE].vint = myOBJECTS[object_num].force;
-		PARAMETER[P_O_CLIMB].vint = myOBJECTS[object_num].climb;
-		PARAMETER[P_O_OFFSET].vint = myOBJECTS[object_num].offset;
-		PARAMETER[P_O_OVERCUT].vint = myOBJECTS[object_num].overcut;
-		PARAMETER[P_O_POCKET].vint = myOBJECTS[object_num].pocket;
-		PARAMETER[P_O_HELIX].vint = myOBJECTS[object_num].helix;
-		PARAMETER[P_O_ROUGHFINE].vint = myOBJECTS[object_num].roughfine;
-		PARAMETER[P_O_ROUGHOFF].vdouble = myOBJECTS[object_num].roughoff;
-		PARAMETER[P_O_LASER].vint = myOBJECTS[object_num].laser;
-		PARAMETER[P_O_DEPTH].vdouble = myOBJECTS[object_num].depth;
-		PARAMETER[P_O_ORDER].vint = myOBJECTS[object_num].order;
-		PARAMETER[P_O_TABS].vint = myOBJECTS[object_num].tabs;
-		PARAMETER[P_O_TOOL_NUM].vint = myOBJECTS[object_num].tool_num;
-		PARAMETER[P_O_TOOL_DIAMETER].vdouble = myOBJECTS[object_num].tool_dia;
-		PARAMETER[P_O_TOOL_SPEED].vint = myOBJECTS[object_num].tool_speed;
-	} else if (n > P_O_SELECT && PARAMETER[P_O_SELECT].vint != -1) {
-		int object_num = PARAMETER[P_O_SELECT].vint;
-		myOBJECTS[object_num].use = PARAMETER[P_O_USE].vint;
-		myOBJECTS[object_num].force = PARAMETER[P_O_FORCE].vint;
-		myOBJECTS[object_num].climb = PARAMETER[P_O_CLIMB].vint;
-		myOBJECTS[object_num].offset = PARAMETER[P_O_OFFSET].vint;
-		myOBJECTS[object_num].overcut = PARAMETER[P_O_OVERCUT].vint;
-		myOBJECTS[object_num].pocket = PARAMETER[P_O_POCKET].vint;
-		myOBJECTS[object_num].helix = PARAMETER[P_O_HELIX].vint;
-		myOBJECTS[object_num].roughfine = PARAMETER[P_O_ROUGHFINE].vint;
-		myOBJECTS[object_num].roughoff = PARAMETER[P_O_ROUGHOFF].vdouble;
-		myOBJECTS[object_num].laser = PARAMETER[P_O_LASER].vint;
-		myOBJECTS[object_num].depth = PARAMETER[P_O_DEPTH].vdouble;
-		myOBJECTS[object_num].order = PARAMETER[P_O_ORDER].vint;
-		myOBJECTS[object_num].tabs = PARAMETER[P_O_TABS].vint;
-		myOBJECTS[object_num].tool_num = PARAMETER[P_O_TOOL_NUM].vint;
-		myOBJECTS[object_num].tool_dia = PARAMETER[P_O_TOOL_DIAMETER].vdouble;
-		myOBJECTS[object_num].tool_speed = PARAMETER[P_O_TOOL_SPEED].vint;
-	}
-	if (n == P_MAT_SELECT) {
-		int mat_num = PARAMETER[P_MAT_SELECT].vint;
-		PARAMETER[P_MAT_CUTSPEED].vint = Material[mat_num].vc;
-		PARAMETER[P_MAT_FEEDFLUTE4].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE4];
-		PARAMETER[P_MAT_FEEDFLUTE8].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE8];
-		PARAMETER[P_MAT_FEEDFLUTE12].vdouble = Material[mat_num].fz[FZ_FEEDFLUTE12];
-		strncpy(PARAMETER[P_MAT_TEXTURE].vstr, Material[mat_num].texture, sizeof(PARAMETER[P_MAT_TEXTURE].vstr));
-	}
-	if (n == P_O_TOLERANCE) {
-		loading = 1;
-		init_objects();
-		loading = 0;
-	}
-	if (n == P_O_SCALE) {
-		loading = 1;
-		handler_reload_dxf(NULL, NULL);
-		init_objects();
-		loading = 0;
-	}
-	if (n != P_O_PARAVIEW && strncmp(PARAMETER[n].name, "Translate", 9) != 0 && strncmp(PARAMETER[n].name, "Rotate", 6) != 0 && strncmp(PARAMETER[n].name, "Zoom", 4) != 0) {
-		update_post = 1;
-	}
-	if (n == P_O_PARAVIEW) {
-		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "please save setup and restart cammill !"), "please save setup and restart cammill !");
-	}
-	if (PARAMETER[P_O_UNIT].vint == 1) {
-		strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
-	} else {
-		strcpy(PARAMETER[P_O_UNIT].vstr, "inch");
-	}
-	if (PARAMETER[P_O_UNIT_LOAD].vint == 1) {
-		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "mm");
-	} else if (PARAMETER[P_O_UNIT_LOAD].vint == 2) {
-		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "auto");
-	} else {
-		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "inch");
-	}
-	if (n == P_M_TEXT_SCALE_WIDTH || n == P_M_TEXT_SCALE_HEIGHT || n == P_M_TEXT_FIXED_WIDTH || n == P_M_TEXT_FONT) {
-//		printf("UPDATED(%i): %s\n", n, PARAMETER[n].name);
-		if (n == P_M_TEXT_FONT) {
-			DIR *dir;
-			struct dirent *ent;
-			int fn = 0;
-			char dir_fonts[PATH_MAX];
-			if (program_path[0] == 0) {
-				snprintf(dir_fonts, PATH_MAX, "%s", "../share/cammill/fonts");
-			} else {
-				snprintf(dir_fonts, PATH_MAX, "%s%s%s", program_path, DIR_SEP, "../share/cammill/fonts");
-			}
-			if ((dir = opendir(dir_fonts)) != NULL) {
-				while ((ent = readdir(dir)) != NULL) {
-					if (ent->d_name[0] != '.') {
-						char *pname = suffix_remove(ent->d_name);
-						if (fn == PARAMETER[P_M_TEXT_FONT].vint) {
-//							printf("FONT %i: %i %s\n", fn, PARAMETER[P_M_TEXT_FONT].vint, pname);
-							strcpy(PARAMETER[P_M_TEXT_FONT].vstr, pname);
-							free(pname);
-							break;
-						}
-						fn++;
-						free(pname);
-					}
-				}
-				closedir (dir);
-			}
-		}
-/*
-		if (loading == 0) {
-			loading = 1;
-			char filename[PATH_MAX];
-			strcpy(filename, PARAMETER[P_V_DXF].vstr);
-
-printf("## %s ##\n", filename);
-
-			if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
-				SetupLoadFromGcode(PARAMETER[P_V_DXF].vstr);
-				if (PARAMETER[P_V_DXF].vstr[0] != 0) {
-					dxf_read(PARAMETER[P_V_DXF].vstr);
-				}
-			} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
-				dxf_read(PARAMETER[P_V_DXF].vstr);
-#ifdef USE_G3D
-			} else {
-				slice_3d(PARAMETER[P_V_DXF].vstr, 0.0);
-#endif
-			}
-			if (PARAMETER[P_V_DXF].vstr[0] != 0) {
-				strncpy(PARAMETER[P_M_LOADPATH].vstr, PARAMETER[P_V_DXF].vstr, PATH_MAX);
-				dirname(PARAMETER[P_M_LOADPATH].vstr);
-			}
-			init_objects();
-			if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
-				SetupLoadFromGcodeObjects(filename);
-			}
-			loading = 0;
-		}
-*/
-	}
-}
-
 void ParameterUpdate (void) {
 	if (PARAMETER[P_O_BATCHMODE].vint == 1) {
 		return;
 	}
-	char path[1024];
-	char value2[1024];
-	int n = 0;
 	if (PARAMETER[P_O_UNIT].vint == 1) {
 		strcpy(PARAMETER[P_O_UNIT].vstr, "mm");
 	} else {
@@ -1679,89 +1959,7 @@ void ParameterUpdate (void) {
 	} else {
 		strcpy(PARAMETER[P_O_UNIT_LOAD].vstr, "inch");
 	}
-
-#ifdef USE_BMPMODE
-	if (main_mode == 0) {
-		if (PARAMETER[P_O_PARAVIEW].vint == 1) {
-			gtk_widget_hide(GroupBox[G_BITMAP]);
-			gtk_widget_show(GroupBox[G_POCKETS]);
-			gtk_widget_show(GroupBox[G_TABS]);
-			gtk_widget_show(GroupBox[G_OBJECTS]);
-			gtk_widget_show(GroupBox[G_TEXT]);
-		} else {
-			gtk_widget_hide(GroupBoxFrame[G_BITMAP]);
-			gtk_widget_show(GroupBoxFrame[G_POCKETS]);
-			gtk_widget_show(GroupBoxFrame[G_TABS]);
-			gtk_widget_show(GroupBoxFrame[G_OBJECTS]);
-			gtk_widget_show(GroupBoxFrame[G_TEXT]);
-		}
-	} else {
-		if (PARAMETER[P_O_PARAVIEW].vint == 1) {
-			gtk_widget_show(GroupBox[G_BITMAP]);
-			gtk_widget_hide(GroupBox[G_POCKETS]);
-			gtk_widget_hide(GroupBox[G_TABS]);
-			gtk_widget_hide(GroupBox[G_OBJECTS]);
-			gtk_widget_hide(GroupBox[G_TEXT]);
-		} else {
-			gtk_widget_show(GroupBoxFrame[G_BITMAP]);
-			gtk_widget_hide(GroupBoxFrame[G_POCKETS]);
-			gtk_widget_hide(GroupBoxFrame[G_TABS]);
-			gtk_widget_hide(GroupBoxFrame[G_OBJECTS]);
-			gtk_widget_hide(GroupBoxFrame[G_TEXT]);
-		}
-	}
-#endif
-
-	for (n = 0; n < P_LAST; n++) {
-		if (PARAMETER[n].type == T_FLOAT) {
-			if (PARAMETER[n].vfloat != gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(ParamValue[n]))) {
-				gtk_spin_button_set_value(GTK_SPIN_BUTTON(ParamValue[n]), PARAMETER[n].vfloat);
-			}
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			if (PARAMETER[n].vdouble != gtk_spin_button_get_value_as_float(GTK_SPIN_BUTTON(ParamValue[n]))) {
-				gtk_spin_button_set_value(GTK_SPIN_BUTTON(ParamValue[n]), PARAMETER[n].vdouble);
-			}
-		} else if (PARAMETER[n].type == T_INT) {
-			if (PARAMETER[n].vint != gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ParamValue[n]))) {
-				gtk_spin_button_set_value(GTK_SPIN_BUTTON(ParamValue[n]), PARAMETER[n].vint);
-			}
-		} else if (PARAMETER[n].type == T_SELECT) {
-			if (PARAMETER[n].vint != gtk_combo_box_get_active(GTK_COMBO_BOX(ParamValue[n]))) {
-				gtk_combo_box_set_active(GTK_COMBO_BOX(ParamValue[n]), PARAMETER[n].vint);
-			}
-		} else if (PARAMETER[n].type == T_BOOL) {
-			if (PARAMETER[n].vint != gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(ParamValue[n]))) {
-				gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(ParamValue[n]), PARAMETER[n].vint);
-			}
-		} else if (PARAMETER[n].type == T_STRING) {
-			gtk_entry_set_text(GTK_ENTRY(ParamValue[n]), PARAMETER[n].vstr);
-		} else if (PARAMETER[n].type == T_FILE) {
-			gtk_entry_set_text(GTK_ENTRY(ParamValue[n]), PARAMETER[n].vstr);
-		} else {
-			continue;
-		}
-	}
-	// needed ???
-	for (n = 0; n < P_LAST; n++) {
-		snprintf(path, sizeof(path), "0:%i:%i", PARAMETER[n].l1, PARAMETER[n].l2);
-		if (PARAMETER[n].type == T_FLOAT) {
-			snprintf(value2, sizeof(value2), "%f", PARAMETER[n].vfloat);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			snprintf(value2, sizeof(value2), "%f", PARAMETER[n].vdouble);
-		} else if (PARAMETER[n].type == T_INT) {
-			snprintf(value2, sizeof(value2), "%i", PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			snprintf(value2, sizeof(value2), "%i", PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			snprintf(value2, sizeof(value2), "%i", PARAMETER[n].vint);
-		} else if (PARAMETER[n].type == T_STRING) {
-			snprintf(value2, sizeof(value2), "%s", PARAMETER[n].vstr);
-		} else if (PARAMETER[n].type == T_FILE) {
-			snprintf(value2, sizeof(value2), "%s", PARAMETER[n].vstr);
-		} else {
-			continue;
-		}
-	}
+	update_tree_values();
 }
 
 GdkPixbuf *create_pixbuf(const gchar * filename) {
@@ -1834,6 +2032,7 @@ void DnDreceive (GtkWidget *widget, GdkDragContext *context, gint x, gint y, Gtk
 				dirname(PARAMETER[P_M_LOADPATH].vstr);
 			}
 			init_objects();
+			fill_objtree();
 			loading = 0;
 			gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "loading dxf...done"), "loading dxf...done");
 		}
@@ -1846,38 +2045,578 @@ void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer 
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), ""), "");
 }
 
-void create_gui () {
-	GtkWidget *vbox;
-	glCanvas = create_gl();
-	gtk_widget_set_usize(GTK_WIDGET(glCanvas), 800, 600);
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "expose_event", GTK_SIGNAL_FUNC(handler_draw), NULL);  
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "button_press_event", GTK_SIGNAL_FUNC(handler_button_press), NULL);  
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "button_release_event", GTK_SIGNAL_FUNC(handler_button_release), NULL);  
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "configure_event", GTK_SIGNAL_FUNC(handler_configure), NULL);  
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "motion_notify_event", GTK_SIGNAL_FUNC(handler_motion), NULL);  
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "key_press_event", GTK_SIGNAL_FUNC(handler_keypress), NULL);  
-	gtk_signal_connect(GTK_OBJECT(glCanvas), "scroll-event", GTK_SIGNAL_FUNC(handler_scrollwheel), NULL);  
-//	gtk_signal_connect(GTK_OBJECT(window),   "window-state-event", G_CALLBACK(window_event), NULL);
-//	g_signal_connect(G_OBJECT(window), "window-state-event", G_CALLBACK(window_event), NULL);
+gboolean update_tree_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data) {
+    gchar *tree_path_str = NULL;
+//    gchar *tree_path_str2 = NULL;
+	gchar *group = NULL;
+	gchar *name = NULL;
+	gchar *value = NULL;
+	gchar *object = NULL;
+	gboolean *overwrite = NULL;
+	gtk_tree_model_get(model, iter, COL_GROUP, &group, COL_NAME, &name, COL_VALUE, &value, COL_OBJECT, &object, COL_OVERWRITE, &overwrite, -1);
+	if (object != NULL && group != NULL && name != NULL && value != NULL) {
+		if (strcmp(object, "-1") == 0) {
+			tree_path_str = gtk_tree_path_to_string(path);
+			int n = 0;
+			for (n = 0; n < P_LAST; n++) {
+				if (strcmp(PARAMETER[n].group, group) == 0 && strcmp(PARAMETER[n].name, name) == 0) {
+					char value_str[1024];
+					if (PARAMETER[n].type == T_FLOAT) {
+						sprintf(value_str, "%f", PARAMETER[n].vfloat);
+					} else if (PARAMETER[n].type == T_DOUBLE) {
+						sprintf(value_str, "%f", PARAMETER[n].vdouble);
+					} else if (PARAMETER[n].type == T_INT) {
+						sprintf(value_str, "%i", PARAMETER[n].vint);
+					} else if (PARAMETER[n].type == T_SELECT) {
+						sprintf(value_str, "%s", gui_liststore_get_text(n, PARAMETER[n].vint));
+					} else if (PARAMETER[n].type == T_BOOL) {
+						if (PARAMETER[n].vint == 1) {
+							sprintf(value_str, _("On"));
+						} else {
+							sprintf(value_str, _("Off"));
+						}
+					} else if (PARAMETER[n].type == T_STRING) {
+						sprintf(value_str, "%s", PARAMETER[n].vstr);
+					} else if (PARAMETER[n].type == T_FILE) {
+						sprintf(value_str, "%s", PARAMETER[n].vstr);
+					} else {
+						continue;
+					}
+					if (strcmp(value, value_str) != 0) {
+//						g_print("#%s: %s/%s: %s -> %s\n", object, group, name, value, value_str);
+						gtk_tree_store_set(treestore, iter, COL_VALUE, value_str, COL_OBJECT, "-1", -1);
+					}
+				}
+			}
+			g_free(tree_path_str);
+		} else {
+			int object_num = atoi(object);
+			tree_path_str = gtk_tree_path_to_string(path);
 
-	// Drag & Drop
-	gtk_drag_dest_set(glCanvas, GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY);
-	gtk_drag_dest_add_text_targets(glCanvas);
-	gtk_drag_dest_add_uri_targets(glCanvas);
-	g_signal_connect(GTK_OBJECT(glCanvas), "drag-drop", G_CALLBACK(DnDdrop), NULL);
-	g_signal_connect(GTK_OBJECT(glCanvas), "drag-motion", G_CALLBACK(DnDmotion), NULL);
-	g_signal_connect(GTK_OBJECT(glCanvas), "drag-data-received", G_CALLBACK(DnDreceive), NULL);
-	g_signal_connect(GTK_OBJECT(glCanvas), "drag-leave", G_CALLBACK(DnDleave), NULL);
+			if (strcmp(group, "") == 0 && strcmp(name, "use") == 0) {
+				gtk_tree_store_set(treestore, iter, COL_OVERWRITE, myOBJECTS[object_num].use, -1);
+			}
 
-	// top-menu
-	GtkWidget *MenuBar = gtk_menu_bar_new();
+			int n = 0;
+			for (n = 0; n < P_LAST; n++) {
+				if (strcmp(myOBJECTS[object_num].PARAMETER[n].group, group) == 0 && strcmp(myOBJECTS[object_num].PARAMETER[n].name, name) == 0) {
+					char value_str[1024];
+					if (myOBJECTS[object_num].PARAMETER[n].type == T_FLOAT) {
+						sprintf(value_str, "%f", myOBJECTS[object_num].PARAMETER[n].vfloat);
+					} else if (myOBJECTS[object_num].PARAMETER[n].type == T_DOUBLE) {
+						sprintf(value_str, "%f", myOBJECTS[object_num].PARAMETER[n].vdouble);
+					} else if (myOBJECTS[object_num].PARAMETER[n].type == T_INT) {
+						sprintf(value_str, "%i", myOBJECTS[object_num].PARAMETER[n].vint);
+					} else if (myOBJECTS[object_num].PARAMETER[n].type == T_SELECT) {
+						sprintf(value_str, "%s", gui_liststore_get_text(n, myOBJECTS[object_num].PARAMETER[n].vint));
+					} else if (myOBJECTS[object_num].PARAMETER[n].type == T_BOOL) {
+						if (myOBJECTS[object_num].PARAMETER[n].vint == 1) {
+							sprintf(value_str, _("On"));
+						} else {
+							sprintf(value_str, _("Off"));
+						}
+					} else if (myOBJECTS[object_num].PARAMETER[n].type == T_STRING) {
+						sprintf(value_str, "%s", myOBJECTS[object_num].PARAMETER[n].vstr);
+					} else if (myOBJECTS[object_num].PARAMETER[n].type == T_FILE) {
+						sprintf(value_str, "%s", myOBJECTS[object_num].PARAMETER[n].vstr);
+					} else {
+						continue;
+					}
+
+					if (strcmp(value, value_str) != 0) {
+//						g_print("#%s: %s/%s: %s -> %s\n", object, group, name, value, value_str);
+						gtk_tree_store_set(treestore, iter, COL_VALUE, value_str, -1);
+					}
+
+					if ((int)overwrite != (int)myOBJECTS[object_num].PARAMETER[n].overwrite) {
+
+/*
+						tree_path_str2 = gtk_tree_path_to_string(path);
+						tree_path_str2[5] = 0;
+						GtkTreePath *path2 = gtk_tree_path_new_from_string(tree_path_str2);
+						GtkTreeIter iter2;
+						if (gtk_tree_model_get_iter(model, &iter2, path2)) {
+							printf("overwrite: %s %s\n", tree_path_str, tree_path_str2);
+							gtk_tree_store_set(treestore, &iter2, COL_OPTION, "overwrites", -1);
+						}
+*/
+
+						if (myOBJECTS[object_num].PARAMETER[n].overwrite == 1) {
+							gtk_tree_store_set(treestore, iter, COL_OVERWRITE, TRUE, -1);
+						} else {
+							gtk_tree_store_set(treestore, iter, COL_OVERWRITE, FALSE, -1);
+						}
+					}
+				}
+			}
+			g_free(tree_path_str);
+		}
+	}
+	if (group != NULL) {
+		g_free(group);
+	}
+	if (name != NULL) {
+		g_free(name);
+	}
+	if (value != NULL) {
+		g_free(value);
+	}
+    return FALSE;
+}
+
+void update_tree_values (void) {
+	int n = 0;
+	int object_num = 0;
+	for (object_num = 0; object_num < object_last; object_num++) {
+		for (n = 0; n < P_LAST; n++) {
+			if (myOBJECTS[object_num].PARAMETER[n].overwrite == 0) {
+				strcpy(myOBJECTS[object_num].PARAMETER[n].name, PARAMETER[n].name);
+				strcpy(myOBJECTS[object_num].PARAMETER[n].group, PARAMETER[n].group);
+				myOBJECTS[object_num].PARAMETER[n].type = PARAMETER[n].type;
+				myOBJECTS[object_num].PARAMETER[n].vint = PARAMETER[n].vint;
+				myOBJECTS[object_num].PARAMETER[n].vfloat = PARAMETER[n].vfloat;
+				myOBJECTS[object_num].PARAMETER[n].vdouble = PARAMETER[n].vdouble;
+				strcpy(myOBJECTS[object_num].PARAMETER[n].vstr, PARAMETER[n].vstr);
+				myOBJECTS[object_num].PARAMETER[n].min = PARAMETER[n].min;
+				myOBJECTS[object_num].PARAMETER[n].step = PARAMETER[n].step;
+				myOBJECTS[object_num].PARAMETER[n].max = PARAMETER[n].max;
+			}
+		}
+	}
+	gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), update_tree_foreach_func, NULL);
+}
+
+gboolean delete_object_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data) {
+	gchar *object = NULL;
+	gchar *group = NULL;
+	gtk_tree_model_get(model, iter, COL_OBJECT, &object, COL_GROUP, &group, -1);
+	if (object != NULL && group != NULL) {
+		if (strcmp(object, "-1") != 0 && group[0] == 0) {
+			gtk_tree_store_remove(treestore, iter);
+			g_free(object);
+			g_free(group);
+			return TRUE;
+		}
+		g_free(object);
+		g_free(group);
+	}
+    return FALSE;
+}
+
+
+void objtree_add_object (int object_num) {
+	GtkTreeIter child;
+	GtkTreeIter grouplevel[G_LAST];
+	int ng = 0;
+	char tmp_str[1024];
+	char tmp_str2[1024];
+	sprintf(tmp_str, "#%i ", object_num);
+	if (myOBJECTS[object_num].closed == 1) {
+		strcat(tmp_str, "closed ");
+	} else {
+		strcat(tmp_str, "open ");
+	}
+	if (myOBJECTS[object_num].inside == 1) {
+		strcat(tmp_str, "inside ");
+	} else {
+		strcat(tmp_str, "outside ");
+	}
+	strcat(tmp_str, "layer ");
+	strcat(tmp_str, myOBJECTS[object_num].layer);
+	if (myOBJECTS[object_num].clone != -1) {
+		sprintf(tmp_str2, "clone of #%i ", myOBJECTS[object_num].clone);
+		strcat(tmp_str, tmp_str2);
+	}
+	sprintf(tmp_str2, "%i", object_num);
+	gtk_tree_store_append(treestore, &myOBJECTS[object_num].level, &toplevels[TREE_OBJECTS]);
+	gtk_tree_store_set(treestore, &myOBJECTS[object_num].level,
+		COL_OPTION, tmp_str,
+		COL_OBJECT, tmp_str2,
+		COL_GROUP, "",
+		COL_NAME, "use",
+		COL_VALUE, "",
+		COL_OVERWRITE, TRUE,
+	-1);
+	for (ng = 0; ng < G_LAST; ng++) {
+		if (strcmp(GROUPS[ng].name, "View") == 0) {
+		} else if (strcmp(GROUPS[ng].name, "Machine") == 0) {
+		} else if (strcmp(GROUPS[ng].name, "Misc") == 0) {
+		} else if (strcmp(GROUPS[ng].name, "Rotary") == 0) {
+		} else if (strcmp(GROUPS[ng].name, "Tangencial") == 0) {
+		} else if (strcmp(GROUPS[ng].name, "Bitmap") == 0) {
+		} else {
+			gtk_tree_store_append(treestore, &grouplevel[ng], &myOBJECTS[object_num].level);
+			gtk_tree_store_set(treestore, &grouplevel[ng],
+				COL_OPTION, _(GROUPS[ng].name),
+				COL_OBJECT, "-1",
+			-1);
+			int n = 0;
+			for (n = 0; n < P_LAST; n++) {
+				if (strcmp(myOBJECTS[object_num].PARAMETER[n].group, GROUPS[ng].name) == 0) {
+					gtk_tree_store_append(treestore, &child, &grouplevel[ng]);
+					gtk_tree_store_set(treestore, &child,
+						COL_OPTION, _(myOBJECTS[object_num].PARAMETER[n].name),
+						COL_VALUE, "???",
+						COL_GROUP, myOBJECTS[object_num].PARAMETER[n].group,
+						COL_NAME, myOBJECTS[object_num].PARAMETER[n].name,
+						COL_OBJECT, tmp_str2,
+						COL_OVERWRITE, FALSE,
+					-1);
+				}
+			}
+		}
+	}
+}
+
+void fill_objtree (void) {
+	int object_num = 0;
+	for (object_num = 0; object_num < object_last; object_num++) {
+		gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), delete_object_foreach_func, NULL);
+	}
+	int order_num = 0;
+	for (order_num = 0; order_num < object_last; order_num++) {
+		for (object_num = 0; object_num < object_last; object_num++) {
+			if (order_num == myOBJECTS[object_num].order && myOBJECTS[object_num].line[0] != 0) {
+				objtree_add_object(object_num);
+			}
+		}
+	}
+}
+
+
+GtkTreeModel *create_and_fill_model (void) {
+	GtkTreeIter child;
+	GtkTreeIter grouplevel[G_LAST];
+	GtkTreeIter systemtop;
+	treestore = gtk_tree_store_new(NUM_COLS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_BOOLEAN);
+
+
+	gtk_tree_store_append(treestore, &systemtop, NULL);
+	gtk_tree_store_set(treestore, &systemtop, COL_OPTION, _("System"), COL_OBJECT, "-1", -1);
+
+
+	gtk_tree_store_append(treestore, &toplevels[TREE_VIEW], &systemtop);
+	gtk_tree_store_set(treestore, &toplevels[TREE_VIEW], COL_OPTION, _("View"), COL_OBJECT, "-1", -1);
+	gtk_tree_store_append(treestore, &toplevels[TREE_MACHINE], &systemtop);
+	gtk_tree_store_set(treestore, &toplevels[TREE_MACHINE], COL_OPTION, _("Machine"), COL_OBJECT, "-1", -1);
+	gtk_tree_store_append(treestore, &toplevels[TREE_ROTARY], &systemtop);
+	gtk_tree_store_set(treestore, &toplevels[TREE_ROTARY], COL_OPTION, _("Rotary"), COL_OBJECT, "-1", -1);
+	gtk_tree_store_append(treestore, &toplevels[TREE_TANGENCIAL], &systemtop);
+	gtk_tree_store_set(treestore, &toplevels[TREE_TANGENCIAL], COL_OPTION, _("Tangencial"), COL_OBJECT, "-1", -1);
+	gtk_tree_store_append(treestore, &toplevels[TREE_BITMAP], &systemtop);
+	gtk_tree_store_set(treestore, &toplevels[TREE_BITMAP], COL_OPTION, _("Bitmap"), COL_OBJECT, "-1", -1);
+	gtk_tree_store_append(treestore, &toplevels[TREE_MISC], &systemtop);
+	gtk_tree_store_set(treestore, &toplevels[TREE_MISC], COL_OPTION, _("Misc"), COL_OBJECT, "-1", -1);
+
+	gtk_tree_store_append(treestore, &toplevels[TREE_GLOBALS], NULL);
+	gtk_tree_store_set(treestore, &toplevels[TREE_GLOBALS], COL_OPTION, _("Settings (for all Objects)"), COL_OBJECT, "-1", -1);
+	gtk_tree_store_append(treestore, &toplevels[TREE_OBJECTS], NULL);
+	gtk_tree_store_set(treestore, &toplevels[TREE_OBJECTS], COL_OPTION, _("Objects"), COL_OBJECT, "-1", -1);
+	int ng = 0;
+	for (ng = 0; ng < G_LAST; ng++) {
+		GtkTreeIter *master;
+		if (strcmp(GROUPS[ng].name, "View") == 0) {
+			master = &toplevels[TREE_VIEW];
+		} else if (strcmp(GROUPS[ng].name, "Machine") == 0) {
+			master = &toplevels[TREE_MACHINE];
+		} else if (strcmp(GROUPS[ng].name, "Rotary") == 0) {
+			master = &toplevels[TREE_ROTARY];
+		} else if (strcmp(GROUPS[ng].name, "Tangencial") == 0) {
+			master = &toplevels[TREE_TANGENCIAL];
+		} else if (strcmp(GROUPS[ng].name, "Bitmap") == 0) {
+			master = &toplevels[TREE_BITMAP];
+		} else if (strcmp(GROUPS[ng].name, "Misc") == 0) {
+			master = &toplevels[TREE_MISC];
+		} else {
+			gtk_tree_store_append(treestore, &grouplevel[ng], &toplevels[TREE_GLOBALS]);
+			gtk_tree_store_set(treestore, &grouplevel[ng],
+				COL_OPTION, _(GROUPS[ng].name),
+				COL_OBJECT, "-1",
+			-1);
+			master = &grouplevel[ng];
+		}
+		int n = 0;
+		for (n = 0; n < P_LAST; n++) {
+			if (strcmp(PARAMETER[n].group, GROUPS[ng].name) == 0) {
+				gtk_tree_store_append(treestore, &child, master);
+				gtk_tree_store_set(treestore, &child,
+					COL_OPTION, _(PARAMETER[n].name),
+					COL_VALUE, "",
+					COL_GROUP, PARAMETER[n].group,
+					COL_NAME, PARAMETER[n].name,
+					COL_OBJECT, "-1",
+				-1);
+			}
+		}
+	}
+	update_tree_values();
+	return GTK_TREE_MODEL(treestore);
+}
+
+
+void view_onRowActivated (GtkTreeView *treeview, GtkTreePath *path, GtkTreeViewColumn *col, gpointer userdata) {
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	model = gtk_tree_view_get_model(treeview);
+	if (gtk_tree_model_get_iter(model, &iter, path)) {
+		gchar *group = NULL;
+		gchar *name = NULL;
+		gchar *value = NULL;
+		gchar *object = NULL;
+		gtk_tree_model_get(model, &iter, COL_GROUP, &group, COL_NAME, &name, COL_VALUE, &value, COL_OBJECT, &object, -1);
+		if (object != NULL && group != NULL && name != NULL && value != NULL) {
+			if (strcmp(object, "-1") == 0) {
+				int n = 0;
+				for (n = 0; n < P_LAST; n++) {
+					if (strcmp(PARAMETER[n].group, group) == 0 && strcmp(PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+						if (PARAMETER[n].type == T_BOOL) {
+							PARAMETER[n].vint = 1 - PARAMETER[n].vint;
+							update_tree_values();
+							update_post = 1;
+						}
+					}
+				}
+			} else {
+				int object_num = atoi(object);
+				int n = 0;
+				for (n = 0; n < P_LAST; n++) {
+					if (strcmp(myOBJECTS[object_num].PARAMETER[n].group, group) == 0 && strcmp(myOBJECTS[object_num].PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+						if (myOBJECTS[object_num].PARAMETER[n].type == T_BOOL) {
+							myOBJECTS[object_num].PARAMETER[n].vint = 1 - myOBJECTS[object_num].PARAMETER[n].vint;
+							myOBJECTS[object_num].PARAMETER[n].overwrite = 1;
+							update_tree_values();
+							update_post = 1;
+						}
+					}
+				}
+			}
+		}
+		if (group != NULL) {
+			g_free(group);
+		}
+		if (name != NULL) {
+			g_free(name);
+		}
+		if (value != NULL) {
+			g_free(value);
+		}
+		if (object != NULL) {
+			g_free(object);
+		}
+	}
+}
+
+void overwrite_cb (GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+	GtkTreeIter iter;
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+	GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(TreeBox));
+	gtk_tree_model_get_iter(model, &iter, path);
+	gchar *group = NULL;
+	gchar *name = NULL;
+	gchar *object = NULL;
+	gtk_tree_model_get(model, &iter, COL_GROUP, &group, COL_NAME, &name, COL_OBJECT, &object, -1);
+	if (object != NULL && group != NULL && name != NULL) {
+		if (strcmp(object, "-1") != 0) {
+			if (strcmp(group, "") == 0 && strcmp(name, "use") == 0) {
+				int object_num = atoi(object);
+				myOBJECTS[object_num].use = 1 - myOBJECTS[object_num].use;
+				update_post = 1;
+			}
+		}
+		int n = 0;
+		int object_num = atoi(object);
+		for (n = 0; n < P_LAST; n++) {
+			if (strcmp(object, "-1") != 0) {
+				if (strcmp(myOBJECTS[object_num].PARAMETER[n].group, group) == 0 && strcmp(myOBJECTS[object_num].PARAMETER[n].name, name) == 0 && PARAMETER[n].readonly == 0) {
+					myOBJECTS[object_num].PARAMETER[n].overwrite = 1 - myOBJECTS[object_num].PARAMETER[n].overwrite;
+					update_post = 1;
+				}
+			}
+		}
+	}
+	if (group != NULL) {
+		g_free(group);
+	}
+	if (name != NULL) {
+		g_free(name);
+	}
+	if (object != NULL) {
+		g_free(object);
+	}
+	gtk_tree_path_free (path);
+}
+
+
+
+
+
+
+
+GtkTreeIter iter_sel;
+int object_sel = -1;
+
+gboolean view_selection_func (GtkTreeSelection *selection, GtkTreeModel *model, GtkTreePath *path, gboolean path_currently_selected, gpointer userdata) {
+	GtkTreeIter iter;
+	if (gtk_tree_model_get_iter(model, &iter, path)) {
+		gchar *object = NULL;
+		gtk_tree_model_get(model, &iter, COL_OBJECT, &object, -1);
+		if (!path_currently_selected) {
+			if (gtk_tree_model_get_iter(model, &iter_sel, path)) {
+				object_sel = atoi(object);
+			}
+		}
+		if (object != NULL) {
+			g_free(object);
+		}
+	}
+	return TRUE;
+}
+
+
+
+
+void popup_menu_move_down (GtkWidget *menuitem, gpointer userdata) {
+	GtkTreeIter iter = iter_sel;
+	gtk_tree_model_iter_next(GTK_TREE_MODEL(treestore), &iter_sel);
+	gtk_tree_store_move_after(treestore, &iter, &iter_sel);
+	update_post = 1;
+}
+
+void popup_menu_clone_object (GtkWidget *menuitem, gpointer userdata) {
+	int object_num = object_last;
+	object_last++;
+	memcpy((void *)&myOBJECTS[object_num], (void *)&myOBJECTS[object_sel], sizeof(_OBJECT));
+	myOBJECTS[object_num].clone = object_sel;
+	objtree_add_object(object_num);
+	update_post = 1;
+}
+
+
+void view_popup_menu (GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
+	GtkWidget *menu, *menuitem;
+	menu = gtk_menu_new();
+
+	menuitem = gtk_menu_item_new_with_label(_("Move down..."));
+	g_signal_connect(menuitem, "activate", (GCallback)popup_menu_move_down, treeview);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	menuitem = gtk_menu_item_new_with_label(_("Clone this Object..."));
+	g_signal_connect(menuitem, "activate", (GCallback)popup_menu_clone_object, treeview);
+	gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
+
+	gtk_widget_show_all(menu);
+	gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL, (event != NULL) ? event->button : 0, gdk_event_get_time((GdkEvent*)event));
+}
+
+int count_char_in_string (const char *string, char c) {
+	int num = 0;
+	int n = 0;
+	if (string == NULL) {
+		return -1;
+	}
+	for (n = 0; n < strlen(string); n++) {
+		if (string[n] == c) {
+			num++;
+		}
+	}
+	return num;
+}
+
+gboolean view_onButtonPressed (GtkWidget *treeview, GdkEventButton *event, gpointer userdata) {
+	if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+		GtkTreeSelection *selection;
+		selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
+		if (gtk_tree_selection_count_selected_rows(selection)  <= 1) {
+			GtkTreePath *path;
+			if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview), (gint)event->x, (gint)event->y, &path, NULL, NULL, NULL)) {
+				gtk_tree_selection_unselect_all(selection);
+				gtk_tree_selection_select_path(selection, path);
+				char *tree_path_str = gtk_tree_path_to_string(path);
+				int cnum = count_char_in_string(tree_path_str, ':');
+				if (tree_path_str[0] == PATH_OBJECTS && cnum == 1) {
+					view_popup_menu(treeview, event, userdata);
+				}
+				gtk_tree_path_free(path);
+			}
+		}
+		return TRUE;
+	}
+	return FALSE;
+}
+
+gboolean view_onPopupMenu (GtkWidget *treeview, gpointer userdata) {
+	view_popup_menu(treeview, NULL, userdata);
+	return TRUE;
+}
+
+
+
+
+static GtkWidget *create_view_and_model (void) {
+	GtkTreeViewColumn *col = NULL;
+	GtkCellRenderer *renderer = NULL;
+	GtkWidget *view = NULL;
+	GtkTreeModel *model = NULL;
+	view = gtk_tree_view_new();
+
+	col = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(col, _("Option"));
+	gtk_tree_view_append_column(GTK_TREE_VIEW(view), col);
+	renderer = gtk_cell_renderer_text_new();
+	gtk_tree_view_column_pack_start(col, renderer, TRUE);
+	gtk_tree_view_column_add_attribute(col, renderer, "text", COL_OPTION);
+
+	col = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(col, _("Value"));
+	gtk_tree_view_append_column(GTK_TREE_VIEW(view), col);
+	gtk_tree_view_column_set_expand(col, TRUE);
+	renderer = gui_cell_renderer_param_new();
+	gtk_tree_view_column_pack_start(col, renderer, TRUE);
+	gtk_tree_view_column_add_attribute(col, renderer, "text", COL_VALUE);
+	g_object_set(renderer, "editable", TRUE, NULL);
+
+	col = gtk_tree_view_column_new();
+	gtk_tree_view_column_set_title(col, "");
+	gtk_tree_view_append_column(GTK_TREE_VIEW(view), col);
+	gtk_tree_view_column_set_resizable(col, FALSE);
+	gtk_tree_view_column_set_fixed_width(col, 30);
+	gtk_tree_view_column_set_max_width(col, 30);
+	gtk_tree_view_column_set_expand(col, FALSE);
+	renderer = gtk_cell_renderer_toggle_new();
+	gtk_tree_view_column_pack_start(col, renderer, TRUE);
+	gtk_tree_view_column_add_attribute(col, renderer, "active", COL_OVERWRITE);
+//	gtk_tree_view_column_add_attribute(col, renderer, "activatable", COL_OVERWRITE);
+	g_signal_connect(G_OBJECT(renderer), "toggled", G_CALLBACK(overwrite_cb), NULL);
+
+	model = create_and_fill_model();
+	gtk_tree_view_set_model(GTK_TREE_VIEW(view), model);
+
+//	gtk_tree_view_set_reorderable(GTK_TREE_VIEW(view), TRUE);
+
+    g_signal_connect(view, "button-press-event", (GCallback)view_onButtonPressed, NULL);
+    g_signal_connect(view, "popup-menu", (GCallback)view_onPopupMenu, NULL);
+
+
+
+	g_object_unref(model);
+	gtk_tree_selection_set_mode(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), GTK_SELECTION_SINGLE);
+	gtk_tree_selection_set_select_function(gtk_tree_view_get_selection(GTK_TREE_VIEW(view)), view_selection_func, NULL, NULL);
+	g_signal_connect(view, "row-activated", (GCallback)view_onRowActivated, NULL);
+
+
+
+	return view;
+}
+
+void create_menu (void) {
+	MenuBar = gtk_menu_bar_new();
 	GtkWidget *MenuItem;
 	GtkWidget *FileMenu = gtk_menu_item_new_with_mnemonic(_("_File"));
 	GtkWidget *FileMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(FileMenu), FileMenuList);
 	gtk_menu_bar_append(GTK_MENU_BAR(MenuBar), FileMenu);
 
-	GtkAccelGroup *accel_group = gtk_accel_group_new();
+	accel_group = gtk_accel_group_new();
 
 	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Load DXF"));
 	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
@@ -1924,8 +2663,10 @@ void create_gui () {
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_destroy), NULL);
 
 	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_q, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
-                
+}
 
+void create_toolbar (void) {
+	GtkWidget *MenuItem;
 	GtkWidget *ToolsMenu = gtk_menu_item_new_with_mnemonic(_("_Tools"));
 	GtkWidget *ToolsMenuList = gtk_menu_new();
 	gtk_menu_item_set_submenu(GTK_MENU_ITEM(ToolsMenu), ToolsMenuList);
@@ -1956,7 +2697,7 @@ void create_gui () {
 	gtk_menu_append(GTK_MENU(HelpMenuList), MenuItem);
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_about), NULL);
 
-	GtkWidget *ToolBar = gtk_toolbar_new();
+	ToolBar = gtk_toolbar_new();
 	gtk_toolbar_set_style(GTK_TOOLBAR(ToolBar), GTK_TOOLBAR_ICONS);
 
 	GtkToolItem *ToolItemLoadDXF = gtk_tool_button_new_from_stock(GTK_STOCK_OPEN);
@@ -2042,126 +2783,61 @@ void create_gui () {
 	GtkToolItem *ToolItemSep2 = gtk_separator_tool_item_new();
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), ToolItemSep2, -1); 
 
-	GtkWidget *NbBox;
+}
+
+
+void create_gui () {
+	GtkWidget *vbox;
 	int GroupNum[G_LAST];
 	int n = 0;
+	for (n = 0; n < P_LAST; n++) {
+		ListStore[n] = NULL;
+		if (PARAMETER[n].type == T_SELECT) {
+			ListStore[n] = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+		}
+	}
+
+
+
+
+
+
+	glCanvas = create_gl();
+	gtk_widget_set_usize(GTK_WIDGET(glCanvas), 800, 600);
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "expose_event", GTK_SIGNAL_FUNC(handler_draw), NULL);  
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "button_press_event", GTK_SIGNAL_FUNC(handler_button_press), NULL);  
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "button_release_event", GTK_SIGNAL_FUNC(handler_button_release), NULL);  
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "configure_event", GTK_SIGNAL_FUNC(handler_configure), NULL);  
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "motion_notify_event", GTK_SIGNAL_FUNC(handler_motion), NULL);  
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "key_press_event", GTK_SIGNAL_FUNC(handler_keypress), NULL);  
+	gtk_signal_connect(GTK_OBJECT(glCanvas), "scroll-event", GTK_SIGNAL_FUNC(handler_scrollwheel), NULL);  
+//	gtk_signal_connect(GTK_OBJECT(window),   "window-state-event", G_CALLBACK(window_event), NULL);
+//	g_signal_connect(G_OBJECT(window), "window-state-event", G_CALLBACK(window_event), NULL);
+
+	// Drag & Drop
+	gtk_drag_dest_set(glCanvas, GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY);
+	gtk_drag_dest_add_text_targets(glCanvas);
+	gtk_drag_dest_add_uri_targets(glCanvas);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-drop", G_CALLBACK(DnDdrop), NULL);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-motion", G_CALLBACK(DnDmotion), NULL);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-data-received", G_CALLBACK(DnDreceive), NULL);
+	g_signal_connect(GTK_OBJECT(glCanvas), "drag-leave", G_CALLBACK(DnDleave), NULL);
+
+	// top-menu
+	create_menu();
+	create_toolbar();
+
+
+	TreeBox = create_view_and_model();
+	GtkWidget *NtBox = gtk_scrolled_window_new(NULL, NULL);
+	gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(NtBox), TreeBox);
+
+
 	for (n = 0; n < G_LAST; n++) {
-		GroupBox[n] = gtk_vbox_new(0, 0);
 		GroupNum[n] = 0;
 	}
 
-	if (PARAMETER[P_O_PARAVIEW].vint == 1) {
-		NbBox = gtk_table_new(2, 2, FALSE);
-		GtkWidget *notebook = gtk_notebook_new();
-		gtk_notebook_set_scrollable(GTK_NOTEBOOK(notebook), TRUE);
-		gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
-		gtk_table_attach_defaults(GTK_TABLE(NbBox), notebook, 0, 1, 0, 1);
-		for (n = 0; n < G_LAST; n++) {
-			GroupLabel[n] = gtk_label_new(_(GROUPS[n].name));
-			gtk_notebook_append_page(GTK_NOTEBOOK(notebook), GroupBox[n], GroupLabel[n]);
-		}
-	} else {
-		GtkWidget *ExpanderBox = gtk_vbox_new(0, 0);
-		NbBox = gtk_scrolled_window_new(NULL, NULL);
-		gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(NbBox), ExpanderBox);
-		for (n = 0; n < G_LAST; n++) {
-			GroupExpander[n] = gtk_expander_new(_(GROUPS[n].name));
-			gtk_expander_set_expanded(GTK_EXPANDER(GroupExpander[n]), ExpanderStat[n]);
-			GroupBoxFrame[n] = gtk_frame_new("");
-			gtk_container_add(GTK_CONTAINER(GroupBoxFrame[n]), GroupExpander[n]);
-			gtk_box_pack_start(GTK_BOX(ExpanderBox), GroupBoxFrame[n], 0, 1, 0);
-			gtk_container_add(GTK_CONTAINER(GroupExpander[n]), GroupBox[n]);
-		}
-	}
-	gtk_widget_set_size_request(NbBox, 300, -1);
-
-	for (n = 0; n < P_LAST; n++) {
-		GtkWidget *Label;
-		GtkTooltips *tooltips = gtk_tooltips_new();
-		GtkWidget *Box = gtk_hbox_new(0, 0);
-		char label_str[1024];
-		if (PARAMETER[n].unit[0] != 0) {
-			sprintf(label_str, "%s (%s)", _(PARAMETER[n].name), PARAMETER[n].unit);
-		} else {
-			sprintf(label_str, "%s", _(PARAMETER[n].name));
-		}
-		Label = gtk_label_new(label_str);
-		if (PARAMETER[n].type == T_FLOAT) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			GtkAdjustment *Adj = (GtkAdjustment *)gtk_adjustment_new(PARAMETER[n].vdouble, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0);
-			ParamValue[n] = gtk_spin_button_new(Adj, PARAMETER[n].step, 3);
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			GtkAdjustment *Adj = (GtkAdjustment *)gtk_adjustment_new(PARAMETER[n].vdouble, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0);
-			ParamValue[n] = gtk_spin_button_new(Adj, PARAMETER[n].step, 4);
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-		} else if (PARAMETER[n].type == T_INT) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			GtkAdjustment *Adj = (GtkAdjustment *)gtk_adjustment_new(PARAMETER[n].vdouble, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0);
-			ParamValue[n] = gtk_spin_button_new(Adj, PARAMETER[n].step, 1);
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-		} else if (PARAMETER[n].type == T_SELECT) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			ListStore[n] = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
-			ParamValue[n] = gtk_combo_box_new_with_model(GTK_TREE_MODEL(ListStore[n]));
-			g_object_unref(ListStore[n]);
-			GtkCellRenderer *column;
-			column = gtk_cell_renderer_text_new();
-			gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(ParamValue[n]), column, TRUE);
-			gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(ParamValue[n]), column, "cell-background", 0, "text", 1, NULL);
-			gtk_combo_box_set_active(GTK_COMBO_BOX(ParamValue[n]), 1);
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-		} else if (PARAMETER[n].type == T_BOOL) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			ParamValue[n] = gtk_check_button_new_with_label(_("On/Off"));
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-		} else if (PARAMETER[n].type == T_STRING) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			ParamValue[n] = gtk_entry_new();
-			gtk_entry_set_text(GTK_ENTRY(ParamValue[n]), PARAMETER[n].vstr);
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-		} else if (PARAMETER[n].type == T_FILE) {
-			GtkWidget *Align = gtk_alignment_new(0.0, 0.5, 0.0, 0.0);
-			gtk_container_add(GTK_CONTAINER(Align), Label);
-			ParamValue[n] = gtk_entry_new();
-			gtk_entry_set_text(GTK_ENTRY(ParamValue[n]), PARAMETER[n].vstr);
-			ParamButton[n] = gtk_button_new();
-			GtkWidget *image = gtk_image_new_from_stock(GTK_STOCK_OPEN, GTK_ICON_SIZE_BUTTON);
-			gtk_button_set_image(GTK_BUTTON(ParamButton[n]), image);
-			gtk_box_pack_start(GTK_BOX(Box), Align, 1, 1, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamValue[n], 0, 0, 0);
-			gtk_box_pack_start(GTK_BOX(Box), ParamButton[n], 0, 0, 0);
-		} else {
-			continue;
-		}
-		gtk_tooltips_set_tip(tooltips, Box, _(PARAMETER[n].help), NULL);
-
-		int gn = 0;
-		for (gn = 0; gn < G_LAST; gn++) {
-			if (strcmp(PARAMETER[n].group, GROUPS[gn].name) == 0) {
-				gtk_box_pack_start(GTK_BOX(GroupBox[gn]), Box, 0, 0, 0);
-				PARAMETER[n].l1 = 0;
-				PARAMETER[n].l2 = GroupNum[gn];
-				GroupNum[gn]++;
-			}
-		}
-	}
-
-	OutputInfoLabel = gtk_label_new("-- OutputInfo --");
-	gtk_box_pack_start(GTK_BOX(GroupBox[G_MACHINE]), OutputInfoLabel, 0, 0, 0);
+	gtk_widget_set_size_request(NtBox, 300, -1);
 
 //	LayerLoadList();
 	loading = 0;
@@ -2174,18 +2850,6 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_M_COOLANT], NULL, -1, 0, NULL, 1, _("Mist"), -1);
 	gtk_list_store_insert_with_values(ListStore[P_M_COOLANT], NULL, -1, 0, NULL, 1, _("Flood"), -1);
 
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, _("-5 First"), -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "-4", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "-3", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "-2", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "-1", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, _("0 Auto"), -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "1", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "2", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "3", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, "4", -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_ORDER], NULL, -1, 0, NULL, 1, _("5 Last"), -1);
-
 	gtk_list_store_insert_with_values(ListStore[P_H_ROTARYAXIS], NULL, -1, 0, NULL, 1, "A", -1);
 	gtk_list_store_insert_with_values(ListStore[P_H_ROTARYAXIS], NULL, -1, 0, NULL, 1, "B", -1);
 	gtk_list_store_insert_with_values(ListStore[P_H_ROTARYAXIS], NULL, -1, 0, NULL, 1, "C", -1);
@@ -2193,9 +2857,6 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_H_KNIFEAXIS], NULL, -1, 0, NULL, 1, "A", -1);
 	gtk_list_store_insert_with_values(ListStore[P_H_KNIFEAXIS], NULL, -1, 0, NULL, 1, "B", -1);
 	gtk_list_store_insert_with_values(ListStore[P_H_KNIFEAXIS], NULL, -1, 0, NULL, 1, "C", -1);
-
-	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Expander"), -1);
-	gtk_list_store_insert_with_values(ListStore[P_O_PARAVIEW], NULL, -1, 0, NULL, 1, _("Notebook-Tabs"), -1);
 
 	gtk_list_store_insert_with_values(ListStore[P_O_UNIT_LOAD], NULL, -1, 0, NULL, 1, "inch", -1);
 	gtk_list_store_insert_with_values(ListStore[P_O_UNIT_LOAD], NULL, -1, 0, NULL, 1, "mm", -1);
@@ -2208,31 +2869,7 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "original", -1);
 	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "center", -1);
 
-	g_signal_connect(G_OBJECT(ParamButton[P_MFILE]), "clicked", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
-	g_signal_connect(G_OBJECT(ParamButton[P_TOOL_TABLE]), "clicked", GTK_SIGNAL_FUNC(handler_load_tooltable), NULL);
-	g_signal_connect(G_OBJECT(ParamButton[P_V_DXF]), "clicked", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
-
 	ParameterUpdate();
-	for (n = 0; n < P_LAST; n++) {
-		if (PARAMETER[n].readonly == 1) {
-			gtk_widget_set_sensitive(GTK_WIDGET(ParamValue[n]), FALSE);
-		} else if (PARAMETER[n].type == T_FLOAT) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		} else if (PARAMETER[n].type == T_DOUBLE) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		} else if (PARAMETER[n].type == T_INT) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		} else if (PARAMETER[n].type == T_SELECT) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		} else if (PARAMETER[n].type == T_BOOL) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "toggled", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		} else if (PARAMETER[n].type == T_STRING) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		} else if (PARAMETER[n].type == T_FILE) {
-			gtk_signal_connect(GTK_OBJECT(ParamValue[n]), "changed", GTK_SIGNAL_FUNC(ParameterChanged), GINT_TO_POINTER(n));
-		}
-	}
-
 	StatusBar = gtk_statusbar_new();
 
 	gCodeViewLua = gtk_source_view_new();
@@ -2279,9 +2916,13 @@ void create_gui () {
 //	gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(gCodeView), TRUE);
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCodeView), GTK_WRAP_WORD_CHAR);
 
+
+
 	GtkWidget *textWidget = gtk_scrolled_window_new(NULL, NULL);
 	gtk_container_add(GTK_CONTAINER(textWidget), gCodeView);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(textWidget), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
+
+
 
 	GtkTextBuffer *buffer;
 	const gchar *text = "Hello Text";
@@ -2307,20 +2948,25 @@ void create_gui () {
 	GtkSourceLanguage *langLua = gtk_source_language_manager_get_language(manager, "lua");
 	gtk_source_buffer_set_language(GTK_SOURCE_BUFFER(bufferLua), langLua);
 
-	GtkWidget *NbBox2 = gtk_table_new(2, 2, FALSE);
-	notebook2 = gtk_notebook_new();
-	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook2), GTK_POS_TOP);
-	gtk_table_attach_defaults(GTK_TABLE(NbBox2), notebook2, 0, 1, 0, 1);
+	GtkWidget *NbBox = gtk_table_new(2, 2, FALSE);
+	notebook = gtk_notebook_new();
+	gtk_notebook_set_tab_pos(GTK_NOTEBOOK(notebook), GTK_POS_TOP);
+	gtk_table_attach_defaults(GTK_TABLE(NbBox), notebook, 0, 1, 0, 1);
 
 	GtkWidget *glCanvasLabel = gtk_label_new(_("3D-View"));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), glCanvas, glCanvasLabel);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), glCanvas, glCanvasLabel);
 
 	gCodeViewLabel = gtk_label_new(_("Output"));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), textWidget, gCodeViewLabel);
-	gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), textWidget, gCodeViewLabel);
 
 	gCodeViewLabelLua = gtk_label_new(_("PostProcessor"));
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), textWidgetLuaBox, gCodeViewLabelLua);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), textWidgetLuaBox, gCodeViewLabelLua);
+
+
+	gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_info);
+	
+	
+
 
 #ifdef USE_VNC
 	if (PARAMETER[P_O_VNCSERVER].vstr[0] != 0) {
@@ -2330,7 +2976,7 @@ void create_gui () {
 		GtkWidget *VncWindow = gtk_scrolled_window_new(NULL, NULL);
 		gtk_container_add(GTK_CONTAINER(VncWindow), VncView);
 		gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(VncWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-		gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), VncWindow, VncLabel);
+		gtk_notebook_append_page(GTK_NOTEBOOK(notebook), VncWindow, VncLabel);
 		snprintf(port, sizeof(port), "%i", PARAMETER[P_O_VNCPORT].vint);
 		vnc_display_set_scaling(VNC_DISPLAY(VncView), TRUE);
 		vnc_display_open_host(VNC_DISPLAY(VncView), PARAMETER[P_O_VNCSERVER].vstr, port);
@@ -2361,7 +3007,7 @@ void create_gui () {
 	gtk_box_pack_start(GTK_BOX(WebKitBox), WebKitWindow, 1, 1, 0);
 	gtk_container_add(GTK_CONTAINER(WebKitWindow), WebKit);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(WebKitWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), WebKitBox, WebKitLabel);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), WebKitBox, WebKitLabel);
 	webkit_web_view_open(WEBKIT_WEB_VIEW(WebKit), "file:///usr/src/cammill/index.html");
 #endif
 
@@ -2369,13 +3015,16 @@ void create_gui () {
 	Embedded Programms (-wid)
 	GtkWidget *PlugLabel = gtk_label_new(_("PlugIn"));
 	GtkWidget *sck = gtk_socket_new();
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), sck, PlugLabel);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), sck, PlugLabel);
 */
 
 	hbox = gtk_hpaned_new();
-	gtk_paned_pack1(GTK_PANED(hbox), NbBox, TRUE, FALSE);
-	gtk_paned_pack2(GTK_PANED(hbox), NbBox2, TRUE, TRUE);
+
+
+	gtk_paned_pack1(GTK_PANED(hbox), NtBox, TRUE, TRUE);
+	gtk_paned_pack2(GTK_PANED(hbox), NbBox, TRUE, TRUE);
 	gtk_paned_set_position(GTK_PANED(hbox), PannedStat);
+
 
 	SizeInfoLabel = gtk_label_new("Width=0 / Height=0");
 	GtkWidget *SizeInfo = gtk_event_box_new();
@@ -2406,7 +3055,7 @@ void create_gui () {
 
 	window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "CAMmill 2D");
-        gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
+	gtk_window_add_accel_group(GTK_WINDOW(window), accel_group);
 
 	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
 
@@ -2437,6 +3086,8 @@ void create_gui () {
 	g_print("%i\n", nwnd);
 */
 }
+
+
 
 void load_files () {
 	DIR *dir;
@@ -2515,6 +3166,8 @@ void load_files () {
 			}
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".dxf") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".DXF") > 0) {
 			dxf_read(PARAMETER[P_V_DXF].vstr);
+		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".plt") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PLT") > 0) {
+			hpgl_read(PARAMETER[P_V_DXF].vstr);
 #ifdef USE_BMPMODE
 		} else if (strstr(PARAMETER[P_V_DXF].vstr, ".png") > 0 || strstr(PARAMETER[P_V_DXF].vstr, ".PNG") > 0) {
 			main_mode = 1;
@@ -2531,6 +3184,7 @@ void load_files () {
 		dirname(PARAMETER[P_M_LOADPATH].vstr);
 	}
 	init_objects();
+	fill_objtree();
 	if (strstr(filename, ".ngc") > 0 || strstr(filename, ".NGC") > 0) {
 		SetupLoadFromGcodeObjects(filename);
 	}
@@ -2568,7 +3222,7 @@ int main (int argc, char *argv[]) {
 		setlocale(LC_NUMERIC, "POSIX");
 		create_gui();
 		load_files();
-		gtk_label_set_text(GTK_LABEL(OutputInfoLabel), output_info);
+		gtk_label_set_text(GTK_LABEL(OutputErrorLabel), output_info);
 		snprintf(tmp_str, sizeof(tmp_str), "%s (%s)", _("Output"), output_extension);
 		gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
 	}
@@ -2576,6 +3230,9 @@ int main (int argc, char *argv[]) {
 		postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
 	postcam_plugin = PARAMETER[P_H_POST].vint;	
+
+	update_tree_values();
+
 	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
 		mainloop();
 	} else {

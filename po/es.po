@@ -2,10 +2,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cammill\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"POT-Creation-Date: 2016-09-27 16:46+0200\n"
 "PO-Revision-Date: 2015-11-03 17:03-0500\n"
 "Last-Translator: koppi <jakob.flierl@gmail.com>\n"
 "Language-Team: Spanish\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14,10 +15,229 @@ msgstr ""
 "X-Crowdin-Project: cammill\n"
 "X-Crowdin-Language: es-ES\n"
 "X-Crowdin-File: cammill.po\n"
-"Language: es_ES\n"
 
+#: src/bmp.c:165
+msgid "Image-View"
+msgstr ""
+
+#: src/main.c:900
+#, c-format
+msgid "Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"
+msgstr ""
+
+#: src/main.c:1455
+msgid "Load Drawing"
+msgstr "Cargar dibujos"
+
+#: src/main.c:1465
+msgid "DXF-Drawings"
+msgstr "DXF-Dibujos"
+
+#: src/main.c:1471
+msgid "HPGL-Files"
+msgstr ""
+
+#: src/main.c:1477
+msgid "gCode-Files"
+msgstr ""
+
+#: src/main.c:1484
+msgid "Bitmap-Files"
+msgstr ""
+
+#: src/main.c:1492
+msgid "3D-Objects"
+msgstr ""
+
+#: src/main.c:1655 src/main.c:2712
+msgid "Save Output As.."
+msgstr "Guardar como..."
+
+#: src/main.c:1735 src/main.c:2643
+msgid "Load Tooltable"
+msgstr "Cargar tabla de herramientas"
+
+#: src/main.c:1745
+msgid "Tooltable"
+msgstr "Tabla de herramientas"
+
+#: src/main.c:1782 src/main.c:2694
+msgid "About"
+msgstr "Acerca de"
+
+#: src/main.c:2074 src/main.c:2114
+#, c-format
+msgid "On"
+msgstr ""
+
+#: src/main.c:2076 src/main.c:2116 src/main.c:2847
+#, c-format
+msgid "Off"
+msgstr ""
+
+#: src/main.c:2293
+msgid "System"
+msgstr ""
+
+#: src/main.c:2297
 msgid "View"
 msgstr "Ver"
+
+#: src/main.c:2299
+msgid "Machine"
+msgstr "Máquina"
+
+#: src/main.c:2301
+msgid "Rotary"
+msgstr "Girar"
+
+#: src/main.c:2303
+msgid "Tangencial"
+msgstr "Tangencial"
+
+#: src/main.c:2305
+msgid "Bitmap"
+msgstr ""
+
+#: src/main.c:2307
+msgid "Misc"
+msgstr "Otros"
+
+#: src/main.c:2310
+msgid "Settings (for all Objects)"
+msgstr ""
+
+#: src/main.c:2312
+msgid "Objects"
+msgstr "Objetos"
+
+#: src/main.c:2497
+msgid "Move down..."
+msgstr ""
+
+#: src/main.c:2501
+msgid "Clone this Object..."
+msgstr ""
+
+#: src/main.c:2561
+msgid "Option"
+msgstr ""
+
+#: src/main.c:2568
+msgid "Value"
+msgstr ""
+
+#: src/main.c:2612
+msgid "_File"
+msgstr ""
+
+#: src/main.c:2619
+msgid "_Load DXF"
+msgstr ""
+
+#: src/main.c:2625
+msgid "_Reload DXF"
+msgstr ""
+
+#: src/main.c:2631
+msgid "_Save Output As.."
+msgstr ""
+
+#: src/main.c:2637
+msgid "_Save Output"
+msgstr ""
+
+#: src/main.c:2647 src/main.c:2730
+msgid "Load Preset"
+msgstr "Cargar preestablecido"
+
+#: src/main.c:2651 src/main.c:2735
+msgid "Save Preset"
+msgstr "Guardar Preselección"
+
+#: src/main.c:2655 src/main.c:2722
+msgid "Save Setup"
+msgstr "Guardar configuración"
+
+#: src/main.c:2668
+msgid "_Tools"
+msgstr ""
+
+#: src/main.c:2673
+msgid "mm->inch"
+msgstr ""
+
+#: src/main.c:2676
+msgid "inch->mm"
+msgstr ""
+
+#: src/main.c:2679
+msgid "rotate"
+msgstr ""
+
+#: src/main.c:2682
+msgid "flip-x"
+msgstr ""
+
+#: src/main.c:2685
+msgid "flip-y"
+msgstr ""
+
+#: src/main.c:2689
+msgid "_Help"
+msgstr ""
+
+#: src/main.c:2702
+msgid "Load DXF"
+msgstr "Cargar DXF"
+
+#: src/main.c:2707
+msgid "Reload DXF"
+msgstr "Recargar DXF"
+
+#: src/main.c:2717
+msgid "Save Output"
+msgstr "Guardar salida"
+
+#: src/main.c:2843
+msgid "None"
+msgstr "Ninguno"
+
+#: src/main.c:2844
+msgid "Inside"
+msgstr "Interior"
+
+#: src/main.c:2845
+msgid "Outside"
+msgstr "Exterior"
+
+#: src/main.c:2848
+msgid "Mist"
+msgstr ""
+
+#: src/main.c:2849
+msgid "Flood"
+msgstr ""
+
+#: src/main.c:2954
+msgid "3D-View"
+msgstr "Vista 3D"
+
+#: src/main.c:2957 src/main.c:3224
+msgid "Output"
+msgstr "Salida"
+
+#: src/main.c:2960
+msgid "PostProcessor"
+msgstr "Postprocesador"
+
+#: src/main.c:2972
+msgid "VNC"
+msgstr "VNC"
+
+#: src/main.c:2985
+msgid "Documentation"
+msgstr "Documentación"
 
 msgid "Tool"
 msgstr "Herramienta"
@@ -28,23 +248,8 @@ msgstr "Fresado"
 msgid "Tabs"
 msgstr "Pestañas"
 
-msgid "Rotary"
-msgstr "Girar"
-
-msgid "Tangencial"
-msgstr "Tangencial"
-
-msgid "Machine"
-msgstr "Máquina"
-
 msgid "Material"
 msgstr "Material"
-
-msgid "Objects"
-msgstr "Objetos"
-
-msgid "Misc"
-msgstr "Otros"
 
 msgid "Zoom"
 msgstr "Zoom"
@@ -418,21 +623,6 @@ msgstr "Puerto del servidor VNC"
 msgid "On/Off"
 msgstr "On/Off"
 
-msgid "3D-View"
-msgstr "Vista 3D"
-
-msgid "Output"
-msgstr "Salida"
-
-msgid "PostProcessor"
-msgstr "Postprocesador"
-
-msgid "VNC"
-msgstr "VNC"
-
-msgid "Documentation"
-msgstr "Documentación"
-
 msgid "-5 First"
 msgstr "-5 Primero"
 
@@ -441,15 +631,6 @@ msgstr "0 Automático"
 
 msgid "5 Last"
 msgstr "5 Ultima"
-
-msgid "None"
-msgstr "Ninguno"
-
-msgid "Inside"
-msgstr "Interior"
-
-msgid "Outside"
-msgstr "Exterior"
 
 msgid "Expander"
 msgstr "Expansor"
@@ -460,50 +641,14 @@ msgstr "Notebook-Fichas"
 msgid "Help"
 msgstr "Ayuda"
 
-msgid "About"
-msgstr "Acerca de"
-
 msgid "File"
 msgstr "Archivo"
-
-msgid "Load DXF"
-msgstr "Cargar DXF"
-
-msgid "Reload DXF"
-msgstr "Recargar DXF"
-
-msgid "Load Preset"
-msgstr "Cargar preestablecido"
-
-msgid "Save Preset"
-msgstr "Guardar Preselección"
-
-msgid "Save Output"
-msgstr "Guardar salida"
-
-msgid "Save Output As.."
-msgstr "Guardar como..."
-
-msgid "Load Tooltable"
-msgstr "Cargar tabla de herramientas"
-
-msgid "Save Setup"
-msgstr "Guardar configuración"
 
 msgid "Quit"
 msgstr "Salir"
 
 msgid "Preset"
 msgstr "Predefinido"
-
-msgid "Tooltable"
-msgstr "Tabla de herramientas"
-
-msgid "Load Drawing"
-msgstr "Cargar dibujos"
-
-msgid "DXF-Drawings"
-msgstr "DXF-Dibujos"
 
 msgid "DWG-Drawings"
 msgstr "DWG-Dibujos"
@@ -528,4 +673,3 @@ msgstr "Por fuera"
 
 msgid "holding-tabs on outside-contours"
 msgstr "pestañas sostenidas sobre contornos externos"
-

@@ -29,10 +29,11 @@
 #include <stdlib.h>
 #define _GNU_SOURCE
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <dxf.h>
+#include <gtk/gtk.h>
 #ifdef __linux__
 #include <linux/limits.h> // for PATH_MAX
 #elif _WIN32
@@ -42,6 +43,7 @@
 #endif
 #include <setup.h>
 #include <font.h>
+#include <dxf.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #endif
@@ -220,6 +222,8 @@ char dxf_typename[TYPE_LAST][16];
 
 int line_n = 1;
 int line_last = 0;
+int object_selected = -1;
+
 
 void add_line (int type, char *layer, double x1, double y1, double x2, double y2, double opt, double cx, double cy) {
 	if (PARAMETER[P_M_DXFDEBUG].vint > 0) {
@@ -309,9 +313,9 @@ void add_line (int type, char *layer, double x1, double y1, double x2, double y2
 		myLINES[line_n].cy = cy;
 		myLINES[line_n].opt = opt;
 		myLINES[line_n].marked = 0;
-		myLINES[line_n].in_object = -1;
 		strncpy(myLINES[line_n].block, block_name, sizeof(myLINES[line_n].block));
 		myLINES[line_n].blockdata = block;
+		myLINES[line_n].len = get_len(x1, y1, x2, y2);
 		line_n++;
 
 		myLINES[line_n].used = 0;
@@ -710,9 +714,8 @@ void dxf_read (char *file) {
 						double p_x1 = atof(dxf_options[OPTION_MTEXT_X]);
 						double p_y1 = atof(dxf_options[OPTION_MTEXT_Y]);
 						double p_s = atof(dxf_options[OPTION_MTEXT_SIZE]);
-						if (output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[OPTION_LAYERNAME], p_x1, p_y1, 0.0, p_s, PARAMETER[P_M_TEXT_SCALE_WIDTH].vdouble, PARAMETER[P_M_TEXT_SCALE_HEIGHT].vdouble, PARAMETER[P_M_TEXT_FIXED_WIDTH].vint, PARAMETER[P_M_TEXT_FONT].vstr) == 0) {
-							mtext_n++;
-						}
+						output_text_dxf(dxf_options[OPTION_MTEXT_TEXT], dxf_options[OPTION_LAYERNAME], p_x1, p_y1, 0.0, p_s, PARAMETER[P_M_TEXT_SCALE_WIDTH].vdouble, PARAMETER[P_M_TEXT_SCALE_HEIGHT].vdouble, PARAMETER[P_M_TEXT_FIXED_WIDTH].vint, PARAMETER[P_M_TEXT_FONT].vstr, mtext_n);
+						mtext_n++;
 					} else if (strcmp(last_0, "$MEASUREMENT") == 0) {
 						int mesurement = atoi(dxf_options[OPTION_MEASUREMENT]);
 						if (PARAMETER[P_O_UNIT_LOAD].vint == 2) {

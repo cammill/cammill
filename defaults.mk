@@ -48,7 +48,7 @@ CFLAGS += -Wformat -Werror=format-security
 #CFLAGS += -fstack-protector-strong
 endif
 
-OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/font.o src/texture.o src/os-hacks.o
+OBJS = src/main.o src/pocket.o src/calc.o src/hersheyfont.o src/postprocessor.o src/setup.o src/dxf.o src/hpgl.o src/font.o src/texture.o src/os-hacks.o
 
 # GTK+2.0 and LUA5.1
 PKGS   ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1

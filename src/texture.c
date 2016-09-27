@@ -1,16 +1,36 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stddef.h>
+#include <string.h>
+#include <errno.h>
+#include <unistd.h>
+#include <libgen.h>
+#include <time.h>
+#include <math.h>
+
 #ifdef __APPLE__
+#include <mach-o/dyld.h>
 #include <GLUT/glut.h>
+#include <malloc/malloc.h>
 #else
 #include <GL/glut.h>
 #endif
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#ifdef __APPLE__
-#include <malloc/malloc.h>
+
+#ifdef __linux__
+#include <linux/limits.h> // for PATH_MAX
+#else
+#include <limits.h>
 #endif
+
+#ifdef __MINGW32__
+#include <windows.h>
+#include <shfolder.h>
+#else
+#include <pwd.h>
+#endif
+
+#include "os-hacks.h"
 
 struct Image {
 	unsigned long sizeX;
@@ -102,7 +122,13 @@ void texture_init (void) {
 }
 
 GLuint texture_load (char *filename) {
-	Image *image1 = loadTexture(filename);
+	char tmp_str[PATH_MAX];
+	if (program_path[0] == 0) {
+		snprintf(tmp_str, PATH_MAX, "../share/cammill/textures%s%s.bmp", DIR_SEP, filename);
+	} else {
+		snprintf(tmp_str, PATH_MAX, "%s%s../share/cammill/textures%s%s.bmp", program_path, DIR_SEP, DIR_SEP, filename);
+	}
+	Image *image1 = loadTexture(tmp_str);
 	if(image1 == NULL) {
 		printf("Image was not returned from loadTexture\n");
 		return -1;

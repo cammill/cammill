@@ -23,6 +23,9 @@ function OnInit()
 	CurrentFeedRate = feedRate
 end
 
+function OnVelocityMode()
+end
+
 function OnFinish()
     post.Text("// end\n")
 end

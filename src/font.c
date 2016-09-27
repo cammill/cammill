@@ -7,7 +7,7 @@
 #include <string.h>
 #include <sys/time.h>
 #include <stdlib.h>
-#include <dxf.h>
+#include <gtk/gtk.h>
 #include <hersheyfont.h>
 #ifdef __linux__
 #include <linux/limits.h> // for PATH_MAX
@@ -17,6 +17,7 @@
 #include <limits.h>
 #endif
 #include <setup.h>
+#include <dxf.h>
 #include <font.h>
 #ifdef __APPLE__
 #include <malloc/malloc.h>
@@ -690,7 +691,7 @@ void output_text_gl_ (char *text, float x, float y, float z, float s) {
 	}
 }
 
-int output_text_dxf (char *text, char *layer, float x, float y, float z, float s, float w_scale, float h_scale, int fixed, char *font) {
+int output_text_dxf (char *text, char *layer, float x, float y, float z, float s, float w_scale, float h_scale, int fixed, char *font, int tnum) {
 	char fontname[PATH_MAX];
     if (font[0] == 0) {
 		return -1;
@@ -740,7 +741,7 @@ int output_text_dxf (char *text, char *layer, float x, float y, float z, float s
 			last_x = hp->verts[0].x;
 			last_y = hp->verts[0].y;
 			for (i = 1; i < hp->nverts; i++) {
-				add_line(TYPE_MTEXT, layer, x + (float)last_x * sw, y + (float)last_y * sh, x + (float)hp->verts[i].x * sw, y + (float)hp->verts[i].y * sh, 0, 0.0, 0.0);
+				add_line(TYPE_MTEXT, layer, x + (float)last_x * sw, y + (float)last_y * sh, x + (float)hp->verts[i].x * sw, y + (float)hp->verts[i].y * sh, (double)tnum, 0.0, 0.0);
 				last_x = hp->verts[i].x;
 				last_y = hp->verts[i].y;
 			}

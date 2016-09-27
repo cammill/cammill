@@ -2,6 +2,8 @@
 #TARGETS: AUTO, DEBIAN, FREEBSD, MINGW32, NETBSD, OSX, OPENBSD, SUSE
 TARGET ?= AUTO
 
+#DEBUG = -ggdb
+
 all: binary
 
 include targets/*.mk
@@ -44,11 +46,11 @@ lang: ${LANG_MO}
 ${BINARY}: ${OBJS} ${EXTRA_OBJS}
 	@echo "linking ${BINARY}"
 	@mkdir -p bin
-	@$(COMP) -o ${BINARY} ${OBJS} ${EXTRA_OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
+	@$(COMP) $(DEBUG) -o ${BINARY} ${OBJS} ${EXTRA_OBJS} ${ALL_LIBS} ${INCLUDES} ${CFLAGS}
 
 %.o: %.c
 	@echo "compile $< -> $@"
-	@$(COMP) -c $(CFLAGS) ${INCLUDES} $< -o $@
+	@$(COMP) $(DEBUG) -c $(CFLAGS) ${INCLUDES} $< -o $@
 
 clean:
 	rm -rf ${OBJS}
@@ -78,6 +80,7 @@ install: ${BINARY} lang
 	@install -m 0644 share/cammill/textures/*.bmp ${INSTALL_PATH}/share/cammill/textures/
 	@install -m 0644 share/cammill/fonts/*.jhf ${INSTALL_PATH}/share/cammill/fonts/
 	@install -m 0644 share/doc/cammill/examples/*.dxf ${INSTALL_PATH}/share/doc/cammill/examples/
+	@install -m 0644 share/doc/cammill/examples/*.plt ${INSTALL_PATH}/share/doc/cammill/examples/
 	@install -m 0755 -d ${INSTALL_PATH}/share/locale
 	@cp -R -p share/locale/* ${INSTALL_PATH}/share/locale/
 	chown -R root:root ${INSTALL_PATH}/share/locale/ || true
@@ -110,6 +113,7 @@ pinstall: ${BINARY} lang
 	@install -m 0644 share/${PROGRAM}/textures/*.bmp ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/textures/
 	@install -m 0644 share/${PROGRAM}/fonts/*.jhf ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/${PROGRAM}/fonts/
 	@install -m 0644 share/doc/${PROGRAM}/examples/*.dxf ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/examples/
+	@install -m 0644 share/doc/${PROGRAM}/examples/*.plt ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/doc/${PROGRAM}/examples/
 	@install -m 0755 -d ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale
 	@cp -R -p share/locale/* ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/
 	chown -R root:root ${PKG_INSTALL_PATH}/${INSTALL_PATH}/share/locale/ || true

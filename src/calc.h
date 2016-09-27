@@ -52,9 +52,10 @@ int intersect_check (double p0_x, double p0_y, double p1_x, double p1_y, double 
 void intersect (double l1x1, double l1y1, double l1x2, double l1y2, double l2x1, double l2y1, double l2x2, double l2y2, double *x, double *y);
 void mill_begin (const char* path);
 void mill_end (void);
+void order_objects (void);
 void mill_objects (void);
-void mill_z (int gcmd, double z);
-void mill_xy (int gcmd, double x, double y, double r, int feed, int object_num, char *comment);
+void mill_z (int gcmd, double z, int object_num);
+void mill_xy (int gcmd, double x, double y, double z, double r, int feed, int object_num, char *comment);
 void mill_drill (double x, double y, double depth, double last_depth, int feed, int object_num, char *comment);
 void mill_circle (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment);
 void mill_circle_helix (int gcmd, double x, double y, double r, double depth, int feed, int inside, int object_num, char *comment);

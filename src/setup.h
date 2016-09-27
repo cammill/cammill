@@ -23,6 +23,7 @@ typedef struct {
 	int readonly;
 	int l1;
 	int l2;
+	uint8_t overwrite;
 } PARA;
 
 enum {
@@ -41,7 +42,6 @@ enum {
 	G_MILLING,
 	G_POCKETS,
 	G_TABS,
-	G_OBJECTS,
 	G_TEXT,
 #ifdef USE_BMPMODE
 	G_BITMAP,
@@ -90,8 +90,7 @@ enum {
 	P_M_ROUGHOFF,
 	P_M_VELOCITYMODE,
 	P_M_BLENDINGTOLERANCE,
-	P_V_DXF,
-	P_MFILE,
+	P_O_OFFSET,
 	// Pockets
 	P_M_POCKET,
 	P_M_POCKETSTEP,
@@ -134,24 +133,6 @@ enum {
 	P_TOOL_SPEED_CALC,
 	P_M_FEEDRATE_CALC,
 	P_M_USE_CALC,
-	// Objects
-	P_O_SELECT,
-	P_O_USE,
-	P_O_FORCE,
-	P_O_CLIMB,
-	P_O_OFFSET,
-	P_O_OVERCUT,
-	P_O_POCKET,
-	P_O_HELIX,
-	P_O_ROUGHFINE,
-	P_O_ROUGHOFF,
-	P_O_LASER,
-	P_O_DEPTH,
-	P_O_TABS,
-	P_O_ORDER,
-	P_O_TOOL_NUM,
-	P_O_TOOL_DIAMETER,
-	P_O_TOOL_SPEED,
 	// Rotary
 	P_M_ROTARYMODE,
 	P_H_ROTARYAXIS,
@@ -179,7 +160,6 @@ enum {
 	P_O_SCALE,
 	P_O_TOLERANCE,
 	P_TOOL_TABLE,
-	P_O_PARAVIEW,
 	P_O_AUTOSAVE,
 	P_O_BATCHMODE,
 	P_M_LOADPATH,
@@ -193,6 +173,8 @@ enum {
 	P_MAT_TEXTURE,
 	P_M_NCDEBUG,
 	P_M_DXFDEBUG,
+	P_V_DXF,
+	P_MFILE,
 #ifdef USE_VNC
 	P_O_VNCSERVER,
 	P_O_VNCPORT,
@@ -200,7 +182,7 @@ enum {
 	P_LAST
 };
 
-extern PARA PARAMETER[];
+extern PARA PARAMETER[P_LAST];
 extern PARA_GROUP GROUPS[];
 
 void SetupShow (void);

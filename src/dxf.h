@@ -79,26 +79,17 @@ typedef struct{
 	int inside;
 	int visited;
 	int use;
-	int climb;
-	int offset;
-	int force;
-	int overcut;
-	int pocket;
-	int helix;
-	int laser;
-	int tabs;
 	int order;
-	int tool_num;
-	int tool_speed;
-	int roughfine;
-	double roughoff;
-	double tool_dia;
-	double depth;
+	int clone;
+	int tnum;
 	double min_x;
 	double min_y;
 	double max_x;
 	double max_y;
+	double len;
 	char layer[256];
+	GtkTreeIter level;
+	PARA PARAMETER[P_LAST];
 } _OBJECT;
 
 typedef struct{
@@ -113,10 +104,10 @@ typedef struct{
 	double cx;
 	double cy;
 	double opt;
-	int in_object;
 	int blockdata;
 	int istab;
 	int marked;
+	double len;
 } _LINE;
 
 extern char LayerNames[MAX_OBJECTS][256];
@@ -126,6 +117,7 @@ extern int mtext_n;
 extern char dxf_options[256][256];
 extern char dxf_typename[TYPE_LAST][16];
 extern int line_last;
+extern int object_selected;
 
 void dxf_read (char *file);
 size_t trimline (char *out, size_t len, const char *str);

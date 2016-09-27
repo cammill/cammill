@@ -73,9 +73,9 @@ void slice_3d (char *file, float z);
 #include <unistd.h>
 #include <math.h>
 #include <sys/types.h>
-#include <dxf.h>
 #include <font.h>
 #include <setup.h>
+#include <dxf.h>
 #include <postprocessor.h>
 #include <calc.h>
 #include <bmp.h>
@@ -95,8 +95,9 @@ extern double min_y;
 extern double max_x;
 extern double max_y;
 extern void update_gui (void);
-extern GtkWidget *notebook2;
+extern GtkWidget *notebook;
 extern GtkWidget *imgCanvasLabel;
+extern double mill_last_z;
 
 static int moves[10000][5];
 static int bmp_width = 0;
@@ -158,12 +159,12 @@ int get_dist (int x1, int y1, int x2, int y2) {
 
 void bitmap_load (char *filename) {
 	if (imgCanvas != NULL) {
-//		gtk_notebook_detach_tab(GTK_NOTEBOOK(notebook2), imgCanvas);
-		gtk_notebook_remove_page(GTK_NOTEBOOK(notebook2), gtk_notebook_page_num(GTK_NOTEBOOK(notebook2), imgCanvas));
+//		gtk_notebook_detach_tab(GTK_NOTEBOOK(notebook), imgCanvas);
+		gtk_notebook_remove_page(GTK_NOTEBOOK(notebook), gtk_notebook_page_num(GTK_NOTEBOOK(notebook), imgCanvas));
 	}
 	GtkWidget *imgCanvasLabel = gtk_label_new(_("Image-View"));
 	imgCanvas = gtk_image_new_from_file (filename);
-	gtk_notebook_append_page(GTK_NOTEBOOK(notebook2), imgCanvas, imgCanvasLabel);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), imgCanvas, imgCanvasLabel);
 	gtk_widget_show_all(imgCanvas);
 	gtk_widget_show_all(imgCanvasLabel);
 }
@@ -314,24 +315,24 @@ void bitmap2cnc (void) {
 	double depth = 0.0;
 	int object_num = 0;
 	myOBJECTS[object_num].order = 1;
-	myOBJECTS[object_num].tabs = PARAMETER[P_T_USE].vint;
+	myOBJECTS[object_num].PARAMETER[P_T_USE].vint = PARAMETER[P_T_USE].vint;
 	if (PARAMETER[P_M_LASERMODE].vint == 1) {
-		myOBJECTS[object_num].depth = 0.0;
+		myOBJECTS[object_num].PARAMETER[P_M_DEPTH].vdouble = 0.0;
 	} else {
-		myOBJECTS[object_num].depth = PARAMETER[P_M_DEPTH].vdouble;
+		myOBJECTS[object_num].PARAMETER[P_M_DEPTH].vdouble = PARAMETER[P_M_DEPTH].vdouble;
 	}
-	myOBJECTS[object_num].overcut = PARAMETER[P_M_OVERCUT].vint;
-	myOBJECTS[object_num].laser = PARAMETER[P_M_LASERMODE].vint;
-	myOBJECTS[object_num].climb = PARAMETER[P_M_CLIMB].vint;
-	myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
-	myOBJECTS[object_num].tool_num = PARAMETER[P_TOOL_NUM].vint;
-	myOBJECTS[object_num].tool_dia = PARAMETER[P_TOOL_DIAMETER].vdouble;
-	myOBJECTS[object_num].tool_speed = PARAMETER[P_TOOL_SPEED].vint;
+//	myOBJECTS[object_num].overcut = PARAMETER[P_M_OVERCUT].vint;
+//	myOBJECTS[object_num].laser = PARAMETER[P_M_LASERMODE].vint;
+//	myOBJECTS[object_num].climb = PARAMETER[P_M_CLIMB].vint;
+//	myOBJECTS[object_num].helix = PARAMETER[P_M_HELIX].vint;
+//	myOBJECTS[object_num].tool_num = PARAMETER[P_TOOL_NUM].vint;
+//	myOBJECTS[object_num].tool_dia = PARAMETER[P_TOOL_DIAMETER].vdouble;
+//	myOBJECTS[object_num].tool_speed = PARAMETER[P_TOOL_SPEED].vint;
 	for (depth = PARAMETER[P_M_Z_STEP].vdouble; depth > PARAMETER[P_M_DEPTH].vdouble + PARAMETER[P_M_Z_STEP].vdouble; depth += PARAMETER[P_M_Z_STEP].vdouble) {
 		if (PARAMETER[P_M_LASERMODE].vint == 0) {
-			mill_z(0, PARAMETER[P_CUT_SAVE].vdouble);
+			mill_z(0, PARAMETER[P_CUT_SAVE].vdouble, object_num);
 		} else {
-			mill_z(0, 0.0);
+			mill_z(0, 0.0, object_num);
 		}
 		int xx = 0;
 		int epx = 0;
@@ -362,18 +363,18 @@ void bitmap2cnc (void) {
 				if (ps == 0) {
 					mill_move_in((double)moves[pn][0] * scale, (double)(bmp_height - moves[pn][1]) * scale, depth, PARAMETER[P_M_LASERMODE].vint, object_num);
 					if (PARAMETER[P_M_LASERMODE].vint == 0) {
-						mill_z(1, depth);
+						mill_z(1, depth, object_num);
 					}
-					mill_xy(1, (double)moves[pn][2] * scale, (double)(bmp_height - moves[pn][3]) * scale, 0.0, PARAMETER[P_M_FEEDRATE].vint, 0, "");
+					mill_xy(1, (double)moves[pn][2] * scale, (double)(bmp_height - moves[pn][3]) * scale, mill_last_z, 0.0, PARAMETER[P_M_FEEDRATE].vint, 0, "");
 					mill_move_out(PARAMETER[P_M_LASERMODE].vint, object_num);
 					epx = moves[pn][2];
 					epy = moves[pn][3];
 				} else {
 					mill_move_in((double)moves[pn][2] * scale, (double)(bmp_height - moves[pn][3]) * scale, depth, PARAMETER[P_M_LASERMODE].vint, object_num);
 					if (PARAMETER[P_M_LASERMODE].vint == 0) {
-						mill_z(1, depth);
+						mill_z(1, depth, object_num);
 					}
-					mill_xy(1, (double)moves[pn][0] * scale, (double)(bmp_height - moves[pn][1]) * scale, 0.0, PARAMETER[P_M_FEEDRATE].vint, 0, "");
+					mill_xy(1, (double)moves[pn][0] * scale, (double)(bmp_height - moves[pn][1]) * scale, mill_last_z, 0.0, PARAMETER[P_M_FEEDRATE].vint, 0, "");
 					mill_move_out(PARAMETER[P_M_LASERMODE].vint, object_num);
 					epx = moves[pn][0];
 					epy = moves[pn][1];

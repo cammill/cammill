@@ -6,11 +6,13 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdint.h>
 #include <lua.h>
 #include <lauxlib.h>
 #include <lualib.h>
-#include <dxf.h>
+#include <gtk/gtk.h>
 #include <setup.h>
+#include <dxf.h>
 #include <assert.h>
 
 #include "os-hacks.h"
