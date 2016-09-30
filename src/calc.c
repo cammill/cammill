@@ -2241,7 +2241,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 						}
 					} else {
 						if (helixmode == 1) {
-							double new_len = get_len(check1b_x, check1b_y, mill_last_x, mill_last_y);
+							double new_len = myLINES[lnum1].len;
 							new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
 						} else {
 							new_z = mill_last_z;
@@ -2339,7 +2339,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 							add_angle_offset(&enx, &eny, len - tool_offset, aalpha);
 						}
 						if (helixmode == 1) {
-							double new_len = get_len(px, py, mill_last_x, mill_last_y);
+							double new_len = myLINES[lnum1].len;
 							new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
 						} else {
 							new_z = mill_last_z;
@@ -2385,7 +2385,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 				double alpha2 = line_angle2(lnum2);
 				double alpha_diff = alpha2 - alpha1;
 				if (helixmode == 1 && myOBJECTS[object_num].closed == 1) {
-					double new_len = get_len(myLINES[lnum2].x2, myLINES[lnum2].y2, mill_last_x, mill_last_y);
+					double new_len = myLINES[lnum1].len;
 					new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
 				} else {
 					new_z = mill_last_z;
@@ -2424,7 +2424,7 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 	}
 	if (myOBJECTS[object_num].closed == 1) {
 		if (helixmode == 1) {
-			double new_len = get_len(first_x, first_y, mill_last_x, mill_last_y);
+			double new_len = myLINES[last].len;
 			new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
 		} else {
 			new_z = mill_last_z;
@@ -2542,11 +2542,11 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 			} else {
 				object_draw_offset_depth(fd_out, object_num, new_depth, mill_depth_real, last_depth, next_x, next_y, tool_offset, overcut, lasermode, myOBJECTS[object_num].PARAMETER[P_M_HELIX].vint, offset);
 			}
-			last_depth = new_depth;
+			last_depth = mill_last_z;
 		}
 		if (myOBJECTS[object_num].PARAMETER[P_M_HELIX].vint == 1) {
-			mill_move_out(lasermode, object_num);
-			mill_start = 0;
+//			mill_move_out(lasermode, object_num);
+//			mill_start = 0;
 			if (myOBJECTS[object_num].PARAMETER[P_M_ROUGHFINE].vint == 1) {
 				object_draw_offset_depth(fd_out, object_num, mill_depth_real, mill_depth_real, mill_depth_real, next_x, next_y, tool_offset + myOBJECTS[object_num].PARAMETER[P_M_ROUGHOFF].vdouble, overcut, lasermode, 0, offset);
 			} else {
@@ -2554,12 +2554,13 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 			}
 		}
 		if (myOBJECTS[object_num].PARAMETER[P_M_ROUGHFINE].vint == 1) {
-			mill_move_out(lasermode, object_num);
-			mill_start = 0;
+//			mill_move_out(lasermode, object_num);
+//			mill_start = 0;
 			object_draw_offset_depth(fd_out, object_num, mill_depth_real, mill_depth_real, mill_depth_real, next_x, next_y, tool_offset, overcut, lasermode, 0, offset);
 		}
 	}
 	mill_move_out(lasermode, object_num);
+	mill_start = 0;
 }
 
 int find_next_line (int object_num, int first, int num, int dir, int depth) {
@@ -2777,15 +2778,14 @@ void init_objects (void) {
 							if (myOBJECTS[on].line[n] == 0) {
 								myOBJECTS[on].line[n] = num2;
 								strcpy(myOBJECTS[on].layer, myLINES[num2].layer);
-		myOBJECTS[on].len = 1.0;
-		myOBJECTS[on].use = 1;
-		myOBJECTS[on].closed = 0;
-		myOBJECTS[on].min_x = 0.0;
-		myOBJECTS[on].min_y = 0.0;
-		myOBJECTS[on].max_x = 0.0;
-		myOBJECTS[on].max_y = 0.0;
-		myOBJECTS[on].tnum = (double)myLINES[num2].opt;
-
+								myOBJECTS[on].len = 1.0;
+								myOBJECTS[on].use = 1;
+								myOBJECTS[on].closed = 0;
+								myOBJECTS[on].min_x = 0.0;
+								myOBJECTS[on].min_y = 0.0;
+								myOBJECTS[on].max_x = 0.0;
+								myOBJECTS[on].max_y = 0.0;
+								myOBJECTS[on].tnum = (double)myLINES[num2].opt;
 								break;
 							}
 						}
@@ -2799,16 +2799,14 @@ void init_objects (void) {
 						if (myOBJECTS[object_num].line[n] == 0) {
 							myOBJECTS[object_num].line[n] = num2;
 							strcpy(myOBJECTS[object_num].layer, myLINES[num2].layer);
-
-		myOBJECTS[object_num].len = 1.0;
-		myOBJECTS[object_num].use = 1;
-		myOBJECTS[object_num].closed = 0;
-		myOBJECTS[object_num].min_x = 0.0;
-		myOBJECTS[object_num].min_y = 0.0;
-		myOBJECTS[object_num].max_x = 0.0;
-		myOBJECTS[object_num].max_y = 0.0;
-		myOBJECTS[object_num].tnum = (int)myLINES[num2].opt;
-
+							myOBJECTS[object_num].len = 1.0;
+							myOBJECTS[object_num].use = 1;
+							myOBJECTS[object_num].closed = 0;
+							myOBJECTS[object_num].min_x = 0.0;
+							myOBJECTS[object_num].min_y = 0.0;
+							myOBJECTS[object_num].max_x = 0.0;
+							myOBJECTS[object_num].max_y = 0.0;
+							myOBJECTS[object_num].tnum = (int)myLINES[num2].opt;
 							break;
 						}
 					}
@@ -2818,7 +2816,6 @@ void init_objects (void) {
 			}
 		}
 	}
-
 
 	for (num2 = 1; num2 < line_last; num2++) {
 		if (myLINES[num2].used == 1) {
