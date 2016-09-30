@@ -1384,6 +1384,15 @@ void handler_flip_y_drawing (GtkWidget *widget, gpointer data) {
 	loading = 0;
 }
 
+void handler_reset_view (GtkWidget *widget, gpointer data) {
+	PARAMETER[P_V_TRANSX].vint = 0;
+	PARAMETER[P_V_TRANSY].vint = 0;
+	PARAMETER[P_V_ROTZ].vfloat = 0.0;
+	PARAMETER[P_V_ROTY].vfloat = 0.0;
+	PARAMETER[P_V_ROTX].vfloat = 0.0;
+	PARAMETER[P_V_ZOOM].vfloat = 1.0;
+}
+
 #ifdef __linux__
 void handler_preview (GtkWidget *widget, gpointer data) {
 	char tmp_file[PATH_MAX];
@@ -2765,6 +2774,16 @@ void create_toolbar (void) {
 	gtk_tool_item_set_tooltip_text(TB_FlipY, "Flip Y");
 	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_FlipY, -1);
 	g_signal_connect(G_OBJECT(TB_FlipY), "clicked", GTK_SIGNAL_FUNC(handler_flip_y_drawing), NULL);
+
+
+	GtkToolItem *TB_ViewR;
+	iconpath = path_real("../share/cammill/icons/view-reset.png");
+	TB_ViewR = gtk_tool_button_new(gtk_image_new_from_file(iconpath), "reset View");
+	free(iconpath);
+	gtk_tool_item_set_tooltip_text(TB_ViewR, "reset View");
+	gtk_toolbar_insert(GTK_TOOLBAR(ToolBar), TB_ViewR, -1);
+	g_signal_connect(G_OBJECT(TB_ViewR), "clicked", GTK_SIGNAL_FUNC(handler_reset_view), NULL);
+
 
 #ifdef __linux__
 	if (access("/usr/bin/camotics", F_OK) != -1) {
