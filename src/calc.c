@@ -2542,7 +2542,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 			} else {
 				object_draw_offset_depth(fd_out, object_num, new_depth, mill_depth_real, last_depth, next_x, next_y, tool_offset, overcut, lasermode, myOBJECTS[object_num].PARAMETER[P_M_HELIX].vint, offset);
 			}
-			last_depth = mill_last_z;
+			last_depth = new_depth;
 		}
 		if (myOBJECTS[object_num].PARAMETER[P_M_HELIX].vint == 1) {
 //			mill_move_out(lasermode, object_num);
