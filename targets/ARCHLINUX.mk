@@ -19,7 +19,7 @@ MACHINE          ?= $(shell uname -m)
 RELEASE          ?= $(shell uname -r | cut -d"-" -f1)
 DISTRIBUTION     ?= Arch-Linux
 COMP             ?= clang
-PKGS             ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua5.1
+PKGS             ?= gtk+-2.0 gtkglext-x11-1.0 gtksourceview-2.0 lua
 INSTALL_PATH     ?= /usr
 VERSION          ?= $(shell test -d .git && git describe --tags --match "v*" | sed "s|^v||g" | sed "s|-test-*|t|g" | cut -d"-" -f1 | sed "s|[a-zA-Z].*||g")
 
