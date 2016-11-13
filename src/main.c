@@ -894,13 +894,22 @@ void update_gui (void) {
 	} else {
 		gtk_text_buffer_set_text(buffer, "", -1);
 	}
+
 	double milltime = mill_distance_xy / PARAMETER[P_M_FEEDRATE].vint;
 	milltime += mill_distance_z / PARAMETER[P_M_PLUNGE_SPEED].vint;
 	milltime += (move_distance_xy + move_distance_z) / PARAMETER[P_H_FEEDRATE_FAST].vint;
 	snprintf(tmp_str, sizeof(tmp_str), _("Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"), mill_distance_xy, PARAMETER[P_O_UNIT].vstr, mill_distance_z, PARAMETER[P_O_UNIT].vstr, move_distance_xy, PARAMETER[P_O_UNIT].vstr, move_distance_z, PARAMETER[P_O_UNIT].vstr, milltime);
+
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), tmp_str), tmp_str);
 	snprintf(tmp_str, sizeof(tmp_str), "Width=%0.1f%s / Height=%0.1f%s", size_x, PARAMETER[P_O_UNIT].vstr, size_y, PARAMETER[P_O_UNIT].vstr);
-	gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
+
+	if (strstr(output_buffer, "-nan")) {
+		gtk_label_set_text(GTK_LABEL(SizeInfoLabel), _("ERROR: found NaN's in gCode"));
+		fprintf(stderr, _("ERROR: found NaN's in gCode\n"));
+	} else {
+		gtk_label_set_text(GTK_LABEL(SizeInfoLabel), tmp_str);
+	}
+
 	if (PARAMETER[P_O_BATCHMODE].vint != 1) {
 		glEndList();
 	}
@@ -2630,26 +2639,22 @@ void create_menu (void) {
 	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Load DXF"));
 	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_load_dxf), NULL);
-			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-									   GDK_o, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_o, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 			
 	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Reload DXF"));
 	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_reload_dxf), NULL);
-			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-									   GDK_r, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_r, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 			
 	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output As.."));
 	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode_as), NULL);
-			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-									   GDK_s, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_s, GDK_CONTROL_MASK | GDK_SHIFT_MASK, GTK_ACCEL_VISIBLE);
 
 	MenuItem = gtk_menu_item_new_with_mnemonic(_("_Save Output"));
 	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
 	gtk_signal_connect(GTK_OBJECT(MenuItem), "activate", GTK_SIGNAL_FUNC(handler_save_gcode), NULL);
-			gtk_widget_add_accelerator(MenuItem, "activate", accel_group,
-									   GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
+	gtk_widget_add_accelerator(MenuItem, "activate", accel_group, GDK_s, GDK_CONTROL_MASK, GTK_ACCEL_VISIBLE);
 
 	MenuItem = gtk_menu_item_new_with_label(_("Load Tooltable"));
 	gtk_menu_append(GTK_MENU(FileMenuList), MenuItem);
@@ -2816,11 +2821,6 @@ void create_gui () {
 		}
 	}
 
-
-
-
-
-
 	glCanvas = create_gl();
 	gtk_widget_set_usize(GTK_WIDGET(glCanvas), 800, 600);
 	gtk_signal_connect(GTK_OBJECT(glCanvas), "expose_event", GTK_SIGNAL_FUNC(handler_draw), NULL);  
@@ -2935,13 +2935,9 @@ void create_gui () {
 //	gtk_source_view_set_show_right_margin(GTK_SOURCE_VIEW(gCodeView), TRUE);
 	gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(gCodeView), GTK_WRAP_WORD_CHAR);
 
-
-
 	GtkWidget *textWidget = gtk_scrolled_window_new(NULL, NULL);
 	gtk_container_add(GTK_CONTAINER(textWidget), gCodeView);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(textWidget), GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
-
-
 
 	GtkTextBuffer *buffer;
 	const gchar *text = "Hello Text";
