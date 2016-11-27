@@ -235,8 +235,10 @@ void mill_pocket (int object_num, double *next_x, double *next_y) {
 							if (point_in_object(object_num, -1, pmx + rx, pmy + ry) == 0) {
 								pipret = 0;
 							}
-							if (point_in_object(-1, object_num, pmx + rx, pmy + ry) == 0) {
-								pipret = 0;
+							if (PARAMETER[P_M_POCKETISLAND].vint == 1) {
+								if (point_in_object(-1, object_num, pmx + rx, pmy + ry) == 0) {
+									pipret = 0;
+								}
 							}
 						}
 						if (pipret == 1) {

@@ -92,6 +92,7 @@ PARA PARAMETER[P_LAST] = {
 	// Pockets
 	{"Pocket",	"Pockets",	"-mp",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "mill pockets inside", 0, 0, 0, 0},
 	{"Pocket-Stepover","Pockets",	"-ps",	T_INT	,	50,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"%", 1, 1, "pocket-stepover in percent / relative to the Tool-Diameter", 0, 0, 0, 0},
+	{"Island",	"Pockets",	"-pi",	T_BOOL	,	1,	1.0,	1.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "keep islands", 0, 0, 0, 0},
 	// Holding-Tabs
 	{"Activate",	"Holding-Tabs",	"-hu",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "using holding-tabs", 0, 0, 0, 0},
 	{"Show Grid",	"Holding-Tabs",	"-tg",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 1, "show tab-grid", 0, 0, 0, 0},

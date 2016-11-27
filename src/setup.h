@@ -94,6 +94,7 @@ enum {
 	// Pockets
 	P_M_POCKET,
 	P_M_POCKETSTEP,
+	P_M_POCKETISLAND,
 	// Holding-Tabs
 	P_T_USE,
 	P_T_GRID,
