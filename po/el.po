@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: cammill\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-27 16:46+0200\n"
+"POT-Creation-Date: 2016-11-27 15:20+0100\n"
 "PO-Revision-Date: 2015-07-05 10:07-0400\n"
 "Last-Translator: koppi <jakob.flierl@gmail.com>\n"
 "Language-Team: Greek\n"
@@ -20,222 +20,231 @@ msgstr ""
 msgid "Image-View"
 msgstr ""
 
-#: src/main.c:900
+#: src/main.c:901
 #, c-format
 msgid "Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"
 msgstr ""
 
-#: src/main.c:1455
+#: src/main.c:907
+msgid "ERROR: found NaN's in gCode"
+msgstr ""
+
+#: src/main.c:908
+#, c-format
+msgid "ERROR: found NaN's in gCode\n"
+msgstr ""
+
+#: src/main.c:1473
 msgid "Load Drawing"
 msgstr "Φόρτωση σχεδίου"
 
-#: src/main.c:1465
+#: src/main.c:1483
 msgid "DXF-Drawings"
 msgstr "Σχέδια DXF"
 
-#: src/main.c:1471
+#: src/main.c:1489
 msgid "HPGL-Files"
 msgstr ""
 
-#: src/main.c:1477
+#: src/main.c:1495
 msgid "gCode-Files"
 msgstr ""
 
-#: src/main.c:1484
+#: src/main.c:1502
 msgid "Bitmap-Files"
 msgstr ""
 
-#: src/main.c:1492
+#: src/main.c:1510
 msgid "3D-Objects"
 msgstr ""
 
-#: src/main.c:1655 src/main.c:2712
+#: src/main.c:1673 src/main.c:2728
 msgid "Save Output As.."
 msgstr "Αποθήκευση εξόδου ως.."
 
-#: src/main.c:1735 src/main.c:2643
+#: src/main.c:1753 src/main.c:2659
 msgid "Load Tooltable"
 msgstr "Φόρτωση πίνακα εργαλείων"
 
-#: src/main.c:1745
+#: src/main.c:1763
 msgid "Tooltable"
 msgstr "Πίνακας εργαλείων"
 
-#: src/main.c:1782 src/main.c:2694
+#: src/main.c:1800 src/main.c:2710
 msgid "About"
 msgstr "Περί"
 
-#: src/main.c:2074 src/main.c:2114
+#: src/main.c:2092 src/main.c:2132
 #, c-format
 msgid "On"
 msgstr ""
 
-#: src/main.c:2076 src/main.c:2116 src/main.c:2847
+#: src/main.c:2094 src/main.c:2134 src/main.c:2868
 #, c-format
 msgid "Off"
 msgstr ""
 
-#: src/main.c:2293
+#: src/main.c:2313
 msgid "System"
 msgstr ""
 
-#: src/main.c:2297
+#: src/main.c:2317
 msgid "View"
 msgstr "Προβολή"
 
-#: src/main.c:2299
+#: src/main.c:2319
 msgid "Machine"
 msgstr "Μηχανή"
 
-#: src/main.c:2301
+#: src/main.c:2321
 msgid "Rotary"
 msgstr "Περιστροφικός"
 
-#: src/main.c:2303
+#: src/main.c:2323
 msgid "Tangencial"
 msgstr "Εφαπτομενικός"
 
-#: src/main.c:2305
+#: src/main.c:2325
 msgid "Bitmap"
 msgstr ""
 
-#: src/main.c:2307
+#: src/main.c:2327
 msgid "Misc"
 msgstr "Διάφορα"
 
-#: src/main.c:2310
+#: src/main.c:2330
 msgid "Settings (for all Objects)"
 msgstr ""
 
-#: src/main.c:2312
+#: src/main.c:2332
 msgid "Objects"
 msgstr "Αντικείμενα"
 
-#: src/main.c:2497
+#: src/main.c:2517
 msgid "Move down..."
 msgstr ""
 
-#: src/main.c:2501
+#: src/main.c:2521
 msgid "Clone this Object..."
 msgstr ""
 
-#: src/main.c:2561
+#: src/main.c:2581
 msgid "Option"
 msgstr ""
 
-#: src/main.c:2568
+#: src/main.c:2588
 msgid "Value"
 msgstr ""
 
-#: src/main.c:2612
+#: src/main.c:2632
 msgid "_File"
 msgstr ""
 
-#: src/main.c:2619
+#: src/main.c:2639
 msgid "_Load DXF"
 msgstr ""
 
-#: src/main.c:2625
+#: src/main.c:2644
 msgid "_Reload DXF"
 msgstr ""
 
-#: src/main.c:2631
+#: src/main.c:2649
 msgid "_Save Output As.."
 msgstr ""
 
-#: src/main.c:2637
+#: src/main.c:2654
 msgid "_Save Output"
 msgstr ""
 
-#: src/main.c:2647 src/main.c:2730
+#: src/main.c:2663 src/main.c:2746
 msgid "Load Preset"
 msgstr "Φόρτωση προεπιλογής"
 
-#: src/main.c:2651 src/main.c:2735
+#: src/main.c:2667 src/main.c:2751
 msgid "Save Preset"
 msgstr "Αποθήκευση προεπιλογής"
 
-#: src/main.c:2655 src/main.c:2722
+#: src/main.c:2671 src/main.c:2738
 msgid "Save Setup"
 msgstr "Αποθήκευση ρύθμισης"
 
-#: src/main.c:2668
+#: src/main.c:2684
 msgid "_Tools"
 msgstr ""
 
-#: src/main.c:2673
+#: src/main.c:2689
 msgid "mm->inch"
 msgstr ""
 
-#: src/main.c:2676
+#: src/main.c:2692
 msgid "inch->mm"
 msgstr ""
 
-#: src/main.c:2679
+#: src/main.c:2695
 msgid "rotate"
 msgstr ""
 
-#: src/main.c:2682
+#: src/main.c:2698
 msgid "flip-x"
 msgstr ""
 
-#: src/main.c:2685
+#: src/main.c:2701
 msgid "flip-y"
 msgstr ""
 
-#: src/main.c:2689
+#: src/main.c:2705
 msgid "_Help"
 msgstr ""
 
-#: src/main.c:2702
+#: src/main.c:2718
 msgid "Load DXF"
 msgstr "Φόρτωση DXF"
 
-#: src/main.c:2707
+#: src/main.c:2723
 msgid "Reload DXF"
 msgstr "Επαναφόρτωση DXF"
 
-#: src/main.c:2717
+#: src/main.c:2733
 msgid "Save Output"
 msgstr "Αποθήκευση εξόδου"
 
-#: src/main.c:2843
+#: src/main.c:2864
 msgid "None"
 msgstr "Κανένα"
 
-#: src/main.c:2844
+#: src/main.c:2865
 msgid "Inside"
 msgstr "Μέσα"
 
-#: src/main.c:2845
+#: src/main.c:2866
 msgid "Outside"
 msgstr "Έξω"
 
-#: src/main.c:2848
+#: src/main.c:2869
 msgid "Mist"
 msgstr ""
 
-#: src/main.c:2849
+#: src/main.c:2870
 msgid "Flood"
 msgstr ""
 
-#: src/main.c:2954
+#: src/main.c:2971
 msgid "3D-View"
 msgstr "Προβολή 3Δ"
 
-#: src/main.c:2957 src/main.c:3224
+#: src/main.c:2974 src/main.c:3241
 msgid "Output"
 msgstr "Έξοδος"
 
-#: src/main.c:2960
+#: src/main.c:2977
 msgid "PostProcessor"
 msgstr "Μετεπεξεργαστής"
 
-#: src/main.c:2972
+#: src/main.c:2989
 msgid "VNC"
 msgstr "VNC"
 
-#: src/main.c:2985
+#: src/main.c:3002
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
@@ -673,3 +682,6 @@ msgstr "Εξωτερικά"
 
 msgid "holding-tabs on outside-contours"
 msgstr "γλωττίδες συγκράτησης σε εξωτερικά περιγράμματα"
+
+msgid "Island"
+msgstr "νησί"
