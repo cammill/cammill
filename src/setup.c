@@ -170,7 +170,7 @@ PARA PARAMETER[P_LAST] = {
 	{"Zero-Offset-Y", "Misc", "-zeroy",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm|inch", 1, 1, "Zero-Offset-Y", 0, 0, 0, 0},
 	{"Append Config",	"Misc",  "-ac",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "Append Config to Output-File", 0, 0, 0, 0},
 	{"Texture",	"Misc",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 1, 1, "Bitmap file to load for texture rendering", 1, 0, 0, 0},
-	{"NC-Debug",	"Misc", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects without offsets / for debuging", 0, 0, 0, 0},
+	{"NC-Debug",	"Misc", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects without offsets / for debugging", 0, 0, 0, 0},
 	{"DXF-Debug",   "Misc",         "-dd",  T_BOOL, 0,  0.0,    0.0,    "", 0.0,    1.0,    1.0,        "", 1, 0, "output some debug text while loading dxf", 0, 0, 0, 0},
 	{"DXF-File",	"Misc",	"-d",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "dxf-filename", 0, 0, 0, 0},
 	{"Output-File",	"Misc",	"-o",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "gcode-output filename", 0, 0, 0, 0},
