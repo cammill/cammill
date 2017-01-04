@@ -476,7 +476,7 @@ msgstr "Fresa MTEXT da file DXF"
 msgid "NC-Debug"
 msgstr "NC-Debug"
 
-msgid "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
 msgstr "plotta oggetto senza offset per debug"
 
 msgid "Use Taps"

@@ -458,7 +458,7 @@ msgstr "mtext máy phay từ tập tin dxf"
 msgid "NC-Debug"
 msgstr "NC-gỡ lỗi"
 
-msgid "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
 msgstr "đầu ra các đối tượng không có offset / dành cho gỡ lỗi"
 
 msgid "Use Taps"

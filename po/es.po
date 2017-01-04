@@ -458,7 +458,7 @@ msgstr "texto mecanizado desde archivo dxf"
 msgid "NC-Debug"
 msgstr "NC-Debug"
 
-msgid "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
 msgstr "objetos de salida sin compensación / para depuración"
 
 msgid "Use Taps"

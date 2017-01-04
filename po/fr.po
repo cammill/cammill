@@ -474,7 +474,7 @@ msgstr "Graver le mtext issu d'un fichier dxf"
 msgid "NC-Debug"
 msgstr "Debug du GCODE"
 
-msgid "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
 msgstr "objets finaux sans offset (pour debugage)"
 
 msgid "Use Taps"

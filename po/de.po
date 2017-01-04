@@ -488,7 +488,7 @@ msgstr "MTEXT aus DXF fräsen"
 msgid "NC-Debug"
 msgstr "NC-Debug"
 
-msgid "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
 msgstr "Ausgabe der Objekte ohne Werkzeugkorrektur"
 
 msgid "Use Taps"

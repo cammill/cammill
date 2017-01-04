@@ -458,8 +458,8 @@ msgstr "mill mtext from dxf-files"
 msgid "NC-Debug"
 msgstr "NC-Debug"
 
-msgid "output objects whithout offsets / for debuging"
-msgstr "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
+msgstr "output objects without offsets / for debuging"
 
 msgid "Use Taps"
 msgstr "Use Taps"

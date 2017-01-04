@@ -458,7 +458,7 @@ msgstr "Μύλος mtext από αρχεία dxf"
 msgid "NC-Debug"
 msgstr "Αποσφαλμάτωση NC"
 
-msgid "output objects whithout offsets / for debuging"
+msgid "output objects without offsets / for debuging"
 msgstr "αντικείμενα εξόδου χωρίς μετατοπίσεις / για αποσφαλμάτωση"
 
 msgid "Use Taps"
