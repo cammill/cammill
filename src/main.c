@@ -422,11 +422,11 @@ static GtkCellEditable *gui_cell_renderer_param_start_editing (GtkCellRenderer *
 						if (PARAMETER[n].type == T_FLOAT) {
 							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
 							adj = GTK_ADJUSTMENT(gtk_adjustment_new(PARAMETER[n].vfloat, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0));
-							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 4);
 						} else if (PARAMETER[n].type == T_DOUBLE) {
 							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
 							adj = GTK_ADJUSTMENT(gtk_adjustment_new(PARAMETER[n].vdouble, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0));
-							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 2);
+							gtk_spin_button_configure(GTK_SPIN_BUTTON(paramwidget), adj, 1, 4);
 						} else if (PARAMETER[n].type == T_INT) {
 							paramwidget = g_object_new(GTK_TYPE_SPIN_BUTTON, "has_frame", FALSE, "numeric", TRUE, NULL);
 							adj = GTK_ADJUSTMENT(gtk_adjustment_new(PARAMETER[n].vint, PARAMETER[n].min, PARAMETER[n].max, PARAMETER[n].step, PARAMETER[n].step * 10.0, 0.0));
@@ -2887,6 +2887,11 @@ void create_gui () {
 	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "bottom-left", -1);
 	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "original", -1);
 	gtk_list_store_insert_with_values(ListStore[P_M_ZERO], NULL, -1, 0, NULL, 1, "center", -1);
+
+	gtk_list_store_insert_with_values(ListStore[P_M_ORDER], NULL, -1, 0, NULL, 1, "inside/open first", -1);
+	gtk_list_store_insert_with_values(ListStore[P_M_ORDER], NULL, -1, 0, NULL, 1, "next", -1);
+	gtk_list_store_insert_with_values(ListStore[P_M_ORDER], NULL, -1, 0, NULL, 1, "none", -1);
+
 
 	ParameterUpdate();
 	StatusBar = gtk_statusbar_new();

@@ -367,11 +367,11 @@ void postcam_init_lua (const char* path, char *plugin) {
 	postcam_var_push_double("arcCentreX", 0.0);
 	postcam_var_push_double("arcCentreY", 0.0);
 	postcam_var_push_double("arcAngle", 0.0);
-	postcam_var_push_int("plungeRate", 200);
-	postcam_var_push_int("feedRate", 2000);
-	postcam_var_push_int("spindleSpeed", 10000);
+	postcam_var_push_int("plungeRate", 0);
+	postcam_var_push_int("feedRate", 0);
+	postcam_var_push_int("spindleSpeed", 0);
 	postcam_var_push_int("metric", 1);
-	postcam_var_push_int("tool", 1);
+	postcam_var_push_int("tool", 0);
 	postcam_var_push_int("lastinst", 0);
 	postcam_var_push_string("operationName", "");
 	postcam_var_push_string("commentText", "");

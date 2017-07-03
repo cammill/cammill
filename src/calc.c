@@ -1109,45 +1109,37 @@ void order_objects (void) {
 	double last_y = 0.0;
 	double next_x = 0.0;
 	double next_y = 0.0;
+	if (PARAMETER[P_M_ORDER].vint == 2) {
+		for (object_num = 0; object_num < object_last; object_num++) {
+			myOBJECTS[object_num].visited = 1;
+		}
+		return;
+	}
+
 	for (object_num = 0; object_num < object_last; object_num++) {
 		myOBJECTS[object_num].visited = 0;
 	}
 
 	/* inside and open objects */
-	for (object_num = 0; object_num < object_last; object_num++) {
-		double shortest_len = 9999999.0;
-		double shortest_x = 0.0;
-		double shortest_y = 0.0;
-		int shortest_object = -1;
-		int shortest_line = -1;
-		int flag = 0;
-		int object_num2 = 0;
-		for (object_num2 = 0; object_num2 < object_last; object_num2++) {
-			int nnum = 0;
-			if (myOBJECTS[object_num2].visited != 0) {
-				continue;
-			}
-			if (myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
-				if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].inside == 1) {
-					int lnum2 = myOBJECTS[object_num2].line[nnum];
-					next_x = myLINES[lnum2].cx - myLINES[lnum2].opt;
-					next_y = myLINES[lnum2].cy;
-					double len = get_len(last_x, last_y, next_x, next_y);
-					if (len < shortest_len) {
-						shortest_len = len;
-						shortest_object = object_num2;
-						shortest_x = next_x;
-						shortest_y = next_y;
-						shortest_line = nnum;
-						flag = 1;
-					}
+	if (PARAMETER[P_M_ORDER].vint == 0) {
+		for (object_num = 0; object_num < object_last; object_num++) {
+			double shortest_len = 9999999.0;
+			double shortest_x = 0.0;
+			double shortest_y = 0.0;
+			int shortest_object = -1;
+			int shortest_line = -1;
+			int flag = 0;
+			int object_num2 = 0;
+			for (object_num2 = 0; object_num2 < object_last; object_num2++) {
+				int nnum = 0;
+				if (myOBJECTS[object_num2].visited != 0) {
+					continue;
 				}
-			} else {
-				for (nnum = 0; nnum < line_last; nnum++) {
+				if (myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
 					if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].inside == 1) {
 						int lnum2 = myOBJECTS[object_num2].line[nnum];
-						next_x = myLINES[lnum2].x1;
-						next_y = myLINES[lnum2].y1;
+						next_x = myLINES[lnum2].cx - myLINES[lnum2].opt;
+						next_y = myLINES[lnum2].cy;
 						double len = get_len(last_x, last_y, next_x, next_y);
 						if (len < shortest_len) {
 							shortest_len = len;
@@ -1158,57 +1150,74 @@ void order_objects (void) {
 							flag = 1;
 						}
 					}
+				} else {
+					for (nnum = 0; nnum < line_last; nnum++) {
+						if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].inside == 1) {
+							int lnum2 = myOBJECTS[object_num2].line[nnum];
+							next_x = myLINES[lnum2].x1;
+							next_y = myLINES[lnum2].y1;
+							double len = get_len(last_x, last_y, next_x, next_y);
+							if (len < shortest_len) {
+								shortest_len = len;
+								shortest_object = object_num2;
+								shortest_x = next_x;
+								shortest_y = next_y;
+								shortest_line = nnum;
+								flag = 1;
+							}
+						}
+					}
+				}
+				nnum = 0;
+				if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0) {
+					int lnum2 = myOBJECTS[object_num2].line[nnum];
+					next_x = myLINES[lnum2].x1;
+					next_y = myLINES[lnum2].y1;
+					double len = get_len(last_x, last_y, next_x, next_y);
+					if (len < shortest_len) {
+						shortest_len = len;
+						shortest_object = object_num2;
+						shortest_x = next_x;
+						shortest_y = next_y;
+						shortest_line = nnum;
+						flag = 1;
+					}
+				}
+				nnum = object_line_last(object_num2);
+				if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0) {
+					int lnum2 = myOBJECTS[object_num2].line[nnum];
+					next_x = myLINES[lnum2].x1;
+					next_y = myLINES[lnum2].y1;
+					double len = get_len(last_x, last_y, next_x, next_y);
+					if (len < shortest_len) {
+						shortest_len = len;
+						shortest_object = object_num2;
+						shortest_x = next_x;
+						shortest_y = next_y;
+						shortest_line = nnum;
+						flag = 2;
+					}
 				}
 			}
-			nnum = 0;
-			if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0) {
-				int lnum2 = myOBJECTS[object_num2].line[nnum];
-				next_x = myLINES[lnum2].x1;
-				next_y = myLINES[lnum2].y1;
-				double len = get_len(last_x, last_y, next_x, next_y);
-				if (len < shortest_len) {
-					shortest_len = len;
-					shortest_object = object_num2;
-					shortest_x = next_x;
-					shortest_y = next_y;
-					shortest_line = nnum;
-					flag = 1;
+			if (flag > 0) {
+				myOBJECTS[shortest_object].order = order_num++;
+				myOBJECTS[shortest_object].visited = 1;
+				if (flag > 1) {
+					redir_object(shortest_object);
 				}
-			}
-			nnum = object_line_last(object_num2);
-			if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0) {
-				int lnum2 = myOBJECTS[object_num2].line[nnum];
-				next_x = myLINES[lnum2].x1;
-				next_y = myLINES[lnum2].y1;
-				double len = get_len(last_x, last_y, next_x, next_y);
-				if (len < shortest_len) {
-					shortest_len = len;
-					shortest_object = object_num2;
-					shortest_x = next_x;
-					shortest_y = next_y;
-					shortest_line = nnum;
-					flag = 2;
+				if (myOBJECTS[shortest_object].closed == 1 && myLINES[myOBJECTS[shortest_object].line[0]].type != TYPE_CIRCLE) {
+					resort_object(shortest_object, shortest_line);
+					object_optimize_dir(shortest_object);
 				}
+				last_x = shortest_x;
+				last_y = shortest_y;
+			} else {
+				break;
 			}
-		}
-		if (flag > 0) {
-			myOBJECTS[shortest_object].order = order_num++;
-			myOBJECTS[shortest_object].visited = 1;
-			if (flag > 1) {
-				redir_object(shortest_object);
-			}
-			if (myOBJECTS[shortest_object].closed == 1 && myLINES[myOBJECTS[shortest_object].line[0]].type != TYPE_CIRCLE) {
-				resort_object(shortest_object, shortest_line);
-				object_optimize_dir(shortest_object);
-			}
-			last_x = shortest_x;
-			last_y = shortest_y;
-		} else {
-			break;
 		}
 	}
 
-	/* outside objects */
+	/* all other objects */
 	for (object_num = 0; object_num < object_last; object_num++) {
 		double shortest_len = 9999999.0;
 		double shortest_x = 0.0;
@@ -1721,6 +1730,19 @@ void mill_xy (int gcmd, double x, double y, double z, double r, int feed, int ob
 				if (alpha < 0.0) {
 					alpha += 360.0;
 				}
+
+				float dx = _X(x) - _X(mill_last_x);
+				float dy = _Y(y) - _Y(mill_last_y);
+				if ((dx > -0.000001 && dx < 0.000001) && (dy > -0.000001 && dy < 0.000001)) {
+					printf("ignore circle %f %f %f %f (move too short) \n", _Y(y), _Y(mill_last_y), _X(x), _X(mill_last_x));
+					return;
+				}
+
+//				if (_X(cx) - _X(mill_last_x) == 0.0 || _Y(cy) - _Y(mill_last_y) == 0.0) {
+//					printf("ignore circle %f %f \n", _Y(cy) - _Y(mill_last_y), _X(cx) - _X(mill_last_x));
+//					return;
+//				}
+
 				postcam_var_push_double("arcCentreX", _X(cx));
 				postcam_var_push_double("arcCentreY", _Y(cy));
 				postcam_var_push_double("arcAngle", toRad(alpha));
@@ -1740,6 +1762,19 @@ void mill_xy (int gcmd, double x, double y, double z, double r, int feed, int ob
 				if (alpha > 0.0) {
 					alpha -= 360.0;
 				}
+
+				float dx = _X(x) - _X(mill_last_x);
+				float dy = _Y(y) - _Y(mill_last_y);
+				if ((dx > -0.000001 && dx < 0.000001) && (dy > -0.000001 && dy < 0.000001)) {
+					printf("ignore circle %f %f %f %f (move too short) \n", _Y(y), _Y(mill_last_y), _X(x), _X(mill_last_x));
+					return;
+				}
+
+//				if (_X(cx) - _X(mill_last_x) == 0.0 || _Y(cy) - _Y(mill_last_y) == 0.0) {
+//					printf("ignore circle %f %f \n", _Y(cy) - _Y(mill_last_y), _X(cx) - _X(mill_last_x));
+//					return;
+//				}
+
 				postcam_var_push_double("arcCentreX", _X(cx));
 				postcam_var_push_double("arcCentreY", _Y(cy));
 				postcam_var_push_double("arcAngle", toRad(alpha));

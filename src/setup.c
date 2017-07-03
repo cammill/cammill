@@ -165,6 +165,7 @@ PARA PARAMETER[P_LAST] = {
 	{"SavePath","Misc",	"-misp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0, 0},
 	{"PresetPath","Misc",	"-mipp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0, 0},
 	{"Delete Double Lines","Misc",	"-deld",		T_BOOL	,	1,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "delete double lines on different layers", 0, 0, 0, 0},
+	{"Order", "Misc", "-order",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Mill-Order", 0, 0, 0, 0},
 	{"Zero", "Misc", "-zero",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Zero", 0, 0, 0, 0},
 	{"Zero-Offset-X", "Misc", "-zerox",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm|inch", 1, 1, "Zero-Offset-X", 0, 0, 0, 0},
 	{"Zero-Offset-Y", "Misc", "-zeroy",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm|inch", 1, 1, "Zero-Offset-Y", 0, 0, 0, 0},

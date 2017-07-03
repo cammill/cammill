@@ -61,7 +61,7 @@ function OnMove()
 end
 
 function OnArc()
-	if(arcAngle <0) then
+	if(arcAngle < 0) then
 		post.ModalText("G03")
 	else
 		post.ModalText("G02")

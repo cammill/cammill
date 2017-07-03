@@ -222,19 +222,19 @@ int bitmap_pre (void) {
 				}
 				x_last = x;
 				y_last = y;
-				if (min_x > (double)x * scale) {
-					min_x = (double)x * scale;
+				if (min_x > (double)x) {
+					min_x = (double)x;
 				}
-				if (min_y > (double)y * scale) {
-					min_y = (double)y * scale;
+				if (min_y > (double)y) {
+					min_y = (double)y;
 				}
-				if (max_x < (double)x * scale) {
-					max_x = (double)x * scale;
+				if (max_x < (double)x) {
+					max_x = (double)x;
 				}
-				if (max_y < (double)y * scale) {
-					max_y = (double)y * scale;
+				if (max_y < (double)y) {
+					max_y = (double)y;
 				}
-//				put_pixel(surface_pixbuf, x, y, 0, 0, 255, 255);
+				put_pixel(surface_pixbuf, x, y, 0, 255, 0, 255);
 			} else {
 				if (lon == 1) {
 					lon = 0;
@@ -260,7 +260,7 @@ int bitmap_pre (void) {
 		if (y < bmp_height) {
 			for (x = bmp_width - 1; x >= 0; x -= xstep) {
 				get_pixel(surface_pixbuf, x, y, &red, &green, &blue, &alpha);
-				if (alpha > 0 && red >= PARAMETER[P_B_R].vint && green >= PARAMETER[P_B_G].vint && blue >= PARAMETER[P_B_B].vint) {
+				if (alpha > 0 && red <= PARAMETER[P_B_R].vint && green <= PARAMETER[P_B_G].vint && blue <= PARAMETER[P_B_B].vint) {
 					if (lon == 0) {
 						lon = 1;
 						x_first = x;
@@ -268,19 +268,19 @@ int bitmap_pre (void) {
 					}
 					x_last = x;
 					y_last = y;
-					if (min_x > (double)x * scale) {
-						min_x = (double)x * scale;
+					if (min_x > (double)x) {
+						min_x = (double)x;
 					}
-					if (min_y > (double)y * scale) {
-						min_y = (double)y * scale;
+					if (min_y > (double)y) {
+						min_y = (double)y;
 					}
-					if (max_x < (double)x * scale) {
-						max_x = (double)x * scale;
+					if (max_x < (double)x) {
+						max_x = (double)x;
 					}
-					if (max_y < (double)y * scale) {
-						max_y = (double)y * scale;
+					if (max_y < (double)y) {
+						max_y = (double)y;
 					}
-//					put_pixel(surface_pixbuf, x, y, 0, 0, 255, 255);
+					put_pixel(surface_pixbuf, x, y, 0, 255, 0, 255);
 				} else {
 					if (lon == 1) {
 						lon = 0;
@@ -328,6 +328,7 @@ void bitmap2cnc (void) {
 //	myOBJECTS[object_num].tool_num = PARAMETER[P_TOOL_NUM].vint;
 //	myOBJECTS[object_num].tool_dia = PARAMETER[P_TOOL_DIAMETER].vdouble;
 //	myOBJECTS[object_num].tool_speed = PARAMETER[P_TOOL_SPEED].vint;
+
 	for (depth = PARAMETER[P_M_Z_STEP].vdouble; depth > PARAMETER[P_M_DEPTH].vdouble + PARAMETER[P_M_Z_STEP].vdouble; depth += PARAMETER[P_M_Z_STEP].vdouble) {
 		if (PARAMETER[P_M_LASERMODE].vint == 0) {
 			mill_z(0, PARAMETER[P_CUT_SAVE].vdouble, object_num);
@@ -342,6 +343,9 @@ void bitmap2cnc (void) {
 			int pd = 9999;
 			int ps = 0;
 			int dist = 0;
+
+/*
+			// order
 			for (mn = 0; mn < ml; mn++) {
 				if (moves[mn][4] == 1) {
 					dist = get_dist (epx, epy, moves[mn][0], moves[mn][1]);
@@ -358,6 +362,16 @@ void bitmap2cnc (void) {
 					}
 				}
 			}
+*/
+			for (mn = 0; mn < ml; mn++) {
+				if (moves[mn][4] == 1) {
+					pd = dist;
+					pn = mn;
+					ps = 0;
+					break;
+				}
+			}
+
 			if (pn != -1) {
 				moves[pn][4] = 2;
 				if (ps == 0) {
