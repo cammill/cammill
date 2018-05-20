@@ -73,8 +73,10 @@ enum {
 	TYPE_LAST
 };
 
+/* TODO: is int really the right data type for an array index? update here and sizeof on realloc */
 typedef struct{
-	int line[MAX_LINES];
+	int *line;
+	int line_count;
 	int closed;
 	int inside;
 	int visited;

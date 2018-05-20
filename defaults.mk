@@ -30,7 +30,7 @@ STRIP_CMD ?= strip --remove-section=.comment --remove-section=.note
 LIBS   ?= -lGL -lglut -lGLU -lX11 -lm -lpthread -lstdc++ -lXext -lXi -lxcb -lXau -lXdmcp -lgcc -lc
 CFLAGS += -I./ -I./src
 CFLAGS += "-DHERSHEY_FONTS_DIR=\"./\""
-CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O3
+CFLAGS += -ggdb -Wall -Wno-unknown-pragmas -O1
 CFLAGS += "-DTARGET=\"${TARGET}\""
 CFLAGS += "-DSYSTEM=\"${SYSTEM}\""
 CFLAGS += "-DMACHINE=\"${MACHINE}\""

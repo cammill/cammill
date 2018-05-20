@@ -120,6 +120,8 @@ extern GtkListStore *ListStore[P_LAST];
 extern GtkWidget *OutputErrorLabel;
 extern GtkWidget *gCodeViewLabel;
 
+void *reallocarray(void *ptr, size_t nmemb, size_t size);
+
 void postcam_load_source (char *plugin);
 GLuint texture_load (char *filename);
 
@@ -211,8 +213,9 @@ void object2poly (int object_num, double depth, double depth2, int invert) {
 	}
 	gluTessNormal(tobj, 0, 0, 1);
 	gluTessBeginContour(tobj);
-	if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
+	if (myOBJECTS[object_num].line_count != 0 && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
 		gluTessProperty(tobj, GLU_TESS_WINDING_RULE, GLU_TESS_WINDING_POSITIVE);
+		/* TODO: Where does this single line come from? */
 		int lnum = myOBJECTS[object_num].line[0];
 		float an = 0.0;
 		float r = myLINES[lnum].opt;
@@ -241,28 +244,27 @@ void object2poly (int object_num, double depth, double depth2, int invert) {
 			nverts++;
 		}
 	} else {
-		for (num = 0; num < line_last; num++) {
-			if (myOBJECTS[object_num].line[num] != 0) {
-				int lnum = myOBJECTS[object_num].line[num];
-				rect2[nverts][0] = (GLdouble)myLINES[lnum].x1;
-				rect2[nverts][1] = (GLdouble)myLINES[lnum].y1;
-				rect2[nverts][2] = (GLdouble)depth;
-				gluTessVertex(tobj, rect2[nverts], rect2[nverts]);
-				if (depth != depth2) {
-					glBegin(GL_QUADS);
-					glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth);
-					glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth);
-					glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth2);
-					glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth2);
-					glEnd();
-				}
-				nverts++;
+		for (num = 0; num < myOBJECTS[object_num].line_count; num++) {
+			int lnum = myOBJECTS[object_num].line[num];
+			rect2[nverts][0] = (GLdouble)myLINES[lnum].x1;
+			rect2[nverts][1] = (GLdouble)myLINES[lnum].y1;
+			rect2[nverts][2] = (GLdouble)depth;
+			gluTessVertex(tobj, rect2[nverts], rect2[nverts]);
+			if (depth != depth2) {
+				glBegin(GL_QUADS);
+				glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth);
+				glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth);
+				glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth2);
+				glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth2);
+				glEnd();
 			}
+			nverts++;
 		}
 	}
 	int num5 = 0;
 	for (num5 = 0; num5 < object_last; num5++) {
 		if (num5 != object_num && myOBJECTS[num5].closed == 1 && myOBJECTS[num5].inside == 1) {
+			/* TODO: I don't understand why tihs only checks one line. */
 			int lnum = myOBJECTS[num5].line[0];
 			int pipret = 0;
 			double testx = myLINES[lnum].x1;
@@ -321,23 +323,21 @@ void object2poly (int object_num, double depth, double depth2, int invert) {
 						}
 					}
 				} else {
-					for (num = 0; num < line_last; num++) {
-						if (myOBJECTS[num5].line[num] != 0) {
-							int lnum = myOBJECTS[num5].line[num];
-							rect2[nverts][0] = (GLdouble)myLINES[lnum].x1;
-							rect2[nverts][1] = (GLdouble)myLINES[lnum].y1;
-							rect2[nverts][2] = (GLdouble)depth;
-							gluTessVertex(tobj, rect2[nverts], rect2[nverts]);
-							if (depth != depth2) {
-								glBegin(GL_QUADS);
-								glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth);
-								glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth);
-								glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth2);
-								glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth2);
-								glEnd();
-							}
-							nverts++;
+					for (num = 0; num < myOBJECTS[num5].line_count; num++) {
+						int lnum = myOBJECTS[num5].line[num];
+						rect2[nverts][0] = (GLdouble)myLINES[lnum].x1;
+						rect2[nverts][1] = (GLdouble)myLINES[lnum].y1;
+						rect2[nverts][2] = (GLdouble)depth;
+						gluTessVertex(tobj, rect2[nverts], rect2[nverts]);
+						if (depth != depth2) {
+							glBegin(GL_QUADS);
+							glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth);
+							glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth);
+							glVertex3f((float)myLINES[lnum].x2, (float)myLINES[lnum].y2, depth2);
+							glVertex3f((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, depth2);
+							glEnd();
 						}
+						nverts++;
 					}
 				}
 			}
@@ -627,49 +627,7 @@ int point_in_object (int object_num, int object_ex, double testx, double testy) 
 			if (myOBJECTS[onum].closed == 0) {
 				continue;
 			}
-			for (num = 0; num < line_last; num++) {
-				if (myOBJECTS[onum].line[num] != 0) {
-					int lnum = myOBJECTS[onum].line[num];
-					if (myLINES[lnum].y2 == testy) {
-						if ((myLINES[lnum].x2 == testx) || (myLINES[lnum].y1 == testy && ((myLINES[lnum].x2 > testx) == (myLINES[lnum].x1 < testx)))) {
-							fprintf(stderr, "Point on line\n");
-							return -1;
-						}
-					}
-					if ((myLINES[lnum].y1 < testy) != (myLINES[lnum].y2 < testy)) {
-						if (myLINES[lnum].x1 >= testx) {
-							if (myLINES[lnum].x2 > testx) {
-								result = 1 - result;
-							} else {
-								double d = (double)(myLINES[lnum].x1 - testx) * (myLINES[lnum].y2 - testy) - (double)(myLINES[lnum].x2 - testx) * (myLINES[lnum].y1 - testy);
-								if (!d) {
-									return -1;
-								}
-								if ((d > 0) == (myLINES[lnum].y2 > myLINES[lnum].y1)) {
-									result = 1 - result;
-								}
-							}
-						} else {
-							if (myLINES[lnum].x2 > testx) {
-								double d = (double)(myLINES[lnum].x1 - testx) * (myLINES[lnum].y2 - testy) - (double)(myLINES[lnum].x2 - testx) * (myLINES[lnum].y1 - testy);
-								if (!d) {
-									return -1;
-								}
-								if ((d > 0) == (myLINES[lnum].y2 > myLINES[lnum].y1)) {
-									result = 1 - result;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	} else {
-		if (myOBJECTS[onum].closed == 0) {
-			return 0;
-		}
-		for (num = 0; num < line_last; num++) {
-			if (myOBJECTS[onum].line[num] != 0) {
+			for (num = 0; num < myOBJECTS[onum].line_count; num++) {
 				int lnum = myOBJECTS[onum].line[num];
 				if (myLINES[lnum].y2 == testy) {
 					if ((myLINES[lnum].x2 == testx) || (myLINES[lnum].y1 == testy && ((myLINES[lnum].x2 > testx) == (myLINES[lnum].x1 < testx)))) {
@@ -699,6 +657,44 @@ int point_in_object (int object_num, int object_ex, double testx, double testy) 
 							if ((d > 0) == (myLINES[lnum].y2 > myLINES[lnum].y1)) {
 								result = 1 - result;
 							}
+						}
+					}
+				}
+			}
+		}
+	} else {
+		if (myOBJECTS[onum].closed == 0) {
+			return 0;
+		}
+		for (num = 0; num < myOBJECTS[onum].line_count; num++) {
+			int lnum = myOBJECTS[onum].line[num];
+			if (myLINES[lnum].y2 == testy) {
+				if ((myLINES[lnum].x2 == testx) || (myLINES[lnum].y1 == testy && ((myLINES[lnum].x2 > testx) == (myLINES[lnum].x1 < testx)))) {
+					fprintf(stderr, "Point on line\n");
+					return -1;
+				}
+			}
+			if ((myLINES[lnum].y1 < testy) != (myLINES[lnum].y2 < testy)) {
+				if (myLINES[lnum].x1 >= testx) {
+					if (myLINES[lnum].x2 > testx) {
+						result = 1 - result;
+					} else {
+						double d = (double)(myLINES[lnum].x1 - testx) * (myLINES[lnum].y2 - testy) - (double)(myLINES[lnum].x2 - testx) * (myLINES[lnum].y1 - testy);
+						if (!d) {
+							return -1;
+						}
+						if ((d > 0) == (myLINES[lnum].y2 > myLINES[lnum].y1)) {
+							result = 1 - result;
+						}
+					}
+				} else {
+					if (myLINES[lnum].x2 > testx) {
+						double d = (double)(myLINES[lnum].x1 - testx) * (myLINES[lnum].y2 - testy) - (double)(myLINES[lnum].x2 - testx) * (myLINES[lnum].y1 - testy);
+						if (!d) {
+							return -1;
+						}
+						if ((d > 0) == (myLINES[lnum].y2 > myLINES[lnum].y1)) {
+							result = 1 - result;
 						}
 					}
 				}
@@ -765,17 +761,6 @@ void translateAxisZ (double z, char *ret_str) {
 	}
 }
 
-int object_line_last (int object_num) {
-	int num = 0;
-	int ret = 0;
-	for (num = 0; num < line_last; num++) {
-		if (myOBJECTS[object_num].line[num] != 0) {
-			ret = num;
-		}
-	}
-	return ret;
-}
-
 double get_len (double x1, double y1, double x2, double y2) {
 	double dx = x2 - x1;
 	double dy = y2 - y1;
@@ -794,43 +779,35 @@ double set_positive (double val) {
 void resort_object (int object_num, int start) {
 	int num4 = 0;
 	int num5 = 0;
-	int OTEMPLINE[MAX_LINES];
-	for (num4 = 0; num4 < line_last; num4++) {
-		OTEMPLINE[num4] = 0;
+	int *OTEMPLINE = calloc(myOBJECTS[object_num].line_count, sizeof(int));
+	/* TODO: check return value */
+	for (num4 = start; num4 < myOBJECTS[object_num].line_count; num4++) {
+		OTEMPLINE[num5++] = myOBJECTS[object_num].line[num4];
 	}
-	for (num4 = start; num4 < line_last; num4++) {
-		if (myOBJECTS[object_num].line[num4] != 0) {
-			OTEMPLINE[num5++] = myOBJECTS[object_num].line[num4];
-		}
-	}
+	/* TODO: assert start < line_count or so */
 	for (num4 = 0; num4 < start; num4++) {
-		if (myOBJECTS[object_num].line[num4] != 0) {
-			OTEMPLINE[num5++] = myOBJECTS[object_num].line[num4];
-		}
+		OTEMPLINE[num5++] = myOBJECTS[object_num].line[num4];
 	}
 	for (num4 = 0; num4 < num5; num4++) {
 		myOBJECTS[object_num].line[num4] = OTEMPLINE[num4];
 	}
+	free(OTEMPLINE);
 }
 
 /* reverse lines in object */
 void redir_object (int object_num) {
 	int num = 0;
 	int num5 = 0;
-	int OTEMPLINE[MAX_LINES];
-	for (num = 0; num < line_last; num++) {
-		OTEMPLINE[num] = 0;
-	}
-	for (num = line_last - 1; num >= 0; num--) {
-		if (myOBJECTS[object_num].line[num] != 0) {
-			OTEMPLINE[num5++] = myOBJECTS[object_num].line[num];
-			int lnum = myOBJECTS[object_num].line[num];
-			line_invert(lnum);
-		}
+	int *OTEMPLINE = calloc(myOBJECTS[object_num].line_count, sizeof(int));
+	for (num = myOBJECTS[object_num].line_count - 1; num >= 0; num--) {
+		OTEMPLINE[num5++] = myOBJECTS[object_num].line[num];
+		int lnum = myOBJECTS[object_num].line[num];
+		line_invert(lnum);
 	}
 	for (num = 0; num < num5; num++) {
 		myOBJECTS[object_num].line[num] = OTEMPLINE[num];
 	}
+	free(OTEMPLINE);
 }
 
 double line_len (int lnum) {
@@ -880,7 +857,7 @@ void add_angle_offset (double *check_x, double *check_y, double radius, double a
 /* optimize dir of object / inside=cw, outside=ccw */
 void object_optimize_dir (int object_num) {
 	int pipret = 0;
-	if (myOBJECTS[object_num].line[0] != 0) {
+	if (myOBJECTS[object_num].line_count != 0) {
 		if (myOBJECTS[object_num].closed == 1) {
 			int lnum = myOBJECTS[object_num].line[0];
 			double alpha = line_angle(lnum);
@@ -1078,7 +1055,7 @@ void order_objects (void) {
 	}
 	for (object_num = 0; object_num < object_last; object_num++) {
 		myOBJECTS[object_num].PARAMETER[P_O_OFFSET].overwrite = 1;
-		if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+		if (myOBJECTS[object_num].line_count != 0 && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
 //			myOBJECTS[object_num].PARAMETER[P_M_DEPTH].vdouble = myOBJECTS[object_num].PARAMETER[P_M_TEXT_MILL_DEPTH].vdouble;
 //			myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint = myOBJECTS[object_num].PARAMETER[P_M_TEXT_TOOL_NUM].vint;
 //			myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble = myOBJECTS[object_num].PARAMETER[P_M_TEXT_TOOL_DIAMETER].vdouble;
@@ -1131,11 +1108,14 @@ void order_objects (void) {
 			int flag = 0;
 			int object_num2 = 0;
 			for (object_num2 = 0; object_num2 < object_last; object_num2++) {
+/* TODO remove line */
+printf("object_num2=%d\n", object_num2);
 				int nnum = 0;
 				if (myOBJECTS[object_num2].visited != 0) {
 					continue;
 				}
-				if (myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
+				/* TODO: Not obvious we get here with at least one line. */
+				if (myOBJECTS[object_num2].line_count != 0 && myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
 					if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].inside == 1) {
 						int lnum2 = myOBJECTS[object_num2].line[nnum];
 						next_x = myLINES[lnum2].cx - myLINES[lnum2].opt;
@@ -1151,8 +1131,8 @@ void order_objects (void) {
 						}
 					}
 				} else {
-					for (nnum = 0; nnum < line_last; nnum++) {
-						if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].inside == 1) {
+					for (nnum = 0; nnum < myOBJECTS[object_num2].line_count; nnum++) {
+						if (myOBJECTS[object_num2].inside == 1) {
 							int lnum2 = myOBJECTS[object_num2].line[nnum];
 							next_x = myLINES[lnum2].x1;
 							next_y = myLINES[lnum2].y1;
@@ -1169,7 +1149,7 @@ void order_objects (void) {
 					}
 				}
 				nnum = 0;
-				if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0) {
+				if (myOBJECTS[object_num2].line_count != 0 && myOBJECTS[object_num2].closed == 0) {
 					int lnum2 = myOBJECTS[object_num2].line[nnum];
 					next_x = myLINES[lnum2].x1;
 					next_y = myLINES[lnum2].y1;
@@ -1183,8 +1163,9 @@ void order_objects (void) {
 						flag = 1;
 					}
 				}
-				nnum = object_line_last(object_num2);
-				if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].closed == 0) {
+				/* TODO: This is imperfect. Can be -1 now. And what is this even doing? */
+				nnum = myOBJECTS[object_num2].line_count-1;
+				if (nnum > 0 && myOBJECTS[object_num2].closed == 0) {
 					int lnum2 = myOBJECTS[object_num2].line[nnum];
 					next_x = myLINES[lnum2].x1;
 					next_y = myLINES[lnum2].y1;
@@ -1231,7 +1212,7 @@ void order_objects (void) {
 			if (myOBJECTS[object_num2].visited != 0) {
 				continue;
 			}
-			if (myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
+			if (myOBJECTS[object_num2].line_count && myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
 				if (myOBJECTS[object_num2].line[nnum] != 0) {
 					int lnum2 = myOBJECTS[object_num2].line[nnum];
 					next_x = myLINES[lnum2].cx - myLINES[lnum2].opt;
@@ -1247,20 +1228,18 @@ void order_objects (void) {
 					}
 				}
 			} else {
-				for (nnum = 0; nnum < line_last; nnum++) {
-					if (myOBJECTS[object_num2].line[nnum] != 0) {
-						int lnum2 = myOBJECTS[object_num2].line[nnum];
-						next_x = myLINES[lnum2].x1;
-						next_y = myLINES[lnum2].y1;
-						double len = get_len(last_x, last_y, next_x, next_y);
-						if (len < shortest_len) {
-							shortest_len = len;
-							shortest_object = object_num2;
-							shortest_x = next_x;
-							shortest_y = next_y;
-							shortest_line = nnum;
-							flag = 1;
-						}
+				for (nnum = 0; nnum < myOBJECTS[object_num2].line_count; nnum++) {
+					int lnum2 = myOBJECTS[object_num2].line[nnum];
+					next_x = myLINES[lnum2].x1;
+					next_y = myLINES[lnum2].y1;
+					double len = get_len(last_x, last_y, next_x, next_y);
+					if (len < shortest_len) {
+						shortest_len = len;
+						shortest_object = object_num2;
+						shortest_x = next_x;
+						shortest_y = next_y;
+						shortest_line = nnum;
+						flag = 1;
 					}
 				}
 			}
@@ -1268,7 +1247,7 @@ void order_objects (void) {
 		if (flag == 1) {
 			myOBJECTS[shortest_object].order = order_num++;
 			myOBJECTS[shortest_object].visited = 1;
-			if (myLINES[myOBJECTS[shortest_object].line[0]].type != TYPE_CIRCLE) {
+			if (myOBJECTS[shortest_object].line_count && myLINES[myOBJECTS[shortest_object].line[0]].type != TYPE_CIRCLE) {
 				resort_object(shortest_object, shortest_line);
 				object_optimize_dir(shortest_object);
 			}
@@ -1291,20 +1270,18 @@ void mill_objects (void) {
 	for (order_num = 0; order_num < object_last; order_num++) {
 		for (object_num = 0; object_num < object_last; object_num++) {
 			if (order_num == myOBJECTS[object_num].order) {
-				if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT && 1 == 2) {
+				if (myOBJECTS[object_num].line_count && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT && 1 == 2) {
 				} else {
 					double shortest_len = 9999999.0;
 					int shortest_object = -1;
 					int shortest_line = -1;
-					for (nnum = 0; nnum < line_last; nnum++) {
-						if (myOBJECTS[object_num].line[nnum] != 0) {
-							int lnum = myOBJECTS[object_num].line[nnum];
-							double len = get_len(last_x, last_y, myLINES[lnum].x1, myLINES[lnum].y1);
-							if (len < shortest_len) {
-								shortest_len = len;
-								shortest_object = object_num;
-								shortest_line = nnum;
-							}
+					for (nnum = 0; nnum < myOBJECTS[object_num].line_count; nnum++) {
+						int lnum = myOBJECTS[object_num].line[nnum];
+						double len = get_len(last_x, last_y, myLINES[lnum].x1, myLINES[lnum].y1);
+						if (len < shortest_len) {
+							shortest_len = len;
+							shortest_object = object_num;
+							shortest_line = nnum;
 						}
 					}
 					if (shortest_line != -1) {
@@ -2013,7 +1990,7 @@ void object_draw (FILE *fd_out, int object_num) {
 			glEnd();
 		}
 	}
-	if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
+	if (myOBJECTS[object_num].line_count && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
 		int lnum = myOBJECTS[object_num].line[0];
 		double an = 0.0;
 		double r = (float)myLINES[lnum].opt;
@@ -2064,80 +2041,78 @@ void object_draw (FILE *fd_out, int object_num) {
 		return;
 	}
 
-	for (num = 0; num < line_last; num++) {
-		if (myOBJECTS[object_num].line[num] != 0) {
-			int lnum = myOBJECTS[object_num].line[num];
-			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-				if (object_selected == object_num) {
-					glColor4f(1.0, 0.0, 0.0, 1.0);
-				} else {
-					glColor4f(0.0, 1.0, 0.0, 1.0);
+	for (num = 0; num < myOBJECTS[object_num].line_count; num++) {
+		int lnum = myOBJECTS[object_num].line[num];
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+			if (object_selected == object_num) {
+				glColor4f(1.0, 0.0, 0.0, 1.0);
+			} else {
+				glColor4f(0.0, 1.0, 0.0, 1.0);
+			}
+		}
+		draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
+		if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 1)) {
+			draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble));
+		}
+		if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				glLineWidth(1);
+		}
+		if (PARAMETER[P_M_NCDEBUG].vint == 1) {
+			if (num == 0) {
+				if (lasermode == 1) {
+					if (tool_last != 5) {
+						postcam_var_push_string("commentText", "Spindle off");
+						postcam_call_function("OnSpindleOff");
+						postcam_var_push_int("tool", myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint);
+						char tmp_str[1024];
+						snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint);
+						postcam_var_push_string("toolName", tmp_str);
+						postcam_call_function("OnToolChange");
+					}
+					tool_last = myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint;
+				}
+				mill_xy(0, myLINES[lnum].x1, myLINES[lnum].y1, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+				if (lasermode == 1) {
+					mill_z(0, 0.0, object_num);
+					postcam_var_push_string("commentText", "Laser on");
+					postcam_call_function("OnSpindleCW");
 				}
 			}
-			draw_oline((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, mill_depth_real);
-			if (myOBJECTS[object_num].closed == 0 && (myLINES[lnum].type != TYPE_MTEXT || myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 1)) {
-				draw_line2((float)myLINES[lnum].x1, (float)myLINES[lnum].y1, 0.01, (float)myLINES[lnum].x2, (float)myLINES[lnum].y2, 0.01, (myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble));
-			}
-			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-					glLineWidth(1);
-			}
-			if (PARAMETER[P_M_NCDEBUG].vint == 1) {
-				if (num == 0) {
-					if (lasermode == 1) {
-						if (tool_last != 5) {
-							postcam_var_push_string("commentText", "Spindle off");
-							postcam_call_function("OnSpindleOff");
-							postcam_var_push_int("tool", myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint);
-							char tmp_str[1024];
-							snprintf(tmp_str, sizeof(tmp_str), "Tool# %i", myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint);
-							postcam_var_push_string("toolName", tmp_str);
-							postcam_call_function("OnToolChange");
-						}
-						tool_last = myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint;
-					}
-					mill_xy(0, myLINES[lnum].x1, myLINES[lnum].y1, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-					if (lasermode == 1) {
-						mill_z(0, 0.0, object_num);
-						postcam_var_push_string("commentText", "Laser on");
-						postcam_call_function("OnSpindleCW");
-					}
-				}
-				if (myLINES[lnum].type == TYPE_ARC || myLINES[lnum].type == TYPE_CIRCLE) {
-					if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-						if (myLINES[lnum].opt < 0) {
-							mill_xy(3, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-						} else {
-							mill_xy(2, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-						}
+			if (myLINES[lnum].type == TYPE_ARC || myLINES[lnum].type == TYPE_CIRCLE) {
+				if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+					if (myLINES[lnum].opt < 0) {
+						mill_xy(3, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 					} else {
-						if (myLINES[lnum].opt < 0) {
-							mill_xy(2, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-						} else {
-							mill_xy(3, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-						}
-					}
-				} else if (myLINES[lnum].type == TYPE_MTEXT) {
-					if (myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 1) {
-						mill_xy(1, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+						mill_xy(2, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 					}
 				} else {
+					if (myLINES[lnum].opt < 0) {
+						mill_xy(2, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+					} else {
+						mill_xy(3, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, myLINES[lnum].opt, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+					}
+				}
+			} else if (myLINES[lnum].type == TYPE_MTEXT) {
+				if (myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 1) {
 					mill_xy(1, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 				}
+			} else {
+				mill_xy(1, myLINES[lnum].x2, myLINES[lnum].y2, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 			}
-			if (num == 0) {
-				if (myLINES[lnum].type != TYPE_MTEXT || myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 1) {
-					if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
-						if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-							if (object_num == object_selected) {
-								glColor4f(1.0, 0.0, 0.0, 1.0);
-							} else {
-								glColor4f(1.0, 1.0, 1.0, 1.0);
-							}
+		}
+		if (num == 0) {
+			if (myLINES[lnum].type != TYPE_MTEXT || myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 1) {
+				if (PARAMETER[P_M_ROTARYMODE].vint == 0) {
+					if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+						if (object_num == object_selected) {
+							glColor4f(1.0, 0.0, 0.0, 1.0);
+						} else {
+							glColor4f(1.0, 1.0, 1.0, 1.0);
 						}
-						snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
-						if (PARAMETER[P_O_BATCHMODE].vint != 1) {
-							output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.003 / draw_scale);
-						}
+					}
+					snprintf(tmp_str, sizeof(tmp_str), "%i", object_num);
+					if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+						output_text_gl_center(tmp_str, (float)myLINES[lnum].x1, (float)myLINES[lnum].y1, PARAMETER[P_CUT_SAVE].vdouble, 0.003 / draw_scale);
 					}
 				}
 			}
@@ -2170,15 +2145,12 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 		glLoadName(object_num);
 	}
 	/* find last line in object */
-	for (num = 0; num < line_last; num++) {
-		if (myOBJECTS[object_num].line[num] != 0) {
-			last = myOBJECTS[object_num].line[num];
-		}
-	}
+	/* TODO: Worry about -1 here */
+	last = myOBJECTS[object_num].line_count-1;
 	if (myLINES[last].type == TYPE_MTEXT && myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 0) {
 		return;
 	}
-	if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
+	if (myOBJECTS[object_num].line_count && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_CIRCLE) {
 		int lnum = myOBJECTS[object_num].line[0];
 		double r = myLINES[lnum].opt;
 		if (r < 0.0) {
@@ -2227,266 +2199,265 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 		return;
 	}
 
-	for (num = 0; num < line_last; num++) {
-		if (myOBJECTS[object_num].line[num] != 0) {
-			if (num == 0) {
-				lnum1 = last;
+	for (num = 0; num < myOBJECTS[object_num].line_count; num++) {
+		/* TODO: Don't follow what this is doing. */
+		if (num == 0) {
+			lnum1 = last;
+		} else {
+			lnum1 = last_lnum;
+		}
+		lnum2 = myOBJECTS[object_num].line[num];
+		if (myOBJECTS[object_num].closed == 1 && offset != 0) {
+			// line1 Offsets & Angle
+			double alpha1 = line_angle(lnum1);
+			double check1_x = myLINES[lnum1].x1;
+			double check1_y = myLINES[lnum1].y1;
+			double check1b_x = myLINES[lnum1].x2;
+			double check1b_y = myLINES[lnum1].y2;
+			add_angle_offset(&check1b_x, &check1b_y, 0.0, alpha1);
+			if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+				add_angle_offset(&check1_x, &check1_y, -tool_offset, alpha1 + 90);
+				add_angle_offset(&check1b_x, &check1b_y, -tool_offset, alpha1 + 90);
 			} else {
-				lnum1 = last_lnum;
+				add_angle_offset(&check1_x, &check1_y, tool_offset, alpha1 + 90);
+				add_angle_offset(&check1b_x, &check1b_y, tool_offset, alpha1 + 90);
 			}
-			lnum2 = myOBJECTS[object_num].line[num];
-			if (myOBJECTS[object_num].closed == 1 && offset != 0) {
-				// line1 Offsets & Angle
-				double alpha1 = line_angle(lnum1);
-				double check1_x = myLINES[lnum1].x1;
-				double check1_y = myLINES[lnum1].y1;
-				double check1b_x = myLINES[lnum1].x2;
-				double check1b_y = myLINES[lnum1].y2;
-				add_angle_offset(&check1b_x, &check1b_y, 0.0, alpha1);
-				if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-					add_angle_offset(&check1_x, &check1_y, -tool_offset, alpha1 + 90);
-					add_angle_offset(&check1b_x, &check1b_y, -tool_offset, alpha1 + 90);
-				} else {
-					add_angle_offset(&check1_x, &check1_y, tool_offset, alpha1 + 90);
-					add_angle_offset(&check1b_x, &check1b_y, tool_offset, alpha1 + 90);
-				}
 
-				// line2 Offsets & Angle
-				double alpha2 = line_angle(lnum2);
-				double check2_x = myLINES[lnum2].x1;
-				double check2_y = myLINES[lnum2].y1;
-				add_angle_offset(&check2_x, &check2_y, 0.0, alpha2);
-				double check2b_x = myLINES[lnum2].x2;
-				double check2b_y = myLINES[lnum2].y2;
-				if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-					add_angle_offset(&check2_x, &check2_y, -tool_offset, alpha2 + 90);
-					add_angle_offset(&check2b_x, &check2b_y, -tool_offset, alpha2 + 90);
-				} else {
-					add_angle_offset(&check2_x, &check2_y, tool_offset, alpha2 + 90);
-					add_angle_offset(&check2b_x, &check2b_y, tool_offset, alpha2 + 90);
-				}
+			// line2 Offsets & Angle
+			double alpha2 = line_angle(lnum2);
+			double check2_x = myLINES[lnum2].x1;
+			double check2_y = myLINES[lnum2].y1;
+			add_angle_offset(&check2_x, &check2_y, 0.0, alpha2);
+			double check2b_x = myLINES[lnum2].x2;
+			double check2b_y = myLINES[lnum2].y2;
+			if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+				add_angle_offset(&check2_x, &check2_y, -tool_offset, alpha2 + 90);
+				add_angle_offset(&check2b_x, &check2b_y, -tool_offset, alpha2 + 90);
+			} else {
+				add_angle_offset(&check2_x, &check2_y, tool_offset, alpha2 + 90);
+				add_angle_offset(&check2b_x, &check2b_y, tool_offset, alpha2 + 90);
+			}
 
-				// Angle-Diff
-				alpha1 = alpha1 + 180.0;
-				alpha2 = alpha2 + 180.0;
-				double alpha_diff = alpha2 - alpha1;
-				if (alpha_diff < 0.0) {
-					alpha_diff += 360.0;
-				}
-				if (alpha_diff > 360.0) {
-					alpha_diff -= 360.0;
-				}
-				alpha1 = line_angle2(lnum1);
-				alpha2 = line_angle2(lnum2);
-				alpha_diff = alpha2 - alpha1;
-				if (alpha_diff > 180.0) {
-					alpha_diff -= 360.0;
-				}
-				if (alpha_diff < -180.0) {
-					alpha_diff += 360.0;
-				}
-				if (alpha_diff == 0.0) {
-				} else if ((myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 1 && alpha_diff > 0.0) || (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0 && alpha_diff < 0.0)) {
-					// Aussenkante
-					if (num == 0) {
-						first_x = check1b_x;
-						first_y = check1b_y;
-						if (mill_start == 0) {
-							mill_move_in(first_x, first_y, depth, lasermode, object_num);
-							mill_start = 1;
-						}
-						if (helixmode == 1) {
-							mill_z(1, last_depth, object_num);
-						} else {
-							mill_z(1, depth, object_num);
-						}
-						if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-							mill_xy(3, check2_x, check2_y, mill_last_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-						} else {
-							mill_xy(2, check2_x, check2_y, mill_last_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-						}
+			// Angle-Diff
+			alpha1 = alpha1 + 180.0;
+			alpha2 = alpha2 + 180.0;
+			double alpha_diff = alpha2 - alpha1;
+			if (alpha_diff < 0.0) {
+				alpha_diff += 360.0;
+			}
+			if (alpha_diff > 360.0) {
+				alpha_diff -= 360.0;
+			}
+			alpha1 = line_angle2(lnum1);
+			alpha2 = line_angle2(lnum2);
+			alpha_diff = alpha2 - alpha1;
+			if (alpha_diff > 180.0) {
+				alpha_diff -= 360.0;
+			}
+			if (alpha_diff < -180.0) {
+				alpha_diff += 360.0;
+			}
+			if (alpha_diff == 0.0) {
+			} else if ((myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 1 && alpha_diff > 0.0) || (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0 && alpha_diff < 0.0)) {
+				// Aussenkante
+				if (num == 0) {
+					first_x = check1b_x;
+					first_y = check1b_y;
+					if (mill_start == 0) {
+						mill_move_in(first_x, first_y, depth, lasermode, object_num);
+						mill_start = 1;
+					}
+					if (helixmode == 1) {
+						mill_z(1, last_depth, object_num);
 					} else {
-						if (helixmode == 1) {
-							double new_len = myLINES[lnum1].len;
-							new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
+						mill_z(1, depth, object_num);
+					}
+					if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+						mill_xy(3, check2_x, check2_y, mill_last_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+					} else {
+						mill_xy(2, check2_x, check2_y, mill_last_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+					}
+				} else {
+					if (helixmode == 1) {
+						double new_len = myLINES[lnum1].len;
+						new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
+					} else {
+						new_z = mill_last_z;
+					}
+					if (myLINES[lnum1].type == TYPE_ARC || myLINES[lnum1].type == TYPE_CIRCLE) {
+						if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+							if (myLINES[lnum1].opt < 0) {
+								mill_xy(2, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt + tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							} else {
+								mill_xy(3, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt + tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							}
 						} else {
-							new_z = mill_last_z;
+							if (myLINES[lnum1].opt < 0) {
+								mill_xy(2, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt - tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							} else {
+								mill_xy(3, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt - tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							}
 						}
-						if (myLINES[lnum1].type == TYPE_ARC || myLINES[lnum1].type == TYPE_CIRCLE) {
-							if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-								if (myLINES[lnum1].opt < 0) {
-									mill_xy(2, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt + tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								} else {
-									mill_xy(3, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt + tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								}
-							} else {
-								if (myLINES[lnum1].opt < 0) {
-									mill_xy(2, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt - tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								} else {
-									mill_xy(3, check1b_x, check1b_y, new_z, (myLINES[lnum1].opt - tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								}
-							}
-							if (myLINES[lnum2].type == TYPE_ARC || myLINES[lnum2].type == TYPE_CIRCLE) {
-							} else {
-								if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-									mill_xy(3, check2_x, check2_y, new_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								} else {
-									mill_xy(2, check2_x, check2_y, new_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								}
-							}
+						if (myLINES[lnum2].type == TYPE_ARC || myLINES[lnum2].type == TYPE_CIRCLE) {
 						} else {
-							mill_xy(1, check1b_x, check1b_y, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 							if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
 								mill_xy(3, check2_x, check2_y, new_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 							} else {
 								mill_xy(2, check2_x, check2_y, new_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 							}
 						}
-					}
-					last_x = check2_x;
-					last_y = check2_y;
-				} else {
-					// Innenkante
-					if (myLINES[lnum2].type == TYPE_ARC || myLINES[lnum2].type == TYPE_CIRCLE) {
-						if (myLINES[lnum2].opt < 0 && myLINES[lnum2].opt * -1 < tool_offset) {
-							error = 1;
-							break;
-						}
-					}
-					double px = 0.0;
-					double py = 0.0;
-
-					// BUG: needs extra checks
-					intersect(check1_x, check1_y, check1b_x, check1b_y, check2_x, check2_y, check2b_x, check2b_y, &px, &py);
-
-					double enx = px;
-					double eny = py;
-					if (num == 0) {
-						first_x = px;
-						first_y = py;
-						if (mill_start == 0) {
-							mill_move_in(first_x, first_y, depth, lasermode, object_num);
-							mill_start = 1;
-							last_x = first_x;
-							last_y = first_y;
-						}
-						if (helixmode == 1) {
-							mill_z(1, last_depth, object_num);
-						} else {
-							mill_z(1, depth, object_num);
-						}
-						if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
-							double adx = myLINES[lnum2].x1 - px;
-							double ady = myLINES[lnum2].y1 - py;
-							double aalpha = toDeg(atan(ady / adx));
-							if (adx < 0 && ady >= 0) {
-								aalpha = aalpha + 180;
-							} else if (adx < 0 && ady < 0) {
-								aalpha = aalpha - 180;
-							}
-							double len = sqrt(adx * adx + ady * ady);
-							add_angle_offset(&enx, &eny, len - tool_offset, aalpha);
-							mill_xy(1, enx, eny, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-							mill_xy(1, px, py, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-							last_x = px;
-							last_y = py;
-						}
 					} else {
-						if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
-							double adx = myLINES[lnum1].x2 - px;
-							double ady = myLINES[lnum1].y2 - py;
-							double aalpha = toDeg(atan(ady / adx));
-							if (adx < 0 && ady >= 0) {
-								aalpha = aalpha + 180;
-							} else if (adx < 0 && ady < 0) {
-								aalpha = aalpha - 180;
-							}
-							double len = sqrt(adx * adx + ady * ady);
-							add_angle_offset(&enx, &eny, len - tool_offset, aalpha);
-						}
-						if (helixmode == 1) {
-							double new_len = myLINES[lnum1].len;
-							new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
+						mill_xy(1, check1b_x, check1b_y, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+						if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+							mill_xy(3, check2_x, check2_y, new_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 						} else {
-							new_z = mill_last_z;
+							mill_xy(2, check2_x, check2_y, new_z, tool_offset, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 						}
-						if (myLINES[lnum1].type == TYPE_ARC || myLINES[lnum1].type == TYPE_CIRCLE) {
-							if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
-								if (myLINES[lnum1].opt < 0) {
-									mill_xy(2, px, py, new_z, (myLINES[lnum1].opt + tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								} else {
-									mill_xy(3, px, py, new_z, (myLINES[lnum1].opt + tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								}
-							} else {
-								if (myLINES[lnum1].opt < 0) {
-									mill_xy(2, px, py, new_z, (myLINES[lnum1].opt - tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								} else {
-									mill_xy(3, px, py, new_z, (myLINES[lnum1].opt - tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								}
-							}
-						} else {
-							mill_xy(1, px, py, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-							if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
-								mill_xy(1, enx, eny, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-								mill_xy(1, px, py, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
-							}
-						}
-						last_x = px;
-						last_y = py;
 					}
 				}
+				last_x = check2_x;
+				last_y = check2_y;
 			} else {
+				// Innenkante
+				if (myLINES[lnum2].type == TYPE_ARC || myLINES[lnum2].type == TYPE_CIRCLE) {
+					if (myLINES[lnum2].opt < 0 && myLINES[lnum2].opt * -1 < tool_offset) {
+						error = 1;
+						break;
+					}
+				}
+				double px = 0.0;
+				double py = 0.0;
+
+				// BUG: needs extra checks
+				intersect(check1_x, check1_y, check1b_x, check1b_y, check2_x, check2_y, check2b_x, check2b_y, &px, &py);
+
+				double enx = px;
+				double eny = py;
 				if (num == 0) {
-					first_x = myLINES[lnum2].x1;
-					first_y = myLINES[lnum2].y1;
-					mill_move_in(first_x, first_y, depth, lasermode, object_num);
-					mill_start = 1;
-					if (helixmode == 1 && myOBJECTS[object_num].closed == 1) {
+					first_x = px;
+					first_y = py;
+					if (mill_start == 0) {
+						mill_move_in(first_x, first_y, depth, lasermode, object_num);
+						mill_start = 1;
+						last_x = first_x;
+						last_y = first_y;
+					}
+					if (helixmode == 1) {
 						mill_z(1, last_depth, object_num);
 					} else {
 						mill_z(1, depth, object_num);
 					}
-				}
-				double alpha1 = line_angle2(lnum1);
-				double alpha2 = line_angle2(lnum2);
-				double alpha_diff = alpha2 - alpha1;
-				if (helixmode == 1 && myOBJECTS[object_num].closed == 1) {
-					double new_len = myLINES[lnum1].len;
-					new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
+					if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
+						double adx = myLINES[lnum2].x1 - px;
+						double ady = myLINES[lnum2].y1 - py;
+						double aalpha = toDeg(atan(ady / adx));
+						if (adx < 0 && ady >= 0) {
+							aalpha = aalpha + 180;
+						} else if (adx < 0 && ady < 0) {
+							aalpha = aalpha - 180;
+						}
+						double len = sqrt(adx * adx + ady * ady);
+						add_angle_offset(&enx, &eny, len - tool_offset, aalpha);
+						mill_xy(1, enx, eny, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+						mill_xy(1, px, py, mill_last_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+						last_x = px;
+						last_y = py;
+					}
 				} else {
-					new_z = mill_last_z;
-				}
-				if (myLINES[lnum2].type == TYPE_ARC || myLINES[lnum2].type == TYPE_CIRCLE) {
-					if (myLINES[lnum2].opt < 0) {
-						mill_xy(2, myLINES[lnum2].x2, myLINES[lnum2].y2, new_z, myLINES[lnum2].opt * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+					if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
+						double adx = myLINES[lnum1].x2 - px;
+						double ady = myLINES[lnum1].y2 - py;
+						double aalpha = toDeg(atan(ady / adx));
+						if (adx < 0 && ady >= 0) {
+							aalpha = aalpha + 180;
+						} else if (adx < 0 && ady < 0) {
+							aalpha = aalpha - 180;
+						}
+						double len = sqrt(adx * adx + ady * ady);
+						add_angle_offset(&enx, &eny, len - tool_offset, aalpha);
+					}
+					if (helixmode == 1) {
+						double new_len = myLINES[lnum1].len;
+						new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
 					} else {
-						mill_xy(3, myLINES[lnum2].x2, myLINES[lnum2].y2, new_z, myLINES[lnum2].opt, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+						new_z = mill_last_z;
 					}
-				} else {
-					if (PARAMETER[P_M_KNIFEMODE].vint == 1) {
-						if (alpha_diff > 180.0) {
-							alpha_diff -= 360.0;
-						}
-						if (alpha_diff < -180.0) {
-							alpha_diff += 360.0;
-						}
-						if (alpha_diff > PARAMETER[P_H_KNIFEMAXANGLE].vdouble || alpha_diff < -PARAMETER[P_H_KNIFEMAXANGLE].vdouble) {
-							mill_z(0, PARAMETER[P_CUT_SAVE].vdouble, object_num);
-							snprintf(cline, sizeof(cline), "TAN: %f\n", alpha2);
-							postcam_comment(cline);
-							mill_z(1, depth, object_num);
+					if (myLINES[lnum1].type == TYPE_ARC || myLINES[lnum1].type == TYPE_CIRCLE) {
+						if (myOBJECTS[object_num].PARAMETER[P_M_CLIMB].vint == 0) {
+							if (myLINES[lnum1].opt < 0) {
+								mill_xy(2, px, py, new_z, (myLINES[lnum1].opt + tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							} else {
+								mill_xy(3, px, py, new_z, (myLINES[lnum1].opt + tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							}
 						} else {
-							snprintf(cline, sizeof(cline), "TAN: %f\n", alpha2);
-							postcam_comment(cline);
+							if (myLINES[lnum1].opt < 0) {
+								mill_xy(2, px, py, new_z, (myLINES[lnum1].opt - tool_offset) * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							} else {
+								mill_xy(3, px, py, new_z, (myLINES[lnum1].opt - tool_offset), myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							}
+						}
+					} else {
+						mill_xy(1, px, py, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+						if (overcut == 1 && ((myLINES[lnum1].type == TYPE_LINE && myLINES[lnum2].type == TYPE_LINE) || (myLINES[lnum1].type == TYPE_ELLIPSE && myLINES[lnum2].type == TYPE_ELLIPSE))) {
+							mill_xy(1, enx, eny, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+							mill_xy(1, px, py, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
 						}
 					}
-					mill_xy(1, myLINES[lnum2].x2, myLINES[lnum2].y2, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+					last_x = px;
+					last_y = py;
 				}
-				last_x = myLINES[lnum2].x2;
-				last_y = myLINES[lnum2].y2;
 			}
-			last_lnum = lnum2;
+		} else {
+			if (num == 0) {
+				first_x = myLINES[lnum2].x1;
+				first_y = myLINES[lnum2].y1;
+				mill_move_in(first_x, first_y, depth, lasermode, object_num);
+				mill_start = 1;
+				if (helixmode == 1 && myOBJECTS[object_num].closed == 1) {
+					mill_z(1, last_depth, object_num);
+				} else {
+					mill_z(1, depth, object_num);
+				}
+			}
+			double alpha1 = line_angle2(lnum1);
+			double alpha2 = line_angle2(lnum2);
+			double alpha_diff = alpha2 - alpha1;
+			if (helixmode == 1 && myOBJECTS[object_num].closed == 1) {
+				double new_len = myLINES[lnum1].len;
+				new_z = mill_last_z + (depth - last_depth) * new_len / myOBJECTS[object_num].len;
+			} else {
+				new_z = mill_last_z;
+			}
+			if (myLINES[lnum2].type == TYPE_ARC || myLINES[lnum2].type == TYPE_CIRCLE) {
+				if (myLINES[lnum2].opt < 0) {
+					mill_xy(2, myLINES[lnum2].x2, myLINES[lnum2].y2, new_z, myLINES[lnum2].opt * -1, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+				} else {
+					mill_xy(3, myLINES[lnum2].x2, myLINES[lnum2].y2, new_z, myLINES[lnum2].opt, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+				}
+			} else {
+				if (PARAMETER[P_M_KNIFEMODE].vint == 1) {
+					if (alpha_diff > 180.0) {
+						alpha_diff -= 360.0;
+					}
+					if (alpha_diff < -180.0) {
+						alpha_diff += 360.0;
+					}
+					if (alpha_diff > PARAMETER[P_H_KNIFEMAXANGLE].vdouble || alpha_diff < -PARAMETER[P_H_KNIFEMAXANGLE].vdouble) {
+						mill_z(0, PARAMETER[P_CUT_SAVE].vdouble, object_num);
+						snprintf(cline, sizeof(cline), "TAN: %f\n", alpha2);
+						postcam_comment(cline);
+						mill_z(1, depth, object_num);
+					} else {
+						snprintf(cline, sizeof(cline), "TAN: %f\n", alpha2);
+						postcam_comment(cline);
+					}
+				}
+				mill_xy(1, myLINES[lnum2].x2, myLINES[lnum2].y2, new_z, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+			}
+			last_x = myLINES[lnum2].x2;
+			last_y = myLINES[lnum2].y2;
 		}
+		last_lnum = lnum2;
 	}
 	if (myOBJECTS[object_num].closed == 1) {
 		if (helixmode == 1) {
@@ -2531,7 +2502,7 @@ void object_draw_offset (FILE *fd_out, int object_num, double *next_x, double *n
 	int tangencialmode = 0;
 	int offset = 0;
 	double mill_depth_real = 0.0;
-	if (myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 0 && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+	if (myOBJECTS[object_num].PARAMETER[P_M_TEXT].vint == 0 && myOBJECTS[object_num].line_count && myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
 		return;
 	}
 	if (myOBJECTS[object_num].PARAMETER[P_M_NOOFFSET].vint == 1) {
@@ -2647,28 +2618,29 @@ int find_next_line (int object_num, int first, int num, int dir, int depth) {
 //		printf(" ");
 //	}
 	for (num5 = 0; num5 < object_last; num5++) {
-		if (myOBJECTS[num5].line[0] == 0) {
+		if (myOBJECTS[num5].line_count == 0) {
 			continue;
 		}
-		for (num4 = 0; num4 < line_last; num4++) {
+		for (num4 = 0; num4 < myOBJECTS[num5].line_count; num4++) {
 			if (myOBJECTS[num5].line[num4] == num) {
 //				printf("##LINE %i in OBJECT %i / %i\n", num, num5, num4);
 				return 2;
 			}
 		}
 	}
+	/* TODO: This check should be changed, and probably converted from recursive
+	 * because it's confusing. */
 	if (depth > line_last) {
 		printf("###### ERROR / CAN'T FIND NEXT LINE ########\n");
 		return 0;
 	}
-	for (num4 = 0; num4 < line_last; num4++) {
-		if (myOBJECTS[object_num].line[num4] == 0) {
+	num4 = myOBJECTS[object_num].line_count++;
+	/* TODO: Check return value */
+	myOBJECTS[object_num].line = reallocarray(myOBJECTS[object_num].line, myOBJECTS[object_num].line_count, sizeof(int));
+
 //			printf("##ADD LINE %i to OBJECT %i / %i\n", num, object_num, num4);
-			myOBJECTS[object_num].line[num4] = num;
-			strcpy(myOBJECTS[object_num].layer, myLINES[num].layer);
-			break;
-		}
-	}
+	myOBJECTS[object_num].line[num4] = num;
+	strcpy(myOBJECTS[object_num].layer, myLINES[num].layer);
 	int num2 = 0;
 	fnum = 0;
 #pragma omp parallel
@@ -2725,10 +2697,11 @@ int line_open_check (int num) {
 	double px = 0.0;
 	double py = 0.0;
 	for (onum = 0; onum < object_last; onum++) {
-		if (myOBJECTS[onum].line[0] == 0) {
+		/* TODO: Another case of the iffy sentinel */
+		if (!myOBJECTS[onum].line_count) {
 			break;
 		}
-		for (num2 = 0; num2 < line_last; num2++) {
+		for (num2 = 0; num2 < myOBJECTS[onum].line_count; num2++) {
 			if (myOBJECTS[onum].line[num2] == num) {
 //				printf("##LINE %i in OBJECT %i / %i\n", num, onum, num2);
 				return 0;
@@ -2789,7 +2762,12 @@ void init_objects (void) {
 		free(myOBJECTS);
 		myOBJECTS = NULL;
 	}
-	myOBJECTS = (_OBJECT *)malloc(sizeof(_OBJECT) * (line_last + 1));
+	/* TODO: Why + 1 here? we only seem to init the exact number below. This also seems like too many. */
+	myOBJECTS = (_OBJECT *)calloc(line_last+1, sizeof(_OBJECT));
+	if (NULL == myOBJECTS) {
+		fprintf(stderr, "Could not malloc myOBJECTS\n");
+		exit(1);
+	}
 
 #pragma omp parallel
 {
@@ -2819,9 +2797,10 @@ void init_objects (void) {
 		myOBJECTS[object_num].max_x = -999999.0;
 		myOBJECTS[object_num].max_y = -999999.0;
 		myOBJECTS[object_num].tnum = -1;
-		for (num2 = 0; num2 < line_last; num2++) {
-			myOBJECTS[object_num].line[num2] = 0;
-		}
+		/* TODO: Double check that we set all parameters to something reasonable,
+		 * including 'inside' which can fall through where it's set elsewhere. */
+		myOBJECTS[object_num].line_count = 0;
+		myOBJECTS[object_num].line = NULL;
 	}
 }
 	DrawCheckSize();
@@ -2839,44 +2818,39 @@ void init_objects (void) {
 				for (on = 0; on < P_LAST; on++) {
 					if (myOBJECTS[on].tnum == (int)myLINES[num2].opt) {
 						flag = 1;
-						int n = 0;
-						for (n = 0; n < line_last; n++) {
-							if (myOBJECTS[on].line[n] == 0) {
-								myOBJECTS[on].line[n] = num2;
-								strcpy(myOBJECTS[on].layer, myLINES[num2].layer);
-								myOBJECTS[on].len = 1.0;
-								myOBJECTS[on].use = 1;
-								myOBJECTS[on].closed = 0;
-								myOBJECTS[on].min_x = 0.0;
-								myOBJECTS[on].min_y = 0.0;
-								myOBJECTS[on].max_x = 0.0;
-								myOBJECTS[on].max_y = 0.0;
-								myOBJECTS[on].tnum = (double)myLINES[num2].opt;
-								break;
-							}
-						}
+						int n = myOBJECTS[on].line_count++;
+						myOBJECTS[on].line = reallocarray((void*)myOBJECTS[on].line, myOBJECTS[on].line_count, sizeof(int));
+
+						myOBJECTS[on].line[n] = num2;
+						strcpy(myOBJECTS[on].layer, myLINES[num2].layer);
+						myOBJECTS[on].len = 1.0;
+						myOBJECTS[on].use = 1;
+						myOBJECTS[on].closed = 0;
+						myOBJECTS[on].min_x = 0.0;
+						myOBJECTS[on].min_y = 0.0;
+						myOBJECTS[on].max_x = 0.0;
+						myOBJECTS[on].max_y = 0.0;
+						myOBJECTS[on].tnum = (double)myLINES[num2].opt;
 						break;
 					}
 				}
 				if (flag == 0) {
-					int n = 0;
+					int n = myOBJECTS[on].line_count++;
+					myOBJECTS[on].line = reallocarray((void*)myOBJECTS[on].line, myOBJECTS[on].line_count, sizeof(int));
 
-					for (n = 0; n < line_last; n++) {
-						if (myOBJECTS[object_num].line[n] == 0) {
-							myOBJECTS[object_num].line[n] = num2;
-							strcpy(myOBJECTS[object_num].layer, myLINES[num2].layer);
-							myOBJECTS[object_num].len = 1.0;
-							myOBJECTS[object_num].use = 1;
-							myOBJECTS[object_num].closed = 0;
-							myOBJECTS[object_num].min_x = 0.0;
-							myOBJECTS[object_num].min_y = 0.0;
-							myOBJECTS[object_num].max_x = 0.0;
-							myOBJECTS[object_num].max_y = 0.0;
-							myOBJECTS[object_num].tnum = (int)myLINES[num2].opt;
-							break;
-						}
-					}
+					myOBJECTS[object_num].line[n] = num2;
+					strcpy(myOBJECTS[object_num].layer, myLINES[num2].layer);
+					myOBJECTS[object_num].len = 1.0;
+					myOBJECTS[object_num].use = 1;
+					myOBJECTS[object_num].closed = 0;
+					myOBJECTS[object_num].min_x = 0.0;
+					myOBJECTS[object_num].min_y = 0.0;
+					myOBJECTS[object_num].max_x = 0.0;
+					myOBJECTS[object_num].max_y = 0.0;
+					myOBJECTS[object_num].tnum = (int)myLINES[num2].opt;
+
 					object_num++;
+					/* TODO why +2? */
 					object_last = object_num + 2;
 				}
 			}
@@ -2919,37 +2893,36 @@ void init_objects (void) {
 	for (num5b = 0; num5b < object_last; num5b++) {
 		int flag = 0;
 		int num4b = 0;
-		for (num4b = 0; num4b < line_last; num4b++) {
-			if (myOBJECTS[num5b].line[num4b] != 0) {
-				int lnum = myOBJECTS[num5b].line[num4b];
-				if (myLINES[lnum].used == 1) {
-					int pipret = 0;
-					double testx = myLINES[lnum].x1;
-					double testy = myLINES[lnum].y1;
-					pipret = point_in_object(-1, num5b, testx, testy);
-					if (pipret != 0) {
-						flag = 1;
-					}
-					pipret = 0;
-					testx = myLINES[lnum].x2;
-					testy = myLINES[lnum].y2;
-					pipret = point_in_object(-1, num5b, testx, testy);
-					if (pipret != 0) {
-						flag = 1;
-					}
+		for (num4b = 0; num4b < myOBJECTS[num5b].line_count; num4b++) {
+			int lnum = myOBJECTS[num5b].line[num4b];
+			if (myLINES[lnum].used == 1) {
+				int pipret = 0;
+				double testx = myLINES[lnum].x1;
+				double testy = myLINES[lnum].y1;
+				pipret = point_in_object(-1, num5b, testx, testy);
+				if (pipret != 0) {
+					flag = 1;
+				}
+				pipret = 0;
+				testx = myLINES[lnum].x2;
+				testy = myLINES[lnum].y2;
+				pipret = point_in_object(-1, num5b, testx, testy);
+				if (pipret != 0) {
+					flag = 1;
 				}
 			}
 		}
 		if (flag > 0) {
 			myOBJECTS[num5b].inside = 1;
-		} else if (myOBJECTS[num5b].line[0] != 0) {
+		} else if (myOBJECTS[num5b].line_count != 0) {
 			myOBJECTS[num5b].inside = 0;
 		}
 	}
 #pragma omp parallel
 {
+	/* TODO: should be < object_last ? */
 	for (object_num = 0; object_num < line_last; object_num++) {
-		if (myOBJECTS[object_num].line[0] != 0) {
+		if (myOBJECTS[object_num].line_count != 0) {
 			if (strncmp(myOBJECTS[object_num].layer, "offset-inside", 13) == 0) {
 				if (myOBJECTS[object_num].inside == 0) {
 					redir_object(object_num);
@@ -2966,7 +2939,8 @@ void init_objects (void) {
 }
 	// object-boundingbox
 	for (num5b = 0; num5b < object_last; num5b++) {
-		if (myLINES[myOBJECTS[num5b].line[0]].type == TYPE_CIRCLE) {
+		/* TODO: Not obvious that objects must contain at least one line by here */
+		if (myOBJECTS[num5b].line_count != 0 && myLINES[myOBJECTS[num5b].line[0]].type == TYPE_CIRCLE) {
 			int lnum = myOBJECTS[num5b].line[0];
 			if (myOBJECTS[num5b].min_x > myLINES[lnum].cx - myLINES[lnum].opt) {
 				myOBJECTS[num5b].min_x = myLINES[lnum].cx - myLINES[lnum].opt;
@@ -2984,7 +2958,7 @@ void init_objects (void) {
 #pragma omp parallel
 {
 			int num4b = 0;
-			for (num4b = 0; num4b < line_last; num4b++) {
+			for (num4b = 0; num4b < myOBJECTS[num5b].line_count; num4b++) {
 				int lnum = myOBJECTS[num5b].line[num4b];
 				if (myLINES[lnum].used == 1) {
 					if (myOBJECTS[num5b].min_x > myLINES[lnum].x1) {
@@ -3020,7 +2994,7 @@ void init_objects (void) {
 	for (num5b = 0; num5b < object_last; num5b++) {
 		myOBJECTS[num5b].len = 0.0;
 		int num4b = 0;
-		for (num4b = 0; num4b < line_last; num4b++) {
+		for (num4b = 0; num4b < myOBJECTS[num5b].line_count; num4b++) {
 			if (myOBJECTS[num5b].line[num4b] != 0) {
 				myOBJECTS[num5b].len += myLINES[myOBJECTS[num5b].line[num4b]].len;
 			}

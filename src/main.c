@@ -2294,7 +2294,7 @@ void fill_objtree (void) {
 	int order_num = 0;
 	for (order_num = 0; order_num < object_last; order_num++) {
 		for (object_num = 0; object_num < object_last; object_num++) {
-			if (order_num == myOBJECTS[object_num].order && myOBJECTS[object_num].line[0] != 0) {
+			if (order_num == myOBJECTS[object_num].order && myOBJECTS[object_num].line_count) {
 				objtree_add_object(object_num);
 			}
 		}
