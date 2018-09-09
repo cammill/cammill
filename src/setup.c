@@ -35,6 +35,16 @@ extern int PannedStat;
 extern int ExpanderStat[G_LAST];
 extern int object_last;
 
+char typenames[16][7] = {
+    "INT",
+    "0/1",
+    "FLOAT",
+    "DOUBLE",
+    "STRING",
+    "INT",
+    "FILE"
+};
+
 PARA_GROUP GROUPS[] = {
 	{"View", ""},
 	{"Tool", ""},
@@ -279,26 +289,11 @@ void SetupShowHelp (void) {
 		char name_str[1024];
 		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
 			if (PARAMETER[n].unit[0] != 0) {
-				snprintf(name_str, sizeof(name_str), "%6s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+				snprintf(name_str, sizeof(name_str), "%7s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
 			} else {
-				snprintf(name_str, sizeof(name_str), "         %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+				snprintf(name_str, sizeof(name_str), "          %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
 			}
-			if (PARAMETER[n].readonly == 1) {
-			} else if (PARAMETER[n].type == T_FLOAT) {
-				fprintf(stdout, "%6s FLOAT    %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_DOUBLE) {
-				fprintf(stdout, "%6s DOUBLE   %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_INT) {
-				fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_SELECT) {
-				fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_BOOL) {
-				fprintf(stdout, "%6s 0/1      %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_STRING) {
-				fprintf(stdout, "%6s STRING   %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_FILE) {
-				fprintf(stdout, "%6s FILE     %s\n", PARAMETER[n].arg, name_str);
-			}
+            fprintf(stdout, "%7s %-10s %s\n", PARAMETER[n].arg, typenames[PARAMETER[n].type], name_str);
 		}
 	}
 	fprintf(stdout, "\n");
