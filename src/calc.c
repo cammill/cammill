@@ -1078,7 +1078,8 @@ void order_objects (void) {
 	}
 	for (object_num = 0; object_num < object_last; object_num++) {
 		myOBJECTS[object_num].PARAMETER[P_O_OFFSET].overwrite = 1;
-		if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+		if (myOBJECTS[object_num].line[0] != 0 &&
+		    myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
 //			myOBJECTS[object_num].PARAMETER[P_M_DEPTH].vdouble = myOBJECTS[object_num].PARAMETER[P_M_TEXT_MILL_DEPTH].vdouble;
 //			myOBJECTS[object_num].PARAMETER[P_TOOL_NUM].vint = myOBJECTS[object_num].PARAMETER[P_M_TEXT_TOOL_NUM].vint;
 //			myOBJECTS[object_num].PARAMETER[P_TOOL_DIAMETER].vdouble = myOBJECTS[object_num].PARAMETER[P_M_TEXT_TOOL_DIAMETER].vdouble;
@@ -1135,7 +1136,8 @@ void order_objects (void) {
 				if (myOBJECTS[object_num2].visited != 0) {
 					continue;
 				}
-				if (myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
+				if (myOBJECTS[object_num2].line[nnum] != 0 &&
+				    myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
 					if (myOBJECTS[object_num2].line[nnum] != 0 && myOBJECTS[object_num2].inside == 1) {
 						int lnum2 = myOBJECTS[object_num2].line[nnum];
 						next_x = myLINES[lnum2].cx - myLINES[lnum2].opt;
@@ -1231,7 +1233,8 @@ void order_objects (void) {
 			if (myOBJECTS[object_num2].visited != 0) {
 				continue;
 			}
-			if (myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
+			if (myOBJECTS[object_num2].line[nnum] != 0 &&
+			    myLINES[myOBJECTS[object_num2].line[nnum]].type == TYPE_CIRCLE) {
 				if (myOBJECTS[object_num2].line[nnum] != 0) {
 					int lnum2 = myOBJECTS[object_num2].line[nnum];
 					next_x = myLINES[lnum2].cx - myLINES[lnum2].opt;
@@ -2966,7 +2969,8 @@ void init_objects (void) {
 }
 	// object-boundingbox
 	for (num5b = 0; num5b < object_last; num5b++) {
-		if (myLINES[myOBJECTS[num5b].line[0]].type == TYPE_CIRCLE) {
+		if (myOBJECTS[num5b].line[0] != 0 &&
+		    myLINES[myOBJECTS[num5b].line[0]].type == TYPE_CIRCLE) {
 			int lnum = myOBJECTS[num5b].line[0];
 			if (myOBJECTS[num5b].min_x > myLINES[lnum].cx - myLINES[lnum].opt) {
 				myOBJECTS[num5b].min_x = myLINES[lnum].cx - myLINES[lnum].opt;
@@ -2986,7 +2990,7 @@ void init_objects (void) {
 			int num4b = 0;
 			for (num4b = 0; num4b < line_last; num4b++) {
 				int lnum = myOBJECTS[num5b].line[num4b];
-				if (myLINES[lnum].used == 1) {
+				if (lnum != 0 && myLINES[lnum].used == 1) {
 					if (myOBJECTS[num5b].min_x > myLINES[lnum].x1) {
 						myOBJECTS[num5b].min_x = myLINES[lnum].x1;
 					}
@@ -3110,7 +3114,7 @@ void DrawCheckSize (void) {
 	max_y = 0.0;
 #pragma omp parallel
 {
-	for (num2 = 0; num2 < line_last; num2++) {
+	for (num2 = 1; num2 < line_last; num2++) {
 		if (myLINES[num2].used == 1) {
 			if (max_x < myLINES[num2].x1) {
 				max_x = myLINES[num2].x1;
@@ -3157,7 +3161,7 @@ void DrawSetZero (void) {
 	int num = 0;
 #pragma omp parallel
 {
-	for (num = 0; num < line_last; num++) {
+	for (num = 1; num < line_last; num++) {
 		if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
 			myLINES[num].x1 -= min_x;
 			myLINES[num].y1 -= min_y;
@@ -3212,9 +3216,9 @@ void remove_double_lines (void) {
 //	glLineWidth(10);
 //	glColor4f(1.0, 0.0, 0.0, 1.0);
 //	glBegin(GL_LINES);
-	for (num = 0; num < line_last; num++) {
+	for (num = 1; num < line_last; num++) {
 		if (myLINES[num].used == 1) {
-			for (num2 = 0; num2 < line_last; num2++) {
+			for (num2 = 1; num2 < line_last; num2++) {
 				if (num != num2 && strcmp(myLINES[num].layer, myLINES[num2].layer) == 0) {
 					if (myLINES[num2].used == 1 && ((myLINES[num2].type == TYPE_LINE && myLINES[num].type == TYPE_LINE) || (myLINES[num2].type == TYPE_ELLIPSE && myLINES[num].type == TYPE_ELLIPSE))) {
 						if (myLINES[num].x1 == myLINES[num2].x1 && myLINES[num].y1 == myLINES[num2].y1 && myLINES[num].x2 == myLINES[num2].x2 && myLINES[num].y2 == myLINES[num2].y2) {
