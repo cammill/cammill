@@ -1042,10 +1042,10 @@ void mainloop (void) {
 			bitmap2cnc();
 #endif
 		} else {
-
-			sortget_order_num = 0;
-			gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), sortget_object_foreach_func, NULL);
-
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				sortget_order_num = 0;
+				gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), sortget_object_foreach_func, NULL);
+			}
 			mill_objects();
 		}
 		mill_end();
@@ -2064,6 +2064,8 @@ void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer 
 }
 
 gboolean update_tree_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) return FALSE;
+
     gchar *tree_path_str = NULL;
 //    gchar *tree_path_str2 = NULL;
 	gchar *group = NULL;
@@ -2183,6 +2185,8 @@ gboolean update_tree_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTr
 }
 
 void update_tree_values (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) return;
+
 	int n = 0;
 	int object_num = 0;
 	for (object_num = 0; object_num < object_last; object_num++) {
@@ -2287,6 +2291,8 @@ void objtree_add_object (int object_num) {
 }
 
 void fill_objtree (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) return;
+
 	int object_num = 0;
 	for (object_num = 0; object_num < object_last; object_num++) {
 		gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), delete_object_foreach_func, NULL);
