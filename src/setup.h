@@ -123,6 +123,7 @@ enum {
 	P_TOOL_SPEED_MAX,
 	P_M_FAST_Z,
 	P_H_POST,
+	P_H_POSTNAME,
 	P_POST_CMD,
 	// Material
 	P_TOOL_W,

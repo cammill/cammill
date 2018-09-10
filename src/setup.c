@@ -130,7 +130,8 @@ PARA PARAMETER[P_LAST] = {
 	{"Spindle-Delay",	"Machine",		"-tud",	T_FLOAT,		1,	1.0,	1.0,	"",	0.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0, 0},
 	{"Max Toolspeed",	"Machine",	"-mss",	T_INT,		24000,	0.0,	0.0,	"",	100.0,	100.0,	100000.0,	"rpm", 1, 1, "maximum spindle-speed", 0, 0, 0, 0},
 	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm|inch", 1, 1, "Fast-Z", 0, 0, 0, 0},
-	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0, 0},
+	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "Post-processor selection by number", 0, 0, 0, 0},
+    {"PostName", "Machine", "-mpn", T_STRING, 0, 0.0, 0.0, "", 0.0, 0.0, 0.0, "", 0, 0, "Post-processor selection by name", 0, 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0, 0},
 	// Calculation
 	{"Tool-Flutes",	"Calculation",		"-tw",	T_INT,		2,	0.0,	0.0,	"",	1.0,	1.0,	10.0,		"#", 1, 0, "flutes of the tool, to calculate max toolspeed and feedrate", 0, 0, 0, 0},

@@ -3252,7 +3252,9 @@ int main (int argc, char *argv[]) {
 		snprintf(tmp_str, sizeof(tmp_str), "%s (%s)", _("Output"), output_extension);
 		gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
 	}
-	if (PARAMETER[P_H_POST].vint != -1) {
+    if (PARAMETER[P_H_POSTNAME].vstr[0] != 0) {
+        postcam_init_lua(program_path, PARAMETER[P_H_POSTNAME].vstr);
+	} else if (PARAMETER[P_H_POST].vint != -1) {
 		postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
 	postcam_plugin = PARAMETER[P_H_POST].vint;	
@@ -3262,7 +3264,9 @@ int main (int argc, char *argv[]) {
 	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
 		mainloop();
 	} else {
-		if (PARAMETER[P_H_POST].vint != -1) {
+        if (PARAMETER[P_H_POSTNAME].vstr[0] != 0) {
+		    postcam_load_source(PARAMETER[P_H_POSTNAME].vstr);
+        } else if (PARAMETER[P_H_POST].vint != -1) {
 			postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
 		}
 		gtk_timeout_add(1000/25, handler_periodic_action, NULL);
