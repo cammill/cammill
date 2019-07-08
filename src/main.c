@@ -1667,59 +1667,54 @@ void handler_save_lua (GtkWidget *widget, gpointer data) {
 	gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving lua...done"), "saving lua...done");
 }
 
+char *replace_extension(char* mystr, char* new_ext) {
+	char *retstr;
+	char *lastdot;
+	if (mystr == NULL) {
+		 return NULL;
+	}
+	if ((retstr = malloc (strlen(mystr) + 2 + strlen(new_ext))) == NULL) {
+		return NULL;
+	}
+	strcpy (retstr, mystr);
+	lastdot = strrchr (retstr, '.');
+	if (lastdot != NULL) {
+		*lastdot = '\0';
+	}
+	strcat(retstr, ".");
+	strcat(retstr, new_ext);
+	return retstr;
+}
+
 void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 	char ext_str[1024];
+	char *output_str;
 	GtkWidget *dialog;
 	snprintf(ext_str, 1024, "%s (.%s)", _("Save Output As.."), output_extension);
+	output_str = replace_extension(PARAMETER[P_V_DXF].vstr, output_extension);
 	dialog = gtk_file_chooser_dialog_new (ext_str,
 		GTK_WINDOW(window),
 		GTK_FILE_CHOOSER_ACTION_SAVE,
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_SAVE, GTK_RESPONSE_ACCEPT,
 	NULL);
-	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER (dialog), TRUE);
-
+	gtk_file_chooser_set_do_overwrite_confirmation(GTK_FILE_CHOOSER(dialog), TRUE);
 	GtkFileFilter *ffilter;
 	ffilter = gtk_file_filter_new();
 	gtk_file_filter_set_name(ffilter, output_extension);
 	snprintf(ext_str, 1024, "*.%s", output_extension);
 	gtk_file_filter_add_pattern(ffilter, ext_str);
 	gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), ffilter);
-	if (PARAMETER[P_MFILE].vstr[0] == 0) {
-		char dir[PATH_MAX];
-		strncpy(dir, PARAMETER[P_V_DXF].vstr, strlen(dir));
-		dirname(dir);
-		char file[PATH_MAX];
-		strncpy(file, basename(PARAMETER[P_V_DXF].vstr), sizeof(file));
-		char *file_nosuffix = suffix_remove(file);
-		char *file_nosuffix_new = NULL;
-		file_nosuffix_new = realloc(file_nosuffix, strlen(file_nosuffix) + 5);
-		if (file_nosuffix_new == NULL) {
-				fprintf(stderr, "Not enough memory\n");
-				exit(1);
-		} else {
-			file_nosuffix = file_nosuffix_new;
-		}
-		strcat(file_nosuffix, ".");
-		strcat(file_nosuffix, output_extension);
-		if (strstr(PARAMETER[P_V_DXF].vstr, "/") > 0) {
-			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), dir);
-		} else {
-			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), "./");
-		}
-
-		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), file_nosuffix);
-		free(file_nosuffix);
-	} else {
-		if (PARAMETER[P_M_SAVEPATH].vstr[0] == 0) {
-			char homedir[PATH_MAX];
-			get_home_dir(homedir);
-			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), homedir);
-		} else {
+	if (PARAMETER[P_MFILE].vstr[0] == 0 || PARAMETER[P_MFILE].vstr[0] == '-') {
+		if (PARAMETER[P_M_SAVEPATH].vstr[0] != 0) {
 			gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(dialog), PARAMETER[P_M_SAVEPATH].vstr);
+		} else {
+			gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), output_str);
 		}
+		gtk_file_chooser_set_current_name(GTK_FILE_CHOOSER(dialog), basename(output_str));
+	} else {
+		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(dialog), PARAMETER[P_MFILE].vstr);
 	}
-
 	if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
 		char *filename;
 		filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (dialog));
@@ -1733,6 +1728,7 @@ void handler_save_gcode_as (GtkWidget *widget, gpointer data) {
 		gtk_statusbar_push(GTK_STATUSBAR(StatusBar), gtk_statusbar_get_context_id(GTK_STATUSBAR(StatusBar), "saving g-code..."), "saving g-code...");
 	}
 	gtk_widget_destroy(dialog);
+	free(output_str);
 }
 
 void handler_save_gcode (GtkWidget *widget, gpointer data) {
