@@ -1,0 +1,531 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2019-07-13 16:55\n"
+"Last-Translator: Jakob Flierl (koppi)\n"
+"Language-Team: Polish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: pl\n"
+"X-Crowdin-File: cammill.po\n"
+"Language: pl_PL\n"
+
+msgid "View"
+msgstr "Widok"
+
+msgid "Tool"
+msgstr "Narzędzie"
+
+msgid "Milling"
+msgstr "Frezowanie"
+
+msgid "Tabs"
+msgstr "Karty"
+
+msgid "Rotary"
+msgstr "Obrót"
+
+msgid "Tangencial"
+msgstr "Tanges"
+
+msgid "Machine"
+msgstr "Maszyna"
+
+msgid "Material"
+msgstr "Materiał"
+
+msgid "Objects"
+msgstr "Obiekty"
+
+msgid "Misc"
+msgstr "Inne"
+
+msgid "Zoom"
+msgstr "Powiększ"
+
+msgid "view-zoom"
+msgstr "Widok zoom"
+
+msgid "Helplines"
+msgstr "Pomoc"
+
+msgid "show helplines"
+msgstr "Pokaż pomoc"
+
+msgid "ShowGrid"
+msgstr "ShowGrid"
+
+msgid "show grid"
+msgstr "pokaż siatkę"
+
+msgid "ShowTool"
+msgstr "PokażNarzędzie"
+
+msgid "show tool-diameter"
+msgstr "pokaż średnicę narzędzia"
+
+msgid "Textures"
+msgstr "Tekstury"
+
+msgid "show textures"
+msgstr "pokaż tekstury"
+
+msgid "Rotate-X"
+msgstr "Obróć X"
+
+msgid "View-Rotate X"
+msgstr "Obracanie widoku X"
+
+msgid "Rotate-Y"
+msgstr "Obróć-Y"
+
+msgid "View-Rotate Y"
+msgstr "Obracanie widoku Y"
+
+msgid "Rotate-Z"
+msgstr "Obróć-Z"
+
+msgid "View-Rotate Z"
+msgstr "Obracanie widoku Z"
+
+msgid "Translate-X"
+msgstr "Przetłumacz X"
+
+msgid "View-Translate X"
+msgstr "Pokaż-przetłumacz X"
+
+msgid "Translate-Y"
+msgstr "Przetłumacz-Y"
+
+msgid "View-Translate Y"
+msgstr "Pokaż przetłumacz Y"
+
+msgid "Grid-Size"
+msgstr "Rozmiar siatki"
+
+msgid "size of the grid"
+msgstr "rozmiar siatki"
+
+msgid "Arrow-Scale"
+msgstr "Skala siatki"
+
+msgid "size of arrows"
+msgstr "rozmiar strzał"
+
+msgid "DXF-File"
+msgstr "Plik DXF"
+
+msgid "dxf-filename"
+msgstr "nazwa pliku Dxf"
+
+msgid "Select"
+msgstr "Wybierz"
+
+msgid "selected tool from tooltable"
+msgstr "wybierz przedmiot z tooltable"
+
+msgid "Number"
+msgstr "Numer"
+
+msgid "tool-number"
+msgstr "numer narzędzia"
+
+msgid "Diameter"
+msgstr "Średnica"
+
+msgid "tool-diameter"
+msgstr "narzędzie średnicy"
+
+msgid "CalcSpeed"
+msgstr "CalcSpeed"
+
+msgid "calculated spindle-speed"
+msgstr "obliczona prędkość obrotowa"
+
+msgid "Speed"
+msgstr "Prędkość"
+
+msgid "real spindle-speed"
+msgstr "prawdziwa prędkość obrotowa"
+
+msgid "Flutes"
+msgstr "Flety"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "flety narzędzi, aby zmierzyć maksymalną prędkość narzędzia i feedrate"
+
+msgid "Table"
+msgstr "Tabela"
+
+msgid "the tooltable filename"
+msgstr "nazwa pliku tooltable"
+
+msgid "MaxFeedRate"
+msgstr "MaxFeedRate"
+
+msgid "calculated maximum feedrate"
+msgstr "obliczona maksymalna prędkość posuwu"
+
+msgid "FeedRate"
+msgstr "Prędkość posuwu"
+
+msgid "real feedrate"
+msgstr "prawdziwa prędkość posuwu"
+
+msgid "PlungeRate"
+msgstr "PlungeRate"
+
+msgid "plunge feedrate"
+msgstr "prędkość posuwu wgłębnego"
+
+msgid "Depth"
+msgstr "Głębokość"
+
+msgid "end depth"
+msgstr "głębokość końcowa"
+
+msgid "Z-Step"
+msgstr "Krok Z"
+
+msgid "depth per step"
+msgstr "głębokość na każdym etapie"
+
+msgid "Save-Move"
+msgstr "Zapisz ruch"
+
+msgid "save move z-position"
+msgstr "zapisz ruch z pozycją"
+
+msgid "use this object"
+msgstr "użyj tego obiektu"
+
+msgid "override global parameters for this object"
+msgstr "zastąp parametry globalne dla obiektu"
+
+msgid "Overcut"
+msgstr "Overcut"
+
+msgid "overcutting edges"
+msgstr "overcutting krawędzi"
+
+msgid "Lasermode"
+msgstr "Lasermode"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "lasermode, Głębokość = 0,0, Włączanie i wyłączanie poszczególnych obiektów"
+
+msgid "Climb"
+msgstr "Wspinaczka"
+
+msgid "Climb Milling"
+msgstr "Frezowanie współbieżne"
+
+msgid "reverse milling direction / climb milling"
+msgstr "odwróć kierunek Frezowanie / Frezowanie współbieżne"
+
+msgid "NoOffsets"
+msgstr "NoOffsets"
+
+msgid "without tool-offsets"
+msgstr "bez przesunięć narzędzi"
+
+msgid "Mill Text"
+msgstr "Tekst Mill"
+
+msgid "mill mtext from dxf-files"
+msgstr "młyn mtext z plików dxf"
+
+msgid "NC-Debug"
+msgstr "NC-Debug"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "dane wyjściowe obiektów bez offsetów / dla debugingu"
+
+msgid "Use Taps"
+msgstr "Użyj dotknięć"
+
+msgid "using holding-tabs"
+msgstr "za pomocą karty gospodarstwa"
+
+msgid "Show Grid"
+msgstr "Pokaż siatkę"
+
+msgid "show tab-grid"
+msgstr "pokaż kartę siatki"
+
+msgid "depth of the holding-tabs"
+msgstr "głębokość z gospodarstwa kart"
+
+msgid "Lenght"
+msgstr "Długość"
+
+msgid "lenght of the holding-tabs"
+msgstr "długość z gospodarstwa kart"
+
+msgid "Triangle-Type"
+msgstr "Trójkątne"
+
+msgid "type of the holding-tabs"
+msgstr "rodzaj z gospodarstwa kart"
+
+msgid "X-Grid"
+msgstr "X-Grid"
+
+msgid "X-grid of the holding-tabs"
+msgstr "X-grid gospodarstwa-kart"
+
+msgid "Y-Grid"
+msgstr "Y-Grid"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Y-grid gospodarstwa-kart"
+
+msgid "Fastmove-Speed"
+msgstr "Fastmove prędkość"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "szybkie przenoszenie prędkości maszyny, aby obliczyć czas frezowania"
+
+msgid "Post"
+msgstr "Zamieść"
+
+msgid "post-processor selection"
+msgstr "post-procesor wybór"
+
+msgid "Output-File"
+msgstr "Plik wyjściowy"
+
+msgid "gcode-output filename"
+msgstr "nazwa pliku wyjściowego gcode"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "wybór materiałów do obliczania prędkości posuwu i spindelspeed"
+
+msgid "Cutting Speed"
+msgstr "Prędkość cięcia"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "Feed/Tooth@<4mm"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "Feed/Tooth@<8mm"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "Feed/Tooth@<12mm"
+
+msgid "Texture"
+msgstr "Tekstura"
+
+msgid "Post-Command"
+msgstr "Po wprowadzeniu polecenia"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "postcommand do uruchomienia skryptu po zapisaniu gcode (można to skopiować gcode na Twojej maszynie cnc)"
+
+msgid "object selection"
+msgstr "wybór obiektu"
+
+msgid "Use"
+msgstr "Użycie"
+
+msgid "Overwrite"
+msgstr "Zastąp"
+
+msgid "Offset"
+msgstr "Poprawka"
+
+msgid "Pocket"
+msgstr "Kieszeń"
+
+msgid "Pocket cutting"
+msgstr "Cięcie kieszeni"
+
+msgid "Laser"
+msgstr "Laser"
+
+msgid "Laser cutting"
+msgstr "Cięcie laserowe"
+
+msgid "Holding-Tab's"
+msgstr "Gospodarstwo karta"
+
+msgid "use holding tabs"
+msgstr "użyj kart gospodarstwa"
+
+msgid "Order"
+msgstr "Zamówienie"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "frezowanie zamówienia (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+
+msgid "Activate"
+msgstr "Aktywuj"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "rotarymode do projektu 2D na osi obrotu"
+
+msgid "Axis"
+msgstr "Oś"
+
+msgid "axis that used as rotating axis"
+msgstr "oś, która używała jako osi obrotu"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "średnica materiału dla trybu obrotowego"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "tangencial nóż cięcia, Głębokość = 0,0"
+
+msgid "axis that used as tangencial axis"
+msgstr "oś, która używała jako osi tangencial"
+
+msgid "MaxAngle"
+msgstr "MaksymalnyKąt"
+
+msgid "maximum angle before push up the knife"
+msgstr "maksymalny kąt przed push up noża"
+
+msgid "Tolerance"
+msgstr "Tolerancja"
+
+msgid "Tollerance between points to close objects"
+msgstr "Tolerancja między punktami, aby zamknąć obiekty"
+
+msgid "Parameter"
+msgstr "Parametr"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Ekspander dla parametru lub karty"
+
+msgid "VNC-Server"
+msgstr "VNC-Server"
+
+msgid "VNC-Server address"
+msgstr "Adres serwera VNC"
+
+msgid "VNC-Port"
+msgstr "VNC Port"
+
+msgid "VNC-Server port"
+msgstr "Serwer port"
+
+msgid "On/Off"
+msgstr "Wł./Wył"
+
+msgid "3D-View"
+msgstr "Widok 3D"
+
+msgid "Output"
+msgstr "Wyjście"
+
+msgid "PostProcessor"
+msgstr "Postprocesor"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Dokumentacja"
+
+msgid "-5 First"
+msgstr "Pierwszy -5"
+
+msgid "0 Auto"
+msgstr "0 Auto"
+
+msgid "5 Last"
+msgstr "5 ostatni"
+
+msgid "None"
+msgstr "Brak"
+
+msgid "Inside"
+msgstr "Wewnątrz"
+
+msgid "Outside"
+msgstr "Zewnątrz"
+
+msgid "Expander"
+msgstr "Rozszerzony"
+
+msgid "Notebook-Tabs"
+msgstr "Karty notesu"
+
+msgid "Help"
+msgstr "Pomoc"
+
+msgid "About"
+msgstr "O"
+
+msgid "File"
+msgstr "Plik"
+
+msgid "Load DXF"
+msgstr "Załaduj DXF"
+
+msgid "Reload DXF"
+msgstr "Przeładuj DXF"
+
+msgid "Load Preset"
+msgstr "Wczytaj preset"
+
+msgid "Save Preset"
+msgstr "Zapisz preset"
+
+msgid "Save Output"
+msgstr "Zapisz dane wyjściowe"
+
+msgid "Save Output As.."
+msgstr "Zapisz dane wyjściowe jako.."
+
+msgid "Load Tooltable"
+msgstr "Wczytaj tooltable"
+
+msgid "Save Setup"
+msgstr "Zapisz ustawienia"
+
+msgid "Quit"
+msgstr "Wyjdź"
+
+msgid "Preset"
+msgstr "Preset"
+
+msgid "Tooltable"
+msgstr "Tooltable"
+
+msgid "Load Drawing"
+msgstr "Załaduj rysunek"
+
+msgid "DXF-Drawings"
+msgstr "Rysunki DXF"
+
+msgid "DWG-Drawings"
+msgstr "Rysunki DWG"
+
+msgid "SVG-Drawings"
+msgstr "Rysunki SVG"
+
+msgid "On Open"
+msgstr "Na otwartym"
+
+msgid "holding-tabs on open contours"
+msgstr "gospodarstwo kart na otwartych konturach"
+
+msgid "On Inside"
+msgstr "Od wewnątrz"
+
+msgid "holding-tabs on inside-contours"
+msgstr "gospodarstwo kart wewnątrz konturu"
+
+msgid "On Outside"
+msgstr "Na zewnątrz"
+
+msgid "holding-tabs on outside-contours"
+msgstr "gospodarstwo karty zewnątrz konturu"
+
