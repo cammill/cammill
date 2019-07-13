@@ -1,0 +1,531 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-06-15 08:19+0200\n"
+"PO-Revision-Date: 2019-07-13 16:59\n"
+"Last-Translator: Jakob Flierl (koppi)\n"
+"Language-Team: Turkish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: tr\n"
+"X-Crowdin-File: cammill.po\n"
+"Language: tr_TR\n"
+
+msgid "View"
+msgstr "Görünüm"
+
+msgid "Tool"
+msgstr "Araçlar"
+
+msgid "Milling"
+msgstr "Freze"
+
+msgid "Tabs"
+msgstr "Sekmeler"
+
+msgid "Rotary"
+msgstr "Dönüş"
+
+msgid "Tangencial"
+msgstr "Teğet"
+
+msgid "Machine"
+msgstr "Makina"
+
+msgid "Material"
+msgstr "Malzeme"
+
+msgid "Objects"
+msgstr "Nesneler"
+
+msgid "Misc"
+msgstr "Diğer"
+
+msgid "Zoom"
+msgstr "Yakınlaştır"
+
+msgid "view-zoom"
+msgstr "görünümü-yakınlaştır"
+
+msgid "Helplines"
+msgstr "Yardımcı Çizgiler"
+
+msgid "show helplines"
+msgstr "yardımcı çizgileri göster"
+
+msgid "ShowGrid"
+msgstr "IzagarayıGöster"
+
+msgid "show grid"
+msgstr "ızgarayı göster"
+
+msgid "ShowTool"
+msgstr "AraçlarıGöster"
+
+msgid "show tool-diameter"
+msgstr "araç-çapını göster"
+
+msgid "Textures"
+msgstr "Kaplamalar"
+
+msgid "show textures"
+msgstr "kaplamaları göster"
+
+msgid "Rotate-X"
+msgstr "Çevir-X"
+
+msgid "View-Rotate X"
+msgstr "Görüntüle-Çevir X"
+
+msgid "Rotate-Y"
+msgstr "Çevir Y"
+
+msgid "View-Rotate Y"
+msgstr "Görüntüle-Çevir Y"
+
+msgid "Rotate-Z"
+msgstr "Çevir Z"
+
+msgid "View-Rotate Z"
+msgstr "Görüntüle-Çevir Z"
+
+msgid "Translate-X"
+msgstr "Çevir-X"
+
+msgid "View-Translate X"
+msgstr "Görüntüle-Çevir X"
+
+msgid "Translate-Y"
+msgstr "Çevir-Y"
+
+msgid "View-Translate Y"
+msgstr "Görüntüle-Çevir Y"
+
+msgid "Grid-Size"
+msgstr "Izagara-Boyutu"
+
+msgid "size of the grid"
+msgstr "ızgaranın boyutu"
+
+msgid "Arrow-Scale"
+msgstr "Ok-Ölçek"
+
+msgid "size of arrows"
+msgstr "okun büyüklüğü"
+
+msgid "DXF-File"
+msgstr "DXF-Dosyası"
+
+msgid "dxf-filename"
+msgstr "dxf-dosyaadi"
+
+msgid "Select"
+msgstr "Select"
+
+msgid "selected tool from tooltable"
+msgstr "araç tablosundan seçilmiş araçlar"
+
+msgid "Number"
+msgstr "Numara"
+
+msgid "tool-number"
+msgstr "araç-numarası"
+
+msgid "Diameter"
+msgstr "Çap"
+
+msgid "tool-diameter"
+msgstr "araç-çapı"
+
+msgid "CalcSpeed"
+msgstr "HesapHızı"
+
+msgid "calculated spindle-speed"
+msgstr "hesaplanmış iş mili hızı"
+
+msgid "Speed"
+msgstr "Hız"
+
+msgid "real spindle-speed"
+msgstr "gerçek iş mili hızı"
+
+msgid "Flutes"
+msgstr "Oluk"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "aletlerin olukları, maksimum alet hızını ve ilerleme hızını hesaplamak için"
+
+msgid "Table"
+msgstr "Masa"
+
+msgid "the tooltable filename"
+msgstr "araç tablosu dosya adi"
+
+msgid "MaxFeedRate"
+msgstr "EnfazlaİlerlemeOranı"
+
+msgid "calculated maximum feedrate"
+msgstr "hesaplanan en fazla ilerleme oranı"
+
+msgid "FeedRate"
+msgstr "İlerlemeHızı"
+
+msgid "real feedrate"
+msgstr "gerçek ilerleme hızı"
+
+msgid "PlungeRate"
+msgstr "DalmaOranı"
+
+msgid "plunge feedrate"
+msgstr "dalma oranı ilerleme oranı"
+
+msgid "Depth"
+msgstr "Derinlik"
+
+msgid "end depth"
+msgstr "son derinlik"
+
+msgid "Z-Step"
+msgstr "Z-Adımı"
+
+msgid "depth per step"
+msgstr "adım derinliği"
+
+msgid "Save-Move"
+msgstr "Kaydet-Taşı"
+
+msgid "save move z-position"
+msgstr "z-konumu kaydet taşı"
+
+msgid "use this object"
+msgstr "bu nesneyi kullan"
+
+msgid "override global parameters for this object"
+msgstr "bu nesne için genel parametreleri geçersiz kıl"
+
+msgid "Overcut"
+msgstr "Fazla Kesim"
+
+msgid "overcutting edges"
+msgstr "fazla kesim kenarları"
+
+msgid "Lasermode"
+msgstr "Lazer modu"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "laser modu, derinlik=0.0, nesne başına açma/kapama"
+
+msgid "Climb"
+msgstr "Tırmanma"
+
+msgid "Climb Milling"
+msgstr "Tırmanan Frezeleme"
+
+msgid "reverse milling direction / climb milling"
+msgstr "ters mil yönü / tırmanan freze"
+
+msgid "NoOffsets"
+msgstr "KaydırmaYok"
+
+msgid "without tool-offsets"
+msgstr "kaydırma-araçları olmadan"
+
+msgid "Mill Text"
+msgstr "Mil Yazısı"
+
+msgid "mill mtext from dxf-files"
+msgstr "dxf-dosyalarından mtext mili"
+
+msgid "NC-Debug"
+msgstr "NC-HataAyıklama"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "kayma olmadan çıktı nesnesi / hata ayıklama için"
+
+msgid "Use Taps"
+msgstr "Sekmeleri Kullan"
+
+msgid "using holding-tabs"
+msgstr "sekme alanı kullanımı"
+
+msgid "Show Grid"
+msgstr "Izgarayı Göster"
+
+msgid "show tab-grid"
+msgstr "sekme-ızgarasını göster"
+
+msgid "depth of the holding-tabs"
+msgstr "sekme-alanı derinliği"
+
+msgid "Lenght"
+msgstr "Uzunluk"
+
+msgid "lenght of the holding-tabs"
+msgstr "sekme-alanı uzunluğu"
+
+msgid "Triangle-Type"
+msgstr "Üçgen-Tipi"
+
+msgid "type of the holding-tabs"
+msgstr "sekme-alanı tipi"
+
+msgid "X-Grid"
+msgstr "X-Izgarası"
+
+msgid "X-grid of the holding-tabs"
+msgstr "Sekme alanları için X-ızgarası"
+
+msgid "Y-Grid"
+msgstr "Y-Izgarası"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Sekme-alanı için Y-ızgarası"
+
+msgid "Fastmove-Speed"
+msgstr "HızlıTaşıma-Hızı"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "makinanın hızlı-taşıma hızı, mil süresini hesaplamak için"
+
+msgid "Post"
+msgstr "Gönderi"
+
+msgid "post-processor selection"
+msgstr "işlemci-sonrası seçim"
+
+msgid "Output-File"
+msgstr "Çıktı-Dosyası"
+
+msgid "gcode-output filename"
+msgstr "gcode-çıktı dosya adı"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "malzeme seçimi için iş mili hızı ve ilerleme oranı hesabı"
+
+msgid "Cutting Speed"
+msgstr "Kesme Hızı"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "Besleme/Diş@<4mm"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "Besleme/Diş@<8mm"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "Besleme/Diş@12mm"
+
+msgid "Texture"
+msgstr "Kaplama"
+
+msgid "Post-Command"
+msgstr "Konu-Yorum"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "gcode kaydettikten sonra bir komut dosyası tetiklemek için gönder komutu, (gcode cnc-makinenize kopyalamak için bunu kullanabilirsiniz)"
+
+msgid "object selection"
+msgstr "nesne seçimi"
+
+msgid "Use"
+msgstr "Kullan"
+
+msgid "Overwrite"
+msgstr "Üzerine yaz"
+
+msgid "Offset"
+msgstr "Denge"
+
+msgid "Pocket"
+msgstr "Paket"
+
+msgid "Pocket cutting"
+msgstr "Paket kesim"
+
+msgid "Laser"
+msgstr "Lazer"
+
+msgid "Laser cutting"
+msgstr "Lazer kesim"
+
+msgid "Holding-Tab's"
+msgstr "Sekme-Alanı"
+
+msgid "use holding tabs"
+msgstr "sekme alanını kullan"
+
+msgid "Order"
+msgstr "Sıra"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "mil sırası (Otomatik= içteki dıştakinden önce, -1 -> -5 = mil önce, 1 -> 5 = mil sonra)"
+
+msgid "Activate"
+msgstr "Aktif"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "dönme eksenindeki 2D proje için dönermod"
+
+msgid "Axis"
+msgstr "Eksen"
+
+msgid "axis that used as rotating axis"
+msgstr "dönme ekseni olarak kullanın eksen"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "döner-mod için malzemenin çapı"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "teğet-bıçak kesimi, derinlik=0.0"
+
+msgid "axis that used as tangencial axis"
+msgstr "teğet ekseni olarak kullanılan eksen"
+
+msgid "MaxAngle"
+msgstr "EnFazlaAçı"
+
+msgid "maximum angle before push up the knife"
+msgstr "bıçağı itmeden önceki en fazla açı"
+
+msgid "Tolerance"
+msgstr "Hata payı"
+
+msgid "Tollerance between points to close objects"
+msgstr "Nesneye yakın noktalar arasındaki hata payı"
+
+msgid "Parameter"
+msgstr "Değişkenler"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "Parametreler için Sekmeler veya Genişletici"
+
+msgid "VNC-Server"
+msgstr "VNC-Sunucu"
+
+msgid "VNC-Server address"
+msgstr "VNC-Sunucu adresi"
+
+msgid "VNC-Port"
+msgstr "VNC-Portu"
+
+msgid "VNC-Server port"
+msgstr "VNC-Sunucu portu"
+
+msgid "On/Off"
+msgstr "Açık/Kapalı"
+
+msgid "3D-View"
+msgstr "3D-Görünüm"
+
+msgid "Output"
+msgstr "Çıktı"
+
+msgid "PostProcessor"
+msgstr "Postİşlemcisi"
+
+msgid "VNC"
+msgstr "VNC"
+
+msgid "Documentation"
+msgstr "Belgeleme"
+
+msgid "-5 First"
+msgstr "-5 Önce"
+
+msgid "0 Auto"
+msgstr "0 Otomatik"
+
+msgid "5 Last"
+msgstr "5 Sonra"
+
+msgid "None"
+msgstr "Hiçbiri"
+
+msgid "Inside"
+msgstr "İçinde"
+
+msgid "Outside"
+msgstr "Dışında"
+
+msgid "Expander"
+msgstr "Genişletici"
+
+msgid "Notebook-Tabs"
+msgstr "Not Defteri-Sekmeleri"
+
+msgid "Help"
+msgstr "Yardım"
+
+msgid "About"
+msgstr "Hakkında"
+
+msgid "File"
+msgstr "Dosya"
+
+msgid "Load DXF"
+msgstr "DXF Yükle"
+
+msgid "Reload DXF"
+msgstr "DXF Yeniden yükle"
+
+msgid "Load Preset"
+msgstr "Ön ayarları yükle"
+
+msgid "Save Preset"
+msgstr "Ön ayarları kaydet"
+
+msgid "Save Output"
+msgstr "Çıktıyı Kaydet"
+
+msgid "Save Output As.."
+msgstr "Çıktıyı ... olarak kaydet"
+
+msgid "Load Tooltable"
+msgstr "Araç tablosunu Yükle"
+
+msgid "Save Setup"
+msgstr "Ayarları Sakla"
+
+msgid "Quit"
+msgstr "Çıkış"
+
+msgid "Preset"
+msgstr "Ön ayarlar"
+
+msgid "Tooltable"
+msgstr "Araç Tablosu"
+
+msgid "Load Drawing"
+msgstr "Çizimi Yükle"
+
+msgid "DXF-Drawings"
+msgstr "DXF-Çizimleri"
+
+msgid "DWG-Drawings"
+msgstr "DWG-Drawings"
+
+msgid "SVG-Drawings"
+msgstr "SVG-Drawings"
+
+msgid "On Open"
+msgstr "Açık olanda"
+
+msgid "holding-tabs on open contours"
+msgstr "açık çevrelerde sekme-alanı"
+
+msgid "On Inside"
+msgstr "İç üzerinde"
+
+msgid "holding-tabs on inside-contours"
+msgstr "iç-çevrelerde sekme-alanı"
+
+msgid "On Outside"
+msgstr "Dış Üzerinde"
+
+msgid "holding-tabs on outside-contours"
+msgstr "dış-çevrelerde sekme-alanı"
+
