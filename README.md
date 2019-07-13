@@ -30,5 +30,3 @@ see [Wiki](https://github.com/cammill/cammill/wiki)
 ### Support
 
 [![Join the chat at https://gitter.im/cammill/cammill](https://badges.gitter.im/cammill/cammill.svg)](https://gitter.im/cammill/cammill?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge), check out or edit the [FAQ](https://github.com/cammill/cammill/wiki/Frequently%20Asked%20Questions), We're here to help!
-
-Facebook [https://www.facebook.com/cammill2d](https://www.facebook.com/cammill2d)
