@@ -1,0 +1,684 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: cammill\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-13 18:44+0200\n"
+"PO-Revision-Date: 2019-07-13 16:43\n"
+"Last-Translator: Jakob Flierl (koppi)\n"
+"Language-Team: Chinese Simplified\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: crowdin.com\n"
+"X-Crowdin-Project: cammill\n"
+"X-Crowdin-Language: zh-CN\n"
+"X-Crowdin-File: cammill.po\n"
+
+#: src/bmp.c:165
+msgid "Image-View"
+msgstr ""
+
+#: src/main.c:901
+#, c-format
+msgid "Distance: Mill-XY=%0.2f%s/Z=%0.2f%s / Move-XY=%0.2f%s/Z=%0.2f%s / Time>%0.1fmin"
+msgstr ""
+
+#: src/main.c:907
+msgid "ERROR: found NaN's in gCode"
+msgstr ""
+
+#: src/main.c:908
+#, c-format
+msgid "ERROR: found NaN's in gCode\n"
+msgstr ""
+
+#: src/main.c:1473
+msgid "Load Drawing"
+msgstr "加载绘图"
+
+#: src/main.c:1483
+msgid "DXF-Drawings"
+msgstr "DXF-图纸"
+
+#: src/main.c:1489
+msgid "HPGL-Files"
+msgstr ""
+
+#: src/main.c:1495
+msgid "gCode-Files"
+msgstr ""
+
+#: src/main.c:1502
+msgid "Bitmap-Files"
+msgstr ""
+
+#: src/main.c:1510
+msgid "3D-Objects"
+msgstr ""
+
+#: src/main.c:1693 src/main.c:2724
+msgid "Save Output As.."
+msgstr "保存结果为。。"
+
+#: src/main.c:1749 src/main.c:2655
+msgid "Load Tooltable"
+msgstr "加载工具箱"
+
+#: src/main.c:1759
+msgid "Tooltable"
+msgstr "工具箱"
+
+#: src/main.c:1796 src/main.c:2706
+msgid "About"
+msgstr "关于"
+
+#: src/main.c:2088 src/main.c:2128
+#, c-format
+msgid "On"
+msgstr ""
+
+#: src/main.c:2090 src/main.c:2130 src/main.c:2864
+#, c-format
+msgid "Off"
+msgstr ""
+
+#: src/main.c:2309
+msgid "System"
+msgstr ""
+
+#: src/main.c:2313
+msgid "View"
+msgstr "查看"
+
+#: src/main.c:2315
+msgid "Machine"
+msgstr "机器"
+
+#: src/main.c:2317
+msgid "Rotary"
+msgstr "旋转"
+
+#: src/main.c:2319
+msgid "Tangencial"
+msgstr "切线的"
+
+#: src/main.c:2321
+msgid "Bitmap"
+msgstr ""
+
+#: src/main.c:2323
+msgid "Misc"
+msgstr "杂项"
+
+#: src/main.c:2326
+msgid "Settings (for all Objects)"
+msgstr ""
+
+#: src/main.c:2328
+msgid "Objects"
+msgstr "对象"
+
+#: src/main.c:2513
+msgid "Move down..."
+msgstr ""
+
+#: src/main.c:2517
+msgid "Clone this Object..."
+msgstr ""
+
+#: src/main.c:2577
+msgid "Option"
+msgstr ""
+
+#: src/main.c:2584
+msgid "Value"
+msgstr ""
+
+#: src/main.c:2628
+msgid "_File"
+msgstr ""
+
+#: src/main.c:2635
+msgid "_Load DXF"
+msgstr ""
+
+#: src/main.c:2640
+msgid "_Reload DXF"
+msgstr ""
+
+#: src/main.c:2645
+msgid "_Save Output As.."
+msgstr ""
+
+#: src/main.c:2650
+msgid "_Save Output"
+msgstr ""
+
+#: src/main.c:2659 src/main.c:2742
+msgid "Load Preset"
+msgstr "加载预设"
+
+#: src/main.c:2663 src/main.c:2747
+msgid "Save Preset"
+msgstr "保存预设"
+
+#: src/main.c:2667 src/main.c:2734
+msgid "Save Setup"
+msgstr "保存设置"
+
+#: src/main.c:2680
+msgid "_Tools"
+msgstr ""
+
+#: src/main.c:2685
+msgid "mm->inch"
+msgstr ""
+
+#: src/main.c:2688
+msgid "inch->mm"
+msgstr ""
+
+#: src/main.c:2691
+msgid "rotate"
+msgstr ""
+
+#: src/main.c:2694
+msgid "flip-x"
+msgstr ""
+
+#: src/main.c:2697
+msgid "flip-y"
+msgstr ""
+
+#: src/main.c:2701
+msgid "_Help"
+msgstr ""
+
+#: src/main.c:2714
+msgid "Load DXF"
+msgstr "加载DXF"
+
+#: src/main.c:2719
+msgid "Reload DXF"
+msgstr "重新加载DXF"
+
+#: src/main.c:2729
+msgid "Save Output"
+msgstr "保存输出"
+
+#: src/main.c:2860
+msgid "None"
+msgstr "无"
+
+#: src/main.c:2861
+msgid "Inside"
+msgstr "内部"
+
+#: src/main.c:2862
+msgid "Outside"
+msgstr "外部"
+
+#: src/main.c:2865
+msgid "Mist"
+msgstr ""
+
+#: src/main.c:2866
+msgid "Flood"
+msgstr ""
+
+#: src/main.c:2972
+msgid "3D-View"
+msgstr "3D - 视图"
+
+#: src/main.c:2975 src/main.c:3242
+msgid "Output"
+msgstr "输出"
+
+#: src/main.c:2978
+msgid "PostProcessor"
+msgstr "后处理器"
+
+#: src/main.c:2990
+msgid "VNC"
+msgstr "VNC"
+
+#: src/main.c:3003
+msgid "Documentation"
+msgstr "文档"
+
+msgid "Tool"
+msgstr "工具"
+
+msgid "Milling"
+msgstr "铣削"
+
+msgid "Tabs"
+msgstr "标签"
+
+msgid "Material"
+msgstr "材料"
+
+msgid "Zoom"
+msgstr "缩放"
+
+msgid "view-zoom"
+msgstr "查看-缩放"
+
+msgid "Helplines"
+msgstr "热线"
+
+msgid "show helplines"
+msgstr "显示热线"
+
+msgid "ShowGrid"
+msgstr "显示网格"
+
+msgid "show grid"
+msgstr "显示 网格"
+
+msgid "ShowTool"
+msgstr "显示工具"
+
+msgid "show tool-diameter"
+msgstr "显示 直径工具"
+
+msgid "Textures"
+msgstr "纹理"
+
+msgid "show textures"
+msgstr "显示纹理"
+
+msgid "Rotate-X"
+msgstr "沿X轴旋转"
+
+msgid "View-Rotate X"
+msgstr "视图 - 旋转X轴"
+
+msgid "Rotate-Y"
+msgstr "沿Y轴旋转"
+
+msgid "View-Rotate Y"
+msgstr "视图 - 旋转Y轴"
+
+msgid "Rotate-Z"
+msgstr "沿Z轴旋转"
+
+msgid "View-Rotate Z"
+msgstr "视图 - 旋转Z轴"
+
+msgid "Translate-X"
+msgstr "移动-X"
+
+msgid "View-Translate X"
+msgstr "视图 - 移动X"
+
+msgid "Translate-Y"
+msgstr "移动 Y"
+
+msgid "View-Translate Y"
+msgstr "视图 - 移动Y"
+
+msgid "Grid-Size"
+msgstr "网格大小"
+
+msgid "size of the grid"
+msgstr "网格大小"
+
+msgid "Arrow-Scale"
+msgstr "箭头缩放"
+
+msgid "size of arrows"
+msgstr "箭头大小"
+
+msgid "DXF-File"
+msgstr "DXF文件"
+
+msgid "dxf-filename"
+msgstr "dxf 文件名"
+
+msgid "Select"
+msgstr "选择"
+
+msgid "selected tool from tooltable"
+msgstr "从工具箱中选择工具"
+
+msgid "Number"
+msgstr "编号"
+
+msgid "tool-number"
+msgstr "工具编号"
+
+msgid "Diameter"
+msgstr "直径"
+
+msgid "tool-diameter"
+msgstr "直径工具"
+
+msgid "CalcSpeed"
+msgstr "计算速度"
+
+msgid "calculated spindle-speed"
+msgstr "计算出的主轴转速"
+
+msgid "Speed"
+msgstr "速度"
+
+msgid "real spindle-speed"
+msgstr "实际的主轴转速"
+
+msgid "Flutes"
+msgstr "凹槽"
+
+msgid "flutes of the tool, to calculate max toolspeed and feedrate"
+msgstr "工具的凹槽，计算最大的工具速度和馈送率"
+
+msgid "Table"
+msgstr "表格"
+
+msgid "the tooltable filename"
+msgstr "tooltable文件名"
+
+msgid "MaxFeedRate"
+msgstr "最大馈送率"
+
+msgid "calculated maximum feedrate"
+msgstr "计算的最大馈送率"
+
+msgid "FeedRate"
+msgstr "馈送率"
+
+msgid "real feedrate"
+msgstr "真正的馈送率"
+
+msgid "PlungeRate"
+msgstr "进刀率"
+
+msgid "plunge feedrate"
+msgstr "下刀速度馈送率"
+
+msgid "Depth"
+msgstr "深度"
+
+msgid "end depth"
+msgstr "结束深度"
+
+msgid "Z-Step"
+msgstr "Z步"
+
+msgid "depth per step"
+msgstr "每步深度"
+
+msgid "Save-Move"
+msgstr "保存 - 移动"
+
+msgid "save move z-position"
+msgstr "保存 移动 z位置"
+
+msgid "use this object"
+msgstr "用这个对象"
+
+msgid "override global parameters for this object"
+msgstr "重写此对象的全局参数"
+
+msgid "Overcut"
+msgstr "过长割断"
+
+msgid "overcutting edges"
+msgstr "过长切割边"
+
+msgid "Lasermode"
+msgstr "激光模式"
+
+msgid "lasermode, depth=0.0, turn on/off per object"
+msgstr "激光模式，深度= 0.0，打开/关闭每个对象"
+
+msgid "Climb"
+msgstr "向下"
+
+msgid "Climb Milling"
+msgstr "同向（向下）铣削"
+
+msgid "reverse milling direction / climb milling"
+msgstr "反向铣削方向 / 同向（向下）铣削"
+
+msgid "NoOffsets"
+msgstr "无偏移"
+
+msgid "without tool-offsets"
+msgstr "不带工具偏移"
+
+msgid "Mill Text"
+msgstr "铣削文本"
+
+msgid "mill mtext from dxf-files"
+msgstr "从DXF文件中读取的铣削文本"
+
+msgid "NC-Debug"
+msgstr "NC调试"
+
+msgid "output objects whithout offsets / for debuging"
+msgstr "输出对象没有偏移/调试"
+
+msgid "Use Taps"
+msgstr "使用Tabs"
+
+msgid "using holding-tabs"
+msgstr "使用固定的标签"
+
+msgid "Show Grid"
+msgstr "显示网格"
+
+msgid "show tab-grid"
+msgstr "显示选项卡网格"
+
+msgid "depth of the holding-tabs"
+msgstr "固定的标签 的深度"
+
+msgid "Lenght"
+msgstr "长度"
+
+msgid "lenght of the holding-tabs"
+msgstr "固定的标签的长度"
+
+msgid "Triangle-Type"
+msgstr "三角形类型"
+
+msgid "type of the holding-tabs"
+msgstr "固定的标签的类型"
+
+msgid "X-Grid"
+msgstr "X网格"
+
+msgid "X-grid of the holding-tabs"
+msgstr "X网格固定的标签"
+
+msgid "Y-Grid"
+msgstr "Y网格"
+
+msgid "Y-grid of the holding-tabs"
+msgstr "Y网格固定的标签"
+
+msgid "Fastmove-Speed"
+msgstr "快速移动速度"
+
+msgid "fast-move speed of the machine, to calculate the milling-time"
+msgstr "快速移动机器的速度，来计算铣削时间"
+
+msgid "Post"
+msgstr "发布"
+
+msgid "post-processor selection"
+msgstr "后处理器选择"
+
+msgid "Output-File"
+msgstr "输出文件"
+
+msgid "gcode-output filename"
+msgstr "gcode - 输出文件名"
+
+msgid "material selection to calculate feedrate and spindlespeed"
+msgstr "材料选择来计算馈送率和主轴转速"
+
+msgid "Cutting Speed"
+msgstr "切割速度"
+
+msgid "Feed/Tooth@<4mm"
+msgstr "进料/齿@ <4毫米"
+
+msgid "Feed/Tooth@<8mm"
+msgstr "进料/齿@ <8毫米"
+
+msgid "Feed/Tooth@<12mm"
+msgstr "进料/齿@ <12毫米"
+
+msgid "Texture"
+msgstr "纹理"
+
+msgid "Post-Command"
+msgstr "后处理命令"
+
+msgid "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)"
+msgstr "后处理命令在保存gcode后触发一个脚本（您可以使用它来将gcode复制到您的cnc-machine）"
+
+msgid "object selection"
+msgstr "选择目标"
+
+msgid "Use"
+msgstr "使用"
+
+msgid "Overwrite"
+msgstr "覆盖"
+
+msgid "Offset"
+msgstr "偏移"
+
+msgid "Pocket"
+msgstr "凹坑"
+
+msgid "Pocket cutting"
+msgstr "袖珍切割"
+
+msgid "Laser"
+msgstr "激光"
+
+msgid "Laser cutting"
+msgstr "激光切割"
+
+msgid "Holding-Tab's"
+msgstr "持有- 标签的"
+
+msgid "use holding tabs"
+msgstr "使用保持标签"
+
+msgid "Order"
+msgstr "顺序"
+
+msgid "milling order (Auto= first internal then external, -1 -> -5 = mill first, 1 -> 5 = mill last)"
+msgstr "铣削顺序（自动=先内部后外部，-1 - > -5 =铣削第一，1 - > 5 =铣削最后）"
+
+msgid "Activate"
+msgstr "激活"
+
+msgid "rotarymode to project 2D on rotating axis"
+msgstr "旋转模式在旋转轴上做2D投影"
+
+msgid "Axis"
+msgstr "轴"
+
+msgid "axis that used as rotating axis"
+msgstr "用作旋转轴的轴"
+
+msgid "diameter of the material for the rotary-mode"
+msgstr "用于旋转模式的材料的直径"
+
+msgid "tangencial-knife cutting, depth=0.0"
+msgstr "切向刀切割，深度= 0.0"
+
+msgid "axis that used as tangencial axis"
+msgstr "用作切向轴的轴"
+
+msgid "MaxAngle"
+msgstr "最大角度"
+
+msgid "maximum angle before push up the knife"
+msgstr "上推刀之前的最大角度"
+
+msgid "Tolerance"
+msgstr "允许偏差量"
+
+msgid "Tollerance between points to close objects"
+msgstr "靠近对象的点之间的公差"
+
+msgid "Parameter"
+msgstr "参数"
+
+msgid "Tabs or Expander for Parameter"
+msgstr "参数的选项卡或扩展器"
+
+msgid "VNC-Server"
+msgstr "VNC - 服务器"
+
+msgid "VNC-Server address"
+msgstr "VNC - 服务器地址"
+
+msgid "VNC-Port"
+msgstr "VNC - 端口"
+
+msgid "VNC-Server port"
+msgstr "VNC - 服务器端口"
+
+msgid "On/Off"
+msgstr "开/关"
+
+msgid "-5 First"
+msgstr "-5 第一"
+
+msgid "0 Auto"
+msgstr "0 自动"
+
+msgid "5 Last"
+msgstr "5 最后"
+
+msgid "Expander"
+msgstr "扩展"
+
+msgid "Notebook-Tabs"
+msgstr "笔记本 - 选项卡"
+
+msgid "Help"
+msgstr "帮助"
+
+msgid "File"
+msgstr "文件"
+
+msgid "Quit"
+msgstr "退出"
+
+msgid "Preset"
+msgstr "预设"
+
+msgid "DWG-Drawings"
+msgstr "DWG - 图纸"
+
+msgid "SVG-Drawings"
+msgstr "SVG - 图纸"
+
+msgid "On Open"
+msgstr "打开状态"
+
+msgid "holding-tabs on open contours"
+msgstr "开放的轮廓上的控制标签"
+
+msgid "On Inside"
+msgstr "向内偏移"
+
+msgid "holding-tabs on inside-contours"
+msgstr "内部轮廓上的控制标签"
+
+msgid "On Outside"
+msgstr "向外偏移"
+
+msgid "holding-tabs on outside-contours"
+msgstr "外部轮廓上的标签"
