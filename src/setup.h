@@ -124,6 +124,7 @@ enum {
 	P_M_FAST_Z,
 	P_H_POST,
 	P_POST_CMD,
+	P_RETURN,
 	// Material
 	P_TOOL_W,
 	P_MAT_SELECT,

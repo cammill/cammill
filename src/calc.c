@@ -1344,6 +1344,15 @@ void mill_end (void) {
 		postcam_var_push_string("commentText", "Spindle off");
 	}
 	postcam_call_function("OnSpindleOff");
+
+	if (PARAMETER[P_RETURN].vint == 1) {
+		postcam_var_push_double("endX", _X(0.0));
+		postcam_var_push_double("endY", _Y(0.0));
+		postcam_call_function("OnRapid");
+		postcam_var_push_double("currentX", _X(0.0));
+		postcam_var_push_double("currentY", _Y(0.0));
+	}
+
 	postcam_call_function("OnFinish");
 	if (PARAMETER[P_M_APPEND_CONFIG].vint == 1) {
 		SetupShowGcode(fd_out);

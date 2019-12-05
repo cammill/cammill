@@ -122,6 +122,7 @@ PARA PARAMETER[P_LAST] = {
 	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm|inch", 1, 1, "Fast-Z", 0, 0, 0, 0},
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0, 0},
+	{"Return",	"Machine",	"-rth",	T_BOOL,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 0, 0, "Return to Home at end", 0, 0, 0, 0},
 	// Calculation
 	{"Tool-Flutes",	"Calculation",		"-tw",	T_INT,		2,	0.0,	0.0,	"",	1.0,	1.0,	10.0,		"#", 1, 0, "flutes of the tool, to calculate max toolspeed and feedrate", 0, 0, 0, 0},
 	{"Select",	"Calculation",	"-ms",	T_SELECT,	1,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "material selection to calculate feedrate and spindlespeed", 0, 0, 0, 0},
