@@ -54,6 +54,7 @@ PARA_GROUP GROUPS[] = {
 
 PARA PARAMETER[P_LAST] = {
 	// View
+	// {Name,	GROUP,	CL-Option,	TYPE,	INT,	FLOAT,	DOUBLE,	STRING,	MIN,	STEP,	MAX, UNIT, SHOW, IN_PRESET, HELP, RO, L1, L2, OVERWRITE},
 	{"Zoom",	"View",		"-zo",	T_FLOAT,	0,	1.0,	0.0,	"",	0.1,	0.1,	20.0,		"x", 1, 0, "view-zoom", 0, 0, 0, 0},
 	{"Helplines",	"View", 	"-hl",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "show helplines", 0, 0, 0, 0},
 	{"ShowGrid",	"View", 	"-sg",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "show grid", 0, 0, 0, 0},
@@ -123,6 +124,7 @@ PARA PARAMETER[P_LAST] = {
 	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0, 0},
 	{"Return",	"Machine",	"-rth",	T_BOOL,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 0, 0, "Return to Home at end", 0, 0, 0, 0},
+	{"Return-Z",	"Machine",	"-rtz",	T_FLOAT,	0,	20.0,	0.0,	"",	0.0,	1.0,	100.0,		"", 0, 0, "Return to Home Z-Position", 0, 0, 0, 0},
 	// Calculation
 	{"Tool-Flutes",	"Calculation",		"-tw",	T_INT,		2,	0.0,	0.0,	"",	1.0,	1.0,	10.0,		"#", 1, 0, "flutes of the tool, to calculate max toolspeed and feedrate", 0, 0, 0, 0},
 	{"Select",	"Calculation",	"-ms",	T_SELECT,	1,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "material selection to calculate feedrate and spindlespeed", 0, 0, 0, 0},

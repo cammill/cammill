@@ -1291,7 +1291,32 @@ void mill_objects (void) {
 	for (order_num = 0; order_num < object_last; order_num++) {
 		for (object_num = 0; object_num < object_last; object_num++) {
 			if (order_num == myOBJECTS[object_num].order) {
-				if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT && 1 == 2) {
+				if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+
+
+					double shortest_len = 9999999.0;
+					int shortest_object = -1;
+					int shortest_line = -1;
+					for (nnum = 0; nnum < line_last; nnum++) {
+						if (myOBJECTS[object_num].line[nnum] != 0) {
+							int lnum = myOBJECTS[object_num].line[nnum];
+							double len = get_len(last_x, last_y, myLINES[lnum].x1, myLINES[lnum].y1);
+							if (len < shortest_len) {
+								shortest_len = len;
+								shortest_object = object_num;
+								shortest_line = nnum;
+							}
+						}
+					}
+					if (shortest_line != -1) {
+						resort_object(object_num, shortest_line);
+					}
+					object_optimize_dir(object_num);
+
+					object_draw_offset(fd_out, object_num, &next_x, &next_y);
+					object_draw(fd_out, object_num);
+
+
 				} else {
 					double shortest_len = 9999999.0;
 					int shortest_object = -1;
@@ -1345,7 +1370,12 @@ void mill_end (void) {
 	}
 	postcam_call_function("OnSpindleOff");
 
-	if (PARAMETER[P_RETURN].vint == 1) {
+    if (PARAMETER[P_RETURN].vint == 1) {
+		if (PARAMETER[P_M_LASERMODE].vint != 1) {
+            postcam_var_push_double("endZ", _Z(PARAMETER[P_RETURN_Z].vfloat));
+            postcam_call_function("OnRapid");
+            postcam_var_push_double("currentZ", _Z(PARAMETER[P_RETURN_Z].vfloat));
+		}
 		postcam_var_push_double("endX", _X(0.0));
 		postcam_var_push_double("endY", _Y(0.0));
 		postcam_call_function("OnRapid");
@@ -2235,6 +2265,27 @@ void object_draw_offset_depth (FILE *fd_out, int object_num, double depth, doubl
 		}
 		return;
 	}
+
+	// Text Milling (Experimental)
+	if (myLINES[myOBJECTS[object_num].line[0]].type == TYPE_MTEXT) {
+		mill_z(0, PARAMETER[P_CUT_SAVE].vdouble, object_num);
+		for (num = 0; num < line_last; num++) {
+			if (myOBJECTS[object_num].line[num] != 0) {
+				lnum2 = myOBJECTS[object_num].line[num];
+				if (last_x != myLINES[lnum2].x1 || last_y != myLINES[lnum2].y1) {
+					mill_z(0, 1.0, object_num);
+					mill_xy(0, myLINES[lnum2].x1, myLINES[lnum2].y1, 1.0, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+				}
+				mill_z(1, -1.0, object_num);
+				mill_xy(1, myLINES[lnum2].x2, myLINES[lnum2].y2, -1.0, 0.0, myOBJECTS[object_num].PARAMETER[P_M_FEEDRATE].vint, object_num, "");
+				last_x = myLINES[lnum2].x2;
+				last_y = myLINES[lnum2].y2;
+			}
+			last_lnum = lnum2;
+		}
+		return;
+	}
+
 
 	for (num = 0; num < line_last; num++) {
 		if (myOBJECTS[object_num].line[num] != 0) {
