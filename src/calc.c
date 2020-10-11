@@ -2712,18 +2712,20 @@ int find_next_line (int object_num, int first, int num, int dir, int depth) {
 		}
 		for (num4 = 0; num4 < line_last; num4++) {
 			if (myOBJECTS[num5].line[num4] == num) {
-//				printf("##LINE %i in OBJECT %i / %i\n", num, num5, num4);
+				//printf("##LINE %i in OBJECT %i / %i\n", num, num5, num4);
 				return 2;
 			}
 		}
 	}
+    //printf("###### SEARCH NEXT OF %i (%f,%f -> %f,%f) LAYER %s ########\n", num, myLINES[num].x1, myLINES[num].y1, myLINES[num].x2, myLINES[num].y2, myLINES[num].layer);
+
 	if (depth > line_last) {
 		printf("###### ERROR / CAN'T FIND NEXT LINE ########\n");
 		return 0;
 	}
 	for (num4 = 0; num4 < line_last; num4++) {
 		if (myOBJECTS[object_num].line[num4] == 0) {
-//			printf("##ADD LINE %i to OBJECT %i / %i\n", num, object_num, num4);
+			//printf("##ADD LINE %i to OBJECT %i / %i\n", num, object_num, num4);
 			myOBJECTS[object_num].line[num4] = num;
 			strcpy(myOBJECTS[object_num].layer, myLINES[num].layer);
 			break;
@@ -2731,44 +2733,49 @@ int find_next_line (int object_num, int first, int num, int dir, int depth) {
 	}
 	int num2 = 0;
 	fnum = 0;
-#pragma omp parallel
+/*
+//#pragma omp parallel
 {
 
 	for (num2 = 1; num2 < line_last; num2++) {
 		if (myLINES[num2].used == 1 && num != num2 && strcmp(myLINES[num2].layer, myLINES[num].layer) == 0) {
 			if (px >= myLINES[num2].x1 - PARAMETER[P_O_TOLERANCE].vdouble && px <= myLINES[num2].x1 + PARAMETER[P_O_TOLERANCE].vdouble && py >= myLINES[num2].y1 - PARAMETER[P_O_TOLERANCE].vdouble && py <= myLINES[num2].y1 + PARAMETER[P_O_TOLERANCE].vdouble) {
-//				printf("###### %i NEXT LINE: %f,%f -> %f,%f START\n", depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
+				printf("###### %i %i NEXT LINE: %f,%f -> %f,%f START\n", num2, depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
 				fnum++;
 			} else if (px >= myLINES[num2].x2 - PARAMETER[P_O_TOLERANCE].vdouble && px <= myLINES[num2].x2 + PARAMETER[P_O_TOLERANCE].vdouble && py >= myLINES[num2].y2 - PARAMETER[P_O_TOLERANCE].vdouble && py <= myLINES[num2].y2 + PARAMETER[P_O_TOLERANCE].vdouble) {
-//				printf("###### %i NEXT LINE: %f,%f -> %f,%f END\n", depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
+				printf("###### %i %i NEXT LINE: %f,%f -> %f,%f END\n", num2, depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
 				fnum++;
 			}
 		}
 	}
 }
+*/
 	for (num2 = 1; num2 < line_last; num2++) {
-		if (myLINES[num2].used == 1 && num != num2 && strcmp(myLINES[num2].layer, myLINES[num].layer) == 0) {
+        //printf("###### %i STEP0 %i %s \n", num2, myLINES[num2].used, myLINES[num2].layer);
+		if (myLINES[num2].used == 1 && num != num2 && (PARAMETER[P_O_IGNORE_LAYERS].vint == 1 || strcmp(myLINES[num2].layer, myLINES[num].layer) == 0)) {
+            //printf("###### %i STEP1\n", num2);
+
 			if (px >= myLINES[num2].x1 - PARAMETER[P_O_TOLERANCE].vdouble && px <= myLINES[num2].x1 + PARAMETER[P_O_TOLERANCE].vdouble && py >= myLINES[num2].y1 - PARAMETER[P_O_TOLERANCE].vdouble && py <= myLINES[num2].y1 + PARAMETER[P_O_TOLERANCE].vdouble) {
-//				printf("###### %i NEXT LINE: %f,%f -> %f,%f START\n", depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
+				//printf("###### %i %i NEXT LINE: %f,%f -> %f,%f START\n", num2, depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
 				if (num2 != first) {
 					ret = find_next_line(object_num, first, num2, 1, depth + 1);
 					if (ret == 1) {
 						return 1;
 					}
 				} else {
-//					printf("###### OBJECT CLOSED\n");
+					//printf("###### OBJECT CLOSED\n");
 					return 1;
 				}
 			} else if (px >= myLINES[num2].x2 - PARAMETER[P_O_TOLERANCE].vdouble && px <= myLINES[num2].x2 + PARAMETER[P_O_TOLERANCE].vdouble && py >= myLINES[num2].y2 - PARAMETER[P_O_TOLERANCE].vdouble && py <= myLINES[num2].y2 + PARAMETER[P_O_TOLERANCE].vdouble) {
 				line_invert(num2);
-//				printf("###### %i NEXT LINE: %f,%f -> %f,%f END\n", depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
+				//printf("###### %i %i NEXT LINE: %f,%f -> %f,%f REV\n", num2, depth, myLINES[num2].x1, myLINES[num2].y1, myLINES[num2].x2, myLINES[num2].y2);
 				if (num2 != first) {
 					ret = find_next_line(object_num, first, num2, 1, depth + 1);
 					if (ret == 1) {
 						return 1;
 					}
 				} else {
-//					printf("###### OBJECT CLOSED\n");
+					//printf("###### OBJECT CLOSED\n");
 					return 1;
 				}
 			}
@@ -2797,7 +2804,7 @@ int line_open_check (int num) {
 	}
 	px = myLINES[num].x1;
 	py = myLINES[num].y1;
-#pragma omp parallel
+//#pragma omp parallel
 {
 
 	for (num2 = 1; num2 < line_last; num2++) {
@@ -2816,7 +2823,7 @@ int line_open_check (int num) {
 }
 	px = myLINES[num].x2;
 	py = myLINES[num].y2;
-#pragma omp parallel
+//#pragma omp parallel
 {
 	for (num2 = 1; num2 < line_last; num2++) {
 		if (myLINES[num2].used == 1 && num != num2 && strcmp(myLINES[num2].layer, myLINES[num].layer) == 0) {
@@ -2851,7 +2858,7 @@ void init_objects (void) {
 	}
 	myOBJECTS = (_OBJECT *)malloc(sizeof(_OBJECT) * (line_last + 1));
 
-#pragma omp parallel
+//#pragma omp parallel
 {
 	for (object_num = 0; object_num < line_last; object_num++) {
 		int n = 0;
@@ -3006,7 +3013,7 @@ void init_objects (void) {
 			myOBJECTS[num5b].inside = 0;
 		}
 	}
-#pragma omp parallel
+//#pragma omp parallel
 {
 	for (object_num = 0; object_num < line_last; object_num++) {
 		if (myOBJECTS[object_num].line[0] != 0) {
@@ -3041,7 +3048,7 @@ void init_objects (void) {
 				myOBJECTS[num5b].max_y = myLINES[lnum].cy + myLINES[lnum].opt;
 			}
 		} else {
-#pragma omp parallel
+//#pragma omp parallel
 {
 			int num4b = 0;
 			for (num4b = 0; num4b < line_last; num4b++) {
@@ -3168,7 +3175,7 @@ void DrawCheckSize (void) {
 	min_y = 99999.0;
 	max_x = 0.0;
 	max_y = 0.0;
-#pragma omp parallel
+//#pragma omp parallel
 {
 	for (num2 = 0; num2 < line_last; num2++) {
 		if (myLINES[num2].used == 1) {
@@ -3215,7 +3222,7 @@ void DrawCheckSize (void) {
 
 void DrawSetZero (void) {
 	int num = 0;
-#pragma omp parallel
+//#pragma omp parallel
 {
 	for (num = 0; num < line_last; num++) {
 		if (myLINES[num].used == 1 || myLINES[num].istab == 1) {
