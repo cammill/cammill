@@ -1,4 +1,4 @@
-# CAMmill [![travis](https://travis-ci.org/cammill/cammill.svg?branch=master)](https://travis-ci.org/cammill/cammill)
+# CAMmill
 
 CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and gcode for CNC machines.
 
