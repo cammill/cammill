@@ -35,6 +35,16 @@ extern int PannedStat;
 extern int ExpanderStat[G_LAST];
 extern int object_last;
 
+char typenames[16][7] = {
+    "INT",
+    "0/1",
+    "FLOAT",
+    "DOUBLE",
+    "STRING",
+    "INT",
+    "FILE"
+};
+
 PARA_GROUP GROUPS[] = {
 	{"View", ""},
 	{"Tool", ""},
@@ -73,7 +83,7 @@ PARA PARAMETER[P_LAST] = {
 	{"Diameter",	"Tool",		"-td",	T_DOUBLE,	0,	3.0,	3.0,	"",	0.01,	0.01,	18.0,		"mm|inch", 1, 1, "tool-diameter", 0, 0, 0, 0},
 	{"Speed",	"Tool",		"-ts",	T_INT,		10000,	0.0,	0.0,	"",	1.0,	10.0,	100000.0,	"rpm", 1, 1, "real spindle-speed", 0, 0, 0, 0},
 	{"Coolant",	"Tool", 	"-mc",	T_SELECT	,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 0, "Coolant (Off/Mist/Flood)", 0, 0, 0, 0},
-	{"Kepp spinning",	"Tool",		"-tk",	T_BOOL,		1,	1.0,	1.0,	"",	1.0,	1.0,	1.0,	"", 1, 1, "keep tool spinning", 0, 0, 0, 0},
+	{"Keep spinning",	"Tool",		"-tk",	T_BOOL,		1,	1.0,	1.0,	"",	1.0,	1.0,	1.0,	"", 1, 1, "keep tool spinning", 0, 0, 0, 0},
 	// Milling
 	{"FeedRate",	"Milling",	"-fr",	T_INT	,	200,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 1, "real feedrate", 0, 0, 0, 0},
 	{"PlungeRate",	"Milling",	"-pr",	T_INT	,	100,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"mm/min", 1, 1, "plunge feedrate", 0, 0, 0, 0},
@@ -121,7 +131,8 @@ PARA PARAMETER[P_LAST] = {
 	{"Spindle-Delay",	"Machine",		"-tud",	T_FLOAT,		1,	1.0,	1.0,	"",	0.0,	0.5,	100.0,	"sec", 1, 1, "tool spin up delay", 0, 0, 0, 0},
 	{"Max Toolspeed",	"Machine",	"-mss",	T_INT,		24000,	0.0,	0.0,	"",	100.0,	100.0,	100000.0,	"rpm", 1, 1, "maximum spindle-speed", 0, 0, 0, 0},
 	{"Fast-Z", "Machine", "-fastz",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0,	0.1,	10000.0,		"mm|inch", 1, 1, "Fast-Z", 0, 0, 0, 0},
-	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "post-processor selection", 0, 0, 0, 0},
+	{"Post",	"Machine",	"-mpt",	T_SELECT,	0,	0.0,	0.0,	"",	1.0,	1.0,	100.0,		"#", 0, 1, "Post-processor selection by number", 0, 0, 0, 0},
+    {"PostName", "Machine", "-mpn", T_STRING, 0, 0.0, 0.0, "", 0.0, 0.0, 0.0, "", 0, 0, "Post-processor selection by name", 0, 0, 0, 0},
 	{"Post-Command","Machine",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "postcommand to trigger an script after saving the gcode (you can use this to copy the gcode to your cnc-machine)", 0, 0, 0, 0},
 	{"Return",	"Machine",	"-rth",	T_BOOL,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 0, 0, "Return to Home at end", 0, 0, 0, 0},
 	{"Return-Z",	"Machine",	"-rtz",	T_FLOAT,	0,	20.0,	0.0,	"",	0.0,	1.0,	100.0,		"", 0, 0, "Return to Home Z-Position", 0, 0, 0, 0},
@@ -157,26 +168,25 @@ PARA PARAMETER[P_LAST] = {
 	{"B","Bitmap","-bb",T_INT,	10,	10.0,	10.0,	"",	0.0,	1.0,	255.0,		"", 1, 1, "Bitmap-Blue", 0, 0, 0, 0},
 #endif
 	// Misc
-	{"Unit on Load",	"Misc",		"-munitl",	T_SELECT,	2,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"", 1, 1, "Unit on load mm|inch", 0, 0, 0, 0},
-	{"Unit",	"Misc",		"-munit",	T_SELECT,	1,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"", 1, 1, "Unit mm|inch", 0, 0, 0, 0},
+	{"Unit on Load",	"Misc",		"-munitl",	T_SELECT,	2,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"", 1, 1, "Unit on load (0=inch,1=mm,2=auto)", 0, 0, 0, 0},
+	{"Unit",	"Misc",		"-munit",	T_SELECT,	1,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"", 1, 1, "Unit (0=inch,1=mm)", 0, 0, 0, 0},
 	{"Scale",	"Misc",		"-scale",	T_DOUBLE,	1,	1.0,	1.0,	"",	0.0001,	0.01,	100.0,		"x", 1, 1, "Scale input file", 0, 0, 0, 0},
-	{"Tolerance",	"Misc",		"-mto",	T_DOUBLE,	0,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"mm|inch", 1, 1, "Tollerance between points to close objects", 0, 0, 0, 0},
-	{"Ignore-Layers","Misc",	"-mla",	T_BOOL,		0,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 1, 1, "Ignore Layers", 0, 0, 0, 0},
+	{"Tolerance",	"Misc",		"-mto",	T_DOUBLE,	0,	0.01,	0.001,	"",	0.0001,	0.01,	10.0,		"mm|inch", 1, 1, "Tolerance between points to close objects", 0, 0, 0, 0},
 	{"Tool-Table",	"Misc",		"-tt",	T_FILE	,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "the tooltable filename", 0, 0, 0, 0},
 	{"Setup-Autosave","Misc",	"-sa",	T_BOOL,		1,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 1, 1, "Save setup at exit", 0, 0, 0, 0},
-	{"Batchmode",	"Misc",		"-bm",	T_BOOL,		0,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 0, 1, "Batchmode", 1, 0, 0, 0},
+	{"Batchmode",	"Misc",		"-bm",	T_BOOL,		0,	0.0,	0.0,	"",	0,	1.0,	1.0,		"", 0, 1, "Batchmode (do not show gui)", 1, 0, 0, 0},
 	{"LoadPath","Misc",	"-milp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0, 0},
 	{"SavePath","Misc",	"-misp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0, 0},
 	{"PresetPath","Misc",	"-mipp",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "", 1, 0, 0, 0},
-	{"Delete Double Lines","Misc",	"-deld",		T_BOOL	,	1,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "delete double lines on different layers", 0, 0, 0, 0},
-	{"Order", "Misc", "-order",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Mill-Order", 0, 0, 0, 0},
-	{"Zero", "Misc", "-zero",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Zero", 0, 0, 0, 0},
+	{"Delete Double Lines","Misc",	"-deld",		T_BOOL	,	1,	0.0,	0.0,	"",	1.0,	1.0,	10000.0,	"", 0, 0, "Delete double lines on different layers", 0, 0, 0, 0},
+	{"Order", "Misc", "-order",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Mill-Order (0=inside/open first,1=next,2=none)", 0, 0, 0, 0},
+	{"Zero", "Misc", "-zero",	T_SELECT,	0,	0.0,	0.0,	"",	0.0,	1.0,	2.0,		"", 1, 1, "Zero (0=bottom-left,1=original,2=centered)", 0, 0, 0, 0},
 	{"Zero-Offset-X", "Misc", "-zerox",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm|inch", 1, 1, "Zero-Offset-X", 0, 0, 0, 0},
 	{"Zero-Offset-Y", "Misc", "-zeroy",	T_DOUBLE,	0,	0.0,	0.0,	"",	-10000.0,	1.0,	10000.0,		"mm|inch", 1, 1, "Zero-Offset-Y", 0, 0, 0, 0},
 	{"Append Config",	"Misc",  "-ac",	T_BOOL	,	1,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "Append Config to Output-File", 0, 0, 0, 0},
 	{"Texture",	"Misc",	"-pc",	T_STRING,	0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 1, 1, "Bitmap file to load for texture rendering", 1, 0, 0, 0},
-	{"NC-Debug",	"Misc", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "output objects without offsets / for debugging", 0, 0, 0, 0},
-	{"DXF-Debug",   "Misc",         "-dd",  T_BOOL, 0,  0.0,    0.0,    "", 0.0,    1.0,    1.0,        "", 1, 0, "output some debug text while loading dxf", 0, 0, 0, 0},
+	{"NC-Debug",	"Misc", 	"-nd",	T_BOOL	,	0,	0.0,	0.0,	"",	0.0,	1.0,	1.0,		"", 1, 0, "Output objects without offsets / for debugging", 0, 0, 0, 0},
+	{"DXF-Debug",   "Misc",         "-dd",  T_BOOL, 0,  0.0,    0.0,    "", 0.0,    1.0,    1.0,        "", 1, 0, "Putput some debug text while loading dxf", 0, 0, 0, 0},
 	{"DXF-File",	"Misc",	"-d",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "dxf-filename", 0, 0, 0, 0},
 	{"Output-File",	"Misc",	"-o",	T_FILE,		0,	0.0,	0.0,	"",	0.0,	0.0,	0.0,		"", 0, 0, "gcode-output filename", 0, 0, 0, 0},
 #ifdef USE_VNC
@@ -283,26 +293,11 @@ void SetupShowHelp (void) {
 		char name_str[1024];
 		if (strcmp(PARAMETER[n].group, "Objects") != 0) {
 			if (PARAMETER[n].unit[0] != 0) {
-				snprintf(name_str, sizeof(name_str), "%6s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+				snprintf(name_str, sizeof(name_str), "%7s   %s-%s (%s)", PARAMETER[n].unit, _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
 			} else {
-				snprintf(name_str, sizeof(name_str), "         %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
+				snprintf(name_str, sizeof(name_str), "          %s-%s (%s)", _(PARAMETER[n].group), _(PARAMETER[n].name), _(PARAMETER[n].help));
 			}
-			if (PARAMETER[n].readonly == 1) {
-			} else if (PARAMETER[n].type == T_FLOAT) {
-				fprintf(stdout, "%6s FLOAT    %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_DOUBLE) {
-				fprintf(stdout, "%6s DOUBLE   %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_INT) {
-				fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_SELECT) {
-				fprintf(stdout, "%6s INT      %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_BOOL) {
-				fprintf(stdout, "%6s 0/1      %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_STRING) {
-				fprintf(stdout, "%6s STRING   %s\n", PARAMETER[n].arg, name_str);
-			} else if (PARAMETER[n].type == T_FILE) {
-				fprintf(stdout, "%6s FILE     %s\n", PARAMETER[n].arg, name_str);
-			}
+            fprintf(stdout, "%7s %-10s %s\n", PARAMETER[n].arg, typenames[PARAMETER[n].type], name_str);
 		}
 	}
 	fprintf(stdout, "\n");

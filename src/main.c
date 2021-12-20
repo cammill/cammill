@@ -1042,10 +1042,10 @@ void mainloop (void) {
 			bitmap2cnc();
 #endif
 		} else {
-
-			sortget_order_num = 0;
-			gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), sortget_object_foreach_func, NULL);
-
+			if (PARAMETER[P_O_BATCHMODE].vint != 1) {
+				sortget_order_num = 0;
+				gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), sortget_object_foreach_func, NULL);
+			}
 			mill_objects();
 		}
 		mill_end();
@@ -2060,6 +2060,8 @@ void DnDleave (GtkWidget *widget, GdkDragContext *context, guint time, gpointer 
 }
 
 gboolean update_tree_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer user_data) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) return FALSE;
+
     gchar *tree_path_str = NULL;
 //    gchar *tree_path_str2 = NULL;
 	gchar *group = NULL;
@@ -2179,6 +2181,8 @@ gboolean update_tree_foreach_func (GtkTreeModel *model, GtkTreePath *path, GtkTr
 }
 
 void update_tree_values (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) return;
+
 	int n = 0;
 	int object_num = 0;
 	for (object_num = 0; object_num < object_last; object_num++) {
@@ -2283,6 +2287,8 @@ void objtree_add_object (int object_num) {
 }
 
 void fill_objtree (void) {
+	if (PARAMETER[P_O_BATCHMODE].vint == 1) return;
+
 	int object_num = 0;
 	for (object_num = 0; object_num < object_last; object_num++) {
 		gtk_tree_model_foreach(GTK_TREE_MODEL(treestore), delete_object_foreach_func, NULL);
@@ -3242,7 +3248,9 @@ int main (int argc, char *argv[]) {
 		snprintf(tmp_str, sizeof(tmp_str), "%s (%s)", _("Output"), output_extension);
 		gtk_label_set_text(GTK_LABEL(gCodeViewLabel), tmp_str);
 	}
-	if (PARAMETER[P_H_POST].vint != -1) {
+    if (PARAMETER[P_H_POSTNAME].vstr[0] != 0) {
+        postcam_init_lua(program_path, PARAMETER[P_H_POSTNAME].vstr);
+	} else if (PARAMETER[P_H_POST].vint != -1) {
 		postcam_init_lua(program_path, postcam_plugins[PARAMETER[P_H_POST].vint]);
 	}
 	postcam_plugin = PARAMETER[P_H_POST].vint;	
@@ -3252,7 +3260,9 @@ int main (int argc, char *argv[]) {
 	if (PARAMETER[P_O_BATCHMODE].vint == 1 && PARAMETER[P_MFILE].vstr[0] != 0) {
 		mainloop();
 	} else {
-		if (PARAMETER[P_H_POST].vint != -1) {
+        if (PARAMETER[P_H_POSTNAME].vstr[0] != 0) {
+		    postcam_load_source(PARAMETER[P_H_POSTNAME].vstr);
+        } else if (PARAMETER[P_H_POST].vint != -1) {
 			postcam_load_source(postcam_plugins[PARAMETER[P_H_POST].vint]);
 		}
 		gtk_timeout_add(1000/25, handler_periodic_action, NULL);
