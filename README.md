@@ -1,6 +1,6 @@
 # CAMmill
 
-CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and gcode for CNC machines.
+CAMmill is a CAM application designed to take CAD files in DXF format, produce tool paths and [G-code](https://en.wikipedia.org/wiki/G-code) for CNC machines.
 
 ![license](https://img.shields.io/github/license/cammill/cammill.svg)
 [![release](https://img.shields.io/github/release/cammill/cammill.svg)](https://github.com/cammill/cammill/releases)
